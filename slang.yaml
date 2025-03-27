@@ -1,0 +1,3 @@
+base_locale: en
+input_directory: assets/i18n
+timestamp: false
