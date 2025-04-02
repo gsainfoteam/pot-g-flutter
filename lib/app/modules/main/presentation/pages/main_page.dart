@@ -10,7 +10,9 @@ class MainPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('title')),
-      body: Column(children: [Text('title'), PotGButton()]),
+      body: Column(
+        children: [Text('title'), PotGButton(child: Text('button'))],
+      ),
     );
   }
 }
