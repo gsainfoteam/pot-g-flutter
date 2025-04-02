@@ -1,5 +1,6 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
+import 'package:pot_g/app/modules/common/presentation/widgets/pot_g_button.dart';
 
 @RoutePage()
 class MainPage extends StatelessWidget {
@@ -9,7 +10,7 @@ class MainPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('title')),
-      body: Center(child: Text('title')),
+      body: Column(children: [Text('title'), PotGButton()]),
     );
   }
 }
