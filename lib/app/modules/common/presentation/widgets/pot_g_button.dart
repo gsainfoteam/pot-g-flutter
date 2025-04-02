@@ -30,6 +30,7 @@ class PotGButton extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: _getBorderRadius(),
           border: _getBorder(),
+          color: _getBackgroundColor(),
         ),
         child: Align(widthFactor: 1, heightFactor: 1, child: child),
       ),
@@ -66,6 +67,16 @@ class PotGButton extends StatelessWidget {
         return const EdgeInsets.symmetric(horizontal: 25, vertical: 10);
       case PotGButtonSize.small:
         return const EdgeInsets.symmetric(horizontal: 15, vertical: 7);
+    }
+  }
+
+  Color _getBackgroundColor() {
+    if (onPressed == null) return Palette.borerGrey;
+    switch (variant) {
+      case PotGButtonVariant.emphasized:
+        return Palette.primary;
+      default:
+        return Palette.white;
     }
   }
 }
