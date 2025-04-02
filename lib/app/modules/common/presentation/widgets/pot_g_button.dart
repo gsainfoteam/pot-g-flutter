@@ -10,23 +10,21 @@ class PotGButton extends StatelessWidget {
     super.key,
     this.padding,
     this.child,
-    this.onTap,
+    this.onPressed,
     this.variant,
     this.size = PotGButtonSize.large,
-    this.disabled = false,
   });
 
   final EdgeInsetsGeometry? padding;
   final Widget? child;
-  final VoidCallback? onTap;
+  final VoidCallback? onPressed;
   final PotGButtonVariant? variant;
   final PotGButtonSize size;
-  final bool disabled;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: onPressed,
       child: Container(
         padding: padding ?? _getPadding(),
         decoration: BoxDecoration(
@@ -49,7 +47,7 @@ class PotGButton extends StatelessWidget {
   }
 
   BoxBorder? _getBorder() {
-    if (disabled) return null;
+    if (onPressed == null) return null;
     switch (variant) {
       case PotGButtonVariant.outlined:
         return Border.all(color: Palette.primary, width: 1.5);

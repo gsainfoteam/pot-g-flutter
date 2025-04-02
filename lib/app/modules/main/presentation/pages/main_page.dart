@@ -11,7 +11,11 @@ class MainPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text('title')),
       body: Column(
-        children: [Text('title'), PotGButton(child: Text('button'))],
+        children: [
+          Text('title'),
+          PotGButton(child: Text('button')),
+          ElevatedButton(onPressed: () {}, child: Text('asdf')),
+        ],
       ),
     );
   }
