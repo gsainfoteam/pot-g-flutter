@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:pot_g/app/router.dart';
 import 'package:pot_g/app/values/palette.dart';
+import 'package:pot_g/app/values/theme.dart';
 import 'package:pot_g/gen/strings.g.dart';
 
 final _appRouter = AppRouter();
@@ -17,6 +18,7 @@ class PotGApp extends StatelessWidget {
       child: GestureDetector(
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
         child: MaterialApp.router(
+          theme: PotGTheme.theme,
           routerConfig: _appRouter.config(),
           locale: TranslationProvider.of(context).flutterLocale,
           supportedLocales: AppLocaleUtils.supportedLocales,
