@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pot_g/app/values/palette.dart';
 
 enum PotGButtonVariant { emphasized, outlined }
 
 enum PotGButtonSize { small, medium, large }
 
-class PotGButton extends StatelessWidget {
+class PotGButton extends StatefulWidget {
   const PotGButton({
     super.key,
     this.padding,
@@ -24,17 +25,42 @@ class PotGButton extends StatelessWidget {
   final Widget? prefixIcon;
 
   @override
+  State<PotGButton> createState() => _PotGButtonState();
+}
+
+class _PotGButtonState extends State<PotGButton> {
+  bool _pressed = false;
+  bool _active = false;
+  bool get pressed => _pressed || _active;
+
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onPressed,
+      onTap: widget.onPressed,
+      onTapDown: (_) {
+        if (widget.onPressed == null) return;
+        HapticFeedback.lightImpact();
+        setState(() {
+          _pressed = true;
+          _active = true;
+        });
+        Future.delayed(const Duration(milliseconds: 100), () {
+          if (!mounted) return;
+          setState(() => _active = false);
+        });
+      },
+      onTapUp: (_) => setState(() => _pressed = false),
+      onTapCancel: () => setState(() => _pressed = false),
       child: DefaultTextStyle.merge(
         style: TextStyle(
           color: _getTextColor(),
           fontWeight: _getFontWeight(),
           fontSize: _getFontSize(),
         ),
-        child: Container(
-          padding: padding ?? _getPadding(),
+        child: AnimatedContainer(
+          curve: Curves.easeInOut,
+          duration: const Duration(milliseconds: 100),
+          padding: widget.padding ?? _getPadding(),
           decoration: BoxDecoration(
             borderRadius: _getBorderRadius(),
             border: _getBorder(),
@@ -43,11 +69,11 @@ class PotGButton extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              if (prefixIcon != null) ...[
-                prefixIcon!,
+              if (widget.prefixIcon != null) ...[
+                widget.prefixIcon!,
                 SizedBox(width: _getIconGap()),
               ],
-              child!,
+              widget.child!,
             ],
           ),
         ),
@@ -56,7 +82,7 @@ class PotGButton extends StatelessWidget {
   }
 
   BorderRadiusGeometry _getBorderRadius() {
-    switch (size) {
+    switch (widget.size) {
       case PotGButtonSize.large:
       case PotGButtonSize.medium:
         return BorderRadius.all(Radius.circular(10));
@@ -66,8 +92,8 @@ class PotGButton extends StatelessWidget {
   }
 
   BoxBorder? _getBorder() {
-    if (onPressed == null) return null;
-    switch (variant) {
+    if (widget.onPressed == null) return null;
+    switch (widget.variant) {
       case PotGButtonVariant.outlined:
         return Border.all(color: Palette.primary, width: 1.5);
       case null:
@@ -78,7 +104,7 @@ class PotGButton extends StatelessWidget {
   }
 
   EdgeInsetsGeometry _getPadding() {
-    switch (size) {
+    switch (widget.size) {
       case PotGButtonSize.large:
         return const EdgeInsets.symmetric(horizontal: 20, vertical: 15);
       case PotGButtonSize.medium:
@@ -89,17 +115,22 @@ class PotGButton extends StatelessWidget {
   }
 
   Color _getBackgroundColor() {
-    if (onPressed == null) return Palette.borerGrey;
-    switch (variant) {
+    if (widget.onPressed == null) return Palette.borerGrey;
+    switch (widget.variant) {
       case PotGButtonVariant.emphasized:
+        if (pressed) return const Color(0xff346405);
         return Palette.primary;
+      case PotGButtonVariant.outlined:
+        if (pressed) return Palette.primaryLight;
+        return Palette.white;
       default:
+        if (pressed) return Palette.lightGrey;
         return Palette.white;
     }
   }
 
   FontWeight _getFontWeight() {
-    switch (size) {
+    switch (widget.size) {
       case PotGButtonSize.large:
         return FontWeight.w700;
       default:
@@ -108,10 +139,10 @@ class PotGButton extends StatelessWidget {
   }
 
   Color _getTextColor() {
-    if (onPressed == null) return Palette.grey;
-    switch (variant) {
+    if (widget.onPressed == null) return Palette.grey;
+    switch (widget.variant) {
       case PotGButtonVariant.emphasized:
-        return Palette.white;
+        return Palette.primaryLight;
       case PotGButtonVariant.outlined:
         return Palette.primary;
       default:
@@ -120,7 +151,7 @@ class PotGButton extends StatelessWidget {
   }
 
   double _getFontSize() {
-    switch (size) {
+    switch (widget.size) {
       case PotGButtonSize.large:
         return 20;
       default:
@@ -129,7 +160,7 @@ class PotGButton extends StatelessWidget {
   }
 
   double _getIconGap() {
-    switch (size) {
+    switch (widget.size) {
       case PotGButtonSize.large:
         return 8;
       default:
