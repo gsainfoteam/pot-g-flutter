@@ -3,10 +3,20 @@ import 'package:flutter/services.dart';
 import 'package:pot_g/app/values/palette.dart';
 
 class PotGToggle extends StatelessWidget {
-  const PotGToggle({super.key, required this.value, required this.onChanged});
+  const PotGToggle({
+    super.key,
+    required this.value,
+    required this.onChanged,
+    this.activeColor = Palette.primary,
+    this.inactiveColor = Palette.grey,
+    this.knobColor = Palette.white,
+  });
 
   final bool value;
   final void Function(bool value) onChanged;
+  final Color activeColor;
+  final Color inactiveColor;
+  final Color knobColor;
 
   static const _animationDuration = Duration(milliseconds: 100);
   static const _toggleWidth = 60.0;
@@ -26,7 +36,7 @@ class PotGToggle extends StatelessWidget {
         width: _toggleWidth,
         height: _toggleHeight,
         decoration: BoxDecoration(
-          color: value ? Palette.primary : Palette.grey,
+          color: value ? activeColor : inactiveColor,
           borderRadius: BorderRadius.circular(100),
         ),
         padding: _togglePadding,
@@ -40,7 +50,7 @@ class PotGToggle extends StatelessWidget {
                 width: _knobSize,
                 height: _knobSize,
                 decoration: BoxDecoration(
-                  color: Palette.white,
+                  color: knobColor,
                   borderRadius: BorderRadius.circular(100),
                 ),
               ),
