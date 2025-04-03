@@ -73,8 +73,14 @@ class Pretendard extends DynamicFontsFile {
     );
     DynamicFonts.getFont(Pretendard.fontFamily);
     LicenseRegistry.addLicense(() async* {
-      final data = await Dio().get(licenseUrl);
-      yield LicenseEntryWithLineBreaks([Pretendard.fontFamily], data.data);
+      try {
+        final data = await Dio().get(licenseUrl);
+        yield LicenseEntryWithLineBreaks([Pretendard.fontFamily], data.data);
+      } catch (e) {
+        yield LicenseEntryWithLineBreaks([
+          Pretendard.fontFamily,
+        ], 'Pretendard font license is not available.');
+      }
     });
   }
 }
