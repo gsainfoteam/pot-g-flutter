@@ -20,6 +20,7 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PotGAppBar(
+        title: Text('내 정보'),
         actions: [
           PotGIconButton(icon: Assets.icons.addPot.svg(), onPressed: () {}),
           PotGIconButton(icon: Assets.icons.userCircle.svg(), onPressed: () {}),
