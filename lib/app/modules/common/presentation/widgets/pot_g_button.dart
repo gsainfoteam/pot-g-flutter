@@ -13,6 +13,7 @@ class PotGButton extends StatelessWidget {
     this.onPressed,
     this.variant,
     this.size = PotGButtonSize.large,
+    this.prefixIcon,
   });
 
   final EdgeInsetsGeometry? padding;
@@ -20,19 +21,36 @@ class PotGButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final PotGButtonVariant? variant;
   final PotGButtonSize size;
+  final Widget? prefixIcon;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onPressed,
-      child: Container(
-        padding: padding ?? _getPadding(),
-        decoration: BoxDecoration(
-          borderRadius: _getBorderRadius(),
-          border: _getBorder(),
-          color: _getBackgroundColor(),
+      child: DefaultTextStyle.merge(
+        style: TextStyle(
+          color: _getTextColor(),
+          fontWeight: _getFontWeight(),
+          fontSize: _getFontSize(),
         ),
-        child: Align(widthFactor: 1, heightFactor: 1, child: child),
+        child: Container(
+          padding: padding ?? _getPadding(),
+          decoration: BoxDecoration(
+            borderRadius: _getBorderRadius(),
+            border: _getBorder(),
+            color: _getBackgroundColor(),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              if (prefixIcon != null) ...[
+                prefixIcon!,
+                SizedBox(width: _getIconGap()),
+              ],
+              child!,
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -77,6 +95,45 @@ class PotGButton extends StatelessWidget {
         return Palette.primary;
       default:
         return Palette.white;
+    }
+  }
+
+  FontWeight _getFontWeight() {
+    switch (size) {
+      case PotGButtonSize.large:
+        return FontWeight.w700;
+      default:
+        return FontWeight.w600;
+    }
+  }
+
+  Color _getTextColor() {
+    if (onPressed == null) return Palette.grey;
+    switch (variant) {
+      case PotGButtonVariant.emphasized:
+        return Palette.white;
+      case PotGButtonVariant.outlined:
+        return Palette.primary;
+      default:
+        return Palette.textGrey;
+    }
+  }
+
+  double _getFontSize() {
+    switch (size) {
+      case PotGButtonSize.large:
+        return 20;
+      default:
+        return 18;
+    }
+  }
+
+  double _getIconGap() {
+    switch (size) {
+      case PotGButtonSize.large:
+        return 8;
+      default:
+        return 4;
     }
   }
 }
