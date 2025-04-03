@@ -33,6 +33,9 @@ class _PotGButtonState extends State<PotGButton> {
   bool _active = false;
   bool get pressed => _pressed || _active;
 
+  static const _animationDuration = Duration(milliseconds: 50);
+  static const _minPressedDuration = Duration(milliseconds: 80);
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -44,7 +47,7 @@ class _PotGButtonState extends State<PotGButton> {
           _pressed = true;
           _active = true;
         });
-        Future.delayed(const Duration(milliseconds: 80), () {
+        Future.delayed(_minPressedDuration, () {
           if (!mounted) return;
           setState(() => _active = false);
         });
@@ -59,7 +62,7 @@ class _PotGButtonState extends State<PotGButton> {
         ),
         child: AnimatedContainer(
           curve: Curves.easeInOut,
-          duration: const Duration(milliseconds: 50),
+          duration: _animationDuration,
           padding: widget.padding ?? _getPadding(),
           decoration: BoxDecoration(
             borderRadius: _getBorderRadius(),
