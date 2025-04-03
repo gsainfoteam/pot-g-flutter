@@ -2,33 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pot_g/app/values/palette.dart';
 
-enum PotGButtonVariant { emphasized, outlined }
+enum PotButtonVariant { emphasized, outlined }
 
-enum PotGButtonSize { small, medium, large }
+enum PotButtonSize { small, medium, large }
 
-class PotGButton extends StatefulWidget {
-  const PotGButton({
+class PotButton extends StatefulWidget {
+  const PotButton({
     super.key,
     this.padding,
     this.child,
     this.onPressed,
     this.variant,
-    this.size = PotGButtonSize.large,
+    this.size = PotButtonSize.large,
     this.prefixIcon,
   });
 
   final EdgeInsetsGeometry? padding;
   final Widget? child;
   final VoidCallback? onPressed;
-  final PotGButtonVariant? variant;
-  final PotGButtonSize size;
+  final PotButtonVariant? variant;
+  final PotButtonSize size;
   final Widget? prefixIcon;
 
   @override
-  State<PotGButton> createState() => _PotGButtonState();
+  State<PotButton> createState() => _PotButtonState();
 }
 
-class _PotGButtonState extends State<PotGButton> {
+class _PotButtonState extends State<PotButton> {
   bool _pressed = false;
   bool _active = false;
   bool get pressed => _pressed || _active;
@@ -86,10 +86,10 @@ class _PotGButtonState extends State<PotGButton> {
 
   BorderRadiusGeometry _getBorderRadius() {
     switch (widget.size) {
-      case PotGButtonSize.large:
-      case PotGButtonSize.medium:
+      case PotButtonSize.large:
+      case PotButtonSize.medium:
         return BorderRadius.all(Radius.circular(10));
-      case PotGButtonSize.small:
+      case PotButtonSize.small:
         return BorderRadius.all(Radius.circular(5));
     }
   }
@@ -97,7 +97,7 @@ class _PotGButtonState extends State<PotGButton> {
   BoxBorder? _getBorder() {
     if (widget.onPressed == null) return null;
     switch (widget.variant) {
-      case PotGButtonVariant.outlined:
+      case PotButtonVariant.outlined:
         return Border.all(color: Palette.primary, width: 1.5);
       case null:
         return Border.all(color: Palette.borderGrey, width: 1.5);
@@ -108,11 +108,11 @@ class _PotGButtonState extends State<PotGButton> {
 
   EdgeInsetsGeometry _getPadding() {
     switch (widget.size) {
-      case PotGButtonSize.large:
+      case PotButtonSize.large:
         return const EdgeInsets.symmetric(horizontal: 20, vertical: 15);
-      case PotGButtonSize.medium:
+      case PotButtonSize.medium:
         return const EdgeInsets.symmetric(horizontal: 25, vertical: 10);
-      case PotGButtonSize.small:
+      case PotButtonSize.small:
         return const EdgeInsets.symmetric(horizontal: 15, vertical: 7);
     }
   }
@@ -120,10 +120,10 @@ class _PotGButtonState extends State<PotGButton> {
   Color _getBackgroundColor() {
     if (widget.onPressed == null) return Palette.borderGrey;
     switch (widget.variant) {
-      case PotGButtonVariant.emphasized:
+      case PotButtonVariant.emphasized:
         if (pressed) return const Color(0xff346405);
         return Palette.primary;
-      case PotGButtonVariant.outlined:
+      case PotButtonVariant.outlined:
         if (pressed) return Palette.primaryLight;
         return Palette.white;
       default:
@@ -134,7 +134,7 @@ class _PotGButtonState extends State<PotGButton> {
 
   FontWeight _getFontWeight() {
     switch (widget.size) {
-      case PotGButtonSize.large:
+      case PotButtonSize.large:
         return FontWeight.w700;
       default:
         return FontWeight.w600;
@@ -144,9 +144,9 @@ class _PotGButtonState extends State<PotGButton> {
   Color _getTextColor() {
     if (widget.onPressed == null) return Palette.grey;
     switch (widget.variant) {
-      case PotGButtonVariant.emphasized:
+      case PotButtonVariant.emphasized:
         return Palette.primaryLight;
-      case PotGButtonVariant.outlined:
+      case PotButtonVariant.outlined:
         return Palette.primary;
       default:
         return Palette.textGrey;
@@ -155,7 +155,7 @@ class _PotGButtonState extends State<PotGButton> {
 
   double _getFontSize() {
     switch (widget.size) {
-      case PotGButtonSize.large:
+      case PotButtonSize.large:
         return 20;
       default:
         return 18;
@@ -164,7 +164,7 @@ class _PotGButtonState extends State<PotGButton> {
 
   double _getIconGap() {
     switch (widget.size) {
-      case PotGButtonSize.large:
+      case PotButtonSize.large:
         return 8;
       default:
         return 4;

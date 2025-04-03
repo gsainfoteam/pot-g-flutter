@@ -8,8 +8,8 @@ import 'package:pot_g/gen/strings.g.dart';
 
 final _appRouter = AppRouter();
 
-class PotGApp extends StatelessWidget {
-  const PotGApp({super.key});
+class PotApp extends StatelessWidget {
+  const PotApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class PotGApp extends StatelessWidget {
       child: GestureDetector(
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
         child: MaterialApp.router(
-          theme: PotGTheme.theme,
+          theme: PotTheme.theme,
           routerConfig: _appRouter.config(),
           locale: TranslationProvider.of(context).flutterLocale,
           supportedLocales: AppLocaleUtils.supportedLocales,

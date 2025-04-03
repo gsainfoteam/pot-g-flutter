@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class PotGIconButton extends StatelessWidget {
-  const PotGIconButton({
+class PotIconButton extends StatelessWidget {
+  const PotIconButton({
     super.key,
     required this.icon,
     required this.onPressed,
