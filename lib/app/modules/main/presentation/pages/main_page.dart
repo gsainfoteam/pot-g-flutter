@@ -4,6 +4,7 @@ import 'package:pot_g/app/modules/common/presentation/widgets/pot_app_bar.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_button.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_icon_button.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_toggle.dart';
+import 'package:pot_g/app/modules/main/presentation/widgets/pot_list_item.dart';
 import 'package:pot_g/gen/assets.gen.dart';
 
 @RoutePage()
@@ -26,23 +27,27 @@ class _MainPageState extends State<MainPage> {
           PotIconButton(icon: Assets.icons.userCircle.svg(), onPressed: () {}),
         ],
       ),
-      body: Column(
-        children: [
-          Text('title'),
-          const SizedBox(height: 20),
-          PotButton(
-            onPressed: () {},
-            variant: PotButtonVariant.emphasized,
-            child: Text('button'),
-          ),
-          const SizedBox(height: 20),
-          PotToggle(
-            value: _isEnabled,
-            onChanged: (value) {
-              setState(() => _isEnabled = value);
-            },
-          ),
-        ],
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            Text('title'),
+            const SizedBox(height: 20),
+            PotButton(
+              onPressed: () {},
+              variant: PotButtonVariant.emphasized,
+              child: Text('button'),
+            ),
+            const SizedBox(height: 20),
+            PotToggle(
+              value: _isEnabled,
+              onChanged: (value) {
+                setState(() => _isEnabled = value);
+              },
+            ),
+            PotListItem(),
+          ],
+        ),
       ),
     );
   }
