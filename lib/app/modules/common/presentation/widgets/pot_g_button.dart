@@ -97,7 +97,7 @@ class _PotGButtonState extends State<PotGButton> {
       case PotGButtonVariant.outlined:
         return Border.all(color: Palette.primary, width: 1.5);
       case null:
-        return Border.all(color: Palette.borerGrey, width: 1.5);
+        return Border.all(color: Palette.borderGrey, width: 1.5);
       default:
         return null;
     }
@@ -115,7 +115,7 @@ class _PotGButtonState extends State<PotGButton> {
   }
 
   Color _getBackgroundColor() {
-    if (widget.onPressed == null) return Palette.borerGrey;
+    if (widget.onPressed == null) return Palette.borderGrey;
     switch (widget.variant) {
       case PotGButtonVariant.emphasized:
         if (pressed) return const Color(0xff346405);
