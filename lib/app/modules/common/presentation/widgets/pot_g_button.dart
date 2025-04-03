@@ -44,7 +44,7 @@ class _PotGButtonState extends State<PotGButton> {
           _pressed = true;
           _active = true;
         });
-        Future.delayed(const Duration(milliseconds: 100), () {
+        Future.delayed(const Duration(milliseconds: 80), () {
           if (!mounted) return;
           setState(() => _active = false);
         });
@@ -59,7 +59,7 @@ class _PotGButtonState extends State<PotGButton> {
         ),
         child: AnimatedContainer(
           curve: Curves.easeInOut,
-          duration: const Duration(milliseconds: 100),
+          duration: const Duration(milliseconds: 50),
           padding: widget.padding ?? _getPadding(),
           decoration: BoxDecoration(
             borderRadius: _getBorderRadius(),
