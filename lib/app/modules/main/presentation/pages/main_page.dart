@@ -1,7 +1,10 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
+import 'package:pot_g/app/modules/common/presentation/widgets/pot_g_app_bar.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_g_button.dart';
+import 'package:pot_g/app/modules/common/presentation/widgets/pot_g_icon_button.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_g_toggle.dart';
+import 'package:pot_g/gen/assets.gen.dart';
 
 @RoutePage()
 class MainPage extends StatefulWidget {
@@ -16,7 +19,12 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('title')),
+      appBar: PotGAppBar(
+        actions: [
+          PotGIconButton(icon: Assets.icons.addPot.svg(), onPressed: () {}),
+          PotGIconButton(icon: Assets.icons.userCircle.svg(), onPressed: () {}),
+        ],
+      ),
       body: Column(
         children: [
           Text('title'),
