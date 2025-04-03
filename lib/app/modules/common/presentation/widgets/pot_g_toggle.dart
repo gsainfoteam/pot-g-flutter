@@ -8,6 +8,12 @@ class PotGToggle extends StatelessWidget {
   final bool value;
   final void Function(bool value) onChanged;
 
+  static const _animationDuration = Duration(milliseconds: 100);
+  static const _toggleWidth = 60.0;
+  static const _toggleHeight = 33.0;
+  static const _togglePadding = EdgeInsets.symmetric(horizontal: 4.5);
+  static const _knobSize = 25.5;
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -16,23 +22,23 @@ class PotGToggle extends StatelessWidget {
         onChanged(!value);
       },
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 100),
-        width: 60,
-        height: 33,
+        duration: _animationDuration,
+        width: _toggleWidth,
+        height: _toggleHeight,
         decoration: BoxDecoration(
           color: value ? Palette.primary : Palette.grey,
           borderRadius: BorderRadius.circular(100),
         ),
-        padding: EdgeInsets.symmetric(horizontal: 4.5),
+        padding: _togglePadding,
         child: Stack(
           children: [
             AnimatedAlign(
               curve: Curves.easeOutQuad,
-              duration: const Duration(milliseconds: 100),
+              duration: _animationDuration,
               alignment: value ? Alignment.centerRight : Alignment.centerLeft,
               child: Container(
-                width: 25.5,
-                height: 25.5,
+                width: _knobSize,
+                height: _knobSize,
                 decoration: BoxDecoration(
                   color: Palette.white,
                   borderRadius: BorderRadius.circular(100),
