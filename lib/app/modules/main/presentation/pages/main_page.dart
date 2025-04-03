@@ -1,9 +1,9 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
-import 'package:pot_g/app/modules/common/presentation/widgets/pot_g_app_bar.dart';
-import 'package:pot_g/app/modules/common/presentation/widgets/pot_g_button.dart';
-import 'package:pot_g/app/modules/common/presentation/widgets/pot_g_icon_button.dart';
-import 'package:pot_g/app/modules/common/presentation/widgets/pot_g_toggle.dart';
+import 'package:pot_g/app/modules/common/presentation/widgets/pot_app_bar.dart';
+import 'package:pot_g/app/modules/common/presentation/widgets/pot_button.dart';
+import 'package:pot_g/app/modules/common/presentation/widgets/pot_icon_button.dart';
+import 'package:pot_g/app/modules/common/presentation/widgets/pot_toggle.dart';
 import 'package:pot_g/gen/assets.gen.dart';
 
 @RoutePage()
@@ -19,24 +19,24 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PotGAppBar(
+      appBar: PotAppBar(
         title: Text('내 정보'),
         actions: [
-          PotGIconButton(icon: Assets.icons.addPot.svg(), onPressed: () {}),
-          PotGIconButton(icon: Assets.icons.userCircle.svg(), onPressed: () {}),
+          PotIconButton(icon: Assets.icons.addPot.svg(), onPressed: () {}),
+          PotIconButton(icon: Assets.icons.userCircle.svg(), onPressed: () {}),
         ],
       ),
       body: Column(
         children: [
           Text('title'),
           const SizedBox(height: 20),
-          PotGButton(
+          PotButton(
             onPressed: () {},
-            variant: PotGButtonVariant.emphasized,
+            variant: PotButtonVariant.emphasized,
             child: Text('button'),
           ),
           const SizedBox(height: 20),
-          PotGToggle(
+          PotToggle(
             value: _isEnabled,
             onChanged: (value) {
               setState(() => _isEnabled = value);

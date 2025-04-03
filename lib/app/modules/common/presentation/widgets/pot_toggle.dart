@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pot_g/app/values/palette.dart';
 
-class PotGToggle extends StatelessWidget {
-  const PotGToggle({
+class PotToggle extends StatelessWidget {
+  const PotToggle({
     super.key,
     required this.value,
     required this.onChanged,

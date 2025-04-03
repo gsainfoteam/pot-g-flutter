@@ -1,11 +1,11 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:pot_g/app/modules/common/presentation/widgets/pot_g_icon_button.dart';
+import 'package:pot_g/app/modules/common/presentation/widgets/pot_icon_button.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/gen/assets.gen.dart';
 
-class PotGAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const PotGAppBar({
+class PotAppBar extends StatelessWidget implements PreferredSizeWidget {
+  const PotAppBar({
     super.key,
     this.actions = const [],
     this.title,
@@ -56,7 +56,7 @@ class PotGAppBar extends StatelessWidget implements PreferredSizeWidget {
                     ? leadingType == LeadingType.back
                         ? Padding(
                           padding: const EdgeInsets.only(left: 16),
-                          child: PotGIconButton(
+                          child: PotIconButton(
                             icon: Assets.icons.arrowLeft.svg(),
                             onPressed: action,
                           ),
