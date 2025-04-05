@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_icon_button.dart';
 import 'package:pot_g/app/values/palette.dart';
+import 'package:pot_g/app/values/text_styles.dart';
 import 'package:pot_g/gen/assets.gen.dart';
 
 class PotAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -73,9 +74,7 @@ class PotAppBar extends StatelessWidget implements PreferredSizeWidget {
                     title == null
                         ? null
                         : DefaultTextStyle.merge(
-                          style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 20,
+                          style: TextStyles.title3.copyWith(
                             color: Palette.dark,
                           ),
                           child: title!,

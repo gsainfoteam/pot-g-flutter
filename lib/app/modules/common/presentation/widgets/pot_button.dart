@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pot_g/app/values/palette.dart';
+import 'package:pot_g/app/values/text_styles.dart';
 
 enum PotButtonVariant { emphasized, outlined }
 
@@ -12,7 +13,7 @@ class PotButton extends StatefulWidget {
     this.padding,
     this.child,
     this.onPressed,
-    this.variant,
+    this.variant = PotButtonVariant.emphasized,
     this.size = PotButtonSize.large,
     this.prefixIcon,
   });
@@ -55,11 +56,7 @@ class _PotButtonState extends State<PotButton> {
       onTapUp: (_) => setState(() => _pressed = false),
       onTapCancel: () => setState(() => _pressed = false),
       child: DefaultTextStyle.merge(
-        style: TextStyle(
-          color: _getTextColor(),
-          fontWeight: _getFontWeight(),
-          fontSize: _getFontSize(),
-        ),
+        style: _getTextStyle().copyWith(color: _getTextColor()),
         child: AnimatedContainer(
           curve: Curves.easeInOut,
           duration: _animationDuration,
@@ -132,12 +129,12 @@ class _PotButtonState extends State<PotButton> {
     }
   }
 
-  FontWeight _getFontWeight() {
+  TextStyle _getTextStyle() {
     switch (widget.size) {
       case PotButtonSize.large:
-        return FontWeight.w700;
+        return TextStyles.title3;
       default:
-        return FontWeight.w600;
+        return TextStyles.title4;
     }
   }
 
@@ -150,15 +147,6 @@ class _PotButtonState extends State<PotButton> {
         return Palette.primary;
       default:
         return Palette.textGrey;
-    }
-  }
-
-  double _getFontSize() {
-    switch (widget.size) {
-      case PotButtonSize.large:
-        return 20;
-      default:
-        return 18;
     }
   }
 
