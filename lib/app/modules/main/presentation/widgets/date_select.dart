@@ -22,6 +22,14 @@ class _DateSelectState extends State<DateSelect> {
   late DateTime? _selectedDate = widget.selectedDate;
 
   @override
+  void didUpdateWidget(covariant DateSelect oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.selectedDate != widget.selectedDate) {
+      setState(() => _selectedDate = widget.selectedDate);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
@@ -81,7 +89,7 @@ class _DateSelectState extends State<DateSelect> {
                     children: [
                       Expanded(
                         child:
-                            widget.selectedDate == null
+                            _selectedDate == null
                                 ? Text(
                                   '전체 날짜',
                                   style: TextStyles.body.copyWith(
@@ -90,7 +98,7 @@ class _DateSelectState extends State<DateSelect> {
                                 )
                                 : Text(
                                   DateFormat.yMd().add_E().format(
-                                    widget.selectedDate!,
+                                    _selectedDate!,
                                   ),
                                   style: TextStyles.body.copyWith(
                                     color: Palette.dark,
