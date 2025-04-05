@@ -3,14 +3,14 @@ import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
 import 'package:pot_g/gen/assets.gen.dart';
 
-class PotPathSelect extends StatefulWidget {
-  const PotPathSelect({super.key});
+class PathSelect extends StatefulWidget {
+  const PathSelect({super.key});
 
   @override
-  State<PotPathSelect> createState() => _PotPathSelectState();
+  State<PathSelect> createState() => _PathSelectState();
 }
 
-class _PotPathSelectState extends State<PotPathSelect> {
+class _PathSelectState extends State<PathSelect> {
   bool _isOpen = false;
 
   @override
