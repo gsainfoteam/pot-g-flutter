@@ -28,11 +28,7 @@ class MainPage extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
               color: Palette.white,
               child: Column(
-                children: [
-                  PathSelect(),
-                  const SizedBox(height: 15),
-                  DateSelect(),
-                ],
+                children: [PathSelect(), const SizedBox(height: 15), _Date()],
               ),
             ),
             Expanded(
@@ -69,6 +65,25 @@ class MainPage extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _Date extends StatefulWidget {
+  const _Date();
+
+  @override
+  State<_Date> createState() => _DateState();
+}
+
+class _DateState extends State<_Date> {
+  DateTime? _selectedDate;
+
+  @override
+  Widget build(BuildContext context) {
+    return DateSelect(
+      selectedDate: _selectedDate,
+      onSelected: (date) => setState(() => _selectedDate = date),
     );
   }
 }
