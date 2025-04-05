@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_app_bar.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_icon_button.dart';
 import 'package:pot_g/app/modules/main/presentation/widgets/pot_list_item.dart';
+import 'package:pot_g/app/modules/main/presentation/widgets/pot_path_select.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/gen/assets.gen.dart';
 
@@ -25,6 +26,13 @@ class MainPage extends StatelessWidget {
             Container(
               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
               color: Palette.white,
+              child: Column(
+                children: [
+                  PotPathSelect(),
+                  const SizedBox(height: 15),
+                  PotPathSelect(),
+                ],
+              ),
             ),
             Expanded(
               child: Container(

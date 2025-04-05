@@ -7,6 +7,12 @@ abstract class TextStyles {
     fontWeight: FontWeight.w700,
   );
 
+  static final title2 = TextStyle(
+    fontSize: 24,
+    height: 1,
+    fontWeight: FontWeight.w600,
+  );
+
   static final title3 = TextStyle(
     fontSize: 20,
     height: 1,
@@ -17,6 +23,13 @@ abstract class TextStyles {
     fontSize: 18,
     height: 1,
     fontWeight: FontWeight.w600,
+  );
+
+  static final body = TextStyle(
+    fontSize: 18,
+    height: 1,
+    fontWeight: FontWeight.w400,
+    letterSpacing: -1.5 * 0.01 * 18,
   );
 
   static final description = TextStyle(
