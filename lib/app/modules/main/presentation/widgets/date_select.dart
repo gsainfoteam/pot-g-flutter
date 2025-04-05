@@ -69,6 +69,7 @@ class _DateSelectState extends State<DateSelect> {
                 ),
               )
               : GestureDetector(
+                behavior: HitTestBehavior.opaque,
                 onTap: () => setState(() => _isOpen = true),
                 child: Container(
                   height: 48,

@@ -64,6 +64,7 @@ class _PathSelectState extends State<PathSelect> {
                 ],
               )
               : GestureDetector(
+                behavior: HitTestBehavior.opaque,
                 onTap: () => setState(() => _isOpen = true),
                 child: Container(
                   height: 48,
@@ -107,6 +108,7 @@ class _Selector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      behavior: HitTestBehavior.opaque,
       onTap: onSelected,
       child: Container(
         height: 48,
