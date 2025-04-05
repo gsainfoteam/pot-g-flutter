@@ -14,6 +14,7 @@ class PotListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final disabled = pot.current == pot.total;
     return Container(
       height: 88,
       decoration: BoxDecoration(
@@ -38,7 +39,7 @@ class PotListItem extends StatelessWidget {
           Container(
             width: 64,
             decoration: BoxDecoration(
-              color: Palette.lightGrey,
+              color: disabled ? Palette.white : Palette.lightGrey,
               borderRadius: BorderRadius.horizontal(left: Radius.circular(10)),
             ),
             child: Column(
@@ -46,13 +47,15 @@ class PotListItem extends StatelessWidget {
               children: [
                 Text(
                   '지송',
-                  style: TextStyles.title3.copyWith(color: Palette.textGrey),
+                  style: TextStyles.title3.copyWith(
+                    color: disabled ? Palette.grey : Palette.textGrey,
+                  ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   '001',
                   style: TextStyles.description.copyWith(
-                    color: Palette.textGrey,
+                    color: disabled ? Palette.grey : Palette.textGrey,
                   ),
                 ),
               ],
@@ -71,12 +74,14 @@ class PotListItem extends StatelessWidget {
                       Text(
                         DateFormat.Md().add_E().format(pot.startsAt),
                         style: TextStyles.caption.copyWith(
-                          color: Palette.textGrey,
+                          color: disabled ? Palette.grey : Palette.textGrey,
                         ),
                       ),
                       const SizedBox(height: 8),
                       DefaultTextStyle.merge(
-                        style: TextStyles.title1.copyWith(color: Palette.dark),
+                        style: TextStyles.title1.copyWith(
+                          color: disabled ? Palette.grey : Palette.dark,
+                        ),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
@@ -91,7 +96,10 @@ class PotListItem extends StatelessWidget {
                                   fontWeight: FontWeight.w500,
                                   height: 0.66,
                                   letterSpacing: -0.025 * 12,
-                                  color: Palette.textGrey,
+                                  color:
+                                      disabled
+                                          ? Palette.grey
+                                          : Palette.textGrey,
                                 ),
                               ),
                           ],
@@ -102,7 +110,9 @@ class PotListItem extends StatelessWidget {
                   Spacer(),
                   Text(
                     '${pot.current}/${pot.total}',
-                    style: TextStyles.title1.copyWith(color: Palette.primary),
+                    style: TextStyles.title1.copyWith(
+                      color: disabled ? Palette.grey : Palette.primary,
+                    ),
                   ),
                 ],
               ),

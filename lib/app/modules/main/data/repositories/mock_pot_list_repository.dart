@@ -26,6 +26,18 @@ class MockPotListRepository implements PotListRepository {
         current: 1,
         total: 4,
       ),
+      PotModel(
+        id: '2',
+        route: RouteModel(
+          id: '1',
+          from: StopModel(id: '1', name: '유스퀘어'),
+          to: StopModel(id: '2', name: '지스트'),
+        ),
+        startsAt: DateTime.now().subtract(Duration(hours: 2)),
+        endsAt: DateTime.now(),
+        current: 4,
+        total: 4,
+      ),
     ];
   }
 }
