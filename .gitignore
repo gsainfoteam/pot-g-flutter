@@ -49,3 +49,4 @@ gen/
 *.g.dart
 *.gr.dart
 *.freezed.dart
+locator.config.dart
