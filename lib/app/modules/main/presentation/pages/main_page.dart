@@ -28,7 +28,11 @@ class MainPage extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
               color: Palette.white,
               child: Column(
-                children: [PathSelect(), const SizedBox(height: 15), _Date()],
+                children: [
+                  PathSelect(routes: [], onSelected: (_) {}),
+                  const SizedBox(height: 15),
+                  _Date(),
+                ],
               ),
             ),
             Expanded(

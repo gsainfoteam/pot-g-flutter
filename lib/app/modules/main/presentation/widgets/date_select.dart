@@ -120,7 +120,7 @@ class _Calendar extends StatefulWidget {
 }
 
 class __CalendarState extends State<_Calendar> {
-  DateTime _currentMonth = DateTime.now();
+  late DateTime _currentMonth = widget.selectedDate ?? DateTime.now();
 
   @override
   Widget build(BuildContext context) {
