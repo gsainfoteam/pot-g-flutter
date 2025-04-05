@@ -29,6 +29,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   dynamic_fonts: ^2.2.1
+  intl: ^0.19.0
 
 dev_dependencies:
   flutter_test:
