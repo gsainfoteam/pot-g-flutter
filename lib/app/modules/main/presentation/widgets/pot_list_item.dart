@@ -1,11 +1,15 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:pot_g/app/modules/main/domain/entities/pot_entity.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
 
 class PotListItem extends StatelessWidget {
-  const PotListItem({super.key});
+  const PotListItem({super.key, required this.pot});
+
+  final PotEntity pot;
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +68,7 @@ class PotListItem extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '3/12 (금)',
+                        DateFormat.Md().add_E().format(pot.date),
                         style: TextStyles.caption.copyWith(
                           color: Palette.textGrey,
                         ),

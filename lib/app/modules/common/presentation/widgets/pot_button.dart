@@ -13,7 +13,7 @@ class PotButton extends StatefulWidget {
     this.padding,
     this.child,
     this.onPressed,
-    this.variant = PotButtonVariant.emphasized,
+    this.variant,
     this.size = PotButtonSize.large,
     this.prefixIcon,
   });
@@ -73,7 +73,7 @@ class _PotButtonState extends State<PotButton> {
                 widget.prefixIcon!,
                 SizedBox(width: _getIconGap()),
               ],
-              widget.child!,
+              if (widget.child != null) widget.child!,
             ],
           ),
         ),

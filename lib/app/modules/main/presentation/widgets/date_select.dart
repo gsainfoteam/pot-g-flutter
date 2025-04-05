@@ -61,6 +61,7 @@ class _DateSelectState extends State<DateSelect> {
                                     setState(() => _isOpen = false);
                                     widget.onSelected(_selectedDate!);
                                   },
+                          variant: PotButtonVariant.emphasized,
                           size: PotButtonSize.small,
                           child: Text('선택'),
                         ),
