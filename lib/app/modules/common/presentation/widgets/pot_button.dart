@@ -13,7 +13,7 @@ class PotButton extends StatefulWidget {
     this.padding,
     this.child,
     this.onPressed,
-    this.variant,
+    this.variant = PotButtonVariant.emphasized,
     this.size = PotButtonSize.large,
     this.prefixIcon,
   });

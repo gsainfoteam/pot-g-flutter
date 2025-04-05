@@ -2,6 +2,7 @@ import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_app_bar.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_icon_button.dart';
+import 'package:pot_g/app/modules/main/presentation/widgets/date_select.dart';
 import 'package:pot_g/app/modules/main/presentation/widgets/path_select.dart';
 import 'package:pot_g/app/modules/main/presentation/widgets/pot_list_item.dart';
 import 'package:pot_g/app/values/palette.dart';
@@ -30,7 +31,7 @@ class MainPage extends StatelessWidget {
                 children: [
                   PathSelect(),
                   const SizedBox(height: 15),
-                  PathSelect(),
+                  DateSelect(),
                 ],
               ),
             ),
