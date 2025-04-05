@@ -59,6 +59,7 @@ class _DateSelectState extends State<DateSelect> {
                                   ? null
                                   : () {
                                     setState(() => _isOpen = false);
+                                    widget.onSelected(_selectedDate!);
                                   },
                           size: PotButtonSize.small,
                           child: Text('선택'),
@@ -79,7 +80,7 @@ class _DateSelectState extends State<DateSelect> {
                     children: [
                       Expanded(
                         child:
-                            _selectedDate == null
+                            widget.selectedDate == null
                                 ? Text(
                                   '전체 날짜',
                                   style: TextStyles.body.copyWith(
@@ -88,7 +89,7 @@ class _DateSelectState extends State<DateSelect> {
                                 )
                                 : Text(
                                   DateFormat.yMd().add_E().format(
-                                    _selectedDate!,
+                                    widget.selectedDate!,
                                   ),
                                   style: TextStyles.body.copyWith(
                                     color: Palette.dark,
