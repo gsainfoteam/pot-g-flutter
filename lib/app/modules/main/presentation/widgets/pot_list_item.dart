@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:pot_g/app/modules/common/presentation/extensions/date_time.dart';
 import 'package:pot_g/app/modules/main/domain/entities/pot_entity.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
@@ -68,21 +69,39 @@ class PotListItem extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        DateFormat.Md().add_E().format(pot.date),
+                        DateFormat.Md().add_E().format(pot.startsAt),
                         style: TextStyles.caption.copyWith(
                           color: Palette.textGrey,
                         ),
                       ),
                       const SizedBox(height: 8),
-                      Text(
-                        '13:10~14:00',
+                      DefaultTextStyle.merge(
                         style: TextStyles.title1.copyWith(color: Palette.dark),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(DateFormat.Hm().format(pot.startsAt)),
+                            Text('~'),
+                            Text(DateFormat.Hm().format(pot.endsAt)),
+                            if (!pot.startsAt.isSameDay(pot.endsAt))
+                              Text(
+                                'D+1',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                  height: 0.66,
+                                  letterSpacing: -0.025 * 12,
+                                  color: Palette.textGrey,
+                                ),
+                              ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
                   Spacer(),
                   Text(
-                    '1/4',
+                    '${pot.current}/${pot.total}',
                     style: TextStyles.title1.copyWith(color: Palette.primary),
                   ),
                 ],

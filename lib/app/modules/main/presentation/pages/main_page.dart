@@ -27,7 +27,10 @@ class MainPage extends StatelessWidget {
         ],
       ),
       body: SafeArea(
-        child: BlocProvider(create: (_) => sl<PotListBloc>(), child: _Layout()),
+        child: BlocProvider(
+          create: (_) => sl<PotListBloc>()..add(PotListEvent.init()),
+          child: _Layout(),
+        ),
       ),
     );
   }
