@@ -56,7 +56,6 @@ class _Layout extends StatelessWidget {
                           PotListEvent.search(date: date),
                         ),
                   ),
-                  // _Date(),
                 ],
               ),
             ),
@@ -143,25 +142,6 @@ class _EmptyScreen extends StatelessWidget {
           ],
         ),
       ],
-    );
-  }
-}
-
-class _Date extends StatefulWidget {
-  const _Date();
-
-  @override
-  State<_Date> createState() => _DateState();
-}
-
-class _DateState extends State<_Date> {
-  DateTime? _selectedDate;
-
-  @override
-  Widget build(BuildContext context) {
-    return DateSelect(
-      selectedDate: _selectedDate,
-      onSelected: (date) => setState(() => _selectedDate = date),
     );
   }
 }
