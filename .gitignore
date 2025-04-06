@@ -48,6 +48,8 @@ app.*.map.json
 gen/
 *.g.dart
 *.gr.dart
+*.freezed.dart
+locator.config.dart
 
 # Environment variables
 .env

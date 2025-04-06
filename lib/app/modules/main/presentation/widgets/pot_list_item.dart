@@ -1,14 +1,20 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:pot_g/app/modules/common/presentation/extensions/date_time.dart';
+import 'package:pot_g/app/modules/main/domain/entities/pot_entity.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
 
 class PotListItem extends StatelessWidget {
-  const PotListItem({super.key});
+  const PotListItem({super.key, required this.pot});
+
+  final PotEntity pot;
 
   @override
   Widget build(BuildContext context) {
+    final disabled = pot.current == pot.total;
     return Container(
       height: 88,
       decoration: BoxDecoration(
@@ -33,7 +39,7 @@ class PotListItem extends StatelessWidget {
           Container(
             width: 64,
             decoration: BoxDecoration(
-              color: Palette.lightGrey,
+              color: disabled ? Palette.white : Palette.lightGrey,
               borderRadius: BorderRadius.horizontal(left: Radius.circular(10)),
             ),
             child: Column(
@@ -41,13 +47,15 @@ class PotListItem extends StatelessWidget {
               children: [
                 Text(
                   '지송',
-                  style: TextStyles.title3.copyWith(color: Palette.textGrey),
+                  style: TextStyles.title3.copyWith(
+                    color: disabled ? Palette.grey : Palette.textGrey,
+                  ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   '001',
                   style: TextStyles.description.copyWith(
-                    color: Palette.textGrey,
+                    color: disabled ? Palette.grey : Palette.textGrey,
                   ),
                 ),
               ],
@@ -64,22 +72,47 @@ class PotListItem extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '3/12 (금)',
+                        DateFormat.Md().add_E().format(pot.startsAt),
                         style: TextStyles.caption.copyWith(
-                          color: Palette.textGrey,
+                          color: disabled ? Palette.grey : Palette.textGrey,
                         ),
                       ),
                       const SizedBox(height: 8),
-                      Text(
-                        '13:10~14:00',
-                        style: TextStyles.title1.copyWith(color: Palette.dark),
+                      DefaultTextStyle.merge(
+                        style: TextStyles.title1.copyWith(
+                          color: disabled ? Palette.grey : Palette.dark,
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(DateFormat.Hm().format(pot.startsAt)),
+                            Text('~'),
+                            Text(DateFormat.Hm().format(pot.endsAt)),
+                            if (!pot.startsAt.isSameDay(pot.endsAt))
+                              Text(
+                                'D+1',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                  height: 0.66,
+                                  letterSpacing: -0.025 * 12,
+                                  color:
+                                      disabled
+                                          ? Palette.grey
+                                          : Palette.textGrey,
+                                ),
+                              ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
                   Spacer(),
                   Text(
-                    '1/4',
-                    style: TextStyles.title1.copyWith(color: Palette.primary),
+                    '${pot.current}/${pot.total}',
+                    style: TextStyles.title1.copyWith(
+                      color: disabled ? Palette.grey : Palette.primary,
+                    ),
                   ),
                 ],
               ),
