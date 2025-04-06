@@ -28,10 +28,7 @@ class PotAppBar extends StatelessWidget implements PreferredSizeWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            AspectRatio(
-              aspectRatio: 1,
-              child: Container(color: Palette.primary),
-            ),
+            AspectRatio(aspectRatio: 1, child: Assets.logo.color.image()),
             const SizedBox(width: 4),
             Text(
               '팟쥐',
