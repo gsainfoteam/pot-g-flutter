@@ -1,0 +1,3 @@
+storage_mode("git")
+type("development")
+app_identifier(["me.gistory.PotG"])
