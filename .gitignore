@@ -56,3 +56,6 @@ locator.config.dart
 
 # Fastlane
 */fastlane/report.xml
+
+# Firebase
+firebase_options.dart
