@@ -38,36 +38,72 @@ class _Layout extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+        child: Stack(
           children: [
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-              color: Palette.white,
-              child: Column(
-                children: [
-                  PathSelect(routes: [], onSelected: (_) {}),
-                  const SizedBox(height: 15),
-                  DateSelect(
-                    onSelected:
-                        (date) => context.read<PotListBloc>().add(
-                          PotListEvent.search(date: date),
-                        ),
-                  ),
-                ],
+              color: Palette.lightGrey,
+              child: BlocBuilder<PotListBloc, PotListState>(
+                builder:
+                    (context, state) =>
+                        state.pots.isEmpty
+                            ? _EmptyScreen()
+                            : _ListView(pots: state.pots),
               ),
             ),
-            Expanded(
-              child: Container(
-                color: Palette.lightGrey,
-                child: BlocBuilder<PotListBloc, PotListState>(
-                  builder:
-                      (context, state) =>
-                          state.pots.isEmpty
-                              ? _EmptyScreen()
-                              : _ListView(pots: state.pots),
-                ),
-              ),
+            DraggableScrollableSheet(
+              snap: true,
+              minChildSize: 0.06,
+              maxChildSize: 0.8,
+              builder:
+                  (context, scrollController) => Container(
+                    decoration: BoxDecoration(
+                      color: Palette.white,
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(20),
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          offset: Offset(3, -2),
+                          blurRadius: 8,
+                          color: Color(0x0d000000),
+                        ),
+                        BoxShadow(
+                          offset: Offset(-3, -2),
+                          blurRadius: 8,
+                          color: Color(0x0d000000),
+                        ),
+                      ],
+                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 16),
+                    child: SingleChildScrollView(
+                      controller: scrollController,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            padding: EdgeInsets.symmetric(vertical: 16),
+                            child: Container(
+                              width: 40,
+                              height: 4,
+                              decoration: BoxDecoration(
+                                color: Palette.grey,
+                                borderRadius: BorderRadius.circular(100),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 15),
+                          PathSelect(routes: [], onSelected: (_) {}),
+                          const SizedBox(height: 15),
+                          DateSelect(
+                            onSelected:
+                                (date) => context.read<PotListBloc>().add(
+                                  PotListEvent.search(date: date),
+                                ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
             ),
           ],
         ),
