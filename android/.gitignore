@@ -12,3 +12,10 @@ GeneratedPluginRegistrant.java
 key.properties
 **/*.keystore
 **/*.jks
+
+# Fastlane
+google-play-service-account.json
+fastlane/.crashlytics
+
+# Firebase
+app/google-services.json
