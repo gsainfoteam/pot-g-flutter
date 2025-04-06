@@ -5,7 +5,6 @@ import 'package:pot_g/app/di/locator.dart';
 import 'package:pot_g/app/modules/common/presentation/extensions/toast.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_app_bar.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_button.dart';
-import 'package:pot_g/app/modules/common/presentation/widgets/pot_icon_button.dart';
 import 'package:pot_g/app/modules/main/domain/entities/pot_entity.dart';
 import 'package:pot_g/app/modules/main/presentation/bloc/pot_list_bloc.dart';
 import 'package:pot_g/app/modules/main/presentation/widgets/date_select.dart';
@@ -39,12 +38,7 @@ class _Layout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PotAppBar(
-        actions: [
-          PotIconButton(icon: Assets.icons.addPot.svg(), onPressed: () {}),
-          PotIconButton(icon: Assets.icons.userCircle.svg(), onPressed: () {}),
-        ],
-      ),
+      appBar: PotAppBar(),
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -95,15 +89,21 @@ class _ListView extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
         child: Column(
-          children:
-              pots.indexed
-                  .expand(
-                    (element) => [
-                      if (element.$1 != 0) const SizedBox(height: 15),
-                      PotListItem(pot: element.$2),
-                    ],
-                  )
-                  .toList(),
+          children: [
+            ...pots.indexed.expand(
+              (element) => [
+                PotListItem(pot: element.$2),
+                const SizedBox(height: 15),
+              ],
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 8, bottom: 32),
+              child: Text(
+                '모든 팟을 확인하셨습니다',
+                style: TextStyles.description.copyWith(color: Palette.grey),
+              ),
+            ),
+          ],
         ),
       ),
     );
