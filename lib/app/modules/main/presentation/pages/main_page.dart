@@ -2,6 +2,7 @@ import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pot_g/app/di/locator.dart';
+import 'package:pot_g/app/modules/common/presentation/extensions/toast.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_app_bar.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_button.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_icon_button.dart';
@@ -22,7 +23,12 @@ class MainPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => sl<PotListBloc>()..add(PotListEvent.search()),
-      child: _Layout(),
+      child: BlocListener<PotListBloc, PotListState>(
+        listenWhen:
+            (prev, curr) => prev.error != curr.error && curr.error != null,
+        listener: (context, state) => context.showToast(state.error!),
+        child: _Layout(),
+      ),
     );
   }
 }

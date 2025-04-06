@@ -16,8 +16,12 @@ class PotListBloc extends Bloc<PotListEvent, PotListState> {
 
   Future<void> _onSearch(_Search event, Emitter<PotListState> emit) async {
     emit(state.copyWith(isLoading: true));
-    final pots = await _repository.getPotList(date: event.date);
-    emit(state.copyWith(pots: pots, isLoading: false));
+    try {
+      final pots = await _repository.getPotList(date: event.date);
+      emit(state.copyWith(pots: pots, isLoading: false));
+    } catch (e) {
+      emit(state.copyWith(error: e.toString(), isLoading: false));
+    }
   }
 }
 
@@ -31,5 +35,6 @@ sealed class PotListState with _$PotListState {
   const factory PotListState({
     @Default([]) List<PotEntity> pots,
     @Default(false) bool isLoading,
+    String? error,
   }) = _State;
 }
