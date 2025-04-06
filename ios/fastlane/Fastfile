@@ -1,0 +1,90 @@
+default_platform(:ios)
+
+platform :ios do
+  desc "Test build"
+  lane :test do
+    UI.message("Building for testing")
+    FileUtils.remove_dir(xcarchivePath) if File.directory?(xcarchivePath)
+
+    sh(
+      "flutter", "build", "ipa",
+      "--release",
+      "--no-codesign",
+    )
+    unless File.exist?(xcarchivePath)
+      UI.user_error!("Build failed")
+    end
+  end
+
+  desc "Push a new beta build to TestFlight"
+  lane :internal do
+    setup_ci if ENV['CI']
+    sync_code_signing(type: "appstore", readonly: true)
+    app_store_connect_api_key(duration: 1200) if ENV['CI']
+
+    pubspec = YAML.load_file("../../pubspec.yaml")
+    build_number = latest_testflight_build_number + 1
+    version_string = "#{pubspec["version"]} (#{build_number})"
+    UI.message("Building #{pubspec["name"]} #{version_string}")
+
+    exportOptionsFilePath = "#{Tempfile.new('exportOptions').path}.plist"
+    File.write(exportOptionsFilePath, {
+      method: "app-store",
+      uploadBitcode: false,
+      provisioningProfiles: lane_context[SharedValues::MATCH_PROVISIONING_PROFILE_MAPPING],
+    }.to_plist)
+
+    sh(
+      "flutter", "build", "ipa",
+      "--obfuscate",
+      "--split-debug-info=debug-info",
+      "--release",
+      "--build-number=#{build_number}",
+      "--export-options-plist=#{exportOptionsFilePath}",
+    )
+    upload_to_testflight(
+      ipa: ipaPath,
+      skip_waiting_for_build_processing: ENV['CI'],
+    )
+    slack(
+      payload: {
+        "Build Date" => Time.now.to_s,
+        "Build Number" => build_number,
+      }
+    ) if ENV['CI']
+  ensure
+    File.delete(exportOptionsFilePath) if File.exist?(exportOptionsFilePath)
+  end
+
+  def ipaPath
+    name = get_info_plist_value(path: "./Runner/Info.plist", key: "CFBundleName")
+    return "../build/ios/ipa/#{name}.ipa"
+  end
+
+  def xcarchivePath
+    return "../../build/ios/archive/Runner.xcarchive"
+  end
+
+  lane :production do
+    app_store_connect_api_key(duration: 1200) if ENV['CI']
+    latest_testflight_build_number
+    deliver(
+      app_version: lane_context[SharedValues::LATEST_TESTFLIGHT_VERSION],
+      submit_for_review: true,
+      automatic_release: true,
+      force: true,
+      skip_binary_upload: true,
+      skip_screenshots: true,
+      precheck_include_in_app_purchases: ENV['CI'] ? false : true,
+      submission_information: {
+        add_id_info_uses_idfa: false,
+      },
+      reject_if_possible: true,
+    )
+    slack(
+      payload: {
+        "Promoted At" => Time.now.to_s,
+      }
+    ) if ENV['CI']
+  end
+end
