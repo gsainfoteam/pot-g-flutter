@@ -48,3 +48,6 @@ app.*.map.json
 gen/
 *.g.dart
 *.gr.dart
+
+# Environment variables
+.env
