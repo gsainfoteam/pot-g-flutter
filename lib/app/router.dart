@@ -7,6 +7,6 @@ class AppRouter extends RootStackRouter {
   List<AutoRoute> get routes => [
     RedirectRoute(path: '/', redirectTo: '/splash'),
     AutoRoute(path: '/splash', page: SplashRoute.page),
-    AutoRoute(path: '/main', page: MainRoute.page),
+    AutoRoute(path: '/main', page: MainBottomNavigationRoute.page),
   ];
 }
