@@ -35,12 +35,13 @@ platform :android do
 
     sh("firebase", "crashlytics:symbols:upload", "--app=#{android_app_id}", "../../#{debug_info_path}")
 
-    symbols_path = File.expand_path("../../build/app/intermediates/merged_native_libs/release/out/lib")
+    symbols_path = File.expand_path("../../build/app/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib")
     Dir.chdir(symbols_path) do
       sh("zip", "-r", "native_symbol.zip", ".")
     end
 
     upload_to_play_store(
+      release_status: "draft",  # TODO: remove this when ready
       aab: "../build/app/outputs/bundle/release/app-release.aab",
       track: "internal",
       version_name: version_string,
