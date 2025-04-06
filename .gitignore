@@ -50,3 +50,6 @@ gen/
 *.gr.dart
 *.freezed.dart
 locator.config.dart
+
+# Environment variables
+.env
