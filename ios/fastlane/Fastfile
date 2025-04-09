@@ -42,6 +42,7 @@ platform :ios do
       "--build-number=#{build_number}",
       "--export-options-plist=#{exportOptionsFilePath}",
     )
+    temporary_fix_ios_post_build
     upload_to_testflight(
       ipa: ipaPath,
       skip_waiting_for_build_processing: ENV['CI'],
@@ -86,5 +87,14 @@ platform :ios do
         "Promoted At" => Time.now.to_s,
       }
     ) if ENV['CI']
+  end
+
+  desc "Temporary workaround to remove unwanted files from the IPA"
+  private_lane :temporary_fix_ios_post_build do
+    # Workaround to remove ._Symbols from ipa.
+    sh("pwd")
+    ipa_location = lane_context[SharedValues::IPA_OUTPUT_PATH] || ipaPath
+    sh("unzip -l ../#{ipa_location} | grep ._Symbols || true")
+    sh("zip -d ../#{ipa_location} ._Symbols/ || true")
   end
 end
