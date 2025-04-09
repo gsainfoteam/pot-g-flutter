@@ -10,19 +10,21 @@ class PathSelect extends StatefulWidget {
     required this.routes,
     this.selectedRoute,
     required this.onSelected,
+    required this.isOpen,
+    required this.onOpenChanged,
   });
 
   final List<RouteEntity> routes;
   final RouteEntity? selectedRoute;
   final void Function(RouteEntity?) onSelected;
+  final bool isOpen;
+  final void Function(bool) onOpenChanged;
 
   @override
   State<PathSelect> createState() => _PathSelectState();
 }
 
 class _PathSelectState extends State<PathSelect> {
-  bool _isOpen = false;
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -31,7 +33,7 @@ class _PathSelectState extends State<PathSelect> {
         border: Border.all(
           width: 1.5,
           color:
-              _isOpen
+              widget.isOpen
                   ? Palette.primary
                   : widget.selectedRoute == null
                   ? Palette.borderGrey
@@ -40,14 +42,14 @@ class _PathSelectState extends State<PathSelect> {
         borderRadius: BorderRadius.all(Radius.circular(10)),
       ),
       child:
-          _isOpen
+          widget.isOpen
               ? Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   _Selector(
                     title: '전체 노선',
                     onSelected: () {
-                      setState(() => _isOpen = false);
+                      widget.onOpenChanged(false);
                       widget.onSelected(null);
                     },
                   ),
@@ -56,7 +58,7 @@ class _PathSelectState extends State<PathSelect> {
                       title: route.toString(),
                       selected: widget.selectedRoute == route,
                       onSelected: () {
-                        setState(() => _isOpen = false);
+                        widget.onOpenChanged(false);
                         widget.onSelected(route);
                       },
                     ),
@@ -65,7 +67,7 @@ class _PathSelectState extends State<PathSelect> {
               )
               : GestureDetector(
                 behavior: HitTestBehavior.opaque,
-                onTap: () => setState(() => _isOpen = true),
+                onTap: () => widget.onOpenChanged(true),
                 child: Container(
                   height: 48,
                   padding: EdgeInsets.all(10) + EdgeInsets.only(left: 6),

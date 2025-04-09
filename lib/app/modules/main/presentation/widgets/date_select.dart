@@ -8,17 +8,24 @@ import 'package:pot_g/app/values/text_styles.dart';
 import 'package:pot_g/gen/assets.gen.dart';
 
 class DateSelect extends StatefulWidget {
-  const DateSelect({super.key, this.selectedDate, required this.onSelected});
+  const DateSelect({
+    super.key,
+    this.selectedDate,
+    required this.onSelected,
+    required this.isOpen,
+    required this.onOpenChanged,
+  });
 
   final DateTime? selectedDate;
   final void Function(DateTime) onSelected;
+  final bool isOpen;
+  final void Function(bool) onOpenChanged;
 
   @override
   State<DateSelect> createState() => _DateSelectState();
 }
 
 class _DateSelectState extends State<DateSelect> {
-  bool _isOpen = false;
   late DateTime? _selectedDate = widget.selectedDate;
 
   @override
@@ -37,7 +44,7 @@ class _DateSelectState extends State<DateSelect> {
         border: Border.all(
           width: 1.5,
           color:
-              _isOpen
+              widget.isOpen
                   ? Palette.primary
                   : _selectedDate == null
                   ? Palette.borderGrey
@@ -46,7 +53,7 @@ class _DateSelectState extends State<DateSelect> {
         borderRadius: BorderRadius.all(Radius.circular(10)),
       ),
       child:
-          _isOpen
+          widget.isOpen
               ? Padding(
                 padding: const EdgeInsets.all(15) - EdgeInsets.only(top: 5),
                 child: Column(
@@ -66,7 +73,7 @@ class _DateSelectState extends State<DateSelect> {
                               _selectedDate == null
                                   ? null
                                   : () {
-                                    setState(() => _isOpen = false);
+                                    widget.onOpenChanged(false);
                                     widget.onSelected(_selectedDate!);
                                   },
                           variant: PotButtonVariant.emphasized,
@@ -80,7 +87,7 @@ class _DateSelectState extends State<DateSelect> {
               )
               : GestureDetector(
                 behavior: HitTestBehavior.opaque,
-                onTap: () => setState(() => _isOpen = true),
+                onTap: () => widget.onOpenChanged(true),
                 child: Container(
                   height: 48,
                   padding: EdgeInsets.all(10) + EdgeInsets.only(left: 6),
@@ -105,7 +112,7 @@ class _DateSelectState extends State<DateSelect> {
                                   ),
                                 ),
                       ),
-                      if (!_isOpen)
+                      if (!widget.isOpen)
                         Assets.icons.calendar.svg(
                           colorFilter: ColorFilter.mode(
                             Palette.dark,

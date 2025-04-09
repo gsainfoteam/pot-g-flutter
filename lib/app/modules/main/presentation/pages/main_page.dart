@@ -12,6 +12,7 @@ import 'package:pot_g/app/modules/main/presentation/widgets/pot_list_item.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
 import 'package:pot_g/gen/assets.gen.dart';
+import 'package:sheet/sheet.dart';
 
 @RoutePage()
 class MainPage extends StatelessWidget {
@@ -31,8 +32,17 @@ class MainPage extends StatelessWidget {
   }
 }
 
-class _Layout extends StatelessWidget {
+class _Layout extends StatefulWidget {
   const _Layout();
+
+  @override
+  State<_Layout> createState() => _LayoutState();
+}
+
+class _LayoutState extends State<_Layout> {
+  final _sheetController = SheetController();
+  bool _pathSelectOpened = false;
+  bool _dateSelectOpened = false;
 
   @override
   Widget build(BuildContext context) {
@@ -40,70 +50,107 @@ class _Layout extends StatelessWidget {
       body: SafeArea(
         child: Stack(
           children: [
-            Container(
-              color: Palette.lightGrey,
-              child: BlocBuilder<PotListBloc, PotListState>(
-                builder:
-                    (context, state) =>
-                        state.pots.isEmpty
-                            ? _EmptyScreen()
-                            : _ListView(pots: state.pots),
+            Positioned.fill(
+              child: Container(
+                color: Palette.lightGrey,
+                child: BlocBuilder<PotListBloc, PotListState>(
+                  builder:
+                      (context, state) =>
+                          state.pots.isEmpty
+                              ? _EmptyScreen()
+                              : _ListView(pots: state.pots),
+                ),
               ),
             ),
-            DraggableScrollableSheet(
-              snap: true,
-              minChildSize: 0.06,
-              maxChildSize: 0.8,
-              builder:
-                  (context, scrollController) => Container(
-                    decoration: BoxDecoration(
-                      color: Palette.white,
-                      borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(20),
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          offset: Offset(3, -2),
-                          blurRadius: 8,
-                          color: Color(0x0d000000),
-                        ),
-                        BoxShadow(
-                          offset: Offset(-3, -2),
-                          blurRadius: 8,
-                          color: Color(0x0d000000),
-                        ),
-                      ],
+            Sheet(
+              minExtent: 36,
+              controller: _sheetController,
+              // physics: SnapSheetPhysics(
+              //   parent: BouncingSheetPhysics(),
+              //   stops: [0, 1],
+              // ),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Palette.white,
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                  boxShadow: [
+                    BoxShadow(
+                      offset: Offset(3, -2),
+                      blurRadius: 8,
+                      color: Color(0x0d000000),
                     ),
-                    padding: EdgeInsets.symmetric(horizontal: 16),
-                    child: SingleChildScrollView(
-                      controller: scrollController,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            padding: EdgeInsets.symmetric(vertical: 16),
-                            child: Container(
-                              width: 40,
-                              height: 4,
-                              decoration: BoxDecoration(
-                                color: Palette.grey,
-                                borderRadius: BorderRadius.circular(100),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 15),
-                          PathSelect(routes: [], onSelected: (_) {}),
-                          const SizedBox(height: 15),
-                          DateSelect(
-                            onSelected:
-                                (date) => context.read<PotListBloc>().add(
-                                  PotListEvent.search(date: date),
-                                ),
-                          ),
-                        ],
+                    BoxShadow(
+                      offset: Offset(-3, -2),
+                      blurRadius: 8,
+                      color: Color(0x0d000000),
+                    ),
+                  ],
+                ),
+                padding:
+                    EdgeInsets.symmetric(horizontal: 16) +
+                    EdgeInsets.only(bottom: 20),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.symmetric(vertical: 16),
+                      child: Container(
+                        width: 40,
+                        height: 4,
+                        decoration: BoxDecoration(
+                          color: Palette.grey,
+                          borderRadius: BorderRadius.circular(100),
+                        ),
                       ),
                     ),
-                  ),
+                    const SizedBox(height: 15),
+                    PathSelect(
+                      routes: [],
+                      onSelected: (_) {},
+                      isOpen: _pathSelectOpened,
+                      onOpenChanged:
+                          (value) => setState(() {
+                            _pathSelectOpened = value;
+                            _dateSelectOpened = false;
+                            print(_sheetController.offset);
+                            if (value) {
+                              // post frame
+                              WidgetsBinding.instance.addPostFrameCallback((_) {
+                                _sheetController.animateTo(
+                                  500,
+                                  duration: Duration(milliseconds: 200),
+                                  curve: Curves.easeInOut,
+                                );
+                              });
+                            }
+                          }),
+                    ),
+                    const SizedBox(height: 15),
+                    DateSelect(
+                      isOpen: _dateSelectOpened,
+                      onOpenChanged:
+                          (value) => setState(() {
+                            _dateSelectOpened = value;
+                            _pathSelectOpened = false;
+                            if (value) {
+                              // post frame
+                              WidgetsBinding.instance.addPostFrameCallback((_) {
+                                _sheetController.animateTo(
+                                  500,
+                                  duration: Duration(milliseconds: 200),
+                                  curve: Curves.easeInOut,
+                                );
+                              });
+                            }
+                          }),
+                      onSelected:
+                          (date) => context.read<PotListBloc>().add(
+                            PotListEvent.search(date: date),
+                          ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ],
         ),
@@ -120,25 +167,28 @@ class _ListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-        child: Column(
-          children: [
-            ...pots.indexed.expand(
-              (element) => [
-                PotListItem(pot: element.$2),
-                const SizedBox(height: 15),
-              ],
+      padding: EdgeInsets.fromLTRB(
+        16,
+        20,
+        16,
+        MediaQuery.of(context).size.height * 0.4,
+      ),
+      child: Column(
+        children: [
+          ...pots.indexed.expand(
+            (element) => [
+              PotListItem(pot: element.$2),
+              const SizedBox(height: 15),
+            ],
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 8, bottom: 32),
+            child: Text(
+              '모든 팟을 확인하셨습니다',
+              style: TextStyles.description.copyWith(color: Palette.grey),
             ),
-            Padding(
-              padding: EdgeInsets.only(top: 8, bottom: 32),
-              child: Text(
-                '모든 팟을 확인하셨습니다',
-                style: TextStyles.description.copyWith(color: Palette.grey),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -149,39 +199,44 @@ class _EmptyScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Assets.icons.fofoSad.svg(
-          colorFilter: ColorFilter.mode(Palette.grey, BlendMode.srcIn),
-        ),
-        const SizedBox(height: 16),
-        Text(
-          '해당 조건의 택시 팟이\n존재하지 않습니다',
-          style: TextStyles.description.copyWith(color: Palette.textGrey),
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: 24),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            PotButton(
-              onPressed: () {},
-              size: PotButtonSize.medium,
-              prefixIcon: Assets.icons.addPot.svg(
-                colorFilter: ColorFilter.mode(
-                  Palette.textGrey,
-                  BlendMode.srcIn,
+    return Padding(
+      padding: EdgeInsets.only(
+        bottom: MediaQuery.of(context).size.height * 0.4,
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Assets.icons.fofoSad.svg(
+            colorFilter: ColorFilter.mode(Palette.grey, BlendMode.srcIn),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            '해당 조건의 택시 팟이\n존재하지 않습니다',
+            style: TextStyles.description.copyWith(color: Palette.textGrey),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 24),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              PotButton(
+                onPressed: () {},
+                size: PotButtonSize.medium,
+                prefixIcon: Assets.icons.addPot.svg(
+                  colorFilter: ColorFilter.mode(
+                    Palette.textGrey,
+                    BlendMode.srcIn,
+                  ),
+                ),
+                child: Text(
+                  '새 팟 만들기',
+                  style: TextStyles.title4.copyWith(color: Palette.textGrey),
                 ),
               ),
-              child: Text(
-                '새 팟 만들기',
-                style: TextStyles.title4.copyWith(color: Palette.textGrey),
-              ),
-            ),
-          ],
-        ),
-      ],
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
