@@ -105,10 +105,12 @@ class MockPotListRepository implements PotListRepository {
     DateTime? date,
     RouteEntity? route,
   }) async {
+    final effectiveList =
+        _list.expand((e) => [e, e, e, e, e, e, e, e, e]).toList();
     if (date == null) {
-      return _list;
+      return effectiveList;
     }
-    return _list
+    return effectiveList
         .where(
           (pot) => pot.startsAt.isSameDay(date) || pot.endsAt.isSameDay(date),
         )
