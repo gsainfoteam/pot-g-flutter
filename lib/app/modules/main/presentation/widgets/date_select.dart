@@ -52,77 +52,80 @@ class _DateSelectState extends State<DateSelect> {
         ),
         borderRadius: BorderRadius.all(Radius.circular(10)),
       ),
-      child:
-          widget.isOpen
-              ? Padding(
-                padding: const EdgeInsets.all(15) - EdgeInsets.only(top: 5),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    _Calendar(
-                      selectedDate: _selectedDate,
-                      onSelected:
-                          (date) => setState(() => _selectedDate = date),
-                    ),
-                    SizedBox(height: 8),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        PotButton(
-                          onPressed:
-                              _selectedDate == null
-                                  ? null
-                                  : () {
-                                    widget.onOpenChanged(false);
-                                    widget.onSelected(_selectedDate!);
-                                  },
-                          variant: PotButtonVariant.emphasized,
-                          size: PotButtonSize.small,
-                          child: Text('선택'),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              )
-              : GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTap: () => widget.onOpenChanged(true),
-                child: Container(
-                  height: 48,
-                  padding: EdgeInsets.all(10) + EdgeInsets.only(left: 6),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child:
-                            _selectedDate == null
-                                ? Text(
-                                  '전체 날짜',
-                                  style: TextStyles.body.copyWith(
-                                    color: Palette.textGrey,
-                                  ),
-                                )
-                                : Text(
-                                  DateFormat.yMd().add_E().format(
-                                    _selectedDate!,
-                                  ),
-                                  style: TextStyles.body.copyWith(
-                                    color: Palette.dark,
-                                  ),
-                                ),
-                      ),
-                      if (!widget.isOpen)
-                        Assets.icons.calendar.svg(
-                          colorFilter: ColorFilter.mode(
-                            Palette.dark,
-                            BlendMode.srcIn,
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
+      child: AnimatedCrossFade(
+        duration: Duration(milliseconds: 200),
+        sizeCurve: Curves.easeInOut,
+        crossFadeState:
+            widget.isOpen
+                ? CrossFadeState.showFirst
+                : CrossFadeState.showSecond,
+        firstChild: Padding(
+          padding: const EdgeInsets.all(15) - EdgeInsets.only(top: 5),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _Calendar(
+                selectedDate: _selectedDate,
+                onSelected: (date) => setState(() => _selectedDate = date),
               ),
+              SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  PotButton(
+                    onPressed:
+                        _selectedDate == null
+                            ? null
+                            : () {
+                              widget.onOpenChanged(false);
+                              widget.onSelected(_selectedDate!);
+                            },
+                    variant: PotButtonVariant.emphasized,
+                    size: PotButtonSize.small,
+                    child: Text('선택'),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+        secondChild: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () => widget.onOpenChanged(true),
+          child: Container(
+            height: 48,
+            padding: EdgeInsets.all(10) + EdgeInsets.only(left: 6),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  child:
+                      _selectedDate == null
+                          ? Text(
+                            '전체 날짜',
+                            style: TextStyles.body.copyWith(
+                              color: Palette.textGrey,
+                            ),
+                          )
+                          : Text(
+                            DateFormat.yMd().add_E().format(_selectedDate!),
+                            style: TextStyles.body.copyWith(
+                              color: Palette.dark,
+                            ),
+                          ),
+                ),
+                if (!widget.isOpen)
+                  Assets.icons.calendar.svg(
+                    colorFilter: ColorFilter.mode(
+                      Palette.dark,
+                      BlendMode.srcIn,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
