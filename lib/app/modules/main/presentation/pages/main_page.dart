@@ -3,12 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pot_g/app/di/locator.dart';
 import 'package:pot_g/app/modules/common/presentation/extensions/toast.dart';
-import 'package:pot_g/app/modules/common/presentation/widgets/pot_app_bar.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_button.dart';
-import 'package:pot_g/app/modules/common/presentation/widgets/pot_icon_button.dart';
 import 'package:pot_g/app/modules/main/domain/entities/pot_entity.dart';
 import 'package:pot_g/app/modules/main/presentation/bloc/pot_list_bloc.dart';
 import 'package:pot_g/app/modules/main/presentation/widgets/date_select.dart';
+import 'package:pot_g/app/modules/main/presentation/widgets/panel_draggable.dart';
 import 'package:pot_g/app/modules/main/presentation/widgets/path_select.dart';
 import 'package:pot_g/app/modules/main/presentation/widgets/pot_list_item.dart';
 import 'package:pot_g/app/values/palette.dart';
@@ -33,49 +32,119 @@ class MainPage extends StatelessWidget {
   }
 }
 
-class _Layout extends StatelessWidget {
+class _Layout extends StatefulWidget {
   const _Layout();
+
+  @override
+  State<_Layout> createState() => _LayoutState();
+}
+
+class _LayoutState extends State<_Layout> {
+  bool _pathSelectOpened = false;
+  bool _dateSelectOpened = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PotAppBar(
-        actions: [
-          PotIconButton(icon: Assets.icons.addPot.svg(), onPressed: () {}),
-          PotIconButton(icon: Assets.icons.userCircle.svg(), onPressed: () {}),
-        ],
-      ),
       body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-              color: Palette.white,
-              child: Column(
+        child: LayoutBuilder(
+          builder:
+              (context, constraints) => Stack(
                 children: [
-                  PathSelect(routes: [], onSelected: (_) {}),
-                  const SizedBox(height: 15),
-                  DateSelect(
-                    onSelected:
-                        (date) => context.read<PotListBloc>().add(
-                          PotListEvent.search(date: date),
-                        ),
+                  Positioned.fill(
+                    child: Container(
+                      color: Palette.lightGrey,
+                      child: BlocBuilder<PotListBloc, PotListState>(
+                        builder:
+                            (context, state) =>
+                                state.pots.isEmpty
+                                    ? _EmptyScreen()
+                                    : _ListView(pots: state.pots),
+                      ),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: PanelDraggable(
+                      builder:
+                          (context, notifySize) =>
+                              _buildSheet(notifySize, context),
+                    ),
                   ),
                 ],
               ),
-            ),
-            Expanded(
+        ),
+      ),
+    );
+  }
+
+  Container _buildSheet(VoidCallback notifySize, BuildContext context) {
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: Palette.white,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        boxShadow: [
+          BoxShadow(
+            offset: Offset(3, -2),
+            blurRadius: 8,
+            color: Color(0x0d000000),
+          ),
+          BoxShadow(
+            offset: Offset(-3, -2),
+            blurRadius: 8,
+            color: Color(0x0d000000),
+          ),
+        ],
+      ),
+      child: Padding(
+        padding: EdgeInsets.only(left: 16, right: 16, bottom: 20),
+        child: Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 16),
               child: Container(
-                color: Palette.lightGrey,
-                child: BlocBuilder<PotListBloc, PotListState>(
-                  builder:
-                      (context, state) =>
-                          state.pots.isEmpty
-                              ? _EmptyScreen()
-                              : _ListView(pots: state.pots),
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Palette.grey,
+                  borderRadius: BorderRadius.circular(100),
                 ),
               ),
+            ),
+            const SizedBox(height: 15),
+            PathSelect(
+              routes: [],
+              onSelected: (_) {},
+              isOpen: _pathSelectOpened,
+              onOpenChanged:
+                  (value) => setState(() {
+                    _pathSelectOpened = value;
+                    _dateSelectOpened = false;
+                    if (value) {
+                      WidgetsBinding.instance.addPostFrameCallback(
+                        (_) => notifySize(),
+                      );
+                    }
+                  }),
+            ),
+            const SizedBox(height: 15),
+            DateSelect(
+              isOpen: _dateSelectOpened,
+              onOpenChanged:
+                  (value) => setState(() {
+                    _dateSelectOpened = value;
+                    _pathSelectOpened = false;
+                    if (value) {
+                      WidgetsBinding.instance.addPostFrameCallback(
+                        (_) => notifySize(),
+                      );
+                    }
+                  }),
+              onSelected:
+                  (date) => context.read<PotListBloc>().add(
+                    PotListEvent.search(date: date),
+                  ),
             ),
           ],
         ),
@@ -86,25 +155,32 @@ class _Layout extends StatelessWidget {
 
 class _ListView extends StatelessWidget {
   const _ListView({required this.pots});
-
   final List<PotEntity> pots;
-
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-        child: Column(
-          children:
-              pots.indexed
-                  .expand(
-                    (element) => [
-                      if (element.$1 != 0) const SizedBox(height: 15),
-                      PotListItem(pot: element.$2),
-                    ],
-                  )
-                  .toList(),
-        ),
+      padding: EdgeInsets.fromLTRB(
+        16,
+        20,
+        16,
+        MediaQuery.of(context).size.height * 0.4,
+      ),
+      child: Column(
+        children: [
+          ...pots.indexed.expand(
+            (element) => [
+              PotListItem(pot: element.$2),
+              const SizedBox(height: 15),
+            ],
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 8, bottom: 32),
+            child: Text(
+              '모든 팟을 확인하셨습니다',
+              style: TextStyles.description.copyWith(color: Palette.grey),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -112,42 +188,46 @@ class _ListView extends StatelessWidget {
 
 class _EmptyScreen extends StatelessWidget {
   const _EmptyScreen();
-
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Assets.icons.fofoSad.svg(
-          colorFilter: ColorFilter.mode(Palette.grey, BlendMode.srcIn),
-        ),
-        const SizedBox(height: 16),
-        Text(
-          '해당 조건의 택시 팟이\n존재하지 않습니다',
-          style: TextStyles.description.copyWith(color: Palette.textGrey),
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: 24),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            PotButton(
-              onPressed: () {},
-              size: PotButtonSize.medium,
-              prefixIcon: Assets.icons.addPot.svg(
-                colorFilter: ColorFilter.mode(
-                  Palette.textGrey,
-                  BlendMode.srcIn,
+    return Padding(
+      padding: EdgeInsets.only(
+        bottom: MediaQuery.of(context).size.height * 0.4,
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Assets.icons.fofoSad.svg(
+            colorFilter: ColorFilter.mode(Palette.grey, BlendMode.srcIn),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            '해당 조건의 택시 팟이\n존재하지 않습니다',
+            style: TextStyles.description.copyWith(color: Palette.textGrey),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 24),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              PotButton(
+                onPressed: () {},
+                size: PotButtonSize.medium,
+                prefixIcon: Assets.icons.addPot.svg(
+                  colorFilter: ColorFilter.mode(
+                    Palette.textGrey,
+                    BlendMode.srcIn,
+                  ),
+                ),
+                child: Text(
+                  '새 팟 만들기',
+                  style: TextStyles.title4.copyWith(color: Palette.textGrey),
                 ),
               ),
-              child: Text(
-                '새 팟 만들기',
-                style: TextStyles.title4.copyWith(color: Palette.textGrey),
-              ),
-            ),
-          ],
-        ),
-      ],
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
