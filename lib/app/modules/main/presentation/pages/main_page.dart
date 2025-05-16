@@ -121,7 +121,11 @@ class _LayoutState extends State<_Layout> {
                   (value) => setState(() {
                     _pathSelectOpened = value;
                     _dateSelectOpened = false;
-                    if (value) notifySize();
+                    if (value) {
+                      WidgetsBinding.instance.addPostFrameCallback(
+                        (_) => notifySize(),
+                      );
+                    }
                   }),
             ),
             const SizedBox(height: 15),
@@ -131,7 +135,11 @@ class _LayoutState extends State<_Layout> {
                   (value) => setState(() {
                     _dateSelectOpened = value;
                     _pathSelectOpened = false;
-                    if (value) notifySize();
+                    if (value) {
+                      WidgetsBinding.instance.addPostFrameCallback(
+                        (_) => notifySize(),
+                      );
+                    }
                   }),
               onSelected:
                   (date) => context.read<PotListBloc>().add(
