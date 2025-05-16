@@ -2,8 +2,8 @@ import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 
 @RoutePage()
-class EmptyPage extends StatelessWidget {
-  const EmptyPage({super.key});
+class CreatePage extends StatelessWidget {
+  const CreatePage({super.key});
 
   @override
   Widget build(BuildContext context) {
