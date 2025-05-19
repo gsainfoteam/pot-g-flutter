@@ -22,7 +22,12 @@ class OauthAuthRepository implements AuthRepository {
     final token = await _oAuthRepository.getToken();
     await _tokenRepository.saveToken(token.idToken);
     await _tokenRepository.saveRefreshToken(token.refreshToken);
-    return _parseUser(token.idToken);
+    try {
+      return _parseUser(token.idToken);
+    } catch (e) {
+      await _tokenRepository.deleteToken();
+      rethrow;
+    }
   }
 
   @override
@@ -31,13 +36,14 @@ class OauthAuthRepository implements AuthRepository {
     await _oAuthRepository.setRecentLogout();
   }
 
-  static UserEntity _parseUser(String token) {
+  UserEntity _parseUser(String token) {
     final parts = token.split('.');
-    final payload = jsonDecode(utf8.decode(base64Url.decode(parts[1])));
+    final payload = jsonDecode(
+      utf8.decode(base64Url.decode(base64Url.normalize(parts[1]))),
+    );
     return UserEntity(
       email: payload['email'],
       name: payload['name'],
-      studentId: payload['student_id'],
       uuid: payload['sub'],
     );
   }
@@ -45,6 +51,11 @@ class OauthAuthRepository implements AuthRepository {
   @override
   Stream<UserEntity?> get user => _tokenRepository.token.map((token) {
     if (token == null) return null;
-    return _parseUser(token);
+    try {
+      return _parseUser(token);
+    } catch (e) {
+      _tokenRepository.deleteToken();
+      return null;
+    }
   });
 }

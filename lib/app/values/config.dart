@@ -12,8 +12,6 @@ abstract class Config {
   @EnviedField()
   static const String idpBaseUrl = _Config.idpBaseUrl;
   @EnviedField()
-  static const String idpApiBaseUrl = _Config.idpApiBaseUrl;
-  @EnviedField()
   static const String idpRedirectScheme = _Config.idpRedirectScheme;
   @EnviedField()
   static const String idpRedirectUri = _Config.idpRedirectUri;

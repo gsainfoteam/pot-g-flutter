@@ -12,7 +12,10 @@ class Token {
   Token({required this.token, required this.expiredAt});
 }
 
-@Injectable(as: TokenRepository)
+@LazySingleton(
+  as: TokenRepository,
+  dispose: FlutterSecureStorageTokenRepository.dispose,
+)
 class FlutterSecureStorageTokenRepository implements TokenRepository {
   final FlutterSecureStorage _storage;
   final String _tokenKey = 'token';
@@ -48,7 +51,6 @@ class FlutterSecureStorageTokenRepository implements TokenRepository {
     }
   }
 
-  @disposeMethod
   static FutureOr dispose(TokenRepository repository) {
     (repository as FlutterSecureStorageTokenRepository)
       .._subject.close()

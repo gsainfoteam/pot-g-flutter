@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:pot_g/app/di/locator.dart';
+import 'package:pot_g/app/modules/auth/presentation/bloc/auth_bloc.dart';
 import 'package:pot_g/app/router.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/theme.dart';
@@ -38,6 +41,11 @@ class _Providers extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return child;
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => sl<AuthBloc>()..add(AuthEvent.load())),
+      ],
+      child: child,
+    );
   }
 }

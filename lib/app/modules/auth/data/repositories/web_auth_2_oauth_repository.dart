@@ -8,6 +8,7 @@ import 'package:pot_g/app/modules/auth/data/data_sources/remote/oauth_api.dart';
 import 'package:pot_g/app/modules/auth/data/models/token_request_with_code_model.dart';
 import 'package:pot_g/app/modules/auth/domain/entity/token_entity.dart';
 import 'package:pot_g/app/modules/auth/domain/exceptions/invalid_authorization_code_exception.dart';
+import 'package:pot_g/app/modules/auth/domain/exceptions/invalid_authorization_nonce_exception.dart';
 import 'package:pot_g/app/modules/auth/domain/exceptions/invalid_authorization_state_exception.dart';
 import 'package:pot_g/app/modules/auth/domain/repositories/oauth_repository.dart';
 import 'package:pot_g/app/values/config.dart';
@@ -29,13 +30,7 @@ class WebAuth2OauthRepository implements OAuthRepository {
         .encode(sha256.convert(utf8.encode(codeVerifier)).bytes)
         .replaceAll('=', '');
 
-    final scopes = [
-      'profile',
-      'email',
-      'student_id',
-      'offline_access',
-      'openid',
-    ];
+    final scopes = ['profile', 'email', 'offline_access', 'openid'];
     final prompt = recentLogout ? 'login' : 'consent';
     final authorizeUri = Uri(
       scheme: Uri.parse(Config.idpBaseUrl).scheme,
@@ -50,6 +45,7 @@ class WebAuth2OauthRepository implements OAuthRepository {
         'code_challenge': codeChallenge,
         'code_challenge_method': 'S256',
         'prompt': prompt,
+        'nonce': nonce,
       },
     );
 
@@ -75,6 +71,14 @@ class WebAuth2OauthRepository implements OAuthRepository {
     );
 
     setRecentLogout(false);
+
+    final nonceFromToken =
+        jsonDecode(
+          utf8.decode(
+            base64Url.decode(base64Url.normalize(res.idToken.split('.')[1])),
+          ),
+        )['nonce'];
+    if (nonceFromToken != nonce) throw InvalidAuthorizationNonceException();
 
     return TokenEntity(
       accessToken: res.accessToken,
