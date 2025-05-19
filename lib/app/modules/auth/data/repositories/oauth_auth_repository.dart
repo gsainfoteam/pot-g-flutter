@@ -14,8 +14,7 @@ class OauthAuthRepository implements AuthRepository {
   OauthAuthRepository(this._tokenRepository, this._oAuthRepository);
 
   @override
-  Stream<bool> get isSignedIn =>
-      _tokenRepository.token.map((token) => token != null);
+  Stream<bool> get isSignedIn => user.map((user) => user != null);
 
   @override
   Future<UserEntity> signIn() async {
@@ -51,6 +50,11 @@ class OauthAuthRepository implements AuthRepository {
   @override
   Stream<UserEntity?> get user => _tokenRepository.token.map((token) {
     if (token == null) return null;
+    final exp = _tokenRepository.tokenExpiration;
+    if (exp != null && exp.isBefore(DateTime.now())) {
+      _tokenRepository.deleteToken();
+      return null;
+    }
     try {
       return _parseUser(token);
     } catch (e) {
