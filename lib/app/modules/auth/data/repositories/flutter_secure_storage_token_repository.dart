@@ -72,7 +72,8 @@ class FlutterSecureStorageTokenRepository implements TokenRepository {
       _refreshSubject.stream.map((token) => token?.token);
 
   @override
-  DateTime? get refreshTokenExpiration => _refreshSubject.value?.expiredAt;
+  DateTime? get refreshTokenExpiration =>
+      _refreshSubject.valueOrNull?.expiredAt;
 
   @override
   Future<void> saveRefreshToken(
@@ -106,5 +107,5 @@ class FlutterSecureStorageTokenRepository implements TokenRepository {
   Stream<String?> get token => _subject.stream.map((token) => token?.token);
 
   @override
-  DateTime? get tokenExpiration => _subject.value?.expiredAt;
+  DateTime? get tokenExpiration => _subject.valueOrNull?.expiredAt;
 }
