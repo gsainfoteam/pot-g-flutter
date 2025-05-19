@@ -48,18 +48,19 @@ class OauthAuthRepository implements AuthRepository {
   }
 
   @override
-  Stream<UserEntity?> get user => _tokenRepository.token.map((token) {
-    if (token == null) return null;
-    final exp = _tokenRepository.tokenExpiration;
-    if (exp != null && exp.isBefore(DateTime.now())) {
-      _tokenRepository.deleteToken();
-      return null;
-    }
-    try {
-      return _parseUser(token);
-    } catch (e) {
-      _tokenRepository.deleteToken();
-      return null;
-    }
-  });
+  Stream<UserEntity?> get user =>
+      _tokenRepository.token.asyncMap((token) async {
+        if (token == null) return null;
+        final exp = _tokenRepository.tokenExpiration;
+        if (exp != null && exp.isBefore(DateTime.now())) {
+          await _tokenRepository.deleteToken();
+          return null;
+        }
+        try {
+          return _parseUser(token);
+        } catch (e) {
+          await _tokenRepository.deleteToken();
+          return null;
+        }
+      });
 }
