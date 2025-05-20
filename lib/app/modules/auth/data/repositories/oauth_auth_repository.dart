@@ -37,14 +37,21 @@ class OauthAuthRepository implements AuthRepository {
 
   UserEntity _parseUser(String token) {
     final parts = token.split('.');
-    final payload = jsonDecode(
-      utf8.decode(base64Url.decode(base64Url.normalize(parts[1]))),
-    );
-    return UserEntity(
-      email: payload['email'],
-      name: payload['name'],
-      uuid: payload['sub'],
-    );
+    if (parts.length != 3) {
+      throw FormatException('Invalid JWT structure');
+    }
+    try {
+      final payload = jsonDecode(
+        utf8.decode(base64Url.decode(base64Url.normalize(parts[1]))),
+      );
+      return UserEntity(
+        email: payload['email'],
+        name: payload['name'],
+        uuid: payload['sub'],
+      );
+    } catch (e) {
+      throw FormatException('Invalid JWT payload: $e');
+    }
   }
 
   @override
