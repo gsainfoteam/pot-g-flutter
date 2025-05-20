@@ -58,10 +58,12 @@ class FlutterSecureStorageTokenRepository implements TokenRepository {
   Future<void> deleteToken() async {
     _subject.add(null);
     _refreshSubject.add(null);
-    _storage.delete(key: _tokenKey);
-    _storage.delete(key: _expiredAtKey);
-    _storage.delete(key: _refreshTokenKey);
-    _storage.delete(key: _refreshExpiredAtKey);
+    await Future.wait([
+      _storage.delete(key: _tokenKey),
+      _storage.delete(key: _expiredAtKey),
+      _storage.delete(key: _refreshTokenKey),
+      _storage.delete(key: _refreshExpiredAtKey),
+    ]);
   }
 
   @override
