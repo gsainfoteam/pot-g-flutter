@@ -6,6 +6,7 @@ import 'package:injectable/injectable.dart';
 import 'package:nonce/nonce.dart';
 import 'package:pot_g/app/modules/auth/data/data_sources/remote/oauth_api.dart';
 import 'package:pot_g/app/modules/auth/data/models/token_request_with_code_model.dart';
+import 'package:pot_g/app/modules/auth/data/utils/token_helper.dart';
 import 'package:pot_g/app/modules/auth/domain/entity/token_entity.dart';
 import 'package:pot_g/app/modules/auth/domain/exceptions/invalid_authorization_code_exception.dart';
 import 'package:pot_g/app/modules/auth/domain/exceptions/invalid_authorization_nonce_exception.dart';
@@ -72,12 +73,8 @@ class WebAuth2OauthRepository implements OAuthRepository {
 
     setRecentLogout(false);
 
-    final nonceFromToken =
-        jsonDecode(
-          utf8.decode(
-            base64Url.decode(base64Url.normalize(res.idToken.split('.')[1])),
-          ),
-        )['nonce'];
+    final payload = TokenHelper.getPayload(res.idToken);
+    final nonceFromToken = payload['nonce'];
     if (nonceFromToken != nonce) throw InvalidAuthorizationNonceException();
 
     return TokenEntity(

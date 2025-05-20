@@ -1,6 +1,5 @@
-import 'dart:convert';
-
 import 'package:injectable/injectable.dart';
+import 'package:pot_g/app/modules/auth/data/utils/token_helper.dart';
 import 'package:pot_g/app/modules/auth/domain/entity/user_entity.dart';
 import 'package:pot_g/app/modules/auth/domain/repositories/auth_repository.dart';
 import 'package:pot_g/app/modules/auth/domain/repositories/oauth_repository.dart';
@@ -36,21 +35,15 @@ class OauthAuthRepository implements AuthRepository {
   }
 
   UserEntity _parseUser(String token) {
-    final parts = token.split('.');
-    if (parts.length != 3) {
-      throw FormatException('Invalid JWT structure');
-    }
+    final payload = TokenHelper.getPayload(token);
     try {
-      final payload = jsonDecode(
-        utf8.decode(base64Url.decode(base64Url.normalize(parts[1]))),
-      );
       return UserEntity(
         email: payload['email'],
         name: payload['name'],
         uuid: payload['sub'],
       );
     } catch (e) {
-      throw FormatException('Invalid JWT payload: $e');
+      throw FormatException('Failed to parse user from token: $e');
     }
   }
 
