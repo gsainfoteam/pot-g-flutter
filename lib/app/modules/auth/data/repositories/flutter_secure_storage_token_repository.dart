@@ -36,9 +36,6 @@ class FlutterSecureStorageTokenRepository implements TokenRepository {
     final refreshExpiredAt = await _storage.read(key: _refreshExpiredAtKey);
 
     if (token == null || expiredAt == null) return deleteToken();
-    if (DateTime.parse(expiredAt).isBefore(DateTime.now())) {
-      return deleteToken();
-    }
     saveToken(
       token,
       duration: DateTime.parse(expiredAt).difference(DateTime.now()),
