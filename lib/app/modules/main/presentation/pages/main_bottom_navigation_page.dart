@@ -20,7 +20,7 @@ class _MainBottomNavigationPageState extends State<MainBottomNavigationPage> {
   Widget build(BuildContext context) {
     return AutoTabsRouter.tabBar(
       physics: NeverScrollableScrollPhysics(),
-      routes: [EmptyRoute(), MainRoute(), EmptyRoute(), EmptyRoute()],
+      routes: [CreateRoute(), MainRoute(), ChatRoute(), ProfileRoute()],
       builder:
           (context, child, tabController) => Scaffold(
             body: child,
