@@ -33,10 +33,7 @@ class WebAuth2OauthRepository implements OAuthRepository {
 
     final scopes = ['profile', 'email', 'offline_access', 'openid'];
     final prompt = recentLogout ? 'login' : 'consent';
-    final authorizeUri = Uri(
-      scheme: Uri.parse(Config.idpBaseUrl).scheme,
-      host: Uri.parse(Config.idpBaseUrl).host,
-      path: '/authorize',
+    final authorizeUri = Uri.parse('https://idp.gistory.me/authorize').replace(
       queryParameters: {
         'client_id': clientId,
         'redirect_uri': Config.idpRedirectUri,
