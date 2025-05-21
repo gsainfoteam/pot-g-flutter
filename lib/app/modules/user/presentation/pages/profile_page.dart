@@ -141,17 +141,20 @@ class _Inner extends StatelessWidget {
           title: context.t.profile.account_management.title,
           child: Column(
             children: [
-              SizedBox(
-                height: 44,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      context.t.profile.account_management.logout,
-                      style: TextStyles.title4,
-                    ),
-                    Assets.icons.navArrowRight.svg(),
-                  ],
+              GestureDetector(
+                onTap: () => context.read<AuthBloc>().add(AuthEvent.logout()),
+                child: SizedBox(
+                  height: 44,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        context.t.profile.account_management.logout,
+                        style: TextStyles.title4,
+                      ),
+                      Assets.icons.navArrowRight.svg(),
+                    ],
+                  ),
                 ),
               ),
               SizedBox(
