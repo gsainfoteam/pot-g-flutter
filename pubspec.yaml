@@ -37,6 +37,7 @@ dependencies:
   nonce: ^1.2.0
   crypto: ^3.0.6
   flutter_web_auth_2: ^4.1.0
+  adaptive_dialog: ^2.4.1
 
 dev_dependencies:
   flutter_test:
