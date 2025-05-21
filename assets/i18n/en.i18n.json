@@ -1,3 +1,35 @@
 {
-  "name": "PotG"
+  "name": "PotG",
+  "profile": {
+    "basic_info": {
+      "title": "Basic Info",
+      "name": "Name",
+      "email": "Email"
+    },
+    "notification_settings": {
+      "title": "Notification Settings",
+      "all": {
+        "title": "All Notifications",
+        "description": "All notifications from PotG"
+      },
+      "chat": {
+        "title": "Chat Notifications",
+        "description": "Receive notifications for chat messages"
+      },
+      "event": {
+        "title": "Event Notifications",
+        "description": "Receive notifications for events"
+      }
+    },
+    "account_number_settings": {
+      "title": "Settlement Account Settings",
+      "description": "You can register your account to quickly request settlements.",
+      "button": "Account Settings"
+    },
+    "account_management": {
+      "title": "Account Management",
+      "logout": "Logout",
+      "withdraw": "Withdraw"
+    }
+  }
 }
