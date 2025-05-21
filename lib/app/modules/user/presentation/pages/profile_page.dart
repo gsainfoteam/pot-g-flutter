@@ -143,6 +143,7 @@ class _Inner extends StatelessWidget {
           child: Column(
             children: [
               GestureDetector(
+                behavior: HitTestBehavior.opaque,
                 onTap: () => context.read<AuthBloc>().add(AuthEvent.logout()),
                 child: SizedBox(
                   height: 44,
@@ -159,6 +160,7 @@ class _Inner extends StatelessWidget {
                 ),
               ),
               GestureDetector(
+                behavior: HitTestBehavior.opaque,
                 onTap: () => launchUrl(Uri.parse('https://idp.gistory.me')),
                 child: SizedBox(
                   height: 44,
