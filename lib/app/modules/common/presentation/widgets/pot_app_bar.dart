@@ -47,6 +47,7 @@ class PotAppBar extends StatelessWidget implements PreferredSizeWidget {
       child: SafeArea(
         bottom: false,
         child: AutoLeadingButton(
+          ignorePagelessRoutes: true,
           builder: (context, leadingType, action) {
             final effectiveLeading =
                 leading ??
