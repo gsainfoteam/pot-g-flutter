@@ -8,4 +8,9 @@ class TokenEntity {
     required this.refreshToken,
     required this.idToken,
   });
+
+  @override
+  String toString() {
+    return 'TokenEntity(accessToken: $accessToken, refreshToken: $refreshToken, idToken: $idToken)';
+  }
 }
