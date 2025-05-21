@@ -29,7 +29,10 @@
     "account_management": {
       "title": "Account Management",
       "logout": "Logout",
-      "withdraw": "Withdraw"
+      "withdraw": "Withdraw",
+      "logout_dialog": {
+        "description": "Are you sure you want to logout?"
+      }
     }
   }
 }

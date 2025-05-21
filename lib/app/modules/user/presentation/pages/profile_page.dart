@@ -1,3 +1,4 @@
+import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -144,7 +145,22 @@ class _Inner extends StatelessWidget {
             children: [
               GestureDetector(
                 behavior: HitTestBehavior.opaque,
-                onTap: () => context.read<AuthBloc>().add(AuthEvent.logout()),
+                onTap: () async {
+                  final result = await showOkCancelAlertDialog(
+                    title:
+                        context
+                            .t
+                            .profile
+                            .account_management
+                            .logout_dialog
+                            .description,
+                    context: context,
+                  );
+                  if (!context.mounted) return;
+                  if (result == OkCancelResult.ok) {
+                    context.read<AuthBloc>().add(const AuthEvent.logout());
+                  }
+                },
                 child: SizedBox(
                   height: 44,
                   child: Row(
