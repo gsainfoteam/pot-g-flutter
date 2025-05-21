@@ -8,6 +8,7 @@ import 'package:pot_g/app/modules/common/presentation/widgets/pot_toggle.dart';
 import 'package:pot_g/app/values/text_styles.dart';
 import 'package:pot_g/gen/assets.gen.dart';
 import 'package:pot_g/gen/strings.g.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 @RoutePage()
 class ProfilePage extends StatelessWidget {
@@ -157,17 +158,20 @@ class _Inner extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(
-                height: 44,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      context.t.profile.account_management.withdraw,
-                      style: TextStyles.title4,
-                    ),
-                    Assets.icons.navArrowRight.svg(),
-                  ],
+              GestureDetector(
+                onTap: () => launchUrl(Uri.parse('https://idp.gistory.me')),
+                child: SizedBox(
+                  height: 44,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        context.t.profile.account_management.withdraw,
+                        style: TextStyles.title4,
+                      ),
+                      Assets.icons.navArrowRight.svg(),
+                    ],
+                  ),
                 ),
               ),
             ],
