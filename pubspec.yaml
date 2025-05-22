@@ -29,7 +29,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   dynamic_fonts: ^2.2.1
-  intl: ^0.19.0
+  intl: ^0.20.2
   envied: ^1.1.1
   flutter_native_splash: ^2.4.5
   firebase_core: ^3.13.0
