@@ -17,7 +17,7 @@ class _SplashPageState extends State<SplashPage> {
     super.initState();
     Future.delayed(const Duration(seconds: 1), () async {
       if (!mounted) return;
-      await context.router.replaceAll([const MainRoute()]);
+      await context.router.replaceAll([const ListRoute()]);
       Future.delayed(const Duration(milliseconds: 300), () {
         FlutterNativeSplash.remove();
       });

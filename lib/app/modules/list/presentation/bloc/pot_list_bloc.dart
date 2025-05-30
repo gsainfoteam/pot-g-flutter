@@ -1,8 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
-import 'package:pot_g/app/modules/main/domain/entities/pot_entity.dart';
-import 'package:pot_g/app/modules/main/domain/repositories/pot_list_repository.dart';
+import 'package:pot_g/app/modules/core/domain/entities/pot_entity.dart';
+import 'package:pot_g/app/modules/core/domain/repositories/pot_list_repository.dart';
 
 part 'pot_list_bloc.freezed.dart';
 

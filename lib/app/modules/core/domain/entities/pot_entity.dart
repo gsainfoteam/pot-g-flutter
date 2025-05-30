@@ -1,4 +1,4 @@
-import 'package:pot_g/app/modules/main/domain/entities/route_entity.dart';
+import 'package:pot_g/app/modules/core/domain/entities/route_entity.dart';
 
 abstract class PotEntity {
   const PotEntity({

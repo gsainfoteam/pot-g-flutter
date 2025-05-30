@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pot_g/app/modules/main/domain/entities/route_entity.dart';
+import 'package:pot_g/app/modules/core/domain/entities/route_entity.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
 import 'package:pot_g/gen/assets.gen.dart';

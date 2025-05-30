@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:pot_g/app/modules/main/data/models/route_model.dart';
-import 'package:pot_g/app/modules/main/domain/entities/pot_entity.dart';
+import 'package:pot_g/app/modules/core/data/models/route_model.dart';
+import 'package:pot_g/app/modules/core/domain/entities/pot_entity.dart';
 
 part 'pot_model.freezed.dart';
 part 'pot_model.g.dart';

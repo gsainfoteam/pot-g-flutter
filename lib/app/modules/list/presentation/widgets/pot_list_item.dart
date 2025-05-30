@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pot_g/app/modules/common/presentation/extensions/date_time.dart';
-import 'package:pot_g/app/modules/main/domain/entities/pot_entity.dart';
+import 'package:pot_g/app/modules/core/domain/entities/pot_entity.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
 
