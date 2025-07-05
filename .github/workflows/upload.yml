@@ -73,7 +73,7 @@ jobs:
       - name: install flutterfire
         run: flutter pub global activate flutterfire_cli
       - uses: actions/cache@v4
-        if: matrix.os == 'macos-15'
+        if: matrix.os == 'iOS'
         with:
           path: |
             ~/.cocoapods
