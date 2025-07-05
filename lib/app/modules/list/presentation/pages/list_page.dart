@@ -66,9 +66,7 @@ class _LayoutState extends State<_Layout> {
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: PanelDraggable(
-                      builder:
-                          (context, notifySize) =>
-                              _buildSheet(notifySize, context),
+                      builder: (context) => _buildSheet(context),
                     ),
                   ),
                 ],
@@ -78,7 +76,7 @@ class _LayoutState extends State<_Layout> {
     );
   }
 
-  Container _buildSheet(VoidCallback notifySize, BuildContext context) {
+  Container _buildSheet(BuildContext context) {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -121,11 +119,6 @@ class _LayoutState extends State<_Layout> {
                   (value) => setState(() {
                     _pathSelectOpened = value;
                     _dateSelectOpened = false;
-                    if (value) {
-                      WidgetsBinding.instance.addPostFrameCallback(
-                        (_) => notifySize(),
-                      );
-                    }
                   }),
             ),
             const SizedBox(height: 15),
@@ -135,11 +128,6 @@ class _LayoutState extends State<_Layout> {
                   (value) => setState(() {
                     _dateSelectOpened = value;
                     _pathSelectOpened = false;
-                    if (value) {
-                      WidgetsBinding.instance.addPostFrameCallback(
-                        (_) => notifySize(),
-                      );
-                    }
                   }),
               onSelected:
                   (date) => context.read<PotListBloc>().add(
