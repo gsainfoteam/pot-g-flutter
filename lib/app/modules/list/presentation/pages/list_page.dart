@@ -4,19 +4,19 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pot_g/app/di/locator.dart';
 import 'package:pot_g/app/modules/common/presentation/extensions/toast.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_button.dart';
-import 'package:pot_g/app/modules/main/domain/entities/pot_entity.dart';
-import 'package:pot_g/app/modules/main/presentation/bloc/pot_list_bloc.dart';
-import 'package:pot_g/app/modules/main/presentation/widgets/date_select.dart';
-import 'package:pot_g/app/modules/main/presentation/widgets/panel_draggable.dart';
-import 'package:pot_g/app/modules/main/presentation/widgets/path_select.dart';
-import 'package:pot_g/app/modules/main/presentation/widgets/pot_list_item.dart';
+import 'package:pot_g/app/modules/core/domain/entities/pot_entity.dart';
+import 'package:pot_g/app/modules/list/presentation/bloc/pot_list_bloc.dart';
+import 'package:pot_g/app/modules/list/presentation/widgets/date_select.dart';
+import 'package:pot_g/app/modules/list/presentation/widgets/panel_draggable.dart';
+import 'package:pot_g/app/modules/list/presentation/widgets/path_select.dart';
+import 'package:pot_g/app/modules/list/presentation/widgets/pot_list_item.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
 import 'package:pot_g/gen/assets.gen.dart';
 
 @RoutePage()
-class MainPage extends StatelessWidget {
-  const MainPage({super.key});
+class ListPage extends StatelessWidget {
+  const ListPage({super.key});
 
   @override
   Widget build(BuildContext context) {

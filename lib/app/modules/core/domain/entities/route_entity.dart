@@ -1,4 +1,4 @@
-import 'package:pot_g/app/modules/main/domain/entities/stop_entity.dart';
+import 'package:pot_g/app/modules/core/domain/entities/stop_entity.dart';
 
 abstract class RouteEntity {
   const RouteEntity({required this.id, required this.from, required this.to});

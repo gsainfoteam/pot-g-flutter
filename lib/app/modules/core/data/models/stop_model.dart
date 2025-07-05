@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:pot_g/app/modules/main/domain/entities/stop_entity.dart';
+import 'package:pot_g/app/modules/core/domain/entities/stop_entity.dart';
 
 part 'stop_model.freezed.dart';
 part 'stop_model.g.dart';

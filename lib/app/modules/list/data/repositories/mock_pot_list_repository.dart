@@ -1,11 +1,11 @@
 import 'package:injectable/injectable.dart';
 import 'package:pot_g/app/modules/common/presentation/extensions/date_time.dart';
-import 'package:pot_g/app/modules/main/data/models/pot_model.dart';
-import 'package:pot_g/app/modules/main/data/models/route_model.dart';
-import 'package:pot_g/app/modules/main/data/models/stop_model.dart';
-import 'package:pot_g/app/modules/main/domain/entities/pot_entity.dart';
-import 'package:pot_g/app/modules/main/domain/entities/route_entity.dart';
-import 'package:pot_g/app/modules/main/domain/repositories/pot_list_repository.dart';
+import 'package:pot_g/app/modules/core/data/models/pot_model.dart';
+import 'package:pot_g/app/modules/core/data/models/route_model.dart';
+import 'package:pot_g/app/modules/core/data/models/stop_model.dart';
+import 'package:pot_g/app/modules/core/domain/entities/pot_entity.dart';
+import 'package:pot_g/app/modules/core/domain/entities/route_entity.dart';
+import 'package:pot_g/app/modules/core/domain/repositories/pot_list_repository.dart';
 
 @Injectable(as: PotListRepository)
 class MockPotListRepository implements PotListRepository {
