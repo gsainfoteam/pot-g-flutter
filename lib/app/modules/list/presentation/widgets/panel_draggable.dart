@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class PanelDraggable extends StatefulWidget {
   const PanelDraggable({super.key, required this.builder});
 
-  final Widget Function(BuildContext context, VoidCallback notifySize) builder;
+  final Widget Function(BuildContext context) builder;
 
   @override
   PanelDraggableState createState() => PanelDraggableState();
@@ -90,7 +90,6 @@ class PanelDraggableState extends State<PanelDraggable> {
           child: SizedBox(
             height: containerSize,
             child: SingleChildScrollView(
-              // physics: NoVelocityScrollPhysics(),
               physics: ClampingScrollPhysics(),
               controller: scrollController,
               clipBehavior: Clip.none,
@@ -98,7 +97,19 @@ class PanelDraggableState extends State<PanelDraggable> {
               child: Column(
                 children: [
                   Container(height: unlockScroll),
-                  widget.builder(context, notified),
+                  NotificationListener(
+                    onNotification: (
+                      SizeChangedLayoutNotification notification,
+                    ) {
+                      WidgetsBinding.instance.addPostFrameCallback(
+                        (_) => notified(),
+                      );
+                      return true;
+                    },
+                    child: SizeChangedLayoutNotifier(
+                      child: widget.builder(context),
+                    ),
+                  ),
                 ],
               ),
             ),
