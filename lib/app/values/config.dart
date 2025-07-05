@@ -9,8 +9,8 @@ abstract class Config {
 
   @EnviedField()
   static const String idpClientId = _Config.idpClientId;
-  @EnviedField()
+  @EnviedField(defaultValue: 'pot-g-idp-login-redirect')
   static const String idpRedirectScheme = _Config.idpRedirectScheme;
-  @EnviedField()
+  @EnviedField(defaultValue: 'pot-g-idp-login-redirect://callback')
   static const String idpRedirectUri = _Config.idpRedirectUri;
 }

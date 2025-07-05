@@ -1,7 +1,7 @@
 name: build test (android, iOS)
 
 on:
-  pull_request:
+  pull_request_target:
     branches:
       - development
 
@@ -63,6 +63,9 @@ jobs:
           echo "directory=$(echo ${{ matrix.os }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
       - uses: actions/checkout@v4
         if: env.run == 'true'
+        with:
+          # 포크된 레포지토리에서 안전하게 체크아웃
+          token: ${{ secrets.GITHUB_TOKEN }}
       - uses: subosito/flutter-action@v2
         if: env.run == 'true'
         with:
@@ -102,8 +105,13 @@ jobs:
       - name: Copy dotenv
         if: env.run == 'true'
         run: |
-          echo '${{ vars.DOTENV }}' > .env
-          echo "AMPLITUDE_API_KEY=${{ secrets.AMPLITUDE_API_KEY }}" >> .env
+          if [ "${{ github.event.pull_request.head.repo.full_name }}" != "${{ github.repository }}" ]; then
+            echo 'IDP_CLIENT_ID=dummy_idp_client_id' > .env
+            echo "AMPLITUDE_API_KEY=dummy_key_for_fork" >> .env
+          else
+            echo '${{ vars.DOTENV }}' > .env
+            echo "AMPLITUDE_API_KEY=${{ secrets.AMPLITUDE_API_KEY }}" >> .env
+          fi
 
       - name: Generate files
         if: env.run == 'true'
