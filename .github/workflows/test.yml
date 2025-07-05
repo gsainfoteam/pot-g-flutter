@@ -15,11 +15,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          repository: ${{ github.event.pull_request.head.repo.full_name }}
           fetch-depth: 0
 
       - name: Changed Files (android)
-        uses: tj-actions/changed-files@v37.5.0
+        uses: tj-actions/changed-files@v46
         id: android-changed-files
         with:
           files: |
@@ -29,7 +28,7 @@ jobs:
             lib/**
 
       - name: Changed Files (iOS)
-        uses: tj-actions/changed-files@v37.5.0
+        uses: tj-actions/changed-files@v46
         id: ios-changed-files
         with:
           files: |
