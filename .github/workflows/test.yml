@@ -1,7 +1,7 @@
 name: build test (android, iOS)
 
 on:
-  pull_request_target:
+  pull_request:
     branches:
       - development
 
@@ -63,9 +63,6 @@ jobs:
           echo "directory=$(echo ${{ matrix.os }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
       - uses: actions/checkout@v4
         if: env.run == 'true'
-        with:
-          # 포크된 레포지토리에서 안전하게 체크아웃
-          token: ${{ secrets.GITHUB_TOKEN }}
       - uses: subosito/flutter-action@v2
         if: env.run == 'true'
         with:
