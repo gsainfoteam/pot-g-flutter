@@ -1,0 +1,114 @@
+name: build and publish (android, iOS)
+
+on:
+  push:
+    branches:
+      - development
+
+jobs:
+  build-and-upload:
+    strategy:
+      fail-fast: false
+      matrix:
+        build-os: [ubuntu-latest, macos-15]
+        include:
+          - os: Android
+            build-os: ubuntu-latest
+          - os: iOS
+            build-os: macos-15
+    name: Build ${{ matrix.os }} App and Upload
+    runs-on: ${{ matrix.build-os }}
+    concurrency:
+      group: ${{ matrix.os }}-staging
+      cancel-in-progress: true
+    steps:
+      - uses: actions/checkout@v4
+      - name: setup env
+        run: |
+          echo "directory=$(echo ${{ matrix.os }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+
+      - uses: shimataro/ssh-key-action@v2.7.0
+        if: matrix.os == 'iOS'
+        with:
+          key: ${{ secrets.CERTIFICATION_DEPLOY_KEY }}
+
+      - name: Write Keystore
+        if: matrix.os == 'Android'
+        run: |
+          echo ${{ secrets.KEYSTORE }} | base64 --decode > ./android/app/upload-keystore.jks
+          echo "${{ secrets.KEYSTORE_PROPERTIES }}" > ./android/key.properties
+        env:
+          KEYSTORE: ${{ secrets.KEYSTORE }}
+          KEYSTORE_PROPERTIES: ${{ secrets.KEYSTORE_PROPERTIES }}
+      - uses: actions/setup-node@v4
+        if: matrix.os == 'Android'
+      - uses: w9jds/setup-firebase@main
+        if: matrix.os == 'Android'
+        with:
+          tools-version: 12.4.5
+          gcp_sa_key: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}
+      - uses: actions/setup-java@v4
+        if: matrix.os == 'Android'
+        with:
+          java-version: "17"
+          distribution: "adopt"
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.2.0"
+          bundler-cache: true
+          working-directory: ${{ env.directory }}
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.32.0"
+          channel: "stable"
+          cache: true
+      - uses: actions/cache@v4
+        with:
+          path: |
+            .dart_tool
+            !.dart_tool/**/*.snapshot
+          key: ${{ runner.os }}-dart-tool-${{ hashFiles('pubspec.lock') }}
+      - name: install flutterfire
+        run: flutter pub global activate flutterfire_cli
+      - uses: actions/cache@v4
+        if: matrix.os == 'macos-15'
+        with:
+          path: |
+            ~/.cocoapods
+            ~/Library/Caches/CocoaPods
+          key: cocoapods-${{ hashFiles('ios/Podfile.lock') }}
+
+      - name: Copy dotenv
+        run: |
+          echo '${{ vars.DOTENV }}' > .env
+          echo "AMPLITUDE_API_KEY=${{ secrets.AMPLITUDE_API_KEY }}" >> .env
+
+      - name: Generate files
+        run: |
+          dart run slang
+          dart run build_runner build --delete-conflicting-outputs
+      - name: Run fastlane
+        run: bundle exec fastlane internal
+        env:
+          APP_STORE_CONNECT_API_KEY_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+          APP_STORE_CONNECT_API_KEY_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+          APP_STORE_CONNECT_API_KEY_KEY: ${{ secrets.APP_STORE_CONNECT_KEY_CONTENT }}
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          SLACK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
+          SUPPLY_JSON_KEY_DATA: ${{ secrets.SUPPLY_JSON_KEY_DATA }}
+        working-directory: ${{ env.directory }}
+
+      - name: action-slack
+        uses: 8398a7/action-slack@v3
+        if: ${{ failure() || cancelled() }}
+        with:
+          status: ${{ job.status }}
+          author_name: Github Action Build
+          mention: ${{ secrets.SLACK_MENTION }}
+          if_mention: "failure,cancelled"
+          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
