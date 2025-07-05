@@ -31,6 +31,7 @@ jobs:
         if: matrix.os == 'iOS'
         with:
           key: ${{ secrets.CERTIFICATION_DEPLOY_KEY }}
+          known_hosts: unnecessary
 
       - name: Write Keystore
         if: matrix.os == 'Android'
