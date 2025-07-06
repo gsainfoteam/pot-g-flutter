@@ -56,7 +56,7 @@ class _PathSelectState extends State<PathSelect> {
                   ),
                   ...widget.routes.map(
                     (route) => _Selector(
-                      title: route.toString(),
+                      title: route.name,
                       selected: widget.selectedRoute == route,
                       onSelected: () {
                         widget.onOpenChanged(false);

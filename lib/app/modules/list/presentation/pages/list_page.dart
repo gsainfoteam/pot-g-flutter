@@ -8,6 +8,7 @@ import 'package:pot_g/app/modules/common/presentation/widgets/path_select.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_app_bar.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_button.dart';
 import 'package:pot_g/app/modules/core/domain/entities/pot_entity.dart';
+import 'package:pot_g/app/modules/core/presentation/route_list_bloc.dart';
 import 'package:pot_g/app/modules/list/presentation/bloc/pot_list_bloc.dart';
 import 'package:pot_g/app/modules/list/presentation/widgets/panel_draggable.dart';
 import 'package:pot_g/app/modules/list/presentation/widgets/pot_list_item.dart';
@@ -117,7 +118,7 @@ class _LayoutState extends State<_Layout> {
             ),
             const SizedBox(height: 15),
             PathSelect(
-              routes: [],
+              routes: context.select((RouteListBloc bloc) => bloc.state.routes),
               onSelected: (_) {},
               isOpen: _pathSelectOpened,
               onOpenChanged:
