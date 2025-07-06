@@ -1,4 +1,4 @@
-import 'package:auto_route/annotations.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pot_g/app/di/locator.dart';
@@ -200,7 +200,7 @@ class _EmptyScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               PotButton(
-                onPressed: () {},
+                onPressed: () => AutoTabsRouter.of(context).setActiveIndex(0),
                 size: PotButtonSize.medium,
                 prefixIcon: Assets.icons.addPot.svg(
                   colorFilter: ColorFilter.mode(
