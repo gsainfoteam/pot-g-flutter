@@ -1,5 +1,9 @@
 {
   "name": "PotG",
+  "common": {
+    "confirm": "Confirm",
+    "cancel": "Cancel"
+  },
   "profile": {
     "basic_info": {
       "title": "Basic Info",

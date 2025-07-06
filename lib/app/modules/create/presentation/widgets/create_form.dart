@@ -173,6 +173,12 @@ class _TimeInterval extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final preFilled = context.select(
+      (CreateCubit cubit) =>
+          cubit.state.route != null &&
+          cubit.state.date != null &&
+          cubit.state.maxCapacity != null,
+    );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -183,7 +189,17 @@ class _TimeInterval extends StatelessWidget {
           style: TextStyles.caption,
         ),
         const SizedBox(height: 12),
-        TimeIntervalSelector(),
+        TimeIntervalSelector(
+          disabled: !preFilled,
+          startTime: context.select(
+            (CreateCubit cubit) => cubit.state.startTime,
+          ),
+          endTime: context.select((CreateCubit cubit) => cubit.state.endTime),
+          onStartChanged:
+              (time) => context.read<CreateCubit>().startTimeChanged(time),
+          onEndChanged:
+              (time) => context.read<CreateCubit>().endTimeChanged(time),
+        ),
       ],
     );
   }

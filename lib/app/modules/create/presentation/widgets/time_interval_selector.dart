@@ -1,19 +1,55 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_button.dart';
+import 'package:pot_g/app/modules/create/presentation/widgets/time_interval_form.dart';
+import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
 import 'package:pot_g/gen/strings.g.dart';
 
 class TimeIntervalSelector extends StatelessWidget {
-  const TimeIntervalSelector({super.key});
+  const TimeIntervalSelector({
+    super.key,
+    required this.onStartChanged,
+    required this.onEndChanged,
+    this.startTime,
+    this.endTime,
+    this.disabled = false,
+  });
+
+  final DateTime? startTime;
+  final DateTime? endTime;
+  final Function(DateTime) onStartChanged;
+  final Function(DateTime) onEndChanged;
+  final bool disabled;
 
   @override
   Widget build(BuildContext context) {
     final startWidget = [
       Expanded(
         child: PotButton(
-          onPressed: () {},
+          onPressed: () async {
+            final date = await TimeIntervalForm.select(
+              context,
+              startTime ?? DateTime.now().copyWith(hour: 0, minute: 0),
+            );
+            if (date != null) {
+              onStartChanged(date);
+            }
+          },
           size: PotButtonSize.medium,
-          child: Text('00:00'),
+          child: Text(
+            DateFormat.Hm().format(
+              startTime ?? DateTime.now().copyWith(hour: 0, minute: 0),
+            ),
+            style: TextStyle(
+              color:
+                  startTime != null
+                      ? Palette.primary
+                      : disabled
+                      ? Palette.grey
+                      : null,
+            ),
+          ),
         ),
       ),
       const SizedBox(width: 8),
@@ -25,9 +61,29 @@ class TimeIntervalSelector extends StatelessWidget {
     final endWidget = [
       Expanded(
         child: PotButton(
-          onPressed: () {},
+          onPressed: () async {
+            final date = await TimeIntervalForm.select(
+              context,
+              endTime ?? DateTime.now().copyWith(hour: 23, minute: 59),
+            );
+            if (date != null) {
+              onEndChanged(date);
+            }
+          },
           size: PotButtonSize.medium,
-          child: Text('23:59'),
+          child: Text(
+            DateFormat.Hm().format(
+              endTime ?? DateTime.now().copyWith(hour: 23, minute: 59),
+            ),
+            style: TextStyle(
+              color:
+                  endTime != null
+                      ? Palette.primary
+                      : disabled
+                      ? Palette.grey
+                      : null,
+            ),
+          ),
         ),
       ),
       const SizedBox(width: 8),

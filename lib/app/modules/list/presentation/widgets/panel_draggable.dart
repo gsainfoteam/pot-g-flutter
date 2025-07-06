@@ -108,7 +108,10 @@ class PanelDraggableState extends State<PanelDraggable> {
                       return true;
                     },
                     child: SizeChangedLayoutNotifier(
-                      child: PotGBottomSheet(child: widget.builder(context)),
+                      child: PotGBottomSheet(
+                        smallPadding: true,
+                        child: widget.builder(context),
+                      ),
                     ),
                   ),
                 ],
