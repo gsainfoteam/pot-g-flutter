@@ -16,7 +16,7 @@ class ChatEntity with EquatableMixin {
 
   static ChatEntity make(String message, UserEntity user) {
     return ChatEntity(
-      id: '',
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
       message: message,
       user: user,
       createdAt: DateTime.now(),
