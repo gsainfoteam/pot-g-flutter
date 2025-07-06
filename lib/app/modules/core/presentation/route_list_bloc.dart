@@ -16,8 +16,12 @@ class RouteListBloc extends Bloc<RouteListEvent, RouteListState> {
 
   Future<void> _onSearch(_Search event, Emitter<RouteListState> emit) async {
     emit(const RouteListState.loading());
-    final routes = await _repository.getRouteList();
-    emit(RouteListState.loaded(routes));
+    try {
+      final routes = await _repository.getRouteList();
+      emit(RouteListState.loaded(routes));
+    } catch (e) {
+      emit(RouteListState.error(e.toString()));
+    }
   }
 }
 
