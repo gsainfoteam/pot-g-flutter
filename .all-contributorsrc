@@ -9,7 +9,44 @@
   "imageSize": 100,
   "commit": true,
   "commitConvention": "angular",
-  "contributors": [],
+  "contributors": [
+    {
+      "login": "2paperstar",
+      "name": "Boseong",
+      "avatar_url": "https://avatars.githubusercontent.com/u/125528915?v=4",
+      "profile": "https://blog.paperst.ar/",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "GwanLiZa",
+      "name": "GwanLiZa",
+      "avatar_url": "https://avatars.githubusercontent.com/u/144007144?v=4",
+      "profile": "https://github.com/GwanLiZa",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "controlZ",
+      "name": "controlZ",
+      "avatar_url": "https://avatars.githubusercontent.com/u/101192718?v=4",
+      "profile": "https://github.com/controlZ",
+      "contributions": [
+        "projectManagement"
+      ]
+    },
+    {
+      "login": "Yejin-02",
+      "name": "Yejin-02",
+      "avatar_url": "https://avatars.githubusercontent.com/u/110380670?v=4",
+      "profile": "https://github.com/Yejin-02",
+      "contributions": [
+        "design"
+      ]
+    }
+  ],
   "contributorsPerLine": 7,
   "linkToUsage": true
 }
