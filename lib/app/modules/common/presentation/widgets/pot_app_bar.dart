@@ -43,6 +43,19 @@ class PotAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
     );
+    final effectiveActions =
+        actions.isEmpty
+            ? [
+              if (Scaffold.maybeOf(context)?.hasEndDrawer ?? false)
+                PotIconButton(
+                  icon: Assets.icons.menu.svg(),
+                  onPressed: () {
+                    Scaffold.maybeOf(context)?.openEndDrawer();
+                  },
+                ),
+            ]
+            : actions;
+
     return Container(
       decoration: BoxDecoration(
         color: Palette.white,
@@ -83,7 +96,7 @@ class PotAppBar extends StatelessWidget implements PreferredSizeWidget {
                         ),
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
-                  children: actions,
+                  children: effectiveActions,
                 ),
               ),
             );
