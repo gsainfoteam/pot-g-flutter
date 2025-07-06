@@ -11,11 +11,11 @@ class AppRouter extends RootStackRouter {
       path: '/main',
       page: MainBottomNavigationRoute.page,
       children: [
-        AutoRoute(path: 'create', page: CreateRoute.page),
         AutoRoute(path: '', page: ListRoute.page),
         AutoRoute(path: 'chat', page: ChatRoute.page),
         AutoRoute(path: 'profile', page: ProfileRoute.page),
       ],
     ),
+    AutoRoute(path: '/create', page: CreateRoute.page),
   ];
 }

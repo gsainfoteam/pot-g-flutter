@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pot_g/app/di/locator.dart';
 import 'package:pot_g/app/modules/common/presentation/extensions/toast.dart';
+import 'package:pot_g/app/modules/common/presentation/widgets/pot_app_bar.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_button.dart';
 import 'package:pot_g/app/modules/core/domain/entities/pot_entity.dart';
 import 'package:pot_g/app/modules/list/presentation/bloc/pot_list_bloc.dart';
@@ -10,6 +11,7 @@ import 'package:pot_g/app/modules/list/presentation/widgets/date_select.dart';
 import 'package:pot_g/app/modules/list/presentation/widgets/panel_draggable.dart';
 import 'package:pot_g/app/modules/list/presentation/widgets/path_select.dart';
 import 'package:pot_g/app/modules/list/presentation/widgets/pot_list_item.dart';
+import 'package:pot_g/app/router.gr.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
 import 'package:pot_g/gen/assets.gen.dart';
@@ -27,7 +29,7 @@ class ListPage extends StatelessWidget {
         listenWhen:
             (prev, curr) => prev.error != curr.error && curr.error != null,
         listener: (context, state) => context.showToast(state.error!),
-        child: _Layout(),
+        child: Scaffold(appBar: PotAppBar(), body: _Layout()),
       ),
     );
   }
@@ -200,7 +202,7 @@ class _EmptyScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               PotButton(
-                onPressed: () => AutoTabsRouter.of(context).setActiveIndex(0),
+                onPressed: () => context.router.push(const CreateRoute()),
                 size: PotButtonSize.medium,
                 prefixIcon: Assets.icons.addPot.svg(
                   colorFilter: ColorFilter.mode(

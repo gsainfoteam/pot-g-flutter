@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:pot_g/app/modules/common/presentation/widgets/pot_app_bar.dart';
 import 'package:pot_g/app/router.gr.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
@@ -21,11 +20,10 @@ class _MainBottomNavigationPageState extends State<MainBottomNavigationPage> {
   Widget build(BuildContext context) {
     return AutoTabsRouter.tabBar(
       physics: NeverScrollableScrollPhysics(),
-      routes: [CreateRoute(), ListRoute(), ChatRoute(), ProfileRoute()],
+      routes: [ListRoute(), ChatRoute(), ProfileRoute()],
       builder:
           (context, child, tabController) => Scaffold(
             body: child,
-            appBar: PotAppBar(),
             bottomNavigationBar: Container(
               color: Palette.white,
               child: SafeArea(
@@ -62,7 +60,8 @@ class _MainBottomNavigationPageState extends State<MainBottomNavigationPage> {
                                   ),
                                 ].indexed
                                 .map(
-                                  (e) => _buildItem(tabController, e.$1, e.$2),
+                                  (e) =>
+                                      _buildItem(tabController, e.$1 - 1, e.$2),
                                 )
                                 .toList(),
                       ),
@@ -84,7 +83,13 @@ class _MainBottomNavigationPageState extends State<MainBottomNavigationPage> {
     return Expanded(
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
-        onTap: () => tabController.animateTo(index),
+        onTap: () {
+          if (index < 0) {
+            context.router.push(const CreateRoute());
+          } else {
+            tabController.animateTo(index);
+          }
+        },
         child: Container(
           padding: EdgeInsets.symmetric(vertical: 8),
           decoration: BoxDecoration(
