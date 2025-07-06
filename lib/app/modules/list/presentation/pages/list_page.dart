@@ -3,13 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pot_g/app/di/locator.dart';
 import 'package:pot_g/app/modules/common/presentation/extensions/toast.dart';
-import 'package:pot_g/app/modules/common/presentation/widgets/date_select.dart';
-import 'package:pot_g/app/modules/common/presentation/widgets/path_select.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_app_bar.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_button.dart';
 import 'package:pot_g/app/modules/core/domain/entities/pot_entity.dart';
-import 'package:pot_g/app/modules/core/presentation/route_list_bloc.dart';
+import 'package:pot_g/app/modules/list/presentation/bloc/list_cubit.dart';
 import 'package:pot_g/app/modules/list/presentation/bloc/pot_list_bloc.dart';
+import 'package:pot_g/app/modules/list/presentation/pages/list_filter.dart';
 import 'package:pot_g/app/modules/list/presentation/widgets/panel_draggable.dart';
 import 'package:pot_g/app/modules/list/presentation/widgets/pot_list_item.dart';
 import 'package:pot_g/app/router.gr.dart';
@@ -24,29 +23,34 @@ class ListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => sl<PotListBloc>()..add(PotListEvent.search()),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => sl<ListCubit>()),
+        BlocProvider(
+          create: (_) => sl<PotListBloc>()..add(PotListEvent.search()),
+        ),
+      ],
       child: BlocListener<PotListBloc, PotListState>(
         listenWhen:
             (prev, curr) => prev.error != curr.error && curr.error != null,
         listener: (context, state) => context.showToast(state.error!),
-        child: _Layout(),
+        child: BlocListener<ListCubit, ListState>(
+          listenWhen:
+              (prev, curr) =>
+                  prev.date != curr.date || prev.route != curr.route,
+          listener:
+              (context, state) => context.read<PotListBloc>().add(
+                PotListEvent.search(date: state.date),
+              ),
+          child: _Layout(),
+        ),
       ),
     );
   }
 }
 
-class _Layout extends StatefulWidget {
+class _Layout extends StatelessWidget {
   const _Layout();
-
-  @override
-  State<_Layout> createState() => _LayoutState();
-}
-
-class _LayoutState extends State<_Layout> {
-  bool _pathSelectOpened = false;
-  bool _dateSelectOpened = false;
-  DateTime? _selectedDate;
 
   @override
   Widget build(BuildContext context) {
@@ -72,79 +76,11 @@ class _LayoutState extends State<_Layout> {
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: PanelDraggable(
-                      builder: (context) => _buildSheet(context),
+                      builder: (context) => const ListFilter(),
                     ),
                   ),
                 ],
               ),
-        ),
-      ),
-    );
-  }
-
-  Container _buildSheet(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: Palette.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-        boxShadow: [
-          BoxShadow(
-            offset: Offset(3, -2),
-            blurRadius: 8,
-            color: Color(0x0d000000),
-          ),
-          BoxShadow(
-            offset: Offset(-3, -2),
-            blurRadius: 8,
-            color: Color(0x0d000000),
-          ),
-        ],
-      ),
-      child: Padding(
-        padding: EdgeInsets.only(left: 16, right: 16, bottom: 20),
-        child: Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 16),
-              child: Container(
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: Palette.grey,
-                  borderRadius: BorderRadius.circular(100),
-                ),
-              ),
-            ),
-            const SizedBox(height: 15),
-            PathSelect(
-              routes: context.select((RouteListBloc bloc) => bloc.state.routes),
-              onSelected: (_) {},
-              isOpen: _pathSelectOpened,
-              onOpenChanged:
-                  (value) => setState(() {
-                    _pathSelectOpened = value;
-                    _dateSelectOpened = false;
-                  }),
-            ),
-            const SizedBox(height: 15),
-            DateSelect(
-              selectedDate: _selectedDate,
-              isOpen: _dateSelectOpened,
-              onOpenChanged:
-                  (value) => setState(() {
-                    _dateSelectOpened = value;
-                    _pathSelectOpened = false;
-                  }),
-              onSelected:
-                  (date) => setState(() {
-                    _selectedDate = date;
-                    context.read<PotListBloc>().add(
-                      PotListEvent.search(date: date),
-                    );
-                  }),
-            ),
-          ],
         ),
       ),
     );
