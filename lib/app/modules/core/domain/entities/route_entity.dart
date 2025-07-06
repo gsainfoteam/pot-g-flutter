@@ -6,7 +6,8 @@ abstract class RouteEntity {
   final String id;
   final StopEntity from;
   final StopEntity to;
+}
 
-  @override
-  String toString() => '$from → $to';
+extension RouteEntityX on RouteEntity {
+  String get name => '${from.name} → ${to.name}';
 }
