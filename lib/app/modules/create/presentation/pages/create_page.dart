@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pot_g/app/di/locator.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_app_bar.dart';
-import 'package:pot_g/app/modules/create/presentation/cubits/create_cubit.dart';
+import 'package:pot_g/app/modules/create/presentation/bloc/create_cubit.dart';
 import 'package:pot_g/app/modules/create/presentation/widgets/create_form.dart';
 import 'package:pot_g/gen/strings.g.dart';
 
