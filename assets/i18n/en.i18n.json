@@ -53,6 +53,47 @@
     "reached_all": "You have reached all pots"
   },
   "create": {
-    "title": "Create"
+    "menu_title": "Create",
+    "title": "Create New Pot",
+    "action": "Create New Pot",
+    "info": {
+      "title": "Taxi Pot Information",
+      "fields": {
+        "route": {
+          "label": "Route",
+          "placeholder": "Select Route"
+        },
+        "date": {
+          "label": "Date",
+          "placeholder": "Select Date"
+        }
+      }
+    },
+    "capacity": {
+      "title": "Taxi Pot Maximum Capacity",
+      "description": "The maximum number of people who can join the pot",
+      "fields": {
+        "max_capacity": {
+          "item": {
+            "one": "$n person",
+            "other": "$n people"
+          }
+        }
+      }
+    },
+    "time_interval": {
+      "title": "Taxi Pot Departure Time Interval",
+      "description": "Set the earliest and latest possible departure times",
+      "fields": {
+        "start_time": {
+          "from": "From",
+          "input_first": "false"
+        },
+        "end_time": {
+          "to": "To",
+          "input_first": "false"
+        }
+      }
+    }
   }
 }

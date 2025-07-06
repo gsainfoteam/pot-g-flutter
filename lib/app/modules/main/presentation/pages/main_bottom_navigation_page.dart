@@ -44,7 +44,7 @@ class _MainBottomNavigationPageState extends State<MainBottomNavigationPage> {
                             [
                                   BottomNavigationBarItem(
                                     icon: Assets.icons.addPot.svg(),
-                                    label: context.t.create.title,
+                                    label: context.t.create.menu_title,
                                   ),
                                   BottomNavigationBarItem(
                                     icon: Assets.icons.search.svg(),
