@@ -2,36 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/date_select.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/path_select.dart';
-import 'package:pot_g/app/modules/common/presentation/widgets/pot_g_bottom_sheet.dart';
 import 'package:pot_g/app/modules/core/presentation/route_list_bloc.dart';
 import 'package:pot_g/app/modules/list/presentation/bloc/list_cubit.dart';
-import 'package:pot_g/app/values/palette.dart';
 
 class ListFilter extends StatelessWidget {
   const ListFilter({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return PotGBottomSheet(
-      child: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 16),
-            child: Container(
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: Palette.grey,
-                borderRadius: BorderRadius.circular(100),
-              ),
-            ),
-          ),
-          const SizedBox(height: 15),
-          const _PathSelect(),
-          const SizedBox(height: 15),
-          const _DateSelect(),
-        ],
-      ),
+    return Column(
+      children: [
+        const SizedBox(height: 15),
+        const _PathSelect(),
+        const SizedBox(height: 15),
+        const _DateSelect(),
+      ],
     );
   }
 }

@@ -35,7 +35,23 @@ class PotGBottomSheet extends StatelessWidget {
       ),
       child: Padding(
         padding: EdgeInsets.only(left: 16, right: 16, bottom: 20),
-        child: child,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 16),
+              child: Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Palette.grey,
+                  borderRadius: BorderRadius.circular(100),
+                ),
+              ),
+            ),
+            child,
+          ],
+        ),
       ),
     );
   }
