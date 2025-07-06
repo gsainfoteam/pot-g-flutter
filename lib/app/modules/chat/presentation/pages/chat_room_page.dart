@@ -1,5 +1,10 @@
 import 'package:auto_route/annotations.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pot_g/app/di/locator.dart';
+import 'package:pot_g/app/modules/chat/domain/entities/chat_entity.dart';
+import 'package:pot_g/app/modules/chat/presentation/bloc/chat_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/chat_bubble.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_app_bar.dart';
 import 'package:pot_g/app/values/palette.dart';
@@ -14,13 +19,16 @@ class ChatRoomPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: PotAppBar(),
-      body: Column(
-        children: [
-          Expanded(child: SingleChildScrollView(child: _ChatList())),
-          SafeArea(child: _ChatInput()),
-        ],
+    return BlocProvider(
+      create: (context) => sl<ChatBloc>()..add(ChatInit()),
+      child: Scaffold(
+        appBar: PotAppBar(),
+        body: Column(
+          children: [
+            Expanded(child: SingleChildScrollView(child: _ChatList())),
+            SafeArea(child: _ChatInput()),
+          ],
+        ),
       ),
     );
   }
@@ -31,14 +39,29 @@ class _ChatList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return BlocBuilder<ChatBloc, ChatState>(
+      builder: (context, state) {
+        final chats = state.chats.groupListsBy((chat) => chat.user.uuid).values;
+        return Column(children: chats.mapIndexed(_buildChatGroup).toList());
+      },
+    );
+  }
+
+  Column _buildChatGroup(int index, List<ChatEntity> chats) {
     return Column(
-      children: [
-        ChatBubble(),
-        ChatBubble(),
-        ChatBubble(),
-        ChatBubble(),
-        ChatBubble(),
-      ],
+      children: chats.map((chat) => _buildChat(chat, index == 0)).toList(),
+    );
+  }
+
+  Widget _buildChat(ChatEntity chat, bool isFirst) {
+    return Align(
+      alignment:
+          chat.user.uuid == 'me' ? Alignment.centerRight : Alignment.centerLeft,
+      child: ChatBubble(
+        message: chat.message,
+        user: chat.user.uuid == 'me' ? null : chat.user,
+        isFirst: isFirst,
+      ),
     );
   }
 }
