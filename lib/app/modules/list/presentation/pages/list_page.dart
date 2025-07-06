@@ -29,7 +29,7 @@ class ListPage extends StatelessWidget {
         listenWhen:
             (prev, curr) => prev.error != curr.error && curr.error != null,
         listener: (context, state) => context.showToast(state.error!),
-        child: Scaffold(appBar: PotAppBar(), body: _Layout()),
+        child: _Layout(),
       ),
     );
   }
@@ -49,6 +49,7 @@ class _LayoutState extends State<_Layout> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: PotAppBar(),
       body: SafeArea(
         child: LayoutBuilder(
           builder:
