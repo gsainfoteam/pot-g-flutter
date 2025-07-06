@@ -6,6 +6,7 @@ import 'package:pot_g/app/modules/common/presentation/widgets/pot_button.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
 import 'package:pot_g/gen/assets.gen.dart';
+import 'package:pot_g/gen/strings.g.dart';
 
 class DateSelect extends StatefulWidget {
   const DateSelect({
@@ -82,7 +83,7 @@ class _DateSelectState extends State<DateSelect> {
                             },
                     variant: PotButtonVariant.emphasized,
                     size: PotButtonSize.small,
-                    child: Text('선택'),
+                    child: Text(context.t.list.filters.date.select),
                   ),
                 ],
               ),
@@ -102,7 +103,7 @@ class _DateSelectState extends State<DateSelect> {
                   child:
                       _selectedDate == null
                           ? Text(
-                            '전체 날짜',
+                            context.t.list.filters.date.all,
                             style: TextStyles.body.copyWith(
                               color: Palette.textGrey,
                             ),

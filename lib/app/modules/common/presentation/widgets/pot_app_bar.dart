@@ -4,6 +4,7 @@ import 'package:pot_g/app/modules/common/presentation/widgets/pot_icon_button.da
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
 import 'package:pot_g/gen/assets.gen.dart';
+import 'package:pot_g/gen/strings.g.dart';
 
 class PotAppBar extends StatelessWidget implements PreferredSizeWidget {
   const PotAppBar({
@@ -31,7 +32,7 @@ class PotAppBar extends StatelessWidget implements PreferredSizeWidget {
             AspectRatio(aspectRatio: 1, child: Assets.logo.color.image()),
             const SizedBox(width: 4),
             Text(
-              '팟쥐',
+              context.t.name,
               style: TextStyle(
                 fontWeight: FontWeight.w900,
                 fontSize: 28,

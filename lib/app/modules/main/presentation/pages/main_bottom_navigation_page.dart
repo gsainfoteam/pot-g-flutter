@@ -5,6 +5,7 @@ import 'package:pot_g/app/router.gr.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
 import 'package:pot_g/gen/assets.gen.dart';
+import 'package:pot_g/gen/strings.g.dart';
 
 @RoutePage()
 class MainBottomNavigationPage extends StatefulWidget {
@@ -45,11 +46,11 @@ class _MainBottomNavigationPageState extends State<MainBottomNavigationPage> {
                             [
                                   BottomNavigationBarItem(
                                     icon: Assets.icons.addPot.svg(),
-                                    label: '팟 생성',
+                                    label: context.t.create.title,
                                   ),
                                   BottomNavigationBarItem(
                                     icon: Assets.icons.search.svg(),
-                                    label: '팟 검색',
+                                    label: context.t.list.title,
                                   ),
                                   BottomNavigationBarItem(
                                     icon: Assets.icons.chatBubble.svg(),

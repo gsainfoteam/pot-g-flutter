@@ -13,6 +13,7 @@ import 'package:pot_g/app/modules/list/presentation/widgets/pot_list_item.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
 import 'package:pot_g/gen/assets.gen.dart';
+import 'package:pot_g/gen/strings.g.dart';
 
 @RoutePage()
 class ListPage extends StatelessWidget {
@@ -164,7 +165,7 @@ class _ListView extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(top: 8, bottom: 32),
             child: Text(
-              '모든 팟을 확인하셨습니다',
+              context.t.list.reached_all,
               style: TextStyles.description.copyWith(color: Palette.grey),
             ),
           ),
@@ -190,7 +191,7 @@ class _EmptyScreen extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Text(
-            '해당 조건의 택시 팟이\n존재하지 않습니다',
+            context.t.list.empty.description,
             style: TextStyles.description.copyWith(color: Palette.textGrey),
             textAlign: TextAlign.center,
           ),
@@ -208,7 +209,7 @@ class _EmptyScreen extends StatelessWidget {
                   ),
                 ),
                 child: Text(
-                  '새 팟 만들기',
+                  context.t.list.empty.button,
                   style: TextStyles.title4.copyWith(color: Palette.textGrey),
                 ),
               ),

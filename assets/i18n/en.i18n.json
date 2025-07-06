@@ -34,5 +34,25 @@
         "description": "Are you sure you want to logout?"
       }
     }
+  },
+  "list": {
+    "title": "Search",
+    "empty": {
+      "description": "There is no pot\nthat matches the conditions",
+      "button": "Create New Pot"
+    },
+    "filters": {
+      "date": {
+        "all": "All Dates",
+        "select": "Select"
+      },
+      "route": {
+        "all": "All Routes"
+      }
+    },
+    "reached_all": "You have reached all pots"
+  },
+  "create": {
+    "title": "Create"
   }
 }
