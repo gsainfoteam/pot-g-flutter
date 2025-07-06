@@ -2,7 +2,12 @@
 
 [![Flutter Version](https://img.shields.io/badge/Flutter-3.32.0-02569B?logo=flutter&logoColor=white)](https://flutter.dev)
 [![build and publish (android, iOS)](https://github.com/gsainfoteam/pot-g-flutter/actions/workflows/upload.yml/badge.svg)](https://github.com/gsainfoteam/pot-g-flutter/actions/workflows/upload.yml)
-[![All Contributors](https://img.shields.io/github/all-contributors/gsainfoteam/pot-g-flutter?color=ee8449&style=flat-square)](#contributors-)
+
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+
+[![All Contributors](https://img.shields.io/badge/all_contributors-0-orange.svg?style=flat-square)](#contributors-)
+
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 ## Architecture
 
@@ -20,7 +25,6 @@ Check [Contributing](.github/CONTRIBUTING.md)
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable -->
-
 <!-- markdownlint-restore -->
 <!-- prettier-ignore-end -->
 
