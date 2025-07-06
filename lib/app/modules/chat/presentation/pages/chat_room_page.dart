@@ -25,7 +25,14 @@ class ChatRoomPage extends StatelessWidget {
         appBar: PotAppBar(),
         body: Column(
           children: [
-            Expanded(child: SingleChildScrollView(child: _ChatList())),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(12) - EdgeInsets.only(right: 6),
+                  child: _ChatList(),
+                ),
+              ),
+            ),
             SafeArea(child: _ChatInput()),
           ],
         ),
@@ -42,26 +49,40 @@ class _ChatList extends StatelessWidget {
     return BlocBuilder<ChatBloc, ChatState>(
       builder: (context, state) {
         final chats = state.chats.groupListsBy((chat) => chat.user.uuid).values;
-        return Column(children: chats.mapIndexed(_buildChatGroup).toList());
+        return Column(
+          children:
+              chats
+                  .expandIndexed(
+                    (index, chats) => [
+                      if (index != 0) const SizedBox(height: 12),
+                      _buildChatGroup(index, chats),
+                    ],
+                  )
+                  .toList(),
+        );
       },
     );
   }
 
   Column _buildChatGroup(int index, List<ChatEntity> chats) {
     return Column(
-      children: chats.map((chat) => _buildChat(chat, index == 0)).toList(),
+      children:
+          chats
+              .expandIndexed(
+                (i, chat) => [
+                  if (i != 0) const SizedBox(height: 6),
+                  _buildChat(chat, i == 0),
+                ],
+              )
+              .toList(),
     );
   }
 
   Widget _buildChat(ChatEntity chat, bool isFirst) {
-    return Align(
-      alignment:
-          chat.user.uuid == 'me' ? Alignment.centerRight : Alignment.centerLeft,
-      child: ChatBubble(
-        message: chat.message,
-        user: chat.user.uuid == 'me' ? null : chat.user,
-        isFirst: isFirst,
-      ),
+    return ChatBubble(
+      message: chat.message,
+      user: chat.user.uuid == 'me' ? null : chat.user,
+      isFirst: isFirst,
     );
   }
 }

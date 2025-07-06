@@ -29,13 +29,22 @@ class MockChatRepository implements ChatRepository {
     return [
       ChatEntity.make('첫 메시지', hong),
       ChatEntity.make('두번째 메시지', hong),
-      ChatEntity.make('메시지가 아주 길어지는 경우 이렇게 처리', hong),
+      ChatEntity.make(
+        '메시지가 아주 길어지는 경우 이렇게 처리 메시지가 아주 길어지는 경우 이렇게 처리 메시지가 아주 길어지는 경우 이렇게 처리 메시지가 아주 길어지는 경우 이렇게 처리',
+        hong,
+      ),
       ChatEntity.make('내 메시지', me),
       ChatEntity.make('두번째 내 메시지', me),
-      ChatEntity.make('내 메시지가 아주 길어지는 경우 이렇게 처리', me),
+      ChatEntity.make(
+        '내 메시지가 아주 길어지는 경우 이렇게 처리 내 메시지가 아주 길어지는 경우 이렇게 처리 내 메시지가 아주 길어지는 경우 이렇게 처리내 메시지가 아주 길어지는 경우 이렇게 처리내 메시지가 아주 길어지는 경우 이렇게 처리',
+        me,
+      ),
       ChatEntity.make('첫 메시지', shim),
       ChatEntity.make('두번째 메시지', shim),
-      ChatEntity.make('메시지가 아주 길어지는 경우 이렇게 처리', shim),
+      ChatEntity.make(
+        '메시지가 아주 길어지는 경우 이렇게 처리 메시지가 아주 길어지는 경우 이렇게 처리 메시지가 아주 길어지는 경우 이렇게 처리 메시지가 아주 길어지는 경우 이렇게 처리',
+        shim,
+      ),
     ];
   }
 }
