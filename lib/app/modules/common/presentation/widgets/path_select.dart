@@ -35,12 +35,7 @@ class _PathSelectState extends State<PathSelect> {
         color: Palette.white,
         border: Border.all(
           width: 1.5,
-          color:
-              widget.isOpen
-                  ? Palette.primary
-                  : widget.selectedRoute == null
-                  ? Palette.borderGrey
-                  : Palette.dark,
+          color: widget.isOpen ? Palette.primary : Palette.borderGrey,
         ),
         borderRadius: BorderRadius.all(Radius.circular(10)),
       ),

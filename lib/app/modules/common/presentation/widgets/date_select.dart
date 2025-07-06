@@ -44,12 +44,7 @@ class _DateSelectState extends State<DateSelect> {
         color: Palette.white,
         border: Border.all(
           width: 1.5,
-          color:
-              widget.isOpen
-                  ? Palette.primary
-                  : widget.selectedDate == null
-                  ? Palette.borderGrey
-                  : Palette.dark,
+          color: widget.isOpen ? Palette.primary : Palette.borderGrey,
         ),
         borderRadius: BorderRadius.all(Radius.circular(10)),
       ),
