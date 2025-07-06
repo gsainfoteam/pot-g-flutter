@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "16781278958",
+    "project_id": "gsainfoteam-pot-g",
+    "storage_bucket": "gsainfoteam-pot-g.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:16781278958:android:4f36eda19a625070027dff",
+        "android_client_info": {
+          "package_name": "me.gistory.pot_g"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCuXrM0jF9LzeKbX1u6gbrBC1_c-T2LLiA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -16,6 +16,3 @@ key.properties
 # Fastlane
 google-play-service-account.json
 fastlane/.crashlytics
-
-# Firebase
-app/google-services.json

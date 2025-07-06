@@ -4,10 +4,10 @@ platform :android do
   desc "Test build"
   lane :test do
     UI.message("Building for testing")
-    aabPath = "../../build/app/outputs/bundle/release/app-release.aab"
+    aabPath = "../../build/app/outputs/bundle/debug/app-debug.aab"
     FileUtils.remove_dir(aabPath) if File.directory?(aabPath)
 
-    sh("flutter", "build", "appbundle", "--release")
+    sh("flutter", "build", "appbundle", "--debug")
     unless File.exist?(aabPath)
       UI.user_error!("Build failed")
     end
