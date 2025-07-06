@@ -29,7 +29,7 @@ All types of contributions are encouraged and valued. See the [Table of Contents
 This project and everyone participating in it is governed by the
 [PotG Code of Conduct](https://github.com/gsainfoteam/pot-g-flutter/blob/development/CODE_OF_CONDUCT.md).
 By participating, you are expected to uphold this code. Please report unacceptable behavior
-to <>.
+to <infoteam@gistory.me>.
 
 ## I Have a Question
 
@@ -85,7 +85,7 @@ A good bug report shouldn't leave others needing to chase you up for more inform
 
 #### How Do I Submit a Good Bug Report? <!-- omit in toc -->
 
-> You must never report security related issues, vulnerabilities or bugs including sensitive information to the issue tracker, or elsewhere in public. Instead sensitive bugs must be sent by email to .
+> You must never report security related issues, vulnerabilities or bugs including sensitive information to the issue tracker, or elsewhere in public. Instead sensitive bugs must be sent by email to <security@gistory.me>.
 
 <!-- You may add a PGP key to allow the messages to be sent encrypted as well. -->
 
