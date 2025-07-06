@@ -1,6 +1,7 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pot_g/app/di/locator.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_app_bar.dart';
 import 'package:pot_g/app/modules/core/domain/entities/route_entity.dart';
 import 'package:pot_g/app/modules/create/presentation/bloc/create_cubit.dart';
@@ -19,7 +20,12 @@ class CreatePage extends StatelessWidget {
     return Scaffold(
       appBar: PotAppBar(title: Text(context.t.create.title)),
       body: BlocProvider(
-        create: (context) => CreateCubit(date: date, route: route),
+        create: (context) {
+          final cubit = sl<CreateCubit>();
+          if (date != null) cubit.dateChanged(date!);
+          if (route != null) cubit.routeChanged(route!);
+          return cubit;
+        },
         child: const CreateForm(),
       ),
     );

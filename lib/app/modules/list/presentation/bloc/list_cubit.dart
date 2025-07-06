@@ -1,9 +1,11 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:injectable/injectable.dart';
 import 'package:pot_g/app/modules/core/domain/entities/route_entity.dart';
 
 part 'list_cubit.freezed.dart';
 
+@injectable
 class ListCubit extends Cubit<ListState> {
   ListCubit() : super(const ListState());
 

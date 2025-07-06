@@ -25,7 +25,7 @@ class ListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (_) => ListCubit()),
+        BlocProvider(create: (_) => sl<ListCubit>()),
         BlocProvider(
           create: (_) => sl<PotListBloc>()..add(PotListEvent.search()),
         ),
