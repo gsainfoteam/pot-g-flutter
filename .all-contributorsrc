@@ -36,6 +36,15 @@
       "contributions": [
         "projectManagement"
       ]
+    },
+    {
+      "login": "Yejin-02",
+      "name": "Yejin-02",
+      "avatar_url": "https://avatars.githubusercontent.com/u/110380670?v=4",
+      "profile": "https://github.com/Yejin-02",
+      "contributions": [
+        "design"
+      ]
     }
   ],
   "contributorsPerLine": 7,
