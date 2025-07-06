@@ -44,7 +44,13 @@ class PotAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
     );
     return Container(
-      color: Palette.white,
+      decoration: BoxDecoration(
+        color: Palette.white,
+        border:
+            title == null
+                ? null
+                : Border(bottom: BorderSide(color: Palette.borderGrey2)),
+      ),
       child: SafeArea(
         bottom: false,
         child: AutoLeadingButton(
@@ -54,12 +60,9 @@ class PotAppBar extends StatelessWidget implements PreferredSizeWidget {
                 leading ??
                 (automaticallyImplyLeading
                     ? leadingType == LeadingType.back
-                        ? Padding(
-                          padding: const EdgeInsets.only(left: 16),
-                          child: PotIconButton(
-                            icon: Assets.icons.arrowLeft.svg(),
-                            onPressed: action,
-                          ),
+                        ? PotIconButton(
+                          icon: Assets.icons.arrowLeft.svg(),
+                          onPressed: action,
                         )
                         : title == null
                         ? logo
