@@ -27,6 +27,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "controlZ",
+      "name": "controlZ",
+      "avatar_url": "https://avatars.githubusercontent.com/u/101192718?v=4",
+      "profile": "https://github.com/controlZ",
+      "contributions": [
+        "projectManagement"
+      ]
     }
   ],
   "contributorsPerLine": 7,

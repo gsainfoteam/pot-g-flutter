@@ -25,6 +25,7 @@ Check [Contributing](.github/CONTRIBUTING.md)
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://blog.paperst.ar/"><img src="https://avatars.githubusercontent.com/u/125528915?v=4?s=100" width="100px;" alt="Boseong"/><br /><sub><b>Boseong</b></sub></a><br /><a href="https://github.com/gsainfoteam/pot-g-flutter/commits?author=2paperstar" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/GwanLiZa"><img src="https://avatars.githubusercontent.com/u/144007144?v=4?s=100" width="100px;" alt="GwanLiZa"/><br /><sub><b>GwanLiZa</b></sub></a><br /><a href="https://github.com/gsainfoteam/pot-g-flutter/commits?author=GwanLiZa" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/controlZ"><img src="https://avatars.githubusercontent.com/u/101192718?v=4?s=100" width="100px;" alt="controlZ"/><br /><sub><b>controlZ</b></sub></a><br /><a href="#projectManagement-controlZ" title="Project Management">📆</a></td>
     </tr>
   </tbody>
   <tfoot>
