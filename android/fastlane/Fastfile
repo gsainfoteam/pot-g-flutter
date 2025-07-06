@@ -7,7 +7,7 @@ platform :android do
     aabPath = "../../build/app/outputs/bundle/release/app-release.aab"
     FileUtils.remove_dir(aabPath) if File.directory?(aabPath)
 
-    sh("flutter", "build", "appbundle")
+    sh("flutter", "build", "appbundle", "--debug")
     unless File.exist?(aabPath)
       UI.user_error!("Build failed")
     end
