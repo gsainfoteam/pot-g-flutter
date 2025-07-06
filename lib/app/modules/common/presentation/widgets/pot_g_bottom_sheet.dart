@@ -6,6 +6,13 @@ class PotGBottomSheet extends StatelessWidget {
 
   final Widget child;
 
+  static Future<T?> show<T>(BuildContext context, Widget child) {
+    return showModalBottomSheet<T>(
+      context: context,
+      builder: (context) => PotGBottomSheet(child: child),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
