@@ -1,10 +1,10 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:pot_g/app/modules/common/presentation/widgets/pot_app_bar.dart';
 import 'package:pot_g/app/router.gr.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
 import 'package:pot_g/gen/assets.gen.dart';
+import 'package:pot_g/gen/strings.g.dart';
 
 @RoutePage()
 class MainBottomNavigationPage extends StatefulWidget {
@@ -20,11 +20,10 @@ class _MainBottomNavigationPageState extends State<MainBottomNavigationPage> {
   Widget build(BuildContext context) {
     return AutoTabsRouter.tabBar(
       physics: NeverScrollableScrollPhysics(),
-      routes: [CreateRoute(), ListRoute(), ChatRoute(), ProfileRoute()],
+      routes: [ListRoute(), ChatRoute(), ProfileRoute()],
       builder:
           (context, child, tabController) => Scaffold(
             body: child,
-            appBar: PotAppBar(),
             bottomNavigationBar: Container(
               color: Palette.white,
               child: SafeArea(
@@ -45,11 +44,11 @@ class _MainBottomNavigationPageState extends State<MainBottomNavigationPage> {
                             [
                                   BottomNavigationBarItem(
                                     icon: Assets.icons.addPot.svg(),
-                                    label: '팟 생성',
+                                    label: context.t.create.menu_title,
                                   ),
                                   BottomNavigationBarItem(
                                     icon: Assets.icons.search.svg(),
-                                    label: '팟 검색',
+                                    label: context.t.list.title,
                                   ),
                                   BottomNavigationBarItem(
                                     icon: Assets.icons.chatBubble.svg(),
@@ -61,7 +60,8 @@ class _MainBottomNavigationPageState extends State<MainBottomNavigationPage> {
                                   ),
                                 ].indexed
                                 .map(
-                                  (e) => _buildItem(tabController, e.$1, e.$2),
+                                  (e) =>
+                                      _buildItem(tabController, e.$1 - 1, e.$2),
                                 )
                                 .toList(),
                       ),
@@ -83,7 +83,13 @@ class _MainBottomNavigationPageState extends State<MainBottomNavigationPage> {
     return Expanded(
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
-        onTap: () => tabController.animateTo(index),
+        onTap: () {
+          if (index < 0) {
+            context.router.push(CreateRoute());
+          } else {
+            tabController.animateTo(index);
+          }
+        },
         child: Container(
           padding: EdgeInsets.symmetric(vertical: 8),
           decoration: BoxDecoration(

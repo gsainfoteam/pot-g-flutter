@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:pot_g/app/di/locator.dart';
 import 'package:pot_g/app/modules/auth/presentation/bloc/auth_bloc.dart';
+import 'package:pot_g/app/modules/core/presentation/route_list_bloc.dart';
 import 'package:pot_g/app/router.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/theme.dart';
@@ -44,6 +45,9 @@ class _Providers extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => sl<AuthBloc>()..add(AuthEvent.load())),
+        BlocProvider(
+          create: (_) => sl<RouteListBloc>()..add(RouteListEvent.search()),
+        ),
       ],
       child: child,
     );
