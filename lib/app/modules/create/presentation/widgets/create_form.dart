@@ -4,7 +4,7 @@ import 'package:pot_g/app/modules/common/presentation/widgets/date_select.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/path_select.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_button.dart';
 import 'package:pot_g/app/modules/core/presentation/route_list_bloc.dart';
-import 'package:pot_g/app/modules/create/presentation/cubits/create_cubit.dart';
+import 'package:pot_g/app/modules/create/presentation/bloc/create_cubit.dart';
 import 'package:pot_g/app/modules/create/presentation/widgets/time_interval_selector.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';

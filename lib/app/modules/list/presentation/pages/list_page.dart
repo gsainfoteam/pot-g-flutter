@@ -25,7 +25,7 @@ class ListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (_) => sl<ListCubit>()),
+        BlocProvider(create: (_) => ListCubit()),
         BlocProvider(
           create: (_) => sl<PotListBloc>()..add(PotListEvent.search()),
         ),
@@ -145,7 +145,12 @@ class _EmptyScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               PotButton(
-                onPressed: () => context.router.push(const CreateRoute()),
+                onPressed: () {
+                  final state = context.read<ListCubit>().state;
+                  context.router.push(
+                    CreateRoute(date: state.date, route: state.route),
+                  );
+                },
                 size: PotButtonSize.medium,
                 prefixIcon: Assets.icons.addPot.svg(
                   colorFilter: ColorFilter.mode(

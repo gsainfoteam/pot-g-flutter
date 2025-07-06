@@ -85,7 +85,7 @@ class _MainBottomNavigationPageState extends State<MainBottomNavigationPage> {
         behavior: HitTestBehavior.opaque,
         onTap: () {
           if (index < 0) {
-            context.router.push(const CreateRoute());
+            context.router.push(CreateRoute());
           } else {
             tabController.animateTo(index);
           }
