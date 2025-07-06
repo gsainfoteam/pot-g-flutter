@@ -181,7 +181,7 @@ class _EmptyScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
-        bottom: MediaQuery.of(context).size.height * 0.4,
+        bottom: MediaQuery.of(context).size.height * 0.2,
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
