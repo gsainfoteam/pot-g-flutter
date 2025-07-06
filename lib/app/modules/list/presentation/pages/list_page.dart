@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pot_g/app/di/locator.dart';
 import 'package:pot_g/app/modules/common/presentation/extensions/toast.dart';
+import 'package:pot_g/app/modules/common/presentation/widgets/date_select.dart';
+import 'package:pot_g/app/modules/common/presentation/widgets/path_select.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_app_bar.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_button.dart';
 import 'package:pot_g/app/modules/core/domain/entities/pot_entity.dart';
 import 'package:pot_g/app/modules/list/presentation/bloc/pot_list_bloc.dart';
-import 'package:pot_g/app/modules/list/presentation/widgets/date_select.dart';
 import 'package:pot_g/app/modules/list/presentation/widgets/panel_draggable.dart';
-import 'package:pot_g/app/modules/list/presentation/widgets/path_select.dart';
 import 'package:pot_g/app/modules/list/presentation/widgets/pot_list_item.dart';
 import 'package:pot_g/app/router.gr.dart';
 import 'package:pot_g/app/values/palette.dart';
@@ -45,6 +45,7 @@ class _Layout extends StatefulWidget {
 class _LayoutState extends State<_Layout> {
   bool _pathSelectOpened = false;
   bool _dateSelectOpened = false;
+  DateTime? _selectedDate;
 
   @override
   Widget build(BuildContext context) {
@@ -127,6 +128,7 @@ class _LayoutState extends State<_Layout> {
             ),
             const SizedBox(height: 15),
             DateSelect(
+              selectedDate: _selectedDate,
               isOpen: _dateSelectOpened,
               onOpenChanged:
                   (value) => setState(() {
@@ -134,9 +136,12 @@ class _LayoutState extends State<_Layout> {
                     _pathSelectOpened = false;
                   }),
               onSelected:
-                  (date) => context.read<PotListBloc>().add(
-                    PotListEvent.search(date: date),
-                  ),
+                  (date) => setState(() {
+                    _selectedDate = date;
+                    context.read<PotListBloc>().add(
+                      PotListEvent.search(date: date),
+                    );
+                  }),
             ),
           ],
         ),

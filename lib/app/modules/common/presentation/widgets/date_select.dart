@@ -47,7 +47,7 @@ class _DateSelectState extends State<DateSelect> {
           color:
               widget.isOpen
                   ? Palette.primary
-                  : _selectedDate == null
+                  : widget.selectedDate == null
                   ? Palette.borderGrey
                   : Palette.dark,
         ),
@@ -101,7 +101,7 @@ class _DateSelectState extends State<DateSelect> {
               children: [
                 Expanded(
                   child:
-                      _selectedDate == null
+                      widget.selectedDate == null
                           ? Text(
                             context.t.list.filters.date.all,
                             style: TextStyles.body.copyWith(
@@ -109,7 +109,9 @@ class _DateSelectState extends State<DateSelect> {
                             ),
                           )
                           : Text(
-                            DateFormat.yMd().add_E().format(_selectedDate!),
+                            DateFormat.yMd().add_E().format(
+                              widget.selectedDate!,
+                            ),
                             style: TextStyles.body.copyWith(
                               color: Palette.dark,
                             ),
