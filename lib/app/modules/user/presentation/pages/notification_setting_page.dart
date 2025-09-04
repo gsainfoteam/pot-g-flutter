@@ -68,13 +68,15 @@ class _NotificationOption extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(title, style: TextStyles.title4),
-            const SizedBox(height: 4),
-            Text(description, style: TextStyles.caption),
-          ],
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(title, style: TextStyles.title4),
+              const SizedBox(height: 4),
+              Text(description, style: TextStyles.caption),
+            ],
+          ),
         ),
         PotToggle(value: value, onChanged: onChanged),
       ],
