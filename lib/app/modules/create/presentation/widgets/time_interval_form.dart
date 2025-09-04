@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
+import 'package:pot_g/app/modules/common/presentation/widgets/pot_bottom_sheet.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_button.dart';
-import 'package:pot_g/app/modules/common/presentation/widgets/pot_g_bottom_sheet.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/gen/strings.g.dart';
 
@@ -13,7 +13,7 @@ class TimeIntervalForm extends StatefulWidget {
     BuildContext context,
     DateTime initialDateTime,
   ) {
-    return PotGBottomSheet.show(
+    return PotBottomSheet.show(
       context,
       TimeIntervalForm(initialDateTime: initialDateTime),
     );

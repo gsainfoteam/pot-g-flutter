@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pot_g/app/values/palette.dart';
 
-class PotGBottomSheet extends StatelessWidget {
-  const PotGBottomSheet({
+class PotBottomSheet extends StatelessWidget {
+  const PotBottomSheet({
     super.key,
     required this.child,
     this.smallPadding = false,
@@ -14,7 +14,7 @@ class PotGBottomSheet extends StatelessWidget {
   static Future<T?> show<T>(BuildContext context, Widget child) {
     return showModalBottomSheet<T>(
       context: context,
-      builder: (context) => PotGBottomSheet(child: child),
+      builder: (context) => PotBottomSheet(child: child),
     );
   }
 

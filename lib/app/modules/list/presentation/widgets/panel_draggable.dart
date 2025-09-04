@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pot_g/app/modules/common/presentation/widgets/pot_g_bottom_sheet.dart';
+import 'package:pot_g/app/modules/common/presentation/widgets/pot_bottom_sheet.dart';
 
 class PanelDraggable extends StatefulWidget {
   const PanelDraggable({super.key, required this.builder});
@@ -108,7 +108,7 @@ class PanelDraggableState extends State<PanelDraggable> {
                       return true;
                     },
                     child: SizeChangedLayoutNotifier(
-                      child: PotGBottomSheet(
+                      child: PotBottomSheet(
                         smallPadding: true,
                         child: widget.builder(context),
                       ),
