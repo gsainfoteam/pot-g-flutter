@@ -15,7 +15,37 @@ class NotificationSettingPage extends StatelessWidget {
       appBar: PotAppBar(
         title: Text(context.t.profile.notification_settings.title),
       ),
-      body: const Placeholder(),
+      body: Padding(
+        padding: EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _NotificationOption(
+              title: context.t.profile.notification_settings.all.title,
+              description:
+                  context.t.profile.notification_settings.all.description,
+              value: true,
+              onChanged: (value) {},
+            ),
+            const SizedBox(height: 16),
+            _NotificationOption(
+              title: context.t.profile.notification_settings.chat.title,
+              description:
+                  context.t.profile.notification_settings.chat.description,
+              value: true,
+              onChanged: (value) {},
+            ),
+            const SizedBox(height: 16),
+            _NotificationOption(
+              title: context.t.profile.notification_settings.room.title,
+              description:
+                  context.t.profile.notification_settings.room.description,
+              value: true,
+              onChanged: (value) {},
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

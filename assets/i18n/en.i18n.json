@@ -24,9 +24,9 @@
         "title": "Chat Notifications",
         "description": "Receive notifications for chat messages"
       },
-      "event": {
-        "title": "Event Notifications",
-        "description": "Receive notifications for events"
+      "room": {
+        "title": "Join/Leave Notifications",
+        "description": "Receive notifications for changing members"
       }
     },
     "account_number_settings": {
