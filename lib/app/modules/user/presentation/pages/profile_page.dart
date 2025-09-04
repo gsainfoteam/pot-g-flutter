@@ -1,4 +1,3 @@
-import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,9 +6,7 @@ import 'package:pot_g/app/modules/auth/presentation/bloc/auth_bloc.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_button.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_toggle.dart';
 import 'package:pot_g/app/values/text_styles.dart';
-import 'package:pot_g/gen/assets.gen.dart';
 import 'package:pot_g/gen/strings.g.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 @RoutePage()
 class ProfilePage extends StatelessWidget {
@@ -31,9 +28,11 @@ class ProfilePage extends StatelessWidget {
         ),
       );
     }
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 16),
-      child: SingleChildScrollView(child: _Inner(user: user)),
+    return SafeArea(
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+        child: SingleChildScrollView(child: _Inner(user: user)),
+      ),
     );
   }
 }
@@ -50,6 +49,7 @@ class _Inner extends StatelessWidget {
         _Section(
           title: context.t.profile.basic_info.title,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 crossAxisAlignment: CrossAxisAlignment.baseline,
@@ -66,7 +66,7 @@ class _Inner extends StatelessWidget {
                   Text(user.name, style: TextStyles.body),
                 ],
               ),
-              SizedBox(height: 10),
+              SizedBox(height: 8),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.baseline,
                 textBaseline: TextBaseline.alphabetic,
@@ -79,123 +79,33 @@ class _Inner extends StatelessWidget {
                     ),
                   ),
                   SizedBox(width: 8),
-                  Text(user.email, style: TextStyles.body),
+                  Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: user.email.split('@')[0],
+                          style: TextStyles.body,
+                        ),
+                        TextSpan(text: '@'),
+                        TextSpan(text: user.email.split('@')[1]),
+                      ],
+                      style: TextStyles.caption,
+                    ),
+                  ),
                 ],
               ),
-            ],
-          ),
-        ),
-        SizedBox(height: 40),
-        _Section(
-          title: context.t.profile.notification_settings.title,
-          child: Column(
-            children: [
-              _NotificationOption(
-                title: context.t.profile.notification_settings.all.title,
-                description:
-                    context.t.profile.notification_settings.all.description,
-                value: true,
-                onChanged: (value) {},
-              ),
-              SizedBox(height: 8),
-              _NotificationOption(
-                title: context.t.profile.notification_settings.chat.title,
-                description:
-                    context.t.profile.notification_settings.chat.description,
-                value: true,
-                onChanged: (value) {},
-              ),
-              SizedBox(height: 8),
-              _NotificationOption(
-                title: context.t.profile.notification_settings.event.title,
-                description:
-                    context.t.profile.notification_settings.event.description,
-                value: true,
-                onChanged: (value) {},
-              ),
-            ],
-          ),
-        ),
-        SizedBox(height: 40),
-        _Section(
-          title: context.t.profile.account_number_settings.title,
-          child: Column(
-            children: [
+              SizedBox(height: 6),
               Text(
-                context.t.profile.account_number_settings.description,
-                style: TextStyles.description,
-              ),
-              SizedBox(height: 12),
-              PotButton(
-                onPressed: () {},
-                variant: PotButtonVariant.emphasized,
-                child: Row(
-                  children: [
-                    Assets.icons.dollar.svg(),
-                    SizedBox(width: 8),
-                    Text(context.t.profile.account_number_settings.button),
-                  ],
-                ),
+                context.t.profile.basic_info.description,
+                style: TextStyles.caption.copyWith(color: Colors.grey),
               ),
             ],
           ),
         ),
-        SizedBox(height: 40),
+        SizedBox(height: 24),
         _Section(
-          title: context.t.profile.account_management.title,
-          child: Column(
-            children: [
-              GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTap: () async {
-                  final result = await showOkCancelAlertDialog(
-                    title:
-                        context
-                            .t
-                            .profile
-                            .account_management
-                            .logout_dialog
-                            .description,
-                    context: context,
-                  );
-                  if (!context.mounted) return;
-                  if (result == OkCancelResult.ok) {
-                    context.read<AuthBloc>().add(const AuthEvent.logout());
-                  }
-                },
-                child: SizedBox(
-                  height: 44,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        context.t.profile.account_management.logout,
-                        style: TextStyles.title4,
-                      ),
-                      Assets.icons.navArrowRight.svg(),
-                    ],
-                  ),
-                ),
-              ),
-              GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTap: () => launchUrl(Uri.parse('https://idp.gistory.me')),
-                child: SizedBox(
-                  height: 44,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        context.t.profile.account_management.withdraw,
-                        style: TextStyles.title4,
-                      ),
-                      Assets.icons.navArrowRight.svg(),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
+          title: context.t.profile.settings.title,
+          child: Column(children: []),
         ),
       ],
     );
@@ -214,7 +124,7 @@ class _Section extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Text(title, style: TextStyles.title2),
-        SizedBox(height: 12),
+        SizedBox(height: 6),
         child,
       ],
     );

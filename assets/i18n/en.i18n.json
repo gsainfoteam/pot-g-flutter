@@ -8,7 +8,11 @@
     "basic_info": {
       "title": "Basic Info",
       "name": "Name",
-      "email": "Email"
+      "email": "Email",
+      "description": "Name and email cannot be changed"
+    },
+    "settings": {
+      "title": "Settings"
     },
     "notification_settings": {
       "title": "Notification Settings",
