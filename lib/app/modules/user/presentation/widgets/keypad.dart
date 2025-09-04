@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_pressable.dart';
 
@@ -44,7 +46,7 @@ class Keypad extends StatelessWidget {
                 onTap: () {
                   controller.text = controller.text.substring(
                     0,
-                    controller.text.length - 1,
+                    max(controller.text.length - 1, 0),
                   );
                 },
                 child: Icon(Icons.backspace_outlined),
