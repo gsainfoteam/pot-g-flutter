@@ -5,7 +5,7 @@ import 'package:pot_g/app/modules/auth/domain/entity/user_entity.dart';
 import 'package:pot_g/app/modules/auth/presentation/bloc/auth_bloc.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_button.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_pressable.dart';
-import 'package:pot_g/app/modules/common/presentation/widgets/pot_toggle.dart';
+import 'package:pot_g/app/router.gr.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
 import 'package:pot_g/gen/assets.gen.dart';
@@ -118,17 +118,23 @@ class _Inner extends StatelessWidget {
               children: [
                 _MenuButton(
                   title: context.t.profile.account_number_settings.title,
-                  onTap: () {},
+                  onTap: () {
+                    context.router.push(const AccountNumberSettingsRoute());
+                  },
                 ),
                 Container(height: 1, color: Palette.borderGrey),
                 _MenuButton(
                   title: context.t.profile.notification_settings.title,
-                  onTap: () {},
+                  onTap: () {
+                    context.router.push(const NotificationSettingRoute());
+                  },
                 ),
                 Container(height: 1, color: Palette.borderGrey),
                 _MenuButton(
                   title: context.t.profile.account_management.title,
-                  onTap: () {},
+                  onTap: () {
+                    context.router.push(const AccountManagementRoute());
+                  },
                 ),
               ],
             ),
@@ -182,38 +188,6 @@ class _Section extends StatelessWidget {
         Text(title, style: TextStyles.title2),
         SizedBox(height: 6),
         child,
-      ],
-    );
-  }
-}
-
-class _NotificationOption extends StatelessWidget {
-  const _NotificationOption({
-    required this.title,
-    required this.description,
-    required this.value,
-    required this.onChanged,
-  });
-
-  final String title;
-  final String description;
-  final bool value;
-  final void Function(bool) onChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(title, style: TextStyles.title4),
-            const SizedBox(height: 4),
-            Text(description, style: TextStyles.caption),
-          ],
-        ),
-        PotToggle(value: value, onChanged: onChanged),
       ],
     );
   }

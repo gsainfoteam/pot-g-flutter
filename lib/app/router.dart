@@ -18,5 +18,19 @@ class AppRouter extends RootStackRouter {
     ),
     AutoRoute(path: '/create', page: CreateRoute.page),
     AutoRoute(path: '/chat/:id', page: ChatRoomRoute.page),
+
+    // settings
+    AutoRoute(
+      path: '/settings/account-number',
+      page: AccountNumberSettingsRoute.page,
+    ),
+    AutoRoute(
+      path: '/settings/notification',
+      page: NotificationSettingRoute.page,
+    ),
+    AutoRoute(
+      path: '/settings/account-management',
+      page: AccountManagementRoute.page,
+    ),
   ];
 }
