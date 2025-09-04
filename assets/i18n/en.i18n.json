@@ -44,9 +44,13 @@
         "description": "If the registered name and account holder differ,\nthere may be confusion in settlements",
         "next": "Got it"
       },
-      "input": {
+      "select_bank": {
         "bank": "Bank",
-        "register": "Register"
+        "placeholder": "Search for a bank"
+      },
+      "bank_number": {
+        "register": "Register",
+        "placeholder": "Enter your bank number"
       }
     },
     "account_management": {
