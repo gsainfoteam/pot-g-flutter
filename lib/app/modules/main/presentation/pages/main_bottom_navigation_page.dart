@@ -1,5 +1,8 @@
+import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pot_g/app/modules/auth/presentation/bloc/auth_bloc.dart';
 import 'package:pot_g/app/router.gr.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
@@ -83,7 +86,29 @@ class _MainBottomNavigationPageState extends State<MainBottomNavigationPage> {
     return Expanded(
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
-        onTap: () {
+        onTap: () async {
+          // 검색 탭이 아닌 경우, 로그인 여부 확인이 필요합니다
+          if (index != 0) {
+            final user = context.read<AuthBloc>().state.user;
+            if (user == null) {
+              final result = await showOkCancelAlertDialog(
+                context: context,
+                title: context.t.unauthorized.title,
+                message: context.t.unauthorized.description,
+              );
+              if (!mounted) return;
+              if (result != OkCancelResult.ok) return;
+
+              final bloc = context.read<AuthBloc>();
+              final waiter = bloc.stream.firstWhere(
+                (s) => s is AuthError || s is Authenticated,
+              );
+              bloc.add(const AuthEvent.login());
+              final result2 = await waiter;
+              if (!mounted) return;
+              if (result2 is! Authenticated) return;
+            }
+          }
           if (index < 0) {
             context.router.push(CreateRoute());
           } else {

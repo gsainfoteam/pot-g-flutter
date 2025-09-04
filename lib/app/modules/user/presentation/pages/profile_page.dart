@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pot_g/app/modules/auth/domain/entity/user_entity.dart';
 import 'package:pot_g/app/modules/auth/presentation/bloc/auth_bloc.dart';
-import 'package:pot_g/app/modules/common/presentation/widgets/pot_button.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_pressable.dart';
 import 'package:pot_g/app/router.gr.dart';
 import 'package:pot_g/app/values/palette.dart';
@@ -17,20 +16,8 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = switch (context.watch<AuthBloc>().state) {
-      Authenticated(:final user) => user,
-      _ => null,
-    };
-    if (user == null) {
-      return Center(
-        child: PotButton(
-          variant: PotButtonVariant.emphasized,
-          child: Text('login'),
-          onPressed:
-              () => context.read<AuthBloc>().add(const AuthEvent.login()),
-        ),
-      );
-    }
+    final user = context.watch<AuthBloc>().state.user;
+    if (user == null) return const SizedBox.shrink();
     return SafeArea(
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 20, horizontal: 16),

@@ -56,9 +56,16 @@ sealed class AuthEvent with _$AuthEvent {
 
 @freezed
 sealed class AuthState with _$AuthState {
+  const AuthState._();
+
   const factory AuthState.initial() = AuthInitial;
   const factory AuthState.loading() = AuthLoading;
   const factory AuthState.unauthenticated() = Unauthenticated;
   const factory AuthState.authenticated(UserEntity user) = Authenticated;
   const factory AuthState.error(String message) = AuthError;
+
+  UserEntity? get user => switch (this) {
+    Authenticated(:final user) => user,
+    _ => null,
+  };
 }

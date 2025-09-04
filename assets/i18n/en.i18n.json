@@ -4,6 +4,11 @@
     "confirm": "Confirm",
     "cancel": "Cancel"
   },
+  "unauthorized": {
+    "title": "Login to continue",
+    "description": "To access your information, you need to login.\nWould you like to login?",
+    "button": "Login"
+  },
   "profile": {
     "basic_info": {
       "title": "Basic Info",
