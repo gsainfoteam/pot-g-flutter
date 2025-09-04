@@ -14,6 +14,8 @@ class PotBottomSheet extends StatelessWidget {
   static Future<T?> show<T>(BuildContext context, Widget child) {
     return showModalBottomSheet<T>(
       context: context,
+      scrollControlDisabledMaxHeightRatio: 0.9,
+
       builder: (context) => PotBottomSheet(child: child),
     );
   }

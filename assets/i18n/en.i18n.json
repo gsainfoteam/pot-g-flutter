@@ -31,8 +31,23 @@
     },
     "account_number_settings": {
       "title": "Settlement Account Settings",
-      "description": "You can register your account to quickly request settlements.",
-      "button": "Account Settings"
+      "default_account": "Default Account",
+      "no_account": {
+        "description": "By registering a default account, you can request settlements easily and quickly without needing to enter your account each time.",
+        "button": "Register Account"
+      },
+      "has_account": {
+        "change": "Change"
+      },
+      "alert": {
+        "title": "Caution!\nPlease register an account in your name",
+        "description": "If the registered name and account holder differ,\nthere may be confusion in settlements",
+        "next": "Got it"
+      },
+      "input": {
+        "bank": "Bank",
+        "register": "Register"
+      }
     },
     "account_management": {
       "title": "Account Management",
