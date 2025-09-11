@@ -6,11 +6,11 @@ import 'package:pot_g/app/modules/auth/domain/repositories/oauth_repository.dart
 import 'package:pot_g/app/modules/auth/domain/repositories/token_repository.dart';
 
 @Injectable(as: AuthRepository)
-class OauthAuthRepository implements AuthRepository {
+class OauthRestAuthRepository implements AuthRepository {
   final TokenRepository _tokenRepository;
   final OAuthRepository _oAuthRepository;
 
-  OauthAuthRepository(this._tokenRepository, this._oAuthRepository);
+  OauthRestAuthRepository(this._tokenRepository, this._oAuthRepository);
 
   @override
   Stream<bool> get isSignedIn => user.map((user) => user != null);
