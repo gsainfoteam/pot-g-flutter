@@ -5,7 +5,6 @@ part 'token_request_with_code_model.g.dart';
 
 @freezed
 sealed class TokenRequestWithCodeModel with _$TokenRequestWithCodeModel {
-  @JsonSerializable(fieldRename: FieldRename.snake)
   const factory TokenRequestWithCodeModel({
     @Default('authorization_code') String grantType,
     required String code,

@@ -5,7 +5,6 @@ part 'token_request_with_refresh_model.g.dart';
 
 @freezed
 sealed class TokenRequestWithRefreshModel with _$TokenRequestWithRefreshModel {
-  @JsonSerializable(fieldRename: FieldRename.snake)
   const factory TokenRequestWithRefreshModel({
     @Default('refresh_token') String grantType,
     required String refreshToken,
