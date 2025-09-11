@@ -10,7 +10,6 @@ sealed class TokenRequestWithCodeModel with _$TokenRequestWithCodeModel {
     required String code,
     required String codeVerifier,
     required String clientId,
-    required String nonce,
   }) = _TokenRequestWithCodeModel;
 
   factory TokenRequestWithCodeModel.fromJson(Map<String, dynamic> json) =>

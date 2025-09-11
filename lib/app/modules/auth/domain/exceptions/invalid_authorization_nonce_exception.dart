@@ -1,1 +1,0 @@
-class InvalidAuthorizationNonceException implements Exception {}
