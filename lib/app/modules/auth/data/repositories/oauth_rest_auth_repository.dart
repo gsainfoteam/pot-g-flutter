@@ -52,7 +52,8 @@ class OauthRestAuthRepository implements AuthRepository {
       _tokenRepository.token.asyncMap((token) async {
         if (token == null) return null;
         try {
-          return _userAuthApi.getUser();
+          final user = await _userAuthApi.getUser();
+          return user;
         } catch (e) {
           await _tokenRepository.deleteToken();
           return null;
