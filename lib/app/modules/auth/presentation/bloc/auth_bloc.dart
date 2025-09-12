@@ -1,8 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
-import 'package:pot_g/app/modules/auth/domain/entity/user_entity.dart';
 import 'package:pot_g/app/modules/auth/domain/repositories/auth_repository.dart';
+import 'package:pot_g/app/modules/user/domain/entities/user_entity.dart';
 
 part 'auth_bloc.freezed.dart';
 

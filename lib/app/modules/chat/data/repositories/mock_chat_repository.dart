@@ -1,8 +1,8 @@
 import 'package:injectable/injectable.dart';
-import 'package:pot_g/app/modules/auth/domain/entity/user_entity.dart';
 import 'package:pot_g/app/modules/auth/domain/repositories/auth_repository.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/chat_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/repositories/chat_repository.dart';
+import 'package:pot_g/app/modules/user/domain/entities/user_entity.dart';
 
 @Injectable(as: ChatRepository)
 class MockChatRepository implements ChatRepository {

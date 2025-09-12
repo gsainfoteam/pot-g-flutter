@@ -1,0 +1,11 @@
+abstract class AccountingEntity {
+  const AccountingEntity({
+    required this.isSet,
+    required this.bankShortName,
+    required this.account,
+  });
+
+  final bool isSet;
+  final String bankShortName;
+  final String account;
+}

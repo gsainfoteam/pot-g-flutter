@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:pot_g/app/modules/auth/domain/entity/user_entity.dart';
+import 'package:pot_g/app/modules/user/domain/entities/user_entity.dart';
 
 class ChatEntity with EquatableMixin {
   final String id;
