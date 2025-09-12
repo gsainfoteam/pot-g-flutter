@@ -11,7 +11,6 @@ sealed class TokenModel with _$TokenModel {
     required int expiresIn,
     required String refreshToken,
     required int refreshTokenExpiresIn,
-    required String idToken,
     required String scope,
   }) = _TokenModel;
 
