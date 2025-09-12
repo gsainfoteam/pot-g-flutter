@@ -4,6 +4,7 @@ import 'package:pot_g/app/modules/auth/data/models/login_request_model.dart';
 import 'package:pot_g/app/modules/auth/data/models/login_response_model.dart';
 import 'package:pot_g/app/modules/auth/data/models/refresh_request_model.dart';
 import 'package:pot_g/app/modules/auth/data/models/refresh_response_model.dart';
+import 'package:pot_g/app/modules/user/data/models/self_user_model.dart';
 import 'package:retrofit/retrofit.dart';
 
 part 'user_auth_api.g.dart';
@@ -18,4 +19,7 @@ abstract class UserAuthApi {
 
   @POST('refresh')
   Future<RefreshResponseModel> refresh(@Body() RefreshRequestModel request);
+
+  @GET('info')
+  Future<SelfUserModel> getUser();
 }

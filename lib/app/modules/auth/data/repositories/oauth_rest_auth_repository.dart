@@ -1,27 +1,40 @@
 import 'package:injectable/injectable.dart';
-import 'package:pot_g/app/modules/auth/data/utils/token_helper.dart';
-import 'package:pot_g/app/modules/auth/domain/entity/user_entity.dart';
+import 'package:pot_g/app/modules/auth/data/data_sources/remote/user_auth_api.dart';
+import 'package:pot_g/app/modules/auth/data/models/login_request_model.dart';
 import 'package:pot_g/app/modules/auth/domain/repositories/auth_repository.dart';
 import 'package:pot_g/app/modules/auth/domain/repositories/oauth_repository.dart';
 import 'package:pot_g/app/modules/auth/domain/repositories/token_repository.dart';
+import 'package:pot_g/app/modules/device/domain/repositories/device_info_repository.dart';
+import 'package:pot_g/app/modules/user/domain/entities/user_entity.dart';
 
 @Injectable(as: AuthRepository)
 class OauthRestAuthRepository implements AuthRepository {
   final TokenRepository _tokenRepository;
   final OAuthRepository _oAuthRepository;
+  final UserAuthApi _userAuthApi;
+  final DeviceInfoRepository _deviceInfoRepository;
 
-  OauthRestAuthRepository(this._tokenRepository, this._oAuthRepository);
+  OauthRestAuthRepository(
+    this._tokenRepository,
+    this._oAuthRepository,
+    this._userAuthApi,
+    this._deviceInfoRepository,
+  );
 
   @override
   Stream<bool> get isSignedIn => user.map((user) => user != null);
 
   @override
   Future<UserEntity> signIn() async {
-    final token = await _oAuthRepository.getToken();
-    await _tokenRepository.saveToken(token.idToken);
+    final deviceId = await _deviceInfoRepository.getDeviceId();
+    final idPToken = await _oAuthRepository.getToken();
+    final token = await _userAuthApi.login(
+      LoginRequestModel(token: idPToken.accessToken, deviceId: deviceId),
+    );
+    await _tokenRepository.saveToken(token.accessToken);
     await _tokenRepository.saveRefreshToken(token.refreshToken);
     try {
-      return _parseUser(token.idToken);
+      return _userAuthApi.getUser();
     } catch (e) {
       await _tokenRepository.deleteToken();
       rethrow;
@@ -34,25 +47,12 @@ class OauthRestAuthRepository implements AuthRepository {
     await _oAuthRepository.setRecentLogout();
   }
 
-  UserEntity _parseUser(String token) {
-    final payload = TokenHelper.getPayload(token);
-    try {
-      return UserEntity(
-        email: payload['email'],
-        name: payload['name'],
-        uuid: payload['sub'],
-      );
-    } catch (e) {
-      throw FormatException('Failed to parse user from token: $e');
-    }
-  }
-
   @override
   Stream<UserEntity?> get user =>
       _tokenRepository.token.asyncMap((token) async {
         if (token == null) return null;
         try {
-          return _parseUser(token);
+          return _userAuthApi.getUser();
         } catch (e) {
           await _tokenRepository.deleteToken();
           return null;
