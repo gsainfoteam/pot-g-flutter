@@ -9,6 +9,7 @@ import 'package:retrofit/retrofit.dart';
 
 part 'user_auth_api.g.dart';
 
+@injectable
 @RestApi(baseUrl: 'v1/user')
 abstract class UserAuthApi {
   @factoryMethod
