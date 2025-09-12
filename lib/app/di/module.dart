@@ -9,7 +9,7 @@ abstract class Module {
     aOptions: AndroidOptions(encryptedSharedPreferences: true),
   );
 
-  Dio get dio => Dio(BaseOptions(baseUrl: 'https://api.pot-g.gistory.me/'));
+  Dio get dio => Dio(BaseOptions(baseUrl: 'http://api.pot-g.gistory.me:3000/'));
 
   DeviceInfoPlugin get deviceInfoPlugin => DeviceInfoPlugin();
 }
