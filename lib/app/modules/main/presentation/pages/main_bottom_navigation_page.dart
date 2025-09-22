@@ -1,5 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pot_g/app/modules/auth/presentation/bloc/auth_bloc.dart';
 import 'package:pot_g/app/modules/auth/presentation/functions/try_login.dart';
 import 'package:pot_g/app/router.gr.dart';
 import 'package:pot_g/app/values/palette.dart';
@@ -90,7 +92,7 @@ class _MainBottomNavigationPageState extends State<MainBottomNavigationPage> {
             context.router.push(CreateRoute());
             return;
           }
-          if (index != 0) {
+          if (index != 0 && context.read<AuthBloc>().state.user == null) {
             if (!await tryLogin(context)) return;
           }
           if (context.mounted) {
