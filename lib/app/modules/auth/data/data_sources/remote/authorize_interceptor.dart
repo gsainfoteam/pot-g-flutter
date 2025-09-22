@@ -6,11 +6,17 @@ import 'package:pot_g/app/modules/auth/data/data_sources/remote/user_auth_api.da
 import 'package:pot_g/app/modules/auth/data/models/refresh_request_model.dart';
 import 'package:pot_g/app/modules/auth/domain/repositories/token_repository.dart';
 import 'package:pot_g/app/modules/core/data/dio/pot_dio.dart';
+import 'package:retrofit/retrofit.dart';
+
+class PreventRetry extends Extra {
+  static const _data = {AuthorizeInterceptor._retriedKey: true};
+  const PreventRetry() : super(_data);
+}
 
 @injectable
 class AuthorizeInterceptor extends Interceptor {
   final TokenRepository repository;
-  static const retriedKey = '_retried';
+  static const _retriedKey = '_retried';
   final mutex = ReadWriteMutex();
 
   AuthorizeInterceptor(this.repository);
@@ -81,6 +87,6 @@ class AuthorizeInterceptor extends Interceptor {
 }
 
 extension _RequestOptionsX on RequestOptions {
-  bool get retried => extra.containsKey(AuthorizeInterceptor.retriedKey);
-  set retried(bool value) => extra[AuthorizeInterceptor.retriedKey] = value;
+  bool get retried => extra.containsKey(AuthorizeInterceptor._retriedKey);
+  set retried(bool value) => extra[AuthorizeInterceptor._retriedKey] = value;
 }

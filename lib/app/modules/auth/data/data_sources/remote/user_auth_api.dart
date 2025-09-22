@@ -1,5 +1,5 @@
-import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
+import 'package:pot_g/app/modules/auth/data/data_sources/remote/authorize_interceptor.dart';
 import 'package:pot_g/app/modules/auth/data/models/login_request_model.dart';
 import 'package:pot_g/app/modules/auth/data/models/login_response_model.dart';
 import 'package:pot_g/app/modules/auth/data/models/refresh_request_model.dart';
@@ -20,6 +20,7 @@ abstract class UserAuthApi {
   Future<LoginResponseModel> login(@Body() LoginRequestModel request);
 
   @POST('refresh')
+  @PreventRetry()
   Future<RefreshResponseModel> refresh(@Body() RefreshRequestModel request);
 
   @GET('info')
