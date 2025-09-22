@@ -10,8 +10,8 @@ sealed class AccountingModel
     implements AccountingEntity {
   const factory AccountingModel({
     required bool isSet,
-    required String bankShortName,
-    required String account,
+    String? bankShortName,
+    String? account,
   }) = _AccountingModel;
 
   factory AccountingModel.fromJson(Map<String, dynamic> json) =>

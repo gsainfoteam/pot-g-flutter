@@ -1,11 +1,11 @@
 abstract class AccountingEntity {
   const AccountingEntity({
     required this.isSet,
-    required this.bankShortName,
-    required this.account,
+    this.bankShortName,
+    this.account,
   });
 
   final bool isSet;
-  final String bankShortName;
-  final String account;
+  final String? bankShortName;
+  final String? account;
 }
