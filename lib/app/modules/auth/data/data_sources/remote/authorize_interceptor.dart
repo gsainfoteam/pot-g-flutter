@@ -71,7 +71,7 @@ class AuthorizeInterceptor extends Interceptor {
       );
       await repository.saveToken(res.accessToken);
       return true;
-    } catch (e) {
+    } on DioException {
       await repository.deleteToken();
       return false;
     } finally {

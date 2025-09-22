@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:pot_g/app/modules/auth/data/data_sources/remote/user_auth_api.dart';
 import 'package:pot_g/app/modules/auth/data/models/login_request_model.dart';
@@ -35,7 +36,7 @@ class OauthRestAuthRepository implements AuthRepository {
     await _tokenRepository.saveRefreshToken(token.refreshToken);
     try {
       return _userAuthApi.getUser();
-    } catch (e) {
+    } on DioException {
       await _tokenRepository.deleteToken();
       rethrow;
     }
@@ -54,7 +55,7 @@ class OauthRestAuthRepository implements AuthRepository {
         try {
           final user = await _userAuthApi.getUser();
           return user;
-        } catch (e) {
+        } on DioException {
           await _tokenRepository.deleteToken();
           return null;
         }
