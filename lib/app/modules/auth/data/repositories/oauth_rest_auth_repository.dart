@@ -35,7 +35,7 @@ class OauthRestAuthRepository implements AuthRepository {
     await _tokenRepository.saveToken(token.accessToken);
     await _tokenRepository.saveRefreshToken(token.refreshToken);
     try {
-      return _userAuthApi.getUser();
+      return await _userAuthApi.getUser();
     } on DioException {
       await _tokenRepository.deleteToken();
       rethrow;
