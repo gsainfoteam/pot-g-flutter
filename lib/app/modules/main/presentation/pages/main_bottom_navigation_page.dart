@@ -1,8 +1,6 @@
-import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pot_g/app/modules/auth/presentation/bloc/auth_bloc.dart';
+import 'package:pot_g/app/modules/auth/presentation/functions/try_login.dart';
 import 'package:pot_g/app/router.gr.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
@@ -62,10 +60,7 @@ class _MainBottomNavigationPageState extends State<MainBottomNavigationPage> {
                                     label: '내 정보',
                                   ),
                                 ].indexed
-                                .map(
-                                  (e) =>
-                                      _buildItem(tabController, e.$1 - 1, e.$2),
-                                )
+                                .map((e) => _buildItem(context, e.$1 - 1, e.$2))
                                 .toList(),
                       ),
                     ),
@@ -78,41 +73,28 @@ class _MainBottomNavigationPageState extends State<MainBottomNavigationPage> {
   }
 
   Expanded _buildItem(
-    TabController tabController,
+    BuildContext context,
     int index,
     BottomNavigationBarItem item,
   ) {
-    var selected = tabController.index == index;
+    final router = AutoTabsRouter.of(context);
+    final selected = router.activeIndex == index;
     return Expanded(
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: () async {
-          // 검색 탭이 아닌 경우, 로그인 여부 확인이 필요합니다
-          if (index != 0) {
-            final user = context.read<AuthBloc>().state.user;
-            if (user == null) {
-              final result = await showOkCancelAlertDialog(
-                context: context,
-                title: context.t.unauthorized.title,
-                message: context.t.unauthorized.description,
-              );
-              if (!mounted) return;
-              if (result != OkCancelResult.ok) return;
-
-              final bloc = context.read<AuthBloc>();
-              final waiter = bloc.stream.firstWhere(
-                (s) => s is AuthError || s is Authenticated,
-              );
-              bloc.add(const AuthEvent.login());
-              final result2 = await waiter;
-              if (!mounted) return;
-              if (result2 is! Authenticated) return;
-            }
-          }
+          // 검색 탭이 아닌 경우, 인증 확인이 필요합니다.
+          // 다만 생성 탭은 이미 guard에서 인증 확인을 처리하고 있습니다.
+          // related PR: https://github.com/Milad-Akarie/auto_route_library/pull/1841
           if (index < 0) {
             context.router.push(CreateRoute());
-          } else {
-            tabController.animateTo(index);
+            return;
+          }
+          if (index != 0) {
+            if (!await tryLogin(context)) return;
+          }
+          if (context.mounted) {
+            AutoTabsRouter.of(context).setActiveIndex(index);
           }
         },
         child: Container(
