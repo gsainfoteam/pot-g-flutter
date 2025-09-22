@@ -10,12 +10,20 @@ class FlutterSecureStorageDeviceInfoRepository implements DeviceInfoRepository {
 
   FlutterSecureStorageDeviceInfoRepository(this._storage);
 
+  @PostConstruct(preResolve: true)
+  Future<void> init() async {
+    final deviceId = await _storage.read(key: _key);
+    if (deviceId != null) return;
+    final newDeviceId = Uuid().v4();
+    await _storage.write(key: _key, value: newDeviceId);
+  }
+
   @override
   Future<String> getDeviceId() async {
     final deviceId = await _storage.read(key: _key);
-    if (deviceId != null) return deviceId;
-    final newDeviceId = Uuid().v4();
-    await _storage.write(key: _key, value: newDeviceId);
-    return newDeviceId;
+    if (deviceId == null) {
+      throw Exception('Device id not found');
+    }
+    return deviceId;
   }
 }
