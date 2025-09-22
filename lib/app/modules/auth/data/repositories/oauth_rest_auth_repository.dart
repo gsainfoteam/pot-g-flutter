@@ -7,6 +7,7 @@ import 'package:pot_g/app/modules/auth/domain/repositories/oauth_repository.dart
 import 'package:pot_g/app/modules/auth/domain/repositories/token_repository.dart';
 import 'package:pot_g/app/modules/device/domain/repositories/device_info_repository.dart';
 import 'package:pot_g/app/modules/user/domain/entities/user_entity.dart';
+import 'package:rxdart/streams.dart';
 
 @Injectable(as: AuthRepository)
 class OauthRestAuthRepository implements AuthRepository {
@@ -36,8 +37,11 @@ class OauthRestAuthRepository implements AuthRepository {
     await _tokenRepository.saveRefreshToken(token.refreshToken);
     try {
       return await _userAuthApi.getUser();
-    } on DioException {
-      await _tokenRepository.deleteToken();
+    } on DioException catch (e) {
+      final status = e.response?.statusCode;
+      if (status == 401 || status == 403) {
+        await _tokenRepository.deleteToken();
+      }
       rethrow;
     }
   }
@@ -49,15 +53,19 @@ class OauthRestAuthRepository implements AuthRepository {
   }
 
   @override
-  Stream<UserEntity?> get user =>
-      _tokenRepository.token.asyncMap((token) async {
+  Stream<UserEntity?> get user => _tokenRepository.token
+      .asyncMap((token) async {
         if (token == null) return null;
         try {
           final user = await _userAuthApi.getUser();
           return user;
-        } on DioException {
-          await _tokenRepository.deleteToken();
+        } on DioException catch (e) {
+          final status = e.response?.statusCode;
+          if (status == 401 || status == 403) {
+            await _tokenRepository.deleteToken();
+          }
           return null;
         }
-      });
+      })
+      .shareReplay(maxSize: 1);
 }

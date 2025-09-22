@@ -78,8 +78,11 @@ class AuthorizeInterceptor extends Interceptor {
       );
       await repository.saveToken(res.accessToken);
       return true;
-    } on DioException {
-      await repository.deleteToken();
+    } on DioException catch (e) {
+      final status = e.response?.statusCode;
+      if (status == 401 || status == 403) {
+        await repository.deleteToken();
+      }
       return false;
     } finally {
       mutex.release();
