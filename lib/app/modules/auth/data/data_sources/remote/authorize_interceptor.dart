@@ -66,7 +66,8 @@ class AuthorizeInterceptor extends Interceptor {
     if (mutex.isWriteLocked) {
       await mutex.acquireRead();
       mutex.release();
-      return true;
+      final token = await repository.token.first;
+      return token != null;
     }
     await mutex.acquireWrite();
     try {
