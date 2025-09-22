@@ -8,6 +8,7 @@ part 'user_api.g.dart';
 @injectable
 @RestApi(baseUrl: '/api/v1/user/')
 abstract class UserApi {
+  @factoryMethod
   factory UserApi(PotDio dio) = _UserApi;
 
   @GET('info')
