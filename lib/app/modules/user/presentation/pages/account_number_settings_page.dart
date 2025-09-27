@@ -1,10 +1,14 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pot_g/app/di/locator.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_app_bar.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_bottom_sheet.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_button.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_pressable.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_text_field.dart';
+import 'package:pot_g/app/modules/user/domain/entities/bank_entity.dart';
+import 'package:pot_g/app/modules/user/presentation/blocs/bank_list_bloc.dart';
 import 'package:pot_g/app/modules/user/presentation/widgets/keypad.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
@@ -14,6 +18,15 @@ import 'package:pot_g/gen/strings.g.dart';
 @RoutePage()
 class AccountNumberSettingsPage extends StatelessWidget {
   const AccountNumberSettingsPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return _Layout();
+  }
+}
+
+class _Layout extends StatelessWidget {
+  const _Layout();
 
   @override
   Widget build(BuildContext context) {
@@ -99,14 +112,17 @@ class _SelectBankDialog extends StatefulWidget {
 }
 
 class _SelectBankDialogState extends State<_SelectBankDialog> {
-  String? selectedBank;
+  BankEntity? selectedBank;
 
   @override
   Widget build(BuildContext context) {
-    if (selectedBank != null) {
-      return _BankNumber(selectedBank: selectedBank);
-    }
-    return _buildBankList();
+    return BlocProvider(
+      create: (_) => sl<BankListBloc>()..add(BankListEvent.load()),
+      child:
+          selectedBank != null
+              ? _BankNumber(selectedBank: selectedBank)
+              : _buildBankList(),
+    );
   }
 
   Widget _buildBankList() {
@@ -128,28 +144,39 @@ class _SelectBankDialogState extends State<_SelectBankDialog> {
         const SizedBox(height: 20),
         SizedBox(
           height: 300,
-          child: ListView.separated(
-            itemBuilder:
-                (_, _) => PotPressable(
-                  hitTestBehavior: HitTestBehavior.opaque,
-                  onTap: () => setState(() => selectedBank = '가은행'),
-                  child: SizedBox(
-                    height: 48,
-                    child: Row(
-                      children: [
-                        SizedBox(
-                          width: 24,
-                          height: 24,
-                          child: Assets.icons.fofoSad.svg(),
+          child: BlocBuilder<BankListBloc, BankListState>(
+            builder:
+                (context, state) => ListView.separated(
+                  itemBuilder:
+                      (_, index) => PotPressable(
+                        hitTestBehavior: HitTestBehavior.opaque,
+                        onTap:
+                            () => setState(
+                              () => selectedBank = state.banks[index],
+                            ),
+                        child: SizedBox(
+                          height: 48,
+                          child: Row(
+                            children: [
+                              SizedBox(
+                                width: 24,
+                                height: 24,
+                                child: Image.network(
+                                  'https://placeholder.co/150',
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              Text(
+                                state.banks[index].name,
+                                style: TextStyles.title3,
+                              ),
+                            ],
+                          ),
                         ),
-                        const SizedBox(width: 12),
-                        Text('가은행', style: TextStyles.title3),
-                      ],
-                    ),
-                  ),
+                      ),
+                  separatorBuilder: (_, _) => const SizedBox(height: 8),
+                  itemCount: state.banks.length,
                 ),
-            separatorBuilder: (_, _) => const SizedBox(height: 8),
-            itemCount: 10,
           ),
         ),
       ],
@@ -160,7 +187,7 @@ class _SelectBankDialogState extends State<_SelectBankDialog> {
 class _BankNumber extends StatefulWidget {
   const _BankNumber({required this.selectedBank});
 
-  final String? selectedBank;
+  final BankEntity? selectedBank;
 
   @override
   State<_BankNumber> createState() => _BankNumberState();
@@ -188,7 +215,7 @@ class _BankNumberState extends State<_BankNumber> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(widget.selectedBank!, style: TextStyles.title2),
+        Text(widget.selectedBank!.name, style: TextStyles.title2),
         const SizedBox(height: 20),
         PotTextField(
           controller: controller,
