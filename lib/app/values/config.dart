@@ -17,4 +17,6 @@ abstract class Config {
   static const String idpApiBaseUrl = _Config.idpApiBaseUrl;
   @EnviedField(defaultValue: 'http://api.pot-g.gistory.me:3000/')
   static const String apiBaseUrl = _Config.apiBaseUrl;
+  @EnviedField(defaultValue: 'ws://api.pot-g.gistory.me:3000/ws')
+  static const String wsUrl = _Config.wsUrl;
 }
