@@ -15,7 +15,4 @@ sealed class RequestAuthorizationEventModel
 
   factory RequestAuthorizationEventModel.fromJson(Map<String, dynamic> json) =>
       _$RequestAuthorizationEventModelFromJson(json);
-
-  @override
-  String get type => 'request_authorization';
 }

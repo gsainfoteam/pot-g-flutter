@@ -3,9 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'base_socket_response_model.freezed.dart';
 part 'base_socket_response_model.g.dart';
 
-abstract class BaseSocketEventModel {
-  String get type;
-}
+abstract class BaseSocketEventModel {}
 
 @Freezed(toJson: false, genericArgumentFactories: true)
 sealed class BaseSocketResponseResultModel<T extends BaseSocketEventModel>
