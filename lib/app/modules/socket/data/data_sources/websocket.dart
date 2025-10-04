@@ -3,8 +3,9 @@ import 'dart:convert';
 
 import 'package:injectable/injectable.dart';
 import 'package:pot_g/app/modules/socket/data/models/base/base_server_message_model.dart';
-import 'package:pot_g/app/modules/socket/data/models/base_socket_request_model.dart';
-import 'package:pot_g/app/modules/socket/data/models/events/request_authorization_event_model.dart';
+import 'package:pot_g/app/modules/socket/data/models/base/base_socket_request_model.dart';
+import 'package:pot_g/app/modules/socket/data/models/converter/client_converter.dart';
+import 'package:pot_g/app/modules/socket/data/models/converter/server_converter.dart';
 import 'package:pot_g/app/values/config.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
@@ -50,15 +51,7 @@ class PotGSocket {
         try {
           print(event.runtimeType);
           final Map<String, dynamic> jsonData = jsonDecode(event);
-          final type = jsonData['type'] as String;
-          final data = switch (type) {
-            'pot_event' => throw UnimplementedError(),
-            'request_authorization' => BaseServerMessageModel.fromJson(
-              jsonData,
-              RequestAuthorizationEventModel.fromJson,
-            ),
-            _ => throw UnimplementedError(),
-          };
+          final data = convertServerMessage(jsonData);
           _socketEventController?.add(data);
         } catch (e) {
           // JSON 파싱 오류 처리
@@ -112,8 +105,8 @@ class PotGSocket {
         .cast<BaseServerMessageModel<T>>();
   }
 
-  Future<void> sendRequest(BaseSocketRequestModel request) async {
+  Future<void> sendRequest(BaseSocketRequestEvent request) async {
     await _ensureConnected();
-    channel.sink.add(request.toJson());
+    channel.sink.add(convertClientMessage(request));
   }
 }

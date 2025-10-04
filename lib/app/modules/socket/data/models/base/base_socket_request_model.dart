@@ -3,14 +3,16 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'base_socket_request_model.freezed.dart';
 part 'base_socket_request_model.g.dart';
 
-@freezed
-sealed class BaseSocketRequestModel with _$BaseSocketRequestModel {
+abstract class BaseSocketRequestEvent {
+  Map<String, dynamic> toJson();
+}
+
+@Freezed(fromJson: false, toJson: true, genericArgumentFactories: true)
+sealed class BaseSocketRequestModel<T extends BaseSocketRequestEvent>
+    with _$BaseSocketRequestModel<T> {
   const factory BaseSocketRequestModel({
     required String type,
     required String requestId,
-    required String body,
+    required T body,
   }) = _BaseSocketRequestModel;
-
-  factory BaseSocketRequestModel.fromJson(Map<String, dynamic> json) =>
-      _$BaseSocketRequestModelFromJson(json);
 }
