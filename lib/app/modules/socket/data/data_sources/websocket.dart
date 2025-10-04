@@ -1,9 +1,9 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:injectable/injectable.dart';
 import 'package:pot_g/app/modules/socket/data/models/base_socket_request_model.dart';
-import 'package:pot_g/app/modules/socket/data/models/base_socket_response_model.dart';
-import 'package:pot_g/app/modules/socket/data/models/request_authorization_event_model.dart';
+import 'package:pot_g/app/modules/socket/data/models/socket_response_model.dart';
 import 'package:pot_g/app/values/config.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
@@ -11,7 +11,7 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 class PotGSocket {
   final _wsUrl = Uri.parse(Config.wsUrl);
   WebSocketChannel? _channel;
-  StreamController<Map<String, dynamic>>? _rawMessageController;
+  StreamController<SocketResponseModel>? _socketEventController;
   StreamSubscription? _channelSubscription;
 
   bool get isConnected => _channel != null && _channel!.closeCode == null;
@@ -47,18 +47,19 @@ class PotGSocket {
     _channelSubscription = _channel!.stream.listen(
       (event) {
         try {
-          final Map<String, dynamic> jsonData = event;
-          _rawMessageController?.add(jsonData);
+          print(event.runtimeType);
+          final jsonData = jsonDecode(event);
+          _socketEventController?.add(SocketResponseModel.fromJson(jsonData));
         } catch (e) {
           // JSON 파싱 오류 처리
-          _rawMessageController?.addError(e);
+          _socketEventController?.addError(e);
         }
       },
       onError: (error) {
-        _rawMessageController?.addError(error);
+        _socketEventController?.addError(error);
       },
       onDone: () {
-        _rawMessageController?.close();
+        _socketEventController?.close();
       },
     );
   }
@@ -72,8 +73,8 @@ class PotGSocket {
       _channel = null;
     }
 
-    _rawMessageController?.close();
-    _rawMessageController = null;
+    _socketEventController?.close();
+    _socketEventController = null;
   }
 
   /// 연결 상태를 확인하고 필요시 자동 재연결
@@ -84,39 +85,20 @@ class PotGSocket {
   }
 
   /// 메인 raw message stream
-  Stream<Map<String, dynamic>> get rawMessages {
-    if (_rawMessageController == null || _rawMessageController!.isClosed) {
-      _rawMessageController =
-          StreamController<Map<String, dynamic>>.broadcast();
+  Stream<SocketResponseModel> get messages {
+    if (_socketEventController == null || _socketEventController!.isClosed) {
+      _socketEventController =
+          StreamController<SocketResponseModel>.broadcast();
     }
-
     _ensureConnected();
-    return _rawMessageController!.stream;
+    return _socketEventController!.stream;
   }
 
-  final Map<Type, (String, Function(Map<String, dynamic>))> _mapper = {
-    RequestAuthorizationEventModel: (
-      'request_authorization',
-      RequestAuthorizationEventModel.fromJson,
-    ),
-  };
-
   /// 특정 타입의 이벤트만 필터링하는 stream
-  Stream<T?> createNullableStreamFor<T extends BaseSocketEventModel>() {
-    final (type, fromJson) = _mapper[T]!;
-    return rawMessages
-        .where((message) => message['type'] == type)
-        .map((message) {
-          try {
-            return BaseSocketResponseModel<T>.fromJson(
-              message,
-              (json) => fromJson(json as Map<String, dynamic>),
-            );
-          } catch (e) {
-            throw Exception('Failed to parse $type: $e');
-          }
-        })
-        .map((response) => response.body.result);
+  Stream<T> createStreamFor<T>() {
+    return messages
+        .where((message) => message.body is T)
+        .map((response) => response.body as T);
   }
 
   Future<void> sendRequest(BaseSocketRequestModel request) async {

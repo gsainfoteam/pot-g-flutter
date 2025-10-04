@@ -8,6 +8,7 @@ targets:
       freezed:
         options:
           when: false
+          union_value_case: snake
 
 global_options:
   json_serializable:
