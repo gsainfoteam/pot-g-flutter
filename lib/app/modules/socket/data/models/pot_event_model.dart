@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:pot_g/app/modules/socket/data/models/chat_v1_event.dart';
-import 'package:pot_g/app/modules/socket/data/models/user_in_v1_event.dart';
+import 'package:pot_g/app/modules/socket/data/models/pot_events/chat_v1_event.dart';
+import 'package:pot_g/app/modules/socket/data/models/pot_events/user_in_v1_event.dart';
 
 part 'pot_event_model.freezed.dart';
 part 'pot_event_model.g.dart';
