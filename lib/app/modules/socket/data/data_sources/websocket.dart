@@ -2,8 +2,11 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:injectable/injectable.dart';
+import 'package:pot_g/app/modules/socket/data/models/base/base_server_message_model.dart';
 import 'package:pot_g/app/modules/socket/data/models/base_socket_request_model.dart';
-import 'package:pot_g/app/modules/socket/data/models/socket_response_model.dart';
+import 'package:pot_g/app/modules/socket/data/models/events/pot_event_model.dart';
+import 'package:pot_g/app/modules/socket/data/models/events/request_authorization_event_model.dart';
+import 'package:pot_g/app/modules/socket/data/models/pot_events/chat_v1_event.dart';
 import 'package:pot_g/app/values/config.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
@@ -11,7 +14,7 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 class PotGSocket {
   final _wsUrl = Uri.parse(Config.wsUrl);
   WebSocketChannel? _channel;
-  StreamController<SocketResponseModel>? _socketEventController;
+  StreamController<Map<String, dynamic>>? _socketEventController;
   StreamSubscription? _channelSubscription;
 
   bool get isConnected => _channel != null && _channel!.closeCode == null;
@@ -49,7 +52,7 @@ class PotGSocket {
         try {
           print(event.runtimeType);
           final jsonData = jsonDecode(event);
-          _socketEventController?.add(SocketResponseModel.fromJson(jsonData));
+          _socketEventController?.add(jsonData);
         } catch (e) {
           // JSON 파싱 오류 처리
           _socketEventController?.addError(e);
@@ -85,20 +88,39 @@ class PotGSocket {
   }
 
   /// 메인 raw message stream
-  Stream<SocketResponseModel> get messages {
+  Stream<Map<String, dynamic>> get rawMessages {
     if (_socketEventController == null || _socketEventController!.isClosed) {
       _socketEventController =
-          StreamController<SocketResponseModel>.broadcast();
+          StreamController<Map<String, dynamic>>.broadcast();
     }
     _ensureConnected();
     return _socketEventController!.stream;
   }
 
+  final _mapper = {
+    RequestAuthorizationEventModel: (
+      'request_authorization',
+      RequestAuthorizationEventModel.fromJson,
+    ),
+    PotEventModel: (
+      'pot_event',
+      (json) {
+        if (json['event_type'] == 'chat_v1') {
+          return PotEventModel.fromJson(json, ChatV1Event.fromJson);
+        }
+        throw UnimplementedError();
+      },
+    ),
+  };
+
   /// 특정 타입의 이벤트만 필터링하는 stream
-  Stream<T> createStreamFor<T>() {
-    return messages
-        .where((message) => message.body is T)
-        .map((response) => response.body as T);
+  Stream<BaseServerMessageModel<T>>
+  createStreamFor<T extends BaseServerMessageEvent>() {
+    final type = _mapper[T]!.$1;
+    final fromJsonT = _mapper[T]!.$2 as T Function(Map<String, dynamic>);
+    return rawMessages
+        .where((message) => message['type'] == type)
+        .map((message) => BaseServerMessageModel.fromJson(message, fromJsonT));
   }
 
   Future<void> sendRequest(BaseSocketRequestModel request) async {
