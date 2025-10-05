@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:injectable/injectable.dart';
 import 'package:pot_g/app/modules/auth/domain/repositories/auth_repository.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/chat_entity.dart';
@@ -10,6 +12,8 @@ class MockChatRepository implements ChatRepository {
   final AuthRepository _authRepository;
 
   MockChatRepository(this._authRepository);
+
+  final _controller = StreamController<ChatEntity>.broadcast();
 
   @override
   Future<List<ChatEntity>> getChats(PotEntity pot) async {
@@ -42,13 +46,16 @@ class MockChatRepository implements ChatRepository {
 
   @override
   Stream<ChatEntity> getChatsStream(PotEntity pot) {
-    // TODO: implement getChatsStream
-    throw UnimplementedError();
+    return _controller.stream;
   }
 
   @override
-  Future<void> sendChat(String message, PotEntity pot) {
-    // TODO: implement sendChat
-    throw UnimplementedError();
+  Future<void> sendChat(String message, PotEntity pot) async {
+    _controller.add(
+      ChatEntity.make(
+        message,
+        await _authRepository.user.first ?? UserEntity(name: 'Me', id: 'me'),
+      ),
+    );
   }
 }
