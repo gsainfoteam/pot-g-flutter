@@ -56,7 +56,7 @@ class _Providers extends StatelessWidget {
           BlocListener<AuthBloc, AuthState>(
             listener: (context, state) {
               final event = switch (state) {
-                Authenticated() => SocketAuthEvent.authorize(),
+                Authenticated() => SocketAuthEvent.connect(),
                 Unauthenticated() => SocketAuthEvent.disconnect(),
                 _ => null,
               };

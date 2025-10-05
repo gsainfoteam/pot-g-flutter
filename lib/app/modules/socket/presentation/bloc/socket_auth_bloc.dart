@@ -35,7 +35,6 @@ class SocketAuthBloc extends Bloc<SocketAuthEvent, SocketAuthState> {
 sealed class SocketAuthEvent with _$SocketAuthEvent {
   const factory SocketAuthEvent.connect() = _Connect;
   const factory SocketAuthEvent.disconnect() = _Disconnect;
-  const factory SocketAuthEvent.authorize() = _Authorize;
 }
 
 @freezed
