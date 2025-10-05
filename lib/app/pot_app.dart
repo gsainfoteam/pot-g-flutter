@@ -5,6 +5,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:pot_g/app/di/locator.dart';
 import 'package:pot_g/app/modules/auth/presentation/bloc/auth_bloc.dart';
 import 'package:pot_g/app/modules/core/presentation/route_list_bloc.dart';
+import 'package:pot_g/app/modules/socket/presentation/bloc/socket_auth_bloc.dart';
 import 'package:pot_g/app/router.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/theme.dart';
@@ -48,8 +49,25 @@ class _Providers extends StatelessWidget {
         BlocProvider(
           create: (_) => sl<RouteListBloc>()..add(RouteListEvent.search()),
         ),
+        BlocProvider(create: (_) => sl<SocketAuthBloc>()),
       ],
-      child: child,
+      child: MultiBlocListener(
+        listeners: [
+          BlocListener<AuthBloc, AuthState>(
+            listener: (context, state) {
+              final event = switch (state) {
+                Authenticated() => SocketAuthEvent.authorize(),
+                Unauthenticated() => SocketAuthEvent.disconnect(),
+                _ => null,
+              };
+              if (event != null) {
+                context.read<SocketAuthBloc>().add(event);
+              }
+            },
+          ),
+        ],
+        child: child,
+      ),
     );
   }
 }
