@@ -1,5 +1,6 @@
 import 'package:pot_g/app/modules/socket/data/models/base/base_socket_request_model.dart';
 import 'package:pot_g/app/modules/socket/data/models/requests/authorization_model.dart';
+import 'package:pot_g/app/modules/socket/data/models/requests/send_chat_model.dart';
 import 'package:uuid/uuid.dart';
 
 Map<String, dynamic> convertClientMessage<T extends BaseSocketRequestEvent>(
@@ -13,6 +14,7 @@ Map<String, dynamic> convertClientMessage<T extends BaseSocketRequestEvent>(
   );
   final data = switch (request) {
     AuthorizationModel() => m.copyWith(type: 'authorization'),
+    SendChatModel() => m.copyWith(type: 'send_chat'),
     _ =>
       throw ArgumentError.value(
         request,

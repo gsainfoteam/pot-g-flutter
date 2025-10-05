@@ -2,6 +2,7 @@ import 'package:pot_g/app/modules/socket/data/models/base/base_server_message_mo
 import 'package:pot_g/app/modules/socket/data/models/events/authorization_response_model.dart';
 import 'package:pot_g/app/modules/socket/data/models/events/pot_event_model.dart';
 import 'package:pot_g/app/modules/socket/data/models/events/request_authorization_event_model.dart';
+import 'package:pot_g/app/modules/socket/data/models/events/send_chat_response_model.dart';
 import 'package:pot_g/app/modules/socket/data/models/pot_events/chat_v1_event.dart';
 import 'package:pot_g/app/modules/socket/data/models/pot_events/user_in_v1_event.dart';
 
@@ -37,6 +38,7 @@ BaseServerMessageModel<T> convertServerMessage<
     },
     'request_authorization' => change(RequestAuthorizationEventModel.fromJson),
     'authorization_res' => change(AuthorizationResponseModel.fromJson),
+    'send_chat_res' => change(SendChatResponseModel.fromJson),
     _ => throw ArgumentError.value(jsonData, 'jsonData', 'Unknown type: $type'),
   };
   return data as BaseServerMessageModel<T>;
