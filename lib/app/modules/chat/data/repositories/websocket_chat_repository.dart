@@ -26,15 +26,18 @@ class WebsocketChatRepository implements ChatRepository {
   Stream<ChatEntity> getChatsStream(PotEntity pot) async* {
     final info = await _api.getPotInfo(pot.id);
     final users = info.usersInfo.users;
-    yield* _socket.createStreamFor<PotEventModel<ChatV1Event>>().map((event) {
-      final e = event.body.data;
-      return ChatEntity(
-        id: Uuid().v4(),
-        message: e.content,
-        user: users.firstWhere((u) => u.id == e.from),
-        createdAt: DateTime.now(),
-      );
-    });
+    yield* _socket
+        .createStreamFor<PotEventModel<ChatV1Event>>()
+        .where((e) => e.body.data.from == pot.id)
+        .map((event) {
+          final e = event.body.data;
+          return ChatEntity(
+            id: Uuid().v4(),
+            message: e.content,
+            user: users.firstWhere((u) => u.id == e.from),
+            createdAt: DateTime.now(),
+          );
+        });
   }
 
   @override
