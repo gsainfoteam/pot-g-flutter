@@ -7,6 +7,7 @@ import 'package:pot_g/app/modules/chat/domain/entities/chat_entity.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/chat_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/chat_bubble.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_app_bar.dart';
+import 'package:pot_g/app/modules/common/presentation/widgets/pot_icon_button.dart';
 import 'package:pot_g/app/modules/core/data/models/pot_model.dart';
 import 'package:pot_g/app/modules/core/data/models/route_model.dart';
 import 'package:pot_g/app/modules/core/data/models/stop_model.dart';
@@ -158,8 +159,18 @@ class _ChatInputState extends State<_ChatInput> {
             ),
           ),
           const SizedBox(width: 12),
-          Assets.icons.sendDiagonal.svg(
-            colorFilter: ColorFilter.mode(Palette.grey, BlendMode.srcIn),
+          SizedBox(
+            width: 24,
+            height: 24,
+            child: PotIconButton(
+              icon: Assets.icons.sendDiagonal.svg(
+                colorFilter: ColorFilter.mode(Palette.grey, BlendMode.srcIn),
+              ),
+              onPressed: () {
+                context.read<ChatBloc>().add(ChatSendChat(_controller.text));
+                _controller.clear();
+              },
+            ),
           ),
           const SizedBox(width: 12),
         ],
