@@ -10,6 +10,7 @@ part 'self_user_model.g.dart';
 sealed class SelfUserModel with _$SelfUserModel implements SelfUserEntity {
   const SelfUserModel._();
   const factory SelfUserModel({
+    required String id,
     required String name,
     required String email,
     required AccountingModel accounting,
@@ -18,8 +19,4 @@ sealed class SelfUserModel with _$SelfUserModel implements SelfUserEntity {
 
   factory SelfUserModel.fromJson(Map<String, dynamic> json) =>
       _$SelfUserModelFromJson(json);
-
-  @override
-  // TODO: change this
-  String get id => 'me';
 }

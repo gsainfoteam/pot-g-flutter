@@ -3,6 +3,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pot_g/app/di/locator.dart';
+import 'package:pot_g/app/modules/auth/presentation/bloc/auth_bloc.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/chat_entity.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/chat_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/chat_bubble.dart';
@@ -101,10 +102,14 @@ class _ChatList extends StatelessWidget {
   }
 
   Widget _buildChat(ChatEntity chat, bool isFirst) {
-    return ChatBubble(
-      message: chat.message,
-      user: chat.user.id == 'me' ? null : chat.user,
-      isFirst: isFirst,
+    return Builder(
+      builder:
+          (context) => ChatBubble(
+            message: chat.message,
+            user:
+                chat.user.id == AuthBloc.userOf(context)?.id ? null : chat.user,
+            isFirst: isFirst,
+          ),
     );
   }
 }
