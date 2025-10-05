@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:pot_g/app/modules/chat/data/models/pot_info_model.dart';
 import 'package:pot_g/app/modules/core/data/dio/pot_dio.dart';

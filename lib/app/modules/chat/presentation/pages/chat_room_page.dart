@@ -7,6 +7,9 @@ import 'package:pot_g/app/modules/chat/domain/entities/chat_entity.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/chat_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/chat_bubble.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_app_bar.dart';
+import 'package:pot_g/app/modules/core/data/models/pot_model.dart';
+import 'package:pot_g/app/modules/core/data/models/route_model.dart';
+import 'package:pot_g/app/modules/core/data/models/stop_model.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
 import 'package:pot_g/gen/assets.gen.dart';
@@ -20,7 +23,24 @@ class ChatRoomPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => sl<ChatBloc>()..add(ChatInit()),
+      create:
+          (context) =>
+              sl<ChatBloc>()..add(
+                ChatInit(
+                  PotModel(
+                    id: id,
+                    current: 1,
+                    endsAt: DateTime.now(),
+                    startsAt: DateTime.now(),
+                    route: RouteModel(
+                      id: id,
+                      from: StopModel(id: id, name: ''),
+                      to: StopModel(id: id, name: ''),
+                    ),
+                    total: 4,
+                  ),
+                ),
+              ),
       child: Scaffold(
         appBar: PotAppBar(title: Text('지송 003')),
         endDrawer: Drawer(),
@@ -49,7 +69,7 @@ class _ChatList extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ChatBloc, ChatState>(
       builder: (context, state) {
-        final chats = state.chats.groupListsBy((chat) => chat.user.uuid).values;
+        final chats = state.chats.groupListsBy((chat) => chat.user.id).values;
         return Column(
           children:
               chats
@@ -82,7 +102,7 @@ class _ChatList extends StatelessWidget {
   Widget _buildChat(ChatEntity chat, bool isFirst) {
     return ChatBubble(
       message: chat.message,
-      user: chat.user.uuid == 'me' ? null : chat.user,
+      user: chat.user.id == 'me' ? null : chat.user,
       isFirst: isFirst,
     );
   }
