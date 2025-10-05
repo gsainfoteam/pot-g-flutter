@@ -13,7 +13,9 @@ class ChatPage extends StatelessWidget {
       child: PotButton(
         variant: PotButtonVariant.emphasized,
         onPressed: () {
-          context.router.push(ChatRoomRoute(id: '1'));
+          context.router.push(
+            ChatRoomRoute(id: '22b59c12-a22c-441b-8efe-de75bc7e8fbf'),
+          );
         },
         child: Text('To Chat Room'),
       ),
