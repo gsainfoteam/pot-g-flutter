@@ -26,7 +26,7 @@ BaseServerMessageModel<T> convertServerMessage<
     ),
   );
   final data = switch (type) {
-    'pot_event' => switch (jsonData['event_type']) {
+    'pot_event_receive' => switch (jsonData['event_type']) {
       'chat_v1' => changePotEvent(ChatV1Event.fromJson),
       'user_in_v1' => changePotEvent(UserInV1Event.fromJson),
       _ =>
