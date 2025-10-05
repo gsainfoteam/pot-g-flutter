@@ -2,7 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:pot_g/app/modules/auth/domain/repositories/auth_repository.dart';
-import 'package:pot_g/app/modules/user/domain/entities/user_entity.dart';
+import 'package:pot_g/app/modules/user/domain/entities/self_user_entity.dart';
 
 part 'auth_bloc.freezed.dart';
 
@@ -61,10 +61,10 @@ sealed class AuthState with _$AuthState {
   const factory AuthState.initial() = AuthInitial;
   const factory AuthState.loading() = AuthLoading;
   const factory AuthState.unauthenticated() = Unauthenticated;
-  const factory AuthState.authenticated(UserEntity user) = Authenticated;
+  const factory AuthState.authenticated(SelfUserEntity user) = Authenticated;
   const factory AuthState.error(String message) = AuthError;
 
-  UserEntity? get user => switch (this) {
+  SelfUserEntity? get user => switch (this) {
     Authenticated(:final user) => user,
     _ => null,
   };

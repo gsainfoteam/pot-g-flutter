@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pot_g/app/modules/auth/presentation/bloc/auth_bloc.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_pressable.dart';
-import 'package:pot_g/app/modules/user/domain/entities/user_entity.dart';
+import 'package:pot_g/app/modules/user/domain/entities/self_user_entity.dart';
 import 'package:pot_g/app/router.gr.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
@@ -30,7 +30,7 @@ class ProfilePage extends StatelessWidget {
 class _Inner extends StatelessWidget {
   const _Inner({required this.user});
 
-  final UserEntity user;
+  final SelfUserEntity user;
 
   @override
   Widget build(BuildContext context) {

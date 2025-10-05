@@ -6,7 +6,7 @@ import 'package:pot_g/app/modules/auth/domain/repositories/auth_repository.dart'
 import 'package:pot_g/app/modules/auth/domain/repositories/oauth_repository.dart';
 import 'package:pot_g/app/modules/auth/domain/repositories/token_repository.dart';
 import 'package:pot_g/app/modules/device/domain/repositories/device_info_repository.dart';
-import 'package:pot_g/app/modules/user/domain/entities/user_entity.dart';
+import 'package:pot_g/app/modules/user/domain/entities/self_user_entity.dart';
 import 'package:rxdart/streams.dart';
 
 @Injectable(as: AuthRepository)
@@ -27,7 +27,7 @@ class OauthRestAuthRepository implements AuthRepository {
   Stream<bool> get isSignedIn => user.map((user) => user != null);
 
   @override
-  Future<UserEntity> signIn() async {
+  Future<SelfUserEntity> signIn() async {
     final deviceId = await _deviceInfoRepository.getDeviceId();
     final idPToken = await _oAuthRepository.getToken();
     final token = await _userAuthApi.login(
@@ -53,7 +53,7 @@ class OauthRestAuthRepository implements AuthRepository {
   }
 
   @override
-  Stream<UserEntity?> get user => _tokenRepository.token
+  Stream<SelfUserEntity?> get user => _tokenRepository.token
       .asyncMap((token) async {
         if (token == null) return null;
         try {
