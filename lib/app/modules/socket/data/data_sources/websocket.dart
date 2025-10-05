@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 
+import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:pot_g/app/modules/socket/data/models/base/base_server_message_model.dart';
 import 'package:pot_g/app/modules/socket/data/models/base/base_socket_request_model.dart';
@@ -49,7 +51,9 @@ class PotGSocket {
     _channelSubscription = _channel!.stream.listen(
       (event) {
         try {
-          print(event.runtimeType);
+          if (kDebugMode) {
+            log(event, name: 'websocket');
+          }
           final Map<String, dynamic> jsonData = jsonDecode(event);
           final data = convertServerMessage(jsonData);
           _socketEventController?.add(data);
@@ -127,6 +131,10 @@ class PotGSocket {
 
   Future<void> sendRequest(BaseSocketRequestEvent request) async {
     await _ensureConnected();
-    channel.sink.add(jsonEncode(convertClientMessage(request)));
+    final data = jsonEncode(convertClientMessage(request));
+    if (kDebugMode) {
+      log(data, name: 'websocket');
+    }
+    channel.sink.add(data);
   }
 }
