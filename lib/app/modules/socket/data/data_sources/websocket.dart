@@ -105,6 +105,26 @@ class PotGSocket {
         .cast<BaseServerMessageModel<T>>();
   }
 
+  Future<BaseServerMessageModel<T>> getNextMessage<
+    T extends BaseServerMessageEvent
+  >([Duration? timeout = const Duration(seconds: 30)]) async {
+    var future = rawMessages.firstWhere(
+      (message) => message is BaseServerMessageModel<T>,
+    );
+    if (timeout != null) {
+      future = future.timeout(
+        timeout,
+        onTimeout:
+            () =>
+                throw TimeoutException(
+                  'No message received within the specified timeout',
+                ),
+      );
+    }
+    final message = await future;
+    return message as BaseServerMessageModel<T>;
+  }
+
   Future<void> sendRequest(BaseSocketRequestEvent request) async {
     await _ensureConnected();
     channel.sink.add(convertClientMessage(request));
