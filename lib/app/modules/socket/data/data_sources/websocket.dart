@@ -129,9 +129,12 @@ class PotGSocket {
     return message as BaseServerMessageModel<T>;
   }
 
-  Future<void> sendRequest(BaseSocketRequestEvent request) async {
+  Future<void> sendRequest(
+    BaseSocketRequestEvent request, {
+    String? requestId,
+  }) async {
     await _ensureConnected();
-    final data = jsonEncode(convertClientMessage(request));
+    final data = jsonEncode(convertClientMessage(request, requestId));
     if (kDebugMode) {
       log(data, name: 'websocket');
     }

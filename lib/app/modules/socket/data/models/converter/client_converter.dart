@@ -4,10 +4,11 @@ import 'package:uuid/uuid.dart';
 
 Map<String, dynamic> convertClientMessage<T extends BaseSocketRequestEvent>(
   T request,
+  String? requestId,
 ) {
   final m = BaseSocketRequestModel<T>(
     type: 'unknown',
-    requestId: Uuid().v4(),
+    requestId: requestId ?? Uuid().v4(),
     body: request,
   );
   final data = switch (request) {
