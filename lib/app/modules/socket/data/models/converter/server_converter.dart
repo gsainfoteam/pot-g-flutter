@@ -36,7 +36,7 @@ BaseServerMessageModel<T> convertServerMessage<
         ),
     },
     'request_authorization' => change(RequestAuthorizationEventModel.fromJson),
-    'authorization_response' => change(AuthorizationResponseModel.fromJson),
+    'authorization_res' => change(AuthorizationResponseModel.fromJson),
     _ => throw ArgumentError.value(jsonData, 'jsonData', 'Unknown type: $type'),
   };
   return data as BaseServerMessageModel<T>;
