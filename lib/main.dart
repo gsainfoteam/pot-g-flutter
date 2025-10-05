@@ -12,10 +12,10 @@ import 'package:pot_g/gen/strings.g.dart';
 Future<void> main() async {
   final binding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: binding);
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await configureDependencies();
   if (kDebugMode) {
     Bloc.observer = AppBlocObserver();
   }
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await configureDependencies();
   runApp(TranslationProvider(child: const PotApp()));
 }
