@@ -127,6 +127,6 @@ class PotGSocket {
 
   Future<void> sendRequest(BaseSocketRequestEvent request) async {
     await _ensureConnected();
-    channel.sink.add(convertClientMessage(request));
+    channel.sink.add(jsonEncode(convertClientMessage(request)));
   }
 }
