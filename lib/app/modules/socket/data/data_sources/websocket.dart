@@ -18,6 +18,7 @@ class PotGSocket {
   final _socketEventController =
       StreamController<BaseServerMessageModel>.broadcast();
   StreamSubscription? _channelSubscription;
+  bool _shouldConnected = false;
 
   bool get isConnected => _channel != null && _channel!.closeCode == null;
 
@@ -30,6 +31,7 @@ class PotGSocket {
 
   /// 이미 연결되어 있으면 기존 연결을 끊고 새로 연결
   Future<void> connect() async {
+    _shouldConnected = true;
     if (isConnected) {
       await disconnect();
     }
@@ -70,6 +72,7 @@ class PotGSocket {
   }
 
   Future<void> disconnect() async {
+    _shouldConnected = false;
     _channelSubscription?.cancel();
     _channelSubscription = null;
 
@@ -81,6 +84,7 @@ class PotGSocket {
 
   /// 연결 상태를 확인하고 필요시 자동 재연결
   Future<void> _ensureConnected() async {
+    if (!_shouldConnected) return;
     if (!isConnected) {
       await connect();
     }
