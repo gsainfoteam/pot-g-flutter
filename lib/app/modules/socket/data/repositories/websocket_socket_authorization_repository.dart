@@ -20,7 +20,7 @@ class WebsocketSocketAuthorizationRepository
   @PostConstruct(preResolve: true)
   Future<void> init() async {
     _socket.createStreamFor<RequestAuthorizationEventModel>().listen(
-      (event) => authorize(),
+      (event) => authorize(event.requestId),
     );
   }
 
@@ -34,13 +34,15 @@ class WebsocketSocketAuthorizationRepository
     await _socket.disconnect();
   }
 
-  @override
-  Future<void> authorize() async {
+  Future<void> authorize(String requestId) async {
     if (_mutex.isLocked) return;
     final token = await _tokenRepository.token.first;
     if (token == null) throw Exception('Token is null');
     await _mutex.acquire();
-    await _socket.sendRequest(AuthorizationModel(authorization: token));
+    await _socket.sendRequest(
+      AuthorizationModel(authorization: token),
+      requestId: requestId,
+    );
     await _socket.getNextMessage<RequestAuthorizationEventModel>();
     _mutex.release();
   }

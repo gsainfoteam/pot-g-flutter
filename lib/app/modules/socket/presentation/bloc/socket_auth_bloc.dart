@@ -12,7 +12,6 @@ class SocketAuthBloc extends Bloc<SocketAuthEvent, SocketAuthState> {
   SocketAuthBloc(this._repository) : super(const SocketAuthState.initial()) {
     on<_Connect>(_onConnect);
     on<_Disconnect>(_onDisconnect);
-    on<_Authorize>(_onAuthorize);
   }
 
   Future<void> _onConnect(
@@ -29,14 +28,6 @@ class SocketAuthBloc extends Bloc<SocketAuthEvent, SocketAuthState> {
   ) async {
     await _repository.disconnect();
     emit(const SocketAuthState.disconnected());
-  }
-
-  Future<void> _onAuthorize(
-    SocketAuthEvent event,
-    Emitter<SocketAuthState> emit,
-  ) async {
-    await _repository.authorize();
-    emit(const SocketAuthState.authorized());
   }
 }
 
