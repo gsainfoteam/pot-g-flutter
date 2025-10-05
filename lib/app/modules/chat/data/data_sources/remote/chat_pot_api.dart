@@ -1,0 +1,16 @@
+import 'package:injectable/injectable.dart';
+import 'package:pot_g/app/modules/chat/data/models/pot_info_model.dart';
+import 'package:pot_g/app/modules/core/data/dio/pot_dio.dart';
+import 'package:retrofit/retrofit.dart';
+
+part 'chat_pot_api.g.dart';
+
+@injectable
+@RestApi(baseUrl: '/api/v1/pot/')
+abstract class ChatPotApi {
+  @factoryMethod
+  factory ChatPotApi(PotDio dio) = _ChatPotApi;
+
+  @GET('{id}/info')
+  Future<PotInfoModel> getPotInfo(@Path('id') String id);
+}
