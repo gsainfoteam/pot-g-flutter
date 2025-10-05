@@ -28,9 +28,9 @@ class WebsocketChatRepository implements ChatRepository {
     final users = info.usersInfo.users;
     yield* _socket
         .createStreamFor<PotEventModel<ChatV1Event>>()
-        .where((e) => e.body.data.from == pot.id)
-        .map((event) {
-          final e = event.body.data;
+        .where((e) => e.body.potPk == pot.id)
+        .map((e) => e.body.data)
+        .map((e) {
           return ChatEntity(
             id: Uuid().v4(),
             message: e.content,
