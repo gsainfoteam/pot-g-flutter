@@ -8,15 +8,16 @@ import 'package:pot_g/app/modules/auth/domain/repositories/token_repository.dart
 import 'package:pot_g/app/modules/core/data/dio/pot_dio.dart';
 import 'package:retrofit/retrofit.dart';
 
-class PreventRetry extends Extra {
-  static const _data = {AuthorizeInterceptor._retriedKey: true};
-  const PreventRetry() : super(_data);
+class SkipAuthorize extends Extra {
+  static const _data = {AuthorizeInterceptor._skipKey: true};
+  const SkipAuthorize() : super(_data);
 }
 
 @injectable
 class AuthorizeInterceptor extends Interceptor {
   final TokenRepository repository;
   static const _retriedKey = '_retried';
+  static const _skipKey = '_skip';
   final mutex = ReadWriteMutex();
 
   AuthorizeInterceptor(this.repository);
@@ -26,8 +27,7 @@ class AuthorizeInterceptor extends Interceptor {
     RequestOptions options,
     RequestInterceptorHandler handler,
   ) async {
-    if (options.retried) return handler.next(options);
-
+    if (options.skip) return handler.next(options);
     try {
       await mutex.acquireRead();
       final token = await repository.token.first;
@@ -93,4 +93,6 @@ class AuthorizeInterceptor extends Interceptor {
 extension _RequestOptionsX on RequestOptions {
   bool get retried => extra.containsKey(AuthorizeInterceptor._retriedKey);
   set retried(bool value) => extra[AuthorizeInterceptor._retriedKey] = value;
+
+  bool get skip => extra.containsKey(AuthorizeInterceptor._skipKey);
 }

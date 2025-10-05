@@ -21,7 +21,7 @@ abstract class UserAuthApi {
   Future<LoginResponseModel> login(@Body() LoginRequestModel request);
 
   @POST('refresh')
-  @PreventRetry()
+  @SkipAuthorize()
   Future<RefreshResponseModel> refresh(@Body() RefreshRequestModel request);
 
   @GET('info')
