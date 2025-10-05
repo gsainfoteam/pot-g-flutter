@@ -9,7 +9,7 @@ sealed class AuthorizationResponseModel
     with _$AuthorizationResponseModel
     implements BaseServerMessageEvent {
   const factory AuthorizationResponseModel({
-    required bool success,
+    required int responseCode,
     required String result,
   }) = _AuthorizationResponseModel;
 
