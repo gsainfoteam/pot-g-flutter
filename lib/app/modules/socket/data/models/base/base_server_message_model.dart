@@ -16,6 +16,6 @@ sealed class BaseServerMessageModel<T extends BaseServerMessageEvent>
 
   factory BaseServerMessageModel.fromJson(
     Map<String, dynamic> json,
-    T Function(Map<String, dynamic>) fromJsonT,
-  ) => _$BaseServerMessageModelFromJson(json, fromJsonT as T Function(Object?));
+    T Function(Object?) fromJsonT,
+  ) => _$BaseServerMessageModelFromJson(json, fromJsonT);
 }

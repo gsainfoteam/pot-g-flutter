@@ -1,15 +1,41 @@
 import 'package:pot_g/app/modules/socket/data/models/base/base_server_message_model.dart';
+import 'package:pot_g/app/modules/socket/data/models/events/pot_event_model.dart';
 import 'package:pot_g/app/modules/socket/data/models/events/request_authorization_event_model.dart';
+import 'package:pot_g/app/modules/socket/data/models/pot_events/chat_v1_event.dart';
+import 'package:pot_g/app/modules/socket/data/models/pot_events/user_in_v1_event.dart';
 
-BaseServerMessageModel convertServerMessage(Map<String, dynamic> jsonData) {
+BaseServerMessageModel<T> convertServerMessage<
+  T extends BaseServerMessageEvent
+>(Map<String, dynamic> jsonData) {
   final type = jsonData['type'] as String;
-  final data = switch (type) {
-    'pot_event' => throw UnimplementedError(),
-    'request_authorization' => BaseServerMessageModel.fromJson(
-      jsonData,
-      RequestAuthorizationEventModel.fromJson,
+  BaseServerMessageModel<E> change<E extends BaseServerMessageEvent>(
+    E Function(Map<String, dynamic>) fromJsonT,
+  ) => BaseServerMessageModel.fromJson(
+    jsonData,
+    (json) => fromJsonT(json as Map<String, dynamic>),
+  );
+  BaseServerMessageModel<PotEventModel<E>> changePotEvent<E extends PotEvent>(
+    E Function(Map<String, dynamic>) fromJsonT,
+  ) => BaseServerMessageModel.fromJson(
+    jsonData,
+    (json) => PotEventModel.fromJson(
+      json as Map<String, dynamic>,
+      (inner) => fromJsonT(inner as Map<String, dynamic>),
     ),
+  );
+  final data = switch (type) {
+    'pot_event' => switch (jsonData['event_type']) {
+      'chat_v1' => changePotEvent(ChatV1Event.fromJson),
+      'user_in_v1' => changePotEvent(UserInV1Event.fromJson),
+      _ =>
+        throw ArgumentError.value(
+          jsonData,
+          'jsonData',
+          'Unknown pot event type: ${jsonData['event_type']}',
+        ),
+    },
+    'request_authorization' => change(RequestAuthorizationEventModel.fromJson),
     _ => throw ArgumentError.value(jsonData, 'jsonData', 'Unknown type: $type'),
   };
-  return data;
+  return data as BaseServerMessageModel<T>;
 }

@@ -19,8 +19,8 @@ sealed class PotEventModel<T extends PotEvent>
 
   factory PotEventModel.fromJson(
     Map<String, dynamic> json,
-    T Function(Map<String, dynamic>) fromJsonT,
-  ) => _$PotEventModelFromJson(json, fromJsonT as T Function(Object?));
+    T Function(Object?) fromJsonT,
+  ) => _$PotEventModelFromJson(json, fromJsonT);
 }
 
 class EpochDateTimeConverter implements JsonConverter<DateTime, int> {
