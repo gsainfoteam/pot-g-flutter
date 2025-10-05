@@ -8,6 +8,6 @@ part 'authorization_model.g.dart';
 sealed class AuthorizationModel
     with _$AuthorizationModel
     implements BaseSocketRequestEvent {
-  const factory AuthorizationModel({required String token}) =
+  const factory AuthorizationModel({required String authorization}) =
       _AuthorizationModel;
 }

@@ -40,7 +40,7 @@ class WebsocketSocketAuthorizationRepository
     final token = await _tokenRepository.token.first;
     if (token == null) throw Exception('Token is null');
     await _mutex.acquire();
-    await _socket.sendRequest(AuthorizationModel(token: token));
+    await _socket.sendRequest(AuthorizationModel(authorization: token));
     await _socket.getNextMessage<RequestAuthorizationEventModel>();
     _mutex.release();
   }
