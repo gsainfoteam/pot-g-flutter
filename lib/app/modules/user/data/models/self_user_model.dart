@@ -20,5 +20,5 @@ sealed class SelfUserModel with _$SelfUserModel implements UserEntity {
       _$SelfUserModelFromJson(json);
 
   @override
-  String get uuid => 'me';
+  String get id => 'me';
 }
