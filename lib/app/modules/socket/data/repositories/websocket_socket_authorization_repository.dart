@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:injectable/injectable.dart';
-import 'package:mutex/mutex.dart';
 import 'package:pot_g/app/modules/auth/domain/repositories/token_repository.dart';
 import 'package:pot_g/app/modules/socket/data/data_sources/websocket.dart';
 import 'package:pot_g/app/modules/socket/data/models/events/authorization_response_model.dart';
@@ -14,7 +13,6 @@ class WebsocketSocketAuthorizationRepository
     implements SocketAuthorizationRepository {
   final PotGSocket _socket;
   final TokenRepository _tokenRepository;
-  final _mutex = Mutex();
 
   WebsocketSocketAuthorizationRepository(this._socket, this._tokenRepository);
 
@@ -36,15 +34,12 @@ class WebsocketSocketAuthorizationRepository
   }
 
   Future<void> authorize(String requestId) async {
-    if (_mutex.isLocked) return;
     final token = await _tokenRepository.token.first;
     if (token == null) throw Exception('Token is null');
-    await _mutex.acquire();
     await _socket.sendRequest(
       AuthorizationModel(authorization: token),
       requestId: requestId,
     );
     await _socket.getNextMessage<AuthorizationResponseModel>();
-    _mutex.release();
   }
 }
