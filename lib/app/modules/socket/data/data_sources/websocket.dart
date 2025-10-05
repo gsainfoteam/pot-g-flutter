@@ -15,7 +15,8 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 class PotGSocket {
   final _wsUrl = Uri.parse(Config.wsUrl);
   WebSocketChannel? _channel;
-  StreamController<BaseServerMessageModel>? _socketEventController;
+  final _socketEventController =
+      StreamController<BaseServerMessageModel>.broadcast();
   StreamSubscription? _channelSubscription;
 
   bool get isConnected => _channel != null && _channel!.closeCode == null;
@@ -56,17 +57,14 @@ class PotGSocket {
           }
           final Map<String, dynamic> jsonData = jsonDecode(event);
           final data = convertServerMessage(jsonData);
-          _socketEventController?.add(data);
+          _socketEventController.add(data);
         } catch (e) {
           // JSON 파싱 오류 처리
-          _socketEventController?.addError(e);
+          _socketEventController.addError(e);
         }
       },
       onError: (error) {
-        _socketEventController?.addError(error);
-      },
-      onDone: () {
-        _socketEventController?.close();
+        _socketEventController.addError(error);
       },
     );
   }
@@ -79,9 +77,6 @@ class PotGSocket {
       await _channel!.sink.close();
       _channel = null;
     }
-
-    _socketEventController?.close();
-    _socketEventController = null;
   }
 
   /// 연결 상태를 확인하고 필요시 자동 재연결
@@ -93,12 +88,8 @@ class PotGSocket {
 
   /// 메인 raw message stream
   Stream<BaseServerMessageModel> get rawMessages {
-    if (_socketEventController == null || _socketEventController!.isClosed) {
-      _socketEventController =
-          StreamController<BaseServerMessageModel>.broadcast();
-    }
     _ensureConnected();
-    return _socketEventController!.stream;
+    return _socketEventController.stream;
   }
 
   /// 특정 타입의 이벤트만 필터링하는 stream

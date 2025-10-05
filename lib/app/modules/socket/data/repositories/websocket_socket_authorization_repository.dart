@@ -8,7 +8,7 @@ import 'package:pot_g/app/modules/socket/data/models/events/request_authorizatio
 import 'package:pot_g/app/modules/socket/data/models/requests/authorization_model.dart';
 import 'package:pot_g/app/modules/socket/domain/socket_authorization_repository.dart';
 
-@LazySingleton(as: SocketAuthorizationRepository)
+@Singleton(as: SocketAuthorizationRepository)
 class WebsocketSocketAuthorizationRepository
     implements SocketAuthorizationRepository {
   final PotGSocket _socket;
