@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
+import 'package:pot_g/app/modules/chat/data/models/get_pot_events_query_model.dart';
+import 'package:pot_g/app/modules/chat/data/models/pot_events_model.dart';
 import 'package:pot_g/app/modules/chat/data/models/pot_info_model.dart';
 import 'package:pot_g/app/modules/core/data/dio/pot_dio.dart';
 import 'package:retrofit/retrofit.dart';
@@ -14,4 +16,10 @@ abstract class ChatPotApi {
 
   @GET('{id}/info')
   Future<PotInfoModel> getPotInfo(@Path('id') String id);
+
+  @GET('{id}/events')
+  Future<PotEventsModel> getPotEvents(
+    @Path('id') String id,
+    @Queries() GetPotEventsQueryModel query,
+  );
 }
