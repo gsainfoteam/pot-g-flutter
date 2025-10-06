@@ -44,7 +44,7 @@ class PotUsers extends StatelessWidget {
             if (e.$1 != 0) const SizedBox(height: 8),
             PotUser(
               user: e.$2,
-              onKick: () {},
+              onKick: me?.isHost ?? false ? () {} : null,
               profileIndex: mapUserToIndex[e.$2.id] ?? 0,
             ),
           ],
