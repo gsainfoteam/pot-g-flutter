@@ -16,6 +16,41 @@ import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
 import 'package:pot_g/gen/assets.gen.dart';
 
+/// 연속된 요소만 그룹화하는 함수
+/// [list]: 그룹화할 리스트
+/// [keySelector]: 그룹화 기준이 되는 키를 추출하는 함수
+///
+/// 예시: [1, 2, 13, 14, 4, 3, 23, 12]를 (x) => x % 10으로 그룹화하면
+/// [[1, 2], [13, 14], [4, 3], [23], [12]]가 됩니다.
+List<List<T>> groupConsecutiveBy<T, K>(
+  List<T> list,
+  K Function(T) keySelector,
+) {
+  if (list.isEmpty) return [];
+
+  final result = <List<T>>[];
+  List<T> currentGroup = [list.first];
+
+  for (int i = 1; i < list.length; i++) {
+    final currentItem = list[i];
+    final previousItem = list[i - 1];
+
+    // 현재 아이템과 이전 아이템의 키가 같으면 같은 그룹에 추가
+    if (keySelector(currentItem) == keySelector(previousItem)) {
+      currentGroup.add(currentItem);
+    } else {
+      // 키가 다르면 현재 그룹을 결과에 추가하고 새 그룹 시작
+      result.add(List.from(currentGroup));
+      currentGroup = [currentItem];
+    }
+  }
+
+  // 마지막 그룹 추가
+  result.add(currentGroup);
+
+  return result;
+}
+
 @RoutePage()
 class ChatRoomPage extends StatelessWidget {
   const ChatRoomPage({super.key, required this.id});
@@ -71,7 +106,7 @@ class _ChatList extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ChatBloc, ChatState>(
       builder: (context, state) {
-        final chats = state.chats.groupListsBy((chat) => chat.user.id).values;
+        final chats = groupConsecutiveBy(state.chats, (chat) => chat.user.id);
         return Column(
           children:
               chats
