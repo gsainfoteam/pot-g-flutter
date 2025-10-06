@@ -30,7 +30,7 @@ class ChatRoomPage extends StatelessWidget {
     return BlocProvider(
       create: (context) => sl<ChatBloc>()..add(ChatInit(pot)),
       child: Scaffold(
-        appBar: PotAppBar(title: Text('지송 003')),
+        appBar: PotAppBar(title: Text(pot.name)),
         endDrawer: Drawer(
           child: SafeArea(
             child: Padding(

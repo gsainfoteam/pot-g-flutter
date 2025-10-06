@@ -1,6 +1,7 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:pot_g/app/modules/auth/presentation/bloc/auth_bloc.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
-import 'package:pot_g/app/modules/chat/domain/entities/pot_user_entity.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/pot_user.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
@@ -14,6 +15,11 @@ class PotUsers extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final meUser = AuthBloc.userOf(context);
+    final me = pot.usersInfo.users.firstWhereOrNull((u) => u.id == meUser?.id);
+    final passengers = pot.usersInfo.users.where(
+      (u) => u.isInPot && u.id != meUser?.id,
+    );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -22,38 +28,18 @@ class PotUsers extends StatelessWidget {
           style: TextStyles.caption.copyWith(color: Palette.textGrey),
         ),
         const SizedBox(height: 8),
-        PotUser(
-          user: PotUserEntity(
-            id: '',
-            name: '일지매',
-            isHost: true,
-            isInPot: false,
-          ),
-        ),
+        if (me != null) PotUser(user: me),
         const SizedBox(height: 20),
         Text(
           context.t.chat_room.drawer.members.passenger,
           style: TextStyles.caption.copyWith(color: Palette.textGrey),
         ),
         const SizedBox(height: 8),
-        PotUser(
-          user: PotUserEntity(
-            id: '',
-            name: '심청이',
-            isHost: false,
-            isInPot: false,
-          ),
-          onKick: () {},
-        ),
-        const SizedBox(height: 8),
-        PotUser(
-          user: PotUserEntity(
-            id: '',
-            name: '홍길동',
-            isHost: false,
-            isInPot: false,
-          ),
-          onKick: () {},
+        ...passengers.indexed.expand(
+          (e) => [
+            if (e.$1 != 0) const SizedBox(height: 8),
+            PotUser(user: e.$2, onKick: () {}),
+          ],
         ),
         Container(
           padding: EdgeInsets.symmetric(vertical: 8),
