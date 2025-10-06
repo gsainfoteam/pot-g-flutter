@@ -140,9 +140,11 @@
         "passenger": "passengers",
         "kick": "Kick",
         "invite": "Invite",
-        "leave": "Leave",
-        "report": "Report",
         "host": "Host"
+      },
+      "actions": {
+        "leave": "Leave",
+        "report": "Report"
       }
     }
   }

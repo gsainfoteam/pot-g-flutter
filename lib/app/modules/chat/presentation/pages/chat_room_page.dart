@@ -11,10 +11,12 @@ import 'package:pot_g/app/modules/chat/presentation/widgets/pot_info.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/pot_users.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_app_bar.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_icon_button.dart';
+import 'package:pot_g/app/modules/common/presentation/widgets/pot_pressable.dart';
 import 'package:pot_g/app/modules/core/domain/entities/pot_entity.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
 import 'package:pot_g/gen/assets.gen.dart';
+import 'package:pot_g/gen/strings.g.dart';
 
 /// 연속된 요소만 그룹화하는 함수
 /// [list]: 그룹화할 리스트
@@ -75,7 +77,35 @@ class ChatRoomPage extends StatelessWidget {
                   Container(height: 1, color: Palette.borderGrey2),
                   const SizedBox(height: 20),
                   PotUsers(pot: pot),
-                  const SizedBox(height: 20),
+                  Spacer(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      PotPressable(
+                        onTap: () {},
+                        child: Text(
+                          context.t.chat_room.drawer.actions.leave,
+                          style: TextStyles.caption.copyWith(
+                            color: Palette.grey,
+                            decoration: TextDecoration.underline,
+                            decorationColor: Palette.grey,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      PotPressable(
+                        onTap: () {},
+                        child: Text(
+                          context.t.chat_room.drawer.actions.report,
+                          style: TextStyles.caption.copyWith(
+                            color: Palette.grey,
+                            decoration: TextDecoration.underline,
+                            decorationColor: Palette.grey,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
