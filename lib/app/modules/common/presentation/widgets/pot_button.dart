@@ -5,7 +5,7 @@ import 'package:pot_g/app/values/text_styles.dart';
 
 enum PotButtonVariant { emphasized, outlined }
 
-enum PotButtonSize { small, medium, large }
+enum PotButtonSize { tiny, small, medium, large }
 
 class PotButton extends StatelessWidget {
   const PotButton({
@@ -98,6 +98,8 @@ class _Inner extends StatelessWidget {
         return BorderRadius.all(Radius.circular(10));
       case PotButtonSize.small:
         return BorderRadius.all(Radius.circular(5));
+      case PotButtonSize.tiny:
+        return BorderRadius.all(Radius.circular(4));
     }
   }
 
@@ -121,6 +123,8 @@ class _Inner extends StatelessWidget {
         return const EdgeInsets.symmetric(horizontal: 25, vertical: 10);
       case PotButtonSize.small:
         return const EdgeInsets.symmetric(horizontal: 15, vertical: 7);
+      case PotButtonSize.tiny:
+        return const EdgeInsets.symmetric(horizontal: 8, vertical: 4);
     }
   }
 
@@ -143,6 +147,8 @@ class _Inner extends StatelessWidget {
     switch (size) {
       case PotButtonSize.large:
         return TextStyles.title3;
+      case PotButtonSize.tiny:
+        return TextStyles.description;
       default:
         return TextStyles.title4;
     }

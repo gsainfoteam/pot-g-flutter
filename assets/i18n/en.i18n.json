@@ -134,6 +134,15 @@
         "route_info": "Route Info",
         "departure_date": "Departure Date",
         "departure_time": "Departure Time"
+      },
+      "members": {
+        "my": "my",
+        "passenger": "passengers",
+        "kick": "Kick",
+        "invite": "Invite",
+        "leave": "Leave",
+        "report": "Report",
+        "host": "Host"
       }
     }
   }

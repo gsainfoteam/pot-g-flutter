@@ -1,10 +1,10 @@
 import 'package:equatable/equatable.dart';
-import 'package:pot_g/app/modules/user/domain/entities/user_entity.dart';
+import 'package:pot_g/app/modules/chat/domain/entities/pot_user_entity.dart';
 
 class ChatEntity with EquatableMixin {
   final String id;
   final String message;
-  final UserEntity user;
+  final PotUserEntity user;
   final DateTime createdAt;
 
   const ChatEntity({
@@ -14,7 +14,7 @@ class ChatEntity with EquatableMixin {
     required this.createdAt,
   });
 
-  static ChatEntity make(String message, UserEntity user) {
+  static ChatEntity make(String message, PotUserEntity user) {
     return ChatEntity(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       message: message,

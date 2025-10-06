@@ -8,6 +8,7 @@ import 'package:pot_g/app/modules/chat/domain/entities/chat_entity.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/chat_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/chat_bubble.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/pot_info.dart';
+import 'package:pot_g/app/modules/chat/presentation/widgets/pot_users.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_app_bar.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_icon_button.dart';
 import 'package:pot_g/app/modules/core/domain/entities/pot_entity.dart';
@@ -73,7 +74,7 @@ class ChatRoomPage extends StatelessWidget {
                   const SizedBox(height: 20),
                   Container(height: 1, color: Palette.borderGrey2),
                   const SizedBox(height: 20),
-                  Column(children: []),
+                  PotUsers(pot: pot),
                   const SizedBox(height: 20),
                 ],
               ),

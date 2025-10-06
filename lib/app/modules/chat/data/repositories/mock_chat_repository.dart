@@ -1,26 +1,37 @@
 import 'dart:async';
 
 import 'package:injectable/injectable.dart';
-import 'package:pot_g/app/modules/auth/domain/repositories/auth_repository.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/chat_entity.dart';
+import 'package:pot_g/app/modules/chat/domain/entities/pot_user_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/repositories/chat_repository.dart';
 import 'package:pot_g/app/modules/core/domain/entities/pot_entity.dart';
-import 'package:pot_g/app/modules/user/domain/entities/user_entity.dart';
 
 @Injectable(as: ChatRepository, env: [Environment.test])
 class MockChatRepository implements ChatRepository {
-  final AuthRepository _authRepository;
-
-  MockChatRepository(this._authRepository);
+  MockChatRepository();
 
   final _controller = StreamController<ChatEntity>.broadcast();
 
   @override
   Future<List<ChatEntity>> getChats(PotEntity pot) async {
-    final me =
-        await _authRepository.user.first ?? UserEntity(name: 'Me', id: 'me');
-    final hong = UserEntity(name: '홍길동', id: 'hong');
-    final shim = UserEntity(name: '심청이', id: 'shim');
+    final me = PotUserEntity(
+      name: 'Me',
+      id: 'me',
+      isHost: false,
+      isInPot: true,
+    );
+    final hong = PotUserEntity(
+      name: '홍길동',
+      id: 'hong',
+      isHost: false,
+      isInPot: true,
+    );
+    final shim = PotUserEntity(
+      name: '심청이',
+      id: 'shim',
+      isHost: false,
+      isInPot: true,
+    );
 
     return [
       ChatEntity.make('첫 메시지', hong),
@@ -54,7 +65,7 @@ class MockChatRepository implements ChatRepository {
     _controller.add(
       ChatEntity.make(
         message,
-        await _authRepository.user.first ?? UserEntity(name: 'Me', id: 'me'),
+        PotUserEntity(name: 'Me', id: 'me', isHost: false, isInPot: true),
       ),
     );
   }
