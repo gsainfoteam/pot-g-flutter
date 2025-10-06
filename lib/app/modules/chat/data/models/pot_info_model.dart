@@ -1,8 +1,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:pot_g/app/modules/chat/data/enums/pot_status.dart';
 import 'package:pot_g/app/modules/chat/data/models/pot_accounting_info_model.dart';
 import 'package:pot_g/app/modules/chat/data/models/pot_users_info_model.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
+import 'package:pot_g/app/modules/chat/domain/enums/pot_status.dart';
 import 'package:pot_g/app/modules/core/data/models/route_model.dart';
 
 part 'pot_info_model.freezed.dart';
