@@ -15,5 +15,9 @@ abstract class PotTheme {
     cupertinoOverrideTheme: const NoDefaultCupertinoThemeData(
       primaryColor: Palette.primary,
     ),
+    drawerTheme: DrawerThemeData(
+      backgroundColor: Palette.white,
+      endShape: BeveledRectangleBorder(),
+    ),
   );
 }
