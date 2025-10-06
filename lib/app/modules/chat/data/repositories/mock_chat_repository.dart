@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:injectable/injectable.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/chat_entity.dart';
+import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_user_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/repositories/chat_repository.dart';
-import 'package:pot_g/app/modules/core/domain/entities/pot_entity.dart';
 
 @Injectable(as: ChatRepository, env: [Environment.test])
 class MockChatRepository implements ChatRepository {
@@ -13,7 +13,7 @@ class MockChatRepository implements ChatRepository {
   final _controller = StreamController<ChatEntity>.broadcast();
 
   @override
-  Future<List<ChatEntity>> getChats(PotEntity pot) async {
+  Future<List<ChatEntity>> getChats(PotInfoEntity pot) async {
     final me = PotUserEntity(
       name: 'Me',
       id: 'me',
@@ -56,12 +56,12 @@ class MockChatRepository implements ChatRepository {
   }
 
   @override
-  Stream<ChatEntity> getChatsStream(PotEntity pot) {
+  Stream<ChatEntity> getChatsStream(PotInfoEntity pot) {
     return _controller.stream;
   }
 
   @override
-  Future<void> sendChat(String message, PotEntity pot) async {
+  Future<void> sendChat(String message, PotInfoEntity pot) async {
     _controller.add(
       ChatEntity.make(
         message,

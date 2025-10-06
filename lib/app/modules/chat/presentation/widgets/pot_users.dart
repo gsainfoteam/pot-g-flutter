@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_user_entity.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/pot_user.dart';
-import 'package:pot_g/app/modules/core/domain/entities/pot_entity.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
 import 'package:pot_g/gen/assets.gen.dart';
@@ -10,7 +10,7 @@ import 'package:pot_g/gen/strings.g.dart';
 class PotUsers extends StatelessWidget {
   const PotUsers({super.key, required this.pot});
 
-  final PotEntity pot;
+  final PotInfoEntity pot;
 
   @override
   Widget build(BuildContext context) {

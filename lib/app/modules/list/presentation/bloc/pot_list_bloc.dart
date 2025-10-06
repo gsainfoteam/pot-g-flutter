@@ -33,7 +33,7 @@ sealed class PotListEvent with _$PotListEvent {
 @freezed
 sealed class PotListState with _$PotListState {
   const factory PotListState({
-    @Default([]) List<PotEntity> pots,
+    @Default([]) List<PotSummaryEntity> pots,
     @Default(false) bool isLoading,
     String? error,
   }) = _State;

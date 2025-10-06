@@ -10,7 +10,7 @@ import 'package:pot_g/app/values/text_styles.dart';
 class PotListItem extends StatelessWidget {
   const PotListItem({super.key, required this.pot});
 
-  final PotEntity pot;
+  final PotSummaryEntity pot;
 
   @override
   Widget build(BuildContext context) {

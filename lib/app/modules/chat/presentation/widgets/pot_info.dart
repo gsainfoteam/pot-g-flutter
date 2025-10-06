@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:pot_g/app/modules/core/domain/entities/pot_entity.dart';
+import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
 import 'package:pot_g/app/modules/core/domain/entities/route_entity.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
 import 'package:pot_g/gen/strings.g.dart';
 
 class PotInfo extends StatelessWidget {
-  final PotEntity pot;
+  final PotInfoEntity pot;
 
   const PotInfo({super.key, required this.pot});
 

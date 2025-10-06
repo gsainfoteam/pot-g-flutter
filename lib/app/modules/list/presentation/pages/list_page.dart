@@ -89,7 +89,7 @@ class _Layout extends StatelessWidget {
 
 class _ListView extends StatelessWidget {
   const _ListView({required this.pots});
-  final List<PotEntity> pots;
+  final List<PotSummaryEntity> pots;
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(

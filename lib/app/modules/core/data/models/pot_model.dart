@@ -6,7 +6,7 @@ part 'pot_model.freezed.dart';
 part 'pot_model.g.dart';
 
 @freezed
-sealed class PotModel with _$PotModel implements PotEntity {
+sealed class PotModel with _$PotModel implements PotSummaryEntity {
   factory PotModel({
     required String id,
     required RouteModel route,

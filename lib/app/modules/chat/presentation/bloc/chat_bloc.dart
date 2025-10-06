@@ -2,15 +2,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/chat_entity.dart';
+import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/repositories/chat_repository.dart';
-import 'package:pot_g/app/modules/core/domain/entities/pot_entity.dart';
 
 part 'chat_bloc.freezed.dart';
 
 @injectable
 class ChatBloc extends Bloc<ChatEvent, ChatState> {
   final ChatRepository _chatRepository;
-  late final PotEntity _pot;
+  late final PotInfoEntity _pot;
 
   ChatBloc(this._chatRepository) : super(const ChatInitial()) {
     on<ChatInit>(_onChatInit);
@@ -45,7 +45,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
 @freezed
 sealed class ChatEvent with _$ChatEvent {
-  const factory ChatEvent.init(PotEntity pot) = ChatInit;
+  const factory ChatEvent.init(PotInfoEntity pot) = ChatInit;
   const factory ChatEvent.sendChat(String message) = ChatSendChat;
 }
 

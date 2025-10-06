@@ -101,7 +101,7 @@ class MockPotListRepository implements PotListRepository {
   ];
 
   @override
-  Future<List<PotEntity>> getPotList({
+  Future<List<PotSummaryEntity>> getPotList({
     DateTime? date,
     RouteEntity? route,
   }) async {
