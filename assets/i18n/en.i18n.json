@@ -127,5 +127,14 @@
         }
       }
     }
+  },
+  "chat_room": {
+    "drawer": {
+      "pot_info": {
+        "route_info": "Route Info",
+        "departure_date": "Departure Date",
+        "departure_time": "Departure Time"
+      }
+    }
   }
 }
