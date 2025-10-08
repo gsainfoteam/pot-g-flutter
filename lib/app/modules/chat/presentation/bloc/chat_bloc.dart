@@ -24,11 +24,11 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     _pot = event.pot;
     try {
       final chats = await _chatRepository.getChats(_pot);
-      emit(ChatState.loaded(chats));
+      emit(ChatState.loaded(chats.reversed.toList()));
       return emit.forEach(
         _chatRepository.getChatsStream(_pot),
         onData: (chat) {
-          return ChatState.loaded([...state.chats, chat]);
+          return ChatState.loaded([chat, ...state.chats]);
         },
       );
     } catch (e) {
