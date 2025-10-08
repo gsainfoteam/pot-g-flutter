@@ -29,7 +29,9 @@ class PotProfileImage extends StatelessWidget {
     final hsl = HSLColor.fromColor(sample.$2);
     final color =
         hsl
-            .withHue((hsl.hue + [0, 120, 240][index ~/ images.length]) % 360)
+            .withHue(
+              (hsl.hue + [0, 120, 240][(index ~/ images.length) % 3]) % 360,
+            )
             .toColor();
     return Container(color: color, child: image);
   }
