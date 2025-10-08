@@ -14,7 +14,7 @@ class PotProfileImage extends StatelessWidget {
   Widget getImageByIndex(int index, bool inPot) {
     final images = [
       (Assets.images.jennie, Color(0xFFD3C5FC)),
-      (Assets.images.tree, Color(0xFFF8F8F8)),
+      (Assets.images.tree, index > 3 ? Color(0xFFFFFBAD) : Color(0xFFF8F8F8)),
       (Assets.images.geni, Color(0xFFFFE0EC)),
       (Assets.images.us, Color(0xFFA2D2FF)),
     ];
