@@ -11,14 +11,27 @@ class PotProfileImage extends StatelessWidget {
   final PotUserEntity user;
   final PotInfoEntity pot;
 
-  Image getImageByIndex(int index) {
+  Widget getImageByIndex(int index, bool inPot) {
     final images = [
-      Assets.images.jennie.image(),
-      Assets.images.tree.image(),
-      Assets.images.geni.image(),
-      Assets.images.us.image(),
+      (Assets.images.jennie, Color(0xFFD3C5FC)),
+      (Assets.images.tree, Color(0xFFF8F8F8)),
+      (Assets.images.geni, Color(0xFFFFE0EC)),
+      (Assets.images.us, Color(0xFFA2D2FF)),
     ];
-    return images[index % images.length];
+    final sample = images[index % images.length];
+    final image =
+        inPot
+            ? sample.$1.image()
+            : sample.$1.image(
+              colorBlendMode: BlendMode.color,
+              color: Palette.grey,
+            );
+    final hsl = HSLColor.fromColor(sample.$2);
+    final color =
+        hsl
+            .withHue((hsl.hue + [0, 120, 240][index ~/ images.length]) % 360)
+            .toColor();
+    return Container(color: color, child: image);
   }
 
   @override
@@ -35,7 +48,7 @@ class PotProfileImage extends StatelessWidget {
         borderRadius: BorderRadius.circular(100),
         border: Border.all(color: Palette.borderGrey2, width: 0.5),
       ),
-      child: ClipOval(child: getImageByIndex(index)),
+      child: ClipOval(child: getImageByIndex(index, user.isInPot)),
     );
   }
 }
