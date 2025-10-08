@@ -1,7 +1,6 @@
-import 'package:equatable/equatable.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_user_entity.dart';
 
-class ChatEntity with EquatableMixin {
+class ChatEntity {
   final String message;
   final PotUserEntity user;
   final DateTime createdAt;
@@ -15,7 +14,4 @@ class ChatEntity with EquatableMixin {
   static ChatEntity make(String message, PotUserEntity user) {
     return ChatEntity(message: message, user: user, createdAt: DateTime.now());
   }
-
-  @override
-  List<Object?> get props => [message, user, createdAt];
 }
