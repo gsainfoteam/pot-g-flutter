@@ -10,6 +10,15 @@ import 'package:pot_g/app/modules/socket/data/models/events/send_chat_response_m
 import 'package:pot_g/app/modules/socket/data/models/pot_events/chat_v1_event.dart';
 import 'package:pot_g/app/modules/socket/data/models/requests/send_chat_model.dart';
 
+ChatEntity _makeChatEntity(PotEventModel<ChatV1Event> e, PotInfoEntity pot) {
+  final users = pot.usersInfo.users;
+  return ChatEntity(
+    message: e.data.content,
+    user: users.firstWhere((u) => u.id == e.data.from),
+    createdAt: e.timestamp,
+  );
+}
+
 @Injectable(as: ChatRepository)
 class WebsocketChatRepository implements ChatRepository {
   final PotGSocket _socket;
@@ -19,7 +28,6 @@ class WebsocketChatRepository implements ChatRepository {
 
   @override
   Future<List<ChatEntity>> getChats(PotInfoEntity pot) async {
-    final users = pot.usersInfo.users;
     final events = await _api.getPotEvents(
       pot.id,
       GetPotEventsQueryModel(startsFrom: DateTime.now()),
@@ -27,30 +35,23 @@ class WebsocketChatRepository implements ChatRepository {
     return events.events
         .where((e) => e.potPk == pot.id)
         .whereType<PotEventModel<ChatV1Event>>()
-        .map(
-          (e) => ChatEntity(
-            message: e.data.content,
-            user: users.firstWhere((u) => u.id == e.data.from),
-            createdAt: e.timestamp,
-          ),
-        )
+        .map((e) => _makeChatEntity(e, pot))
         .toList();
   }
 
   @override
   Stream<ChatEntity> getChatsStream(PotInfoEntity pot) async* {
-    final users = pot.usersInfo.users;
+    PotInfoEntity localPot = pot;
     yield* _socket
         .createStreamFor<PotEventModel<ChatV1Event>>()
         .map((e) => e.body)
         .where((e) => e.potPk == pot.id)
-        .map(
-          (e) => ChatEntity(
-            message: e.data.content,
-            user: users.firstWhere((u) => u.id == e.data.from),
-            createdAt: e.timestamp,
-          ),
-        );
+        .asyncMap((e) async {
+          if (!localPot.usersInfo.users.any((u) => u.id == e.data.from)) {
+            localPot = await _api.getPotInfo(pot.id);
+          }
+          return _makeChatEntity(e, localPot);
+        });
   }
 
   @override
