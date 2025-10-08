@@ -5,6 +5,7 @@ import 'package:pot_g/app/di/locator.dart';
 import 'package:pot_g/app/modules/auth/presentation/bloc/auth_bloc.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/chat_bloc.dart';
+import 'package:pot_g/app/modules/chat/presentation/bloc/pot_info_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/chat_bubble.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/pot_info.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/pot_users.dart';
@@ -24,97 +25,112 @@ class ChatRoomPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => sl<ChatBloc>()..add(ChatInit(pot)),
-      child: Scaffold(
-        appBar: PotAppBar(title: Text(pot.name)),
-        endDrawer: Drawer(
-          child: SafeArea(
-            child: Padding(
-              padding: EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  PotInfo(pot: pot),
-                  const SizedBox(height: 20),
-                  Container(height: 1, color: Palette.borderGrey2),
-                  const SizedBox(height: 20),
-                  PotUsers(pot: pot),
-                  Spacer(),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      PotPressable(
-                        onTap: () {},
-                        child: Text(
-                          context.t.chat_room.drawer.actions.leave,
-                          style: TextStyles.caption.copyWith(
-                            color: Palette.grey,
-                            decoration: TextDecoration.underline,
-                            decorationColor: Palette.grey,
-                          ),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => sl<ChatBloc>()..add(ChatInit(pot))),
+        BlocProvider(
+          create: (context) => sl<PotInfoBloc>()..add(PotInfoEvent.init(pot)),
+        ),
+      ],
+      child: _Layout(),
+    );
+  }
+}
+
+class _Layout extends StatelessWidget {
+  const _Layout();
+
+  @override
+  Widget build(BuildContext context) {
+    final pot = context.select((PotInfoBloc bloc) => bloc.state.pot);
+    if (pot == null) return const SizedBox.shrink();
+    return Scaffold(
+      appBar: PotAppBar(title: Text(pot.name)),
+      endDrawer: Drawer(
+        child: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                PotInfo(pot: pot),
+                const SizedBox(height: 20),
+                Container(height: 1, color: Palette.borderGrey2),
+                const SizedBox(height: 20),
+                PotUsers(pot: pot),
+                Spacer(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    PotPressable(
+                      onTap: () {},
+                      child: Text(
+                        context.t.chat_room.drawer.actions.leave,
+                        style: TextStyles.caption.copyWith(
+                          color: Palette.grey,
+                          decoration: TextDecoration.underline,
+                          decorationColor: Palette.grey,
                         ),
                       ),
-                      const SizedBox(width: 16),
-                      PotPressable(
-                        onTap: () {},
-                        child: Text(
-                          context.t.chat_room.drawer.actions.report,
-                          style: TextStyles.caption.copyWith(
-                            color: Palette.grey,
-                            decoration: TextDecoration.underline,
-                            decorationColor: Palette.grey,
-                          ),
+                    ),
+                    const SizedBox(width: 16),
+                    PotPressable(
+                      onTap: () {},
+                      child: Text(
+                        context.t.chat_room.drawer.actions.report,
+                        style: TextStyles.caption.copyWith(
+                          color: Palette.grey,
+                          decoration: TextDecoration.underline,
+                          decorationColor: Palette.grey,
                         ),
                       ),
-                    ],
-                  ),
-                ],
-              ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
         ),
-        body: Column(
-          children: [
-            Expanded(
-              child: BlocBuilder<ChatBloc, ChatState>(
-                builder:
-                    (context, state) => ListView.separated(
-                      reverse: true,
-                      padding:
-                          const EdgeInsets.all(12) - EdgeInsets.only(right: 6),
-                      separatorBuilder: (context, index) {
-                        final chat = state.chats[index];
-                        final nextChat =
-                            index == state.chats.length - 1
-                                ? null
-                                : state.chats[index + 1];
-                        if (nextChat?.user.id == chat.user.id) {
-                          return const SizedBox(height: 6);
-                        }
-                        return const SizedBox(height: 12);
-                      },
-                      itemBuilder: (context, index) {
-                        final chat = state.chats[index];
-                        final nextChat =
-                            index == state.chats.length - 1
-                                ? null
-                                : state.chats[index + 1];
-                        final isMe =
-                            chat.user.id == AuthBloc.userOf(context)?.id;
-                        return ChatBubble(
-                          message: chat.message,
-                          isFirst: nextChat?.user.id != chat.user.id,
-                          user: isMe ? null : chat.user,
-                        );
-                      },
-                      itemCount: state.chats.length,
-                    ),
-              ),
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: BlocBuilder<ChatBloc, ChatState>(
+              builder:
+                  (context, state) => ListView.separated(
+                    reverse: true,
+                    padding:
+                        const EdgeInsets.all(12) - EdgeInsets.only(right: 6),
+                    separatorBuilder: (context, index) {
+                      final chat = state.chats[index];
+                      final nextChat =
+                          index == state.chats.length - 1
+                              ? null
+                              : state.chats[index + 1];
+                      if (nextChat?.user.id == chat.user.id) {
+                        return const SizedBox(height: 6);
+                      }
+                      return const SizedBox(height: 12);
+                    },
+                    itemBuilder: (context, index) {
+                      final chat = state.chats[index];
+                      final nextChat =
+                          index == state.chats.length - 1
+                              ? null
+                              : state.chats[index + 1];
+                      final isMe = chat.user.id == AuthBloc.userOf(context)?.id;
+                      return ChatBubble(
+                        message: chat.message,
+                        isFirst: nextChat?.user.id != chat.user.id,
+                        user: isMe ? null : chat.user,
+                      );
+                    },
+                    itemCount: state.chats.length,
+                  ),
             ),
-            SafeArea(child: _ChatInput()),
-          ],
-        ),
+          ),
+          SafeArea(child: _ChatInput()),
+        ],
       ),
     );
   }
