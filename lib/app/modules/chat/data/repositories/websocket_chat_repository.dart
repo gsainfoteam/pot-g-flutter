@@ -19,8 +19,7 @@ class WebsocketChatRepository implements ChatRepository {
 
   @override
   Future<List<ChatEntity>> getChats(PotInfoEntity pot) async {
-    final info = await _api.getPotInfo(pot.id);
-    final users = info.usersInfo.users;
+    final users = pot.usersInfo.users;
     final events = await _api.getPotEvents(
       pot.id,
       GetPotEventsQueryModel(startsFrom: DateTime.now()),
@@ -40,8 +39,7 @@ class WebsocketChatRepository implements ChatRepository {
 
   @override
   Stream<ChatEntity> getChatsStream(PotInfoEntity pot) async* {
-    final info = await _api.getPotInfo(pot.id);
-    final users = info.usersInfo.users;
+    final users = pot.usersInfo.users;
     yield* _socket
         .createStreamFor<PotEventModel<ChatV1Event>>()
         .map((e) => e.body)
