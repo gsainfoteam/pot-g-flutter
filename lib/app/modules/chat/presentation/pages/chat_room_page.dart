@@ -192,16 +192,40 @@ class _SetDepartureTimeButton extends StatelessWidget {
   }
 }
 
-class _ChatList extends StatelessWidget {
+class _ChatList extends StatefulWidget {
   const _ChatList({required this.pot});
 
   final PotInfoEntity pot;
+
+  @override
+  State<_ChatList> createState() => _ChatListState();
+}
+
+class _ChatListState extends State<_ChatList> {
+  final _controller = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.addListener(() {
+      if (_controller.position.pixels == _controller.position.maxScrollExtent) {
+        context.read<ChatBloc>().add(ChatLoadMore());
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ChatBloc, ChatState>(
       builder:
           (context, state) => ListView.separated(
+            controller: _controller,
             reverse: true,
             padding: const EdgeInsets.all(12) - EdgeInsets.only(right: 6),
             separatorBuilder: (context, index) {
@@ -226,7 +250,7 @@ class _ChatList extends StatelessWidget {
                 message: chat.message,
                 isFirst: nextChat?.user.id != chat.user.id,
                 user: isMe ? null : chat.user,
-                pot: pot,
+                pot: widget.pot,
               );
             },
             itemCount: state.chats.length,
