@@ -19,6 +19,10 @@ import 'package:pot_g/gen/strings.g.dart';
 class AccountNumberSettingsPage extends StatelessWidget {
   const AccountNumberSettingsPage({super.key});
 
+  static void showAccountNumberSetting(BuildContext context) {
+    PotBottomSheet.show(context, _AlertDialog());
+  }
+
   @override
   Widget build(BuildContext context) {
     return _Layout();
@@ -50,7 +54,10 @@ class _Layout extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             PotButton(
-              onPressed: () => PotBottomSheet.show(context, _AlertDialog()),
+              onPressed:
+                  () => AccountNumberSettingsPage.showAccountNumberSetting(
+                    context,
+                  ),
               variant: PotButtonVariant.emphasized,
               prefixIcon: Assets.icons.dollar.svg(
                 width: 24,
@@ -163,7 +170,7 @@ class _SelectBankDialogState extends State<_SelectBankDialog> {
                                 width: 24,
                                 height: 24,
                                 child: Image.network(
-                                  'https://placeholder.co/150',
+                                  'https://placehold.co/40.png',
                                 ),
                               ),
                               const SizedBox(width: 12),

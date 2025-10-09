@@ -10,6 +10,7 @@ import 'package:pot_g/app/modules/common/presentation/widgets/pot_app_bar.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_button.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_checkbox.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_text_field.dart';
+import 'package:pot_g/app/modules/user/presentation/pages/account_number_settings_page.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
 import 'package:pot_g/gen/assets.gen.dart';
@@ -107,7 +108,8 @@ class _DefaultNotRegistered extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         PotButton(
-          onPressed: () {},
+          onPressed:
+              () => AccountNumberSettingsPage.showAccountNumberSetting(context),
           variant: PotButtonVariant.emphasized,
           prefixIcon: Assets.icons.dollar.svg(
             width: 24,
