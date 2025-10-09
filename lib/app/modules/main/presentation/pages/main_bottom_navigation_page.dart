@@ -55,11 +55,11 @@ class _MainBottomNavigationPageState extends State<MainBottomNavigationPage> {
                                   ),
                                   BottomNavigationBarItem(
                                     icon: Assets.icons.chatBubble.svg(),
-                                    label: '채팅방',
+                                    label: context.t.chat.menu_title,
                                   ),
                                   BottomNavigationBarItem(
                                     icon: Assets.icons.userCircle.svg(),
-                                    label: '내 정보',
+                                    label: context.t.profile.menu_title,
                                   ),
                                 ].indexed
                                 .map((e) => _buildItem(context, e.$1 - 1, e.$2))
