@@ -2,7 +2,6 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/chat_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/enums/fofo_action_button_type.dart';
-import 'package:pot_g/app/modules/chat/domain/enums/fofo_chat_type.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/bubble.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_button.dart';
 import 'package:pot_g/app/values/palette.dart';
@@ -14,17 +13,6 @@ class FofoBubble extends StatelessWidget {
   const FofoBubble({super.key, required this.message});
 
   final FofoChatEntity message;
-
-  String title(BuildContext context) {
-    final fofo = context.t.chat_room.fofo.title;
-    return switch (message.type) {
-      FofoChatType.departureConfirmRequest => fofo.departure_confirm_request,
-      FofoChatType.departureConfirmed => fofo.departure_confirmed,
-      FofoChatType.reminderTaxiCall => fofo.reminder_taxi_call,
-      FofoChatType.accountingReminder => fofo.accounting_reminder,
-      FofoChatType.accountingRequest => fofo.accounting_request,
-    };
-  }
 
   String action(BuildContext context, FofoActionButtonType type) {
     final fofo = context.t.chat_room.fofo.actions;
@@ -55,12 +43,12 @@ class FofoBubble extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            title(context),
+            message.content.split('\n').first.replaceAll('**', ''),
             style: TextStyles.title4.copyWith(color: Palette.textGrey),
           ),
           const SizedBox(height: 8),
           Text(
-            message.content,
+            message.content.split('\n').sublist(1).join('\n'),
             style: TextStyles.description.copyWith(color: Palette.textGrey),
           ),
           const SizedBox(height: 8),
