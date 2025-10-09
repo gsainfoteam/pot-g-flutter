@@ -88,6 +88,9 @@ class PotListItem extends StatelessWidget {
   }
 
   Future<void> _joinPot(BuildContext context) async {
+    final potListBloc = context.read<PotListBloc>();
+    final potDetailBloc = context.read<PotDetailBloc>();
+
     return showDialog(
       context: context,
       barrierDismissible: false,
@@ -101,10 +104,8 @@ class PotListItem extends StatelessWidget {
                   initial: (_) {},
                   loading: (_) {},
                   success: (successState) {
-                    context.read<PotListBloc>().add(PotListEvent.search());
-                    context.read<PotDetailBloc>().add(
-                      const PotDetailEvent.loadMyPots(),
-                    );
+                    potListBloc.add(PotListEvent.search());
+                    potDetailBloc.add(const PotDetailEvent.loadMyPots());
                     Navigator.of(context).pop();
                     _navigateToChatRoom(context, successState.potId);
                   },
