@@ -22,6 +22,7 @@ import 'package:pot_g/app/modules/common/presentation/widgets/general_dialog.dar
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_app_bar.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_icon_button.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_pressable.dart';
+import 'package:pot_g/app/modules/core/domain/entities/pot_detail_entity.dart';
 import 'package:pot_g/app/modules/core/domain/entities/route_entity.dart';
 import 'package:pot_g/app/router.gr.dart';
 import 'package:pot_g/app/values/palette.dart';
@@ -33,24 +34,43 @@ import 'package:pot_g/gen/strings.g.dart';
 class ChatRoomPage extends StatelessWidget {
   const ChatRoomPage({super.key, required this.pot});
 
-  final PotInfoEntity pot;
+  final PotDetailEntity pot;
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => sl<ChatBloc>()..add(ChatInit(pot))),
+        BlocProvider(create: (context) => sl<ChatBloc>()),
         BlocProvider(
           create: (context) => sl<PotInfoBloc>()..add(PotInfoEvent.init(pot)),
         ),
       ],
-      child: BlocBuilder<PotInfoBloc, PotInfoState>(
-        builder: (context, state) {
-          if (state.error != null) {
-            return ErrorCover(message: state.error!);
-          }
-          return _Layout();
-        },
+      child: MultiBlocListener(
+        listeners: [
+          BlocListener<PotInfoBloc, PotInfoState>(
+            listener: (context, state) {
+              if (state.error != null) {
+                context.showToast(state.error!);
+              }
+            },
+          ),
+          BlocListener<PotInfoBloc, PotInfoState>(
+            listenWhen:
+                (prev, curr) =>
+                    prev.pot?.id != curr.pot?.id && curr.pot != null,
+            listener:
+                (context, state) =>
+                    context.read<ChatBloc>().add(ChatInit(state.pot!)),
+          ),
+        ],
+        child: BlocBuilder<PotInfoBloc, PotInfoState>(
+          builder: (context, state) {
+            if (state.error != null) {
+              return ErrorCover(message: state.error!);
+            }
+            return _Layout();
+          },
+        ),
       ),
     );
   }

@@ -1,12 +1,17 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:pot_g/app/modules/chat/domain/enums/pot_status.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/chat_list_item.dart';
+import 'package:pot_g/app/modules/common/presentation/widgets/pot_app_bar.dart';
+import 'package:pot_g/app/modules/common/presentation/widgets/pot_pressable.dart';
 import 'package:pot_g/app/modules/core/data/models/pot_detail_model.dart';
 import 'package:pot_g/app/modules/core/data/models/route_model.dart';
 import 'package:pot_g/app/modules/core/data/models/stop_model.dart';
+import 'package:pot_g/app/router.gr.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/gen/assets.gen.dart';
+import 'package:pot_g/gen/strings.g.dart';
 
 @RoutePage()
 class ChatPage extends StatelessWidget {
@@ -85,6 +90,7 @@ class ChatPage extends StatelessWidget {
     ];
 
     return Scaffold(
+      appBar: PotAppBar(title: Text(context.t.chat.title)),
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
@@ -136,9 +142,16 @@ class _ChatListViewState extends State<_ChatListView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (hasActivePots) ...[
-            ...widget.activePots.indexed.expand(
-              (e) => [ChatListItem(pot: e.$2), const SizedBox(height: 15)],
+            ...widget.activePots.indexed.expandIndexed(
+              (index, e) => [
+                if (index != 0) const SizedBox(height: 16),
+                PotPressable(
+                  onTap: () => ChatRoomRoute(pot: e.$2).push(context),
+                  child: ChatListItem(pot: e.$2),
+                ),
+              ],
             ),
+            const SizedBox(height: 32),
           ] else ...[
             AnimatedSize(
               duration: const Duration(milliseconds: 300),
@@ -207,10 +220,13 @@ class _ChatListViewState extends State<_ChatListView> {
                     ? Column(
                       key: const ValueKey('closedList'),
                       children: [
-                        ...widget.closedPots.indexed.expand(
+                        ...widget.closedPots.expand(
                           (e) => [
-                            ChatListItem(pot: e.$2),
-                            const SizedBox(height: 15),
+                            const SizedBox(height: 16),
+                            PotPressable(
+                              onTap: () => ChatRoomRoute(pot: e).push(context),
+                              child: ChatListItem(pot: e),
+                            ),
                           ],
                         ),
                       ],
