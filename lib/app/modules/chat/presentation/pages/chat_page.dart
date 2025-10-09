@@ -20,7 +20,7 @@ class ChatPage extends StatelessWidget {
 
     final dummyPots1 = [
       PotDetailModel(
-        id: '1',
+        id: '22b59c12-a22c-441b-8efe-de75bc7e8fbf',
         name: '팟 1',
         route: dummyRoute,
         startsAt: DateTime(2025, 12, 22, 12, 0),
