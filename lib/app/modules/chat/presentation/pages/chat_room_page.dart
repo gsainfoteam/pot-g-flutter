@@ -244,6 +244,15 @@ class _ChatInput extends StatefulWidget {
 
 class _ChatInputState extends State<_ChatInput> {
   final _controller = TextEditingController();
+  bool _filled = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.addListener(() {
+      setState(() => _filled = _controller.text.isNotEmpty);
+    });
+  }
 
   @override
   void dispose() {
@@ -284,7 +293,10 @@ class _ChatInputState extends State<_ChatInput> {
           const SizedBox(width: 6),
           PotIconButton(
             icon: Assets.icons.sendDiagonal.svg(
-              colorFilter: ColorFilter.mode(Palette.grey, BlendMode.srcIn),
+              colorFilter: ColorFilter.mode(
+                _filled ? Palette.primary : Palette.grey,
+                BlendMode.srcIn,
+              ),
             ),
             onPressed: () {
               context.read<ChatBloc>().add(ChatSendChat(_controller.text));
