@@ -1,7 +1,6 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:pot_g/app/modules/auth/presentation/bloc/auth_bloc.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
+import 'package:pot_g/app/modules/chat/presentation/extensions/pot_user_extension.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/pot_user.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
@@ -15,10 +14,9 @@ class PotUsers extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final meUser = AuthBloc.userOf(context);
-    final me = pot.usersInfo.users.firstWhereOrNull((u) => u.id == meUser?.id);
+    final me = pot.getMe(context);
     final passengers = pot.usersInfo.users.where(
-      (u) => u.isInPot && u.id != meUser?.id,
+      (u) => u.isInPot && u.id != me?.id,
     );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
