@@ -141,7 +141,7 @@ class _AccountingButton extends StatelessWidget {
         colorFilter: ColorFilter.mode(Palette.grey, BlendMode.srcIn),
       ),
       onPressed: () {
-        if (pot.meIsHost(context)) {
+        if (!pot.meIsHost(context)) {
           context.showToast(
             context.t.chat_room.accounting.host_only.description,
           );
