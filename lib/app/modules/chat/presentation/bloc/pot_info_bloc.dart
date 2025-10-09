@@ -63,11 +63,15 @@ class PotInfoBloc extends Bloc<PotInfoEvent, PotInfoState> {
     Emitter<PotInfoState> emit,
   ) async {
     if (state.pot == null) return;
+    final pot = state.pot!;
     try {
-      await _repository.accounting(state.pot!, event.amount, event.targets);
+      emit(const PotInfoState.loading());
+      await _repository.accounting(pot, event.amount, event.targets);
       emit(const PotInfoState.accountingSuccess());
     } catch (e) {
       emit(PotInfoState.error(e.toString()));
+    } finally {
+      emit(PotInfoState.loaded(pot));
     }
   }
 }
