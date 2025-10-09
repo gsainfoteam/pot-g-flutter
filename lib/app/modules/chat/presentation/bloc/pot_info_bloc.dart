@@ -65,6 +65,7 @@ class PotInfoBloc extends Bloc<PotInfoEvent, PotInfoState> {
     if (state.pot == null) return;
     try {
       await _repository.accounting(state.pot!, event.amount, event.targets);
+      emit(const PotInfoState.accountingSuccess());
     } catch (e) {
       emit(PotInfoState.error(e.toString()));
     }
@@ -89,6 +90,7 @@ sealed class PotInfoState with _$PotInfoState {
   const PotInfoState._();
   const factory PotInfoState.loading() = _Loading;
   const factory PotInfoState.loaded(PotInfoEntity pot) = _Loaded;
+  const factory PotInfoState.accountingSuccess() = AccountingSuccess;
   const factory PotInfoState.error(String message) = _Error;
 
   PotInfoEntity? get pot => switch (this) {

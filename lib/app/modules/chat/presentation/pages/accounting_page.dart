@@ -9,6 +9,7 @@ import 'package:pot_g/app/modules/chat/domain/entities/pot_user_entity.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/accounting_cubit.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/pot_info_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/pot_profile_image.dart';
+import 'package:pot_g/app/modules/common/presentation/extensions/toast.dart';
 import 'package:pot_g/app/modules/common/presentation/formatters/thousand_won_formatter.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_app_bar.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_button.dart';
@@ -40,7 +41,17 @@ class AccountingPage extends StatelessWidget {
           create: (context) => sl<PotInfoBloc>()..add(PotInfoEvent.init(pot)),
         ),
       ],
-      child: _Layout(pot: pot),
+      child: BlocListener<PotInfoBloc, PotInfoState>(
+        listener: (context, state) {
+          if (state is AccountingSuccess) {
+            context.router.pop();
+          }
+          if (state.error != null) {
+            context.showToast(state.error!);
+          }
+        },
+        child: _Layout(pot: pot),
+      ),
     );
   }
 }
@@ -81,13 +92,13 @@ class _Layout extends StatelessWidget {
                           onPressed:
                               state.valid && hasBank
                                   ? () {
-                                    context.read<PotInfoBloc>().add(
+                                    final bloc = context.read<PotInfoBloc>();
+                                    bloc.add(
                                       PotInfoEvent.accounting(
                                         state.amount!,
                                         state.targets!.toList(),
                                       ),
                                     );
-                                    context.router.pop();
                                   }
                                   : null,
                           variant: PotButtonVariant.emphasized,
