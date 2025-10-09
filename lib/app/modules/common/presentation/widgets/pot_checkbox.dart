@@ -19,22 +19,27 @@ class PotCheckbox extends StatelessWidget {
     return PotPressable(
       onTap: enabled ? () => onChanged(!value) : null,
       builder:
-          (pressed) => SizedBox(
-            width: 24,
-            height: 24,
-            child: TweenAnimationBuilder<double>(
-              duration: const Duration(milliseconds: 200),
-              curve: Curves.easeInOut,
-              tween: Tween(begin: 0.0, end: value ? 1.0 : 0.0),
-              builder:
-                  (context, animationValue, child) => CustomPaint(
-                    painter: _CheckboxPainter(
-                      value: value,
-                      enabled: enabled,
-                      pressed: pressed,
-                      animationValue: animationValue,
-                    ),
-                  ),
+          (pressed) => Padding(
+            padding: const EdgeInsets.all(6),
+            child: Center(
+              child: SizedBox(
+                width: 24,
+                height: 24,
+                child: TweenAnimationBuilder<double>(
+                  duration: const Duration(milliseconds: 200),
+                  curve: Curves.easeInOut,
+                  tween: Tween(begin: 0.0, end: value ? 1.0 : 0.0),
+                  builder:
+                      (context, animationValue, child) => CustomPaint(
+                        painter: _CheckboxPainter(
+                          value: value,
+                          enabled: enabled,
+                          pressed: pressed,
+                          animationValue: animationValue,
+                        ),
+                      ),
+                ),
+              ),
             ),
           ),
     );
