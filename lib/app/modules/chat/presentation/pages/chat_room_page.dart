@@ -321,8 +321,12 @@ class _ChatListState extends State<_ChatList> {
       case FofoActionButtonType.accountingRequest:
         _AccountingButton.setAccounting(context, widget.pot);
         break;
-      default:
-        throw UnimplementedError();
+      case FofoActionButtonType.accountingInfoCheck:
+      case FofoActionButtonType.accountingProcess:
+      case FofoActionButtonType.taxiCall:
+        // TODO: implement these actions
+        context.showToast('service is not available yet');
+        break;
     }
   }
 }
