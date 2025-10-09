@@ -94,42 +94,7 @@ class _Layout extends StatelessWidget {
       ),
       body: Column(
         children: [
-          Expanded(
-            child: BlocBuilder<ChatBloc, ChatState>(
-              builder:
-                  (context, state) => ListView.separated(
-                    reverse: true,
-                    padding:
-                        const EdgeInsets.all(12) - EdgeInsets.only(right: 6),
-                    separatorBuilder: (context, index) {
-                      final chat = state.chats[index];
-                      final nextChat =
-                          index == state.chats.length - 1
-                              ? null
-                              : state.chats[index + 1];
-                      if (nextChat?.user.id == chat.user.id) {
-                        return const SizedBox(height: 6);
-                      }
-                      return const SizedBox(height: 12);
-                    },
-                    itemBuilder: (context, index) {
-                      final chat = state.chats[index];
-                      final nextChat =
-                          index == state.chats.length - 1
-                              ? null
-                              : state.chats[index + 1];
-                      final isMe = chat.user.id == AuthBloc.userOf(context)?.id;
-                      return ChatBubble(
-                        message: chat.message,
-                        isFirst: nextChat?.user.id != chat.user.id,
-                        user: isMe ? null : chat.user,
-                        pot: pot,
-                      );
-                    },
-                    itemCount: state.chats.length,
-                  ),
-            ),
-          ),
+          Expanded(child: _ChatList(pot: pot)),
           SafeArea(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 6),
@@ -168,6 +133,49 @@ class _Layout extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _ChatList extends StatelessWidget {
+  const _ChatList({required this.pot});
+
+  final PotInfoEntity pot;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<ChatBloc, ChatState>(
+      builder:
+          (context, state) => ListView.separated(
+            reverse: true,
+            padding: const EdgeInsets.all(12) - EdgeInsets.only(right: 6),
+            separatorBuilder: (context, index) {
+              final chat = state.chats[index];
+              final nextChat =
+                  index == state.chats.length - 1
+                      ? null
+                      : state.chats[index + 1];
+              if (nextChat?.user.id == chat.user.id) {
+                return const SizedBox(height: 6);
+              }
+              return const SizedBox(height: 12);
+            },
+            itemBuilder: (context, index) {
+              final chat = state.chats[index];
+              final nextChat =
+                  index == state.chats.length - 1
+                      ? null
+                      : state.chats[index + 1];
+              final isMe = chat.user.id == AuthBloc.userOf(context)?.id;
+              return ChatBubble(
+                message: chat.message,
+                isFirst: nextChat?.user.id != chat.user.id,
+                user: isMe ? null : chat.user,
+                pot: pot,
+              );
+            },
+            itemCount: state.chats.length,
+          ),
     );
   }
 }
