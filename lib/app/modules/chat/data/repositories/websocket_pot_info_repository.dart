@@ -3,8 +3,10 @@ import 'package:injectable/injectable.dart';
 import 'package:pot_g/app/modules/chat/data/data_sources/remote/chat_pot_api.dart';
 import 'package:pot_g/app/modules/chat/data/enums/pot_departure_time_result.dart';
 import 'package:pot_g/app/modules/chat/data/models/confirm_departure_time_request_model.dart';
+import 'package:pot_g/app/modules/chat/data/models/leave_pot_response_model.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/exceptions/departure_time_exception.dart';
+import 'package:pot_g/app/modules/chat/domain/exceptions/leave_pot_exception.dart';
 import 'package:pot_g/app/modules/chat/domain/repositories/pot_info_repository.dart';
 import 'package:pot_g/app/modules/core/domain/entities/pot_detail_entity.dart';
 import 'package:pot_g/app/modules/socket/data/data_sources/websocket.dart';
@@ -67,6 +69,29 @@ class WebsocketPotInfoRepository implements PotInfoRepository {
       }
     } on DioException catch (e) {
       throw DepartureTimeException.networkError(e.error.toString());
+    }
+  }
+
+  @override
+  Future<void> leavePot(PotInfoEntity pot) async {
+    try {
+      final result = await _api.leavePot(pot.id);
+      switch (result.result) {
+        case LeavePotResult.ok:
+          return;
+        case LeavePotResult.afterDepartureConfirmed:
+          throw LeavePotException.afterDepartureConfirmed();
+        case LeavePotResult.notYetPaymentConfirmed:
+          throw LeavePotException.notYetPaymentConfirmed();
+        case LeavePotResult.notYetPaymentCompleted:
+          throw LeavePotException.notYetPaymentCompleted();
+        case LeavePotResult.potNotExist:
+          throw LeavePotException.potNotExist();
+        case LeavePotResult.potAlreadyClosed:
+          throw LeavePotException.potAlreadyClosed();
+      }
+    } on DioException catch (e) {
+      throw LeavePotException.networkError(e.error.toString());
     }
   }
 }
