@@ -44,6 +44,8 @@ BaseServerMessageModel<T> convertServerMessage<
   );
   final data = switch (type) {
     'pot_event_receive' => switch (jsonData['body']['event_type']) {
+      // TODO: handle create_v1 event
+      'create_v1' => pe(ArchiveV1Event.fromJson),
       'chat_v1' => pe(ChatV1Event.fromJson),
       'user_in_v1' => pe(UserInV1Event.fromJson),
       'user_leave_v1' => pe(UserLeaveV1Event.fromJson),
