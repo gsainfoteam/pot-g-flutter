@@ -1,4 +1,3 @@
-import 'package:injectable/injectable.dart';
 import 'package:pot_g/app/modules/common/presentation/extensions/date_time.dart';
 import 'package:pot_g/app/modules/core/data/models/pot_model.dart';
 import 'package:pot_g/app/modules/core/data/models/route_model.dart';
@@ -19,6 +18,7 @@ class MockPotListRepository implements PotListRepository {
   static final _list = [
     PotModel(
       id: '1',
+      name: '팟 1',
       route: _giToSong,
       startsAt: DateTime.now().copyWith(hour: 13, minute: 10),
       endsAt: DateTime.now().copyWith(hour: 14, minute: 00),
@@ -27,6 +27,7 @@ class MockPotListRepository implements PotListRepository {
     ),
     PotModel(
       id: '2',
+      name: '팟 2',
       route: _ugi,
       startsAt: DateTime.now()
           .add(Duration(days: 1))
@@ -39,6 +40,7 @@ class MockPotListRepository implements PotListRepository {
     ),
     PotModel(
       id: '3',
+      name: '팟 3',
       route: _ugi,
       startsAt: DateTime.now()
           .add(Duration(days: 1))
@@ -51,6 +53,7 @@ class MockPotListRepository implements PotListRepository {
     ),
     PotModel(
       id: '4',
+      name: '팟 4',
       route: _songToGi,
       startsAt: DateTime.now()
           .add(Duration(days: 1))
@@ -63,6 +66,7 @@ class MockPotListRepository implements PotListRepository {
     ),
     PotModel(
       id: '5',
+      name: '팟 5',
       route: _songToGi,
       startsAt: DateTime.now()
           .add(Duration(days: 2))
@@ -75,6 +79,7 @@ class MockPotListRepository implements PotListRepository {
     ),
     PotModel(
       id: '6',
+      name: '팟 6',
       route: _ugi,
       startsAt: DateTime.now()
           .add(Duration(days: 2))
@@ -87,6 +92,7 @@ class MockPotListRepository implements PotListRepository {
     ),
     PotModel(
       id: '7',
+      name: '팟 7',
       route: _songToGi,
       startsAt: DateTime.now()
           .add(Duration(days: 3))
