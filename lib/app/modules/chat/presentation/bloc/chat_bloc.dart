@@ -1,8 +1,10 @@
 import 'dart:async';
 
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
+import 'package:mutex/mutex.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/chat_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/repositories/chat_repository.dart';
@@ -13,15 +15,20 @@ part 'chat_bloc.freezed.dart';
 class ChatBloc extends Bloc<ChatEvent, ChatState> {
   final ChatRepository _chatRepository;
   late PotInfoEntity _pot;
+  final _completer = Completer<void>();
+  final _mutex = Mutex();
 
   ChatBloc(this._chatRepository) : super(const ChatInitial()) {
     on<ChatInit>(_onChatInit);
+    on<ChatLoadMore>(_onChatLoadMore, transformer: droppable());
     on<ChatSendChat>(_onChatSendChat);
   }
 
   Future<void> _onChatInit(ChatInit event, Emitter<ChatState> emit) async {
+    await _mutex.acquire();
     emit(const ChatState.loading());
     _pot = event.pot;
+    _completer.complete();
     try {
       final chats = await _chatRepository.getChats(_pot);
       emit(ChatState.loaded(chats.reversed.toList()));
@@ -33,6 +40,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       );
     } catch (e) {
       emit(ChatState.error(state.chats, e.toString()));
+    } finally {
+      _mutex.release();
     }
   }
 
@@ -40,14 +49,26 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     ChatSendChat event,
     Emitter<ChatState> emit,
   ) async {
+    await _completer.future;
     await _chatRepository.sendChat(event.message, _pot);
     // TODO: optimistic UI
+  }
+
+  Future<void> _onChatLoadMore(
+    ChatLoadMore event,
+    Emitter<ChatState> emit,
+  ) async {
+    await _completer.future;
+    final lastChat = state.chats.last;
+    print(lastChat);
+    // await _chatRepository.loadMore(_pot);
   }
 }
 
 @freezed
 sealed class ChatEvent with _$ChatEvent {
   const factory ChatEvent.init(PotInfoEntity pot) = ChatInit;
+  const factory ChatEvent.loadMore() = ChatLoadMore;
   const factory ChatEvent.sendChat(String message) = ChatSendChat;
 }
 
