@@ -146,7 +146,7 @@ class _SetDepartureTimeButton extends StatelessWidget {
         colorFilter: ColorFilter.mode(Palette.grey, BlendMode.srcIn),
       ),
       onPressed: () async {
-        if (pot.meIsHost(context)) {
+        if (!pot.meIsHost(context)) {
           context.showToast(
             context.t.chat_room.set_departure_time.host_only.description,
           );
