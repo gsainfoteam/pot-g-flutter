@@ -76,7 +76,9 @@ class WebsocketPotInfoRepository implements PotInfoRepository {
           throw DepartureTimeException.potAlreadyClosed();
       }
     } on DioException catch (e) {
-      throw DepartureTimeException.networkError(e.error.toString());
+      throw DepartureTimeException.networkError(
+        e.message ?? e.error.toString(),
+      );
     }
   }
 
@@ -103,7 +105,7 @@ class WebsocketPotInfoRepository implements PotInfoRepository {
           throw KickUserException.potAlreadyClosed();
       }
     } on DioException catch (e) {
-      throw KickUserException.networkError(e.error.toString());
+      throw KickUserException.networkError(e.message ?? e.error.toString());
     }
   }
 
@@ -126,7 +128,7 @@ class WebsocketPotInfoRepository implements PotInfoRepository {
           throw LeavePotException.potAlreadyClosed();
       }
     } on DioException catch (e) {
-      throw LeavePotException.networkError(e.error.toString());
+      throw LeavePotException.networkError(e.message ?? e.error.toString());
     }
   }
 
@@ -167,7 +169,9 @@ class WebsocketPotInfoRepository implements PotInfoRepository {
           throw AccountingRequestException.potAlreadyClosed();
       }
     } on DioException catch (e) {
-      throw AccountingRequestException.networkError(e.error.toString());
+      throw AccountingRequestException.networkError(
+        e.message ?? e.error.toString(),
+      );
     }
   }
 }
