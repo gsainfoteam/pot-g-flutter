@@ -161,7 +161,7 @@ class _CheckboxPainter extends CustomPainter {
           ..strokeJoin = StrokeJoin.round;
 
     final path = Path();
-    final checkSize = size.width * 0.4;
+    final checkSize = size.width * 0.7;
     final animatedCheckSize = checkSize * animationValue;
 
     // 애니메이션된 체크마크 경로
