@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
+import 'package:pot_g/app/modules/chat/domain/entities/pot_user_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/repositories/pot_info_repository.dart';
 import 'package:pot_g/app/modules/core/domain/entities/pot_detail_entity.dart';
 
@@ -14,6 +15,7 @@ class PotInfoBloc extends Bloc<PotInfoEvent, PotInfoState> {
   PotInfoBloc(this._repository) : super(const PotInfoState.loading()) {
     on<_Init>(_onInit);
     on<_SetDepartureTime>(_onSetDepartureTime);
+    on<_KickUser>(_onKickUser);
   }
 
   Future<void> _onInit(_Init event, Emitter<PotInfoState> emit) async {
@@ -35,6 +37,11 @@ class PotInfoBloc extends Bloc<PotInfoEvent, PotInfoState> {
       emit(PotInfoState.error(e.toString()));
     }
   }
+
+  Future<void> _onKickUser(_KickUser event, Emitter<PotInfoState> emit) async {
+    if (state.pot == null) return;
+    await _repository.kickUser(state.pot!, event.user);
+  }
 }
 
 @freezed
@@ -42,6 +49,7 @@ sealed class PotInfoEvent with _$PotInfoEvent {
   const factory PotInfoEvent.init(PotDetailEntity pot) = _Init;
   const factory PotInfoEvent.setDepartureTime(DateTime date) =
       _SetDepartureTime;
+  const factory PotInfoEvent.kickUser(PotUserEntity user) = _KickUser;
 }
 
 @freezed
