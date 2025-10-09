@@ -30,7 +30,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     _pot = event.pot;
     _completer.complete();
     try {
-      final chats = await _chatRepository.getChats(_pot);
+      final chats = await _chatRepository.getChats(_pot, DateTime.now());
       emit(ChatState.loaded(chats.reversed.toList()));
       return emit.forEach(
         _chatRepository.getChatsStream(_pot),
@@ -60,8 +60,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   ) async {
     await _completer.future;
     final lastChat = state.chats.last;
-    print(lastChat);
-    // await _chatRepository.loadMore(_pot);
+    final chats = await _chatRepository.getChats(_pot, lastChat.createdAt);
+    emit(ChatState.loaded([...state.chats, ...chats.reversed]));
   }
 }
 

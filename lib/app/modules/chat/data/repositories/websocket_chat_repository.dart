@@ -27,11 +27,14 @@ class WebsocketChatRepository implements ChatRepository {
   WebsocketChatRepository(this._socket, this._api);
 
   @override
-  Future<List<ChatEntity>> getChats(PotInfoEntity pot) async {
+  Future<List<ChatEntity>> getChats(
+    PotInfoEntity pot,
+    DateTime startsFrom,
+  ) async {
     final localPot = await _api.getPotInfo(pot.id);
     final events = await _api.getPotEvents(
       pot.id,
-      GetPotEventsQueryModel(startsFrom: DateTime.now()),
+      GetPotEventsQueryModel(startsFrom: startsFrom),
     );
     return events.events
         .where((e) => e.potPk == pot.id)
