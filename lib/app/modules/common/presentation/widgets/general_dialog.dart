@@ -87,7 +87,7 @@ Future<OkCancelResult> showGeneralOkCancelAdaptiveDialog({
       );
       return result ?? OkCancelResult.cancel;
     case AdaptiveStyle.macOS:
-      throw UnimplementedError();
+      throw UnsupportedError('macOS is not supported');
     case AdaptiveStyle.material:
       final result = await showModal(
         context: context,
@@ -122,6 +122,6 @@ Future<OkCancelResult> showGeneralOkCancelAdaptiveDialog({
       );
       return result ?? OkCancelResult.cancel;
     case AdaptiveStyle.adaptive:
-      throw UnimplementedError();
+      throw StateError('unintended');
   }
 }

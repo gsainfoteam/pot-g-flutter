@@ -25,6 +25,6 @@ class _Converter implements JsonConverter<PotEventModel, Map<String, dynamic>> {
 
   @override
   Map<String, dynamic> toJson(PotEventModel<PotEvent> object) {
-    throw UnimplementedError();
+    throw StateError('toJson is not implemented');
   }
 }

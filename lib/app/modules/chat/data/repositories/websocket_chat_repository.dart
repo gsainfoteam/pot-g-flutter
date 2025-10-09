@@ -30,7 +30,7 @@ String _getRelatedUserId(PotEventModel e) {
     PotEventModel<UserInV1Event>() => e.data.userPk,
     PotEventModel<UserLeaveV1Event>() => e.data.userPk,
     PotEventModel<UserKickV1Event>() => e.data.kickedUserPk,
-    PotEventModel<PopoChatV1Event>() => throw UnimplementedError(),
+    PotEventModel<PopoChatV1Event>() => throw StateError('unintended'),
     _ => throw StateError('Unknown event type'),
   };
 }
