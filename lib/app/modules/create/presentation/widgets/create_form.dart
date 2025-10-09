@@ -6,7 +6,6 @@ import 'package:pot_g/app/modules/common/presentation/widgets/path_select.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_button.dart';
 import 'package:pot_g/app/modules/core/data/models/pot_model.dart';
 import 'package:pot_g/app/modules/core/data/models/route_model.dart';
-import 'package:pot_g/app/modules/core/domain/entities/pot_summary_entity.dart';
 import 'package:pot_g/app/modules/core/presentation/route_list_bloc.dart';
 import 'package:pot_g/app/modules/create/presentation/bloc/create_cubit.dart';
 import 'package:pot_g/app/modules/create/presentation/bloc/create_pot_bloc.dart';

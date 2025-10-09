@@ -1,11 +1,8 @@
-import 'dart:convert';
-
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:pot_g/app/modules/chat/domain/enums/pot_status.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/chat_list_item.dart';
 import 'package:pot_g/app/modules/core/data/models/pot_detail_model.dart';
-import 'package:pot_g/app/modules/core/data/models/pot_model.dart';
 import 'package:pot_g/app/modules/core/data/models/route_model.dart';
 import 'package:pot_g/app/modules/core/data/models/stop_model.dart';
 import 'package:pot_g/app/values/palette.dart';
@@ -21,7 +18,7 @@ class ChatPage extends StatelessWidget {
     final dummyStart = StopModel(id: '', name: '지스트');
     final dummyRoute = RouteModel(id: '', from: dummyStart, to: dummyStop);
 
-    final dummy_pots1 = [
+    final dummyPots1 = [
       PotDetailModel(
         id: '1',
         name: '팟 1',
@@ -60,7 +57,7 @@ class ChatPage extends StatelessWidget {
       ),
     ];
 
-    final dummy_pots2 = [
+    final dummyPots2 = [
       PotDetailModel(
         id: '4',
         name: '팟 4',
@@ -97,8 +94,8 @@ class ChatPage extends StatelessWidget {
                   child: Container(
                     color: Palette.lightGrey,
                     child: _ChatListView(
-                      activePots: dummy_pots1,
-                      closedPots: dummy_pots2,
+                      activePots: dummyPots1,
+                      closedPots: dummyPots2,
                     ),
                     // TO DO : connect bloc and show list
                   ),
