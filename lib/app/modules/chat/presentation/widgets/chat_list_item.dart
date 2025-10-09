@@ -8,6 +8,9 @@ import 'package:pot_g/app/router.gr.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
 
+// TODO: add last chat messsage
+// deleted in https://github.com/2paperstar/pot-g-flutter/commit/402e4d75e9d55f43f242d95e5a6fb4717bfd53fd
+
 class ChatListItem extends StatelessWidget {
   const ChatListItem({super.key, required this.pot});
 
