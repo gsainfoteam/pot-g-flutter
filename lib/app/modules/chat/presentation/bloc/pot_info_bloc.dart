@@ -12,6 +12,7 @@ class PotInfoBloc extends Bloc<PotInfoEvent, PotInfoState> {
 
   PotInfoBloc(this._repository) : super(const PotInfoState.loading()) {
     on<_Init>(_onInit);
+    on<_SetDepartureTime>(_onSetDepartureTime);
   }
 
   Future<void> _onInit(_Init event, Emitter<PotInfoState> emit) async {
@@ -21,11 +22,21 @@ class PotInfoBloc extends Bloc<PotInfoEvent, PotInfoState> {
       onData: (pot) => PotInfoState.loaded(pot),
     );
   }
+
+  Future<void> _onSetDepartureTime(
+    _SetDepartureTime event,
+    Emitter<PotInfoState> emit,
+  ) async {
+    assert(state.pot != null);
+    await _repository.setDepartureTime(state.pot!, event.date);
+  }
 }
 
 @freezed
 sealed class PotInfoEvent with _$PotInfoEvent {
   const factory PotInfoEvent.init(PotInfoEntity pot) = _Init;
+  const factory PotInfoEvent.setDepartureTime(DateTime date) =
+      _SetDepartureTime;
 }
 
 @freezed

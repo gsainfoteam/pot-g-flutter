@@ -1,17 +1,24 @@
+import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:auto_route/annotations.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:pot_g/app/di/locator.dart';
 import 'package:pot_g/app/modules/auth/presentation/bloc/auth_bloc.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/chat_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/pot_info_bloc.dart';
+import 'package:pot_g/app/modules/chat/presentation/extensions/pot_user_extension.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/chat_bubble.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/pot_info.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/pot_users.dart';
+import 'package:pot_g/app/modules/common/presentation/extensions/toast.dart';
+import 'package:pot_g/app/modules/common/presentation/widgets/general_dialog.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_app_bar.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_icon_button.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_pressable.dart';
+import 'package:pot_g/app/modules/core/domain/entities/route_entity.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
 import 'package:pot_g/gen/assets.gen.dart';
@@ -100,24 +107,8 @@ class _Layout extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 6),
               child: Row(
                 children: [
-                  PotIconButton(
-                    icon: Assets.icons.clock.svg(
-                      colorFilter: ColorFilter.mode(
-                        Palette.grey,
-                        BlendMode.srcIn,
-                      ),
-                    ),
-                    onPressed: () {},
-                  ),
-                  PotIconButton(
-                    icon: Assets.icons.dollar.svg(
-                      colorFilter: ColorFilter.mode(
-                        Palette.grey,
-                        BlendMode.srcIn,
-                      ),
-                    ),
-                    onPressed: () {},
-                  ),
+                  _SetDepartureTimeButton(pot: pot),
+                  _AccountingButton(),
                   Expanded(child: _ChatInput()),
                 ],
               ),
@@ -125,6 +116,69 @@ class _Layout extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _AccountingButton extends StatelessWidget {
+  const _AccountingButton();
+
+  @override
+  Widget build(BuildContext context) {
+    return PotIconButton(
+      icon: Assets.icons.dollar.svg(
+        colorFilter: ColorFilter.mode(Palette.grey, BlendMode.srcIn),
+      ),
+      onPressed: () {},
+    );
+  }
+}
+
+class _SetDepartureTimeButton extends StatelessWidget {
+  const _SetDepartureTimeButton({required this.pot});
+
+  final PotInfoEntity pot;
+
+  @override
+  Widget build(BuildContext context) {
+    return PotIconButton(
+      icon: Assets.icons.clock.svg(
+        colorFilter: ColorFilter.mode(Palette.grey, BlendMode.srcIn),
+      ),
+      onPressed: () async {
+        if (pot.meIsHost(context)) {
+          context.showToast(
+            context.t.chat_room.set_departure_time.host_only.description,
+          );
+        }
+        DateTime date = DateTime.now();
+        final result = await showGeneralOkCancelAdaptiveDialog(
+          context: context,
+          title: context.t.chat_room.set_departure_time.clock.title,
+          child: SizedBox(
+            height: 180,
+            child: CupertinoDatePicker(
+              initialDateTime: date,
+              onDateTimeChanged: (value) => date = value,
+              mode: CupertinoDatePickerMode.time,
+            ),
+          ),
+          okLabel: context.t.common.confirm,
+        );
+        if (result != OkCancelResult.ok) return;
+        if (!context.mounted) return;
+        final result2 = await showOkCancelAlertDialog(
+          context: context,
+          title: context.t.chat_room.set_departure_time.confirm.title,
+          message: context.t.chat_room.set_departure_time.confirm.description(
+            route: pot.route.name,
+            time: DateFormat.jm().format(date),
+          ),
+        );
+        if (result2 != OkCancelResult.ok) return;
+        if (!context.mounted) return;
+        context.read<PotInfoBloc>().add(PotInfoEvent.setDepartureTime(date));
+      },
     );
   }
 }

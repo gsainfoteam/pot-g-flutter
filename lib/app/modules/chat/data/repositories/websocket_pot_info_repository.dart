@@ -38,4 +38,10 @@ class WebsocketPotInfoRepository implements PotInfoRepository {
         .where((e) => e.potPk == pot.id)
         .asyncMap((e) => _api.getPotInfo(pot.id));
   }
+
+  @override
+  Future<void> setDepartureTime(PotInfoEntity pot, DateTime date) {
+    // TODO: implement setDepartureTime
+    throw UnimplementedError();
+  }
 }

@@ -9,4 +9,6 @@ extension PotInfoEntityX on PotInfoEntity {
     final meUser = AuthBloc.userOf(context);
     return usersInfo.users.firstWhereOrNull((u) => u.id == meUser?.id);
   }
+
+  bool meIsHost(BuildContext context) => getMe(context)?.isHost ?? false;
 }

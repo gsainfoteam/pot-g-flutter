@@ -146,6 +146,18 @@
         "leave": "Leave",
         "report": "Report"
       }
+    },
+    "set_departure_time": {
+      "clock": {
+        "title": "Set Departure Time"
+      },
+      "confirm": {
+        "title": "Confirm the departure time",
+        "description": "Please confirm the departure time for the $route Station taxi pot at $time. Once the time is confirmed, you cannot change the departure time, party members, or other details."
+      },
+      "host_only": {
+        "description": "This feature is only available for hosts."
+      }
     }
   }
 }
