@@ -142,12 +142,12 @@ class _ChatListViewState extends State<_ChatListView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (hasActivePots) ...[
-            ...widget.activePots.indexed.expandIndexed(
+            ...widget.activePots.expandIndexed(
               (index, e) => [
                 if (index != 0) const SizedBox(height: 16),
                 PotPressable(
-                  onTap: () => ChatRoomRoute(pot: e.$2).push(context),
-                  child: ChatListItem(pot: e.$2),
+                  onTap: () => ChatRoomRoute(pot: e).push(context),
+                  child: ChatListItem(pot: e),
                 ),
               ],
             ),
