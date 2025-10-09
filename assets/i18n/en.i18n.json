@@ -10,6 +10,7 @@
     "button": "Login"
   },
   "profile": {
+    "menu_title": "My Profile",
     "basic_info": {
       "title": "Basic Info",
       "name": "Name",
@@ -127,6 +128,10 @@
         }
       }
     }
+  },
+  "chat": {
+    "title": "Chat",
+    "menu_title": "Chat Rooms"
   },
   "chat_room": {
     "system_messages": {

@@ -6,6 +6,7 @@ import 'package:pot_g/app/modules/chat/data/models/confirm_departure_time_reques
 import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/exceptions/departure_time_exception.dart';
 import 'package:pot_g/app/modules/chat/domain/repositories/pot_info_repository.dart';
+import 'package:pot_g/app/modules/core/domain/entities/pot_detail_entity.dart';
 import 'package:pot_g/app/modules/socket/data/data_sources/websocket.dart';
 import 'package:pot_g/app/modules/socket/data/models/events/pot_event_model.dart';
 import 'package:pot_g/app/modules/socket/data/models/pot_events/accounting_confirm_v1_event.dart';
@@ -24,7 +25,7 @@ class WebsocketPotInfoRepository implements PotInfoRepository {
   WebsocketPotInfoRepository(this._socket, this._api);
 
   @override
-  Stream<PotInfoEntity> getPotInfoStream(PotInfoEntity pot) async* {
+  Stream<PotInfoEntity> getPotInfoStream(PotDetailEntity pot) async* {
     yield await _api.getPotInfo(pot.id);
     yield* _socket
         .createStreamFor<PotEventModel>()

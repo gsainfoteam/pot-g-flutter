@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:pot_g/app/modules/core/data/dio/pot_dio.dart';
-import 'package:pot_g/app/modules/core/data/models/pot_model.dart';
 import 'package:pot_g/app/modules/list/data/model/pot_list_model.dart';
 import 'package:retrofit/retrofit.dart';
 

@@ -3,6 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/repositories/pot_info_repository.dart';
+import 'package:pot_g/app/modules/core/domain/entities/pot_detail_entity.dart';
 
 part 'pot_info_bloc.freezed.dart';
 
@@ -16,10 +17,10 @@ class PotInfoBloc extends Bloc<PotInfoEvent, PotInfoState> {
   }
 
   Future<void> _onInit(_Init event, Emitter<PotInfoState> emit) async {
-    emit(PotInfoState.loaded(event.pot));
     return emit.forEach(
       _repository.getPotInfoStream(event.pot),
       onData: (pot) => PotInfoState.loaded(pot),
+      onError: (error, stackTrace) => PotInfoState.error(error.toString()),
     );
   }
 
@@ -38,7 +39,7 @@ class PotInfoBloc extends Bloc<PotInfoEvent, PotInfoState> {
 
 @freezed
 sealed class PotInfoEvent with _$PotInfoEvent {
-  const factory PotInfoEvent.init(PotInfoEntity pot) = _Init;
+  const factory PotInfoEvent.init(PotDetailEntity pot) = _Init;
   const factory PotInfoEvent.setDepartureTime(DateTime date) =
       _SetDepartureTime;
 }
