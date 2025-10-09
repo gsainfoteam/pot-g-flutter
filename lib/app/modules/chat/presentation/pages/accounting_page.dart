@@ -26,16 +26,36 @@ class AccountingPage extends StatelessWidget {
       appBar: PotAppBar(title: Text(context.dutch.title)),
       body: Padding(
         padding: const EdgeInsets.all(12),
-        child: Column(
-          children: [
-            _Amount(),
-            const SizedBox(height: 28),
-            AuthBloc.userOf(context)?.accounting.isSet == true
-                ? _BankAccount()
-                : _DefaultNotRegistered(),
-            const SizedBox(height: 28),
-            _SettlementTargets(pot: pot),
-          ],
+        child: SafeArea(
+          child: CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(
+                child: Column(
+                  children: [
+                    _Amount(),
+                    const SizedBox(height: 28),
+                    AuthBloc.userOf(context)?.accounting.isSet == true
+                        ? _BankAccount()
+                        : _DefaultNotRegistered(),
+                    const SizedBox(height: 28),
+                    _SettlementTargets(pot: pot),
+                  ],
+                ),
+              ),
+              SliverFillRemaining(
+                child: Column(
+                  children: [
+                    Spacer(),
+                    PotButton(
+                      onPressed: () {},
+                      variant: PotButtonVariant.emphasized,
+                      child: Text(context.dutch.action),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
