@@ -14,6 +14,7 @@ import 'package:pot_g/app/modules/chat/presentation/widgets/chat_bubble.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/pot_info.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/pot_users.dart';
 import 'package:pot_g/app/modules/common/presentation/extensions/toast.dart';
+import 'package:pot_g/app/modules/common/presentation/widgets/error_cover.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/general_dialog.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_app_bar.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_icon_button.dart';
@@ -39,7 +40,14 @@ class ChatRoomPage extends StatelessWidget {
           create: (context) => sl<PotInfoBloc>()..add(PotInfoEvent.init(pot)),
         ),
       ],
-      child: _Layout(),
+      child: BlocBuilder<PotInfoBloc, PotInfoState>(
+        builder: (context, state) {
+          if (state.error != null) {
+            return ErrorCover(message: state.error!);
+          }
+          return _Layout();
+        },
+      ),
     );
   }
 }

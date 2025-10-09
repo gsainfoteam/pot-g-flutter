@@ -27,8 +27,12 @@ class PotInfoBloc extends Bloc<PotInfoEvent, PotInfoState> {
     _SetDepartureTime event,
     Emitter<PotInfoState> emit,
   ) async {
-    assert(state.pot != null);
-    await _repository.setDepartureTime(state.pot!, event.date);
+    if (state.pot == null) return;
+    try {
+      await _repository.setDepartureTime(state.pot!, event.date);
+    } catch (e) {
+      emit(PotInfoState.error(e.toString()));
+    }
   }
 }
 
@@ -44,9 +48,14 @@ sealed class PotInfoState with _$PotInfoState {
   const PotInfoState._();
   const factory PotInfoState.loading() = _Loading;
   const factory PotInfoState.loaded(PotInfoEntity pot) = _Loaded;
+  const factory PotInfoState.error(String message) = _Error;
 
   PotInfoEntity? get pot => switch (this) {
     _Loaded(:final pot) => pot,
+    _ => null,
+  };
+  String? get error => switch (this) {
+    _Error(:final message) => message,
     _ => null,
   };
 }
