@@ -27,16 +27,7 @@ class OauthRestAuthRepository implements AuthRepository {
     _tokenRepository.token
         .asyncMap((token) async {
           if (token == null) return null;
-          try {
-            final user = await _userAuthApi.getUser();
-            return user;
-          } on DioException catch (e) {
-            final status = e.response?.statusCode;
-            if (status == 401 || status == 403) {
-              await _tokenRepository.deleteToken();
-            }
-            return null;
-          }
+          return await _getUser();
         })
         .shareReplay(maxSize: 1)
         .listen((user) {
@@ -79,9 +70,22 @@ class OauthRestAuthRepository implements AuthRepository {
     yield* _userSubject.stream;
   }
 
+  Future<SelfUserEntity?> _getUser() async {
+    try {
+      final user = await _userAuthApi.getUser();
+      return user;
+    } on DioException catch (e) {
+      final status = e.response?.statusCode;
+      if (status == 401 || status == 403) {
+        await _tokenRepository.deleteToken();
+      }
+      return null;
+    }
+  }
+
   @override
   Future<void> update() async {
-    final user = await _userAuthApi.getUser();
+    final user = await _getUser();
     _userSubject.add(user);
   }
 }
