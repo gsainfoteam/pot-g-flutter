@@ -20,6 +20,7 @@ class PotInfoBloc extends Bloc<PotInfoEvent, PotInfoState> {
     return emit.forEach(
       _repository.getPotInfoStream(event.pot),
       onData: (pot) => PotInfoState.loaded(pot),
+      onError: (error, stackTrace) => PotInfoState.error(error.toString()),
     );
   }
 

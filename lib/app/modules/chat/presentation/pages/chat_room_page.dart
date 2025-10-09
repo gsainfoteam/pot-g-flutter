@@ -48,13 +48,6 @@ class ChatRoomPage extends StatelessWidget {
       child: MultiBlocListener(
         listeners: [
           BlocListener<PotInfoBloc, PotInfoState>(
-            listener: (context, state) {
-              if (state.error != null) {
-                context.showToast(state.error!);
-              }
-            },
-          ),
-          BlocListener<PotInfoBloc, PotInfoState>(
             listenWhen:
                 (prev, curr) =>
                     prev.pot?.id != curr.pot?.id && curr.pot != null,
@@ -81,8 +74,10 @@ class _Layout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final pot = context.select((PotInfoBloc bloc) => bloc.state.pot);
-    if (pot == null) return const SizedBox.shrink();
+    final state = context.watch<PotInfoBloc>().state;
+    if (state.error != null) return ErrorCover(message: state.error!);
+    if (state.pot == null) return Scaffold();
+    final pot = state.pot!;
     return Scaffold(
       appBar: PotAppBar(title: Text(pot.name)),
       endDrawer: Drawer(
