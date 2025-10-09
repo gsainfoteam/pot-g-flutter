@@ -49,12 +49,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   Future<void> _onUpdate(AuthEvent event, Emitter<AuthState> emit) async {
-    emit(const AuthState.loading());
     await _repository.update();
   }
 
-  static SelfUserEntity? userOf(BuildContext context) =>
-      context.read<AuthBloc>().state.user;
+  static SelfUserEntity? userOf(BuildContext context, [bool watch = false]) =>
+      watch
+          ? context.watch<AuthBloc>().state.user
+          : context.read<AuthBloc>().state.user;
 }
 
 @freezed
@@ -77,6 +78,7 @@ sealed class AuthState with _$AuthState {
 
   SelfUserEntity? get user => switch (this) {
     Authenticated(:final user) => user,
+    AuthLoading(:final user) => user,
     _ => null,
   };
 }

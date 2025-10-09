@@ -37,6 +37,7 @@ class _Layout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bank = AuthBloc.userOf(context, true)?.accounting;
     return Scaffold(
       appBar: PotAppBar(
         title: Text(context.t.profile.account_number_settings.title),
@@ -51,29 +52,67 @@ class _Layout extends StatelessWidget {
               style: TextStyles.title3,
             ),
             const SizedBox(height: 16),
-            Text(
-              context.t.profile.account_number_settings.no_account.description,
-              style: TextStyles.description,
-            ),
-            const SizedBox(height: 16),
-            PotButton(
-              onPressed:
-                  () => AccountNumberSettingsPage.showAccountNumberSetting(
-                    context,
+            if (bank?.isSet ?? false)
+              Row(
+                children: [
+                  Text(
+                    bank?.bankShortName ?? '',
+                    style: TextStyles.title4.copyWith(color: Palette.dark),
                   ),
-              variant: PotButtonVariant.emphasized,
-              prefixIcon: Assets.icons.dollar.svg(
-                width: 24,
-                height: 24,
-                colorFilter: ColorFilter.mode(
-                  Palette.primaryLight,
-                  BlendMode.srcIn,
+                  const SizedBox(width: 8),
+                  Text(
+                    bank?.account ?? '',
+                    style: TextStyles.body.copyWith(color: Palette.dark),
+                  ),
+                  Spacer(),
+                  PotButton(
+                    onPressed:
+                        () =>
+                            AccountNumberSettingsPage.showAccountNumberSetting(
+                              context,
+                            ),
+                    size: PotButtonSize.small,
+                    child: Text(
+                      context
+                          .t
+                          .profile
+                          .account_number_settings
+                          .has_account
+                          .change,
+                    ),
+                  ),
+                ],
+              )
+            else ...[
+              Text(
+                context
+                    .t
+                    .profile
+                    .account_number_settings
+                    .no_account
+                    .description,
+                style: TextStyles.description,
+              ),
+              const SizedBox(height: 16),
+              PotButton(
+                onPressed:
+                    () => AccountNumberSettingsPage.showAccountNumberSetting(
+                      context,
+                    ),
+                variant: PotButtonVariant.emphasized,
+                prefixIcon: Assets.icons.dollar.svg(
+                  width: 24,
+                  height: 24,
+                  colorFilter: ColorFilter.mode(
+                    Palette.primaryLight,
+                    BlendMode.srcIn,
+                  ),
+                ),
+                child: Text(
+                  context.t.profile.account_number_settings.no_account.button,
                 ),
               ),
-              child: Text(
-                context.t.profile.account_number_settings.no_account.button,
-              ),
-            ),
+            ],
           ],
         ),
       ),

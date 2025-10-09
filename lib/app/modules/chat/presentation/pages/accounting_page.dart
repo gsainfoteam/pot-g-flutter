@@ -131,6 +131,7 @@ class _BankAccount extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bank = AuthBloc.userOf(context, true)?.accounting;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -146,15 +147,21 @@ class _BankAccount extends StatelessWidget {
         const SizedBox(height: 8),
         Row(
           children: [
-            Text('우리', style: TextStyles.title4.copyWith(color: Palette.dark)),
+            Text(
+              bank?.bankShortName ?? '',
+              style: TextStyles.title4.copyWith(color: Palette.dark),
+            ),
             const SizedBox(width: 8),
             Text(
-              '9999-9',
+              bank?.account ?? '',
               style: TextStyles.body.copyWith(color: Palette.dark),
             ),
             Spacer(),
             PotButton(
-              onPressed: () {},
+              onPressed:
+                  () => AccountNumberSettingsPage.showAccountNumberSetting(
+                    context,
+                  ),
               size: PotButtonSize.small,
               child: Text(context.dutch.fields.account.action),
             ),
