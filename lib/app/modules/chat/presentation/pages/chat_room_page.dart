@@ -132,23 +132,35 @@ class _Layout extends StatelessWidget {
           ),
           SafeArea(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 6),
               child: Row(
                 children: [
-                  Assets.icons.clock.svg(
-                    colorFilter: ColorFilter.mode(
-                      Palette.grey,
-                      BlendMode.srcIn,
+                  SizedBox(
+                    width: 36,
+                    height: 36,
+                    child: PotIconButton(
+                      icon: Assets.icons.clock.svg(
+                        colorFilter: ColorFilter.mode(
+                          Palette.grey,
+                          BlendMode.srcIn,
+                        ),
+                      ),
+                      onPressed: () {},
                     ),
                   ),
-                  const SizedBox(width: 12),
-                  Assets.icons.dollar.svg(
-                    colorFilter: ColorFilter.mode(
-                      Palette.grey,
-                      BlendMode.srcIn,
+                  SizedBox(
+                    width: 36,
+                    height: 36,
+                    child: PotIconButton(
+                      icon: Assets.icons.dollar.svg(
+                        colorFilter: ColorFilter.mode(
+                          Palette.grey,
+                          BlendMode.srcIn,
+                        ),
+                      ),
+                      onPressed: () {},
                     ),
                   ),
-                  const SizedBox(width: 12),
                   Expanded(child: _ChatInput()),
                 ],
               ),
@@ -200,10 +212,10 @@ class _ChatInputState extends State<_ChatInput> {
               ),
             ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: 6),
           SizedBox(
-            width: 24,
-            height: 24,
+            width: 36,
+            height: 36,
             child: PotIconButton(
               icon: Assets.icons.sendDiagonal.svg(
                 colorFilter: ColorFilter.mode(Palette.grey, BlendMode.srcIn),
