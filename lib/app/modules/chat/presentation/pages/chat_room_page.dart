@@ -238,7 +238,7 @@ class _ChatListState extends State<_ChatList> {
   void initState() {
     super.initState();
     _controller.addListener(() {
-      if (_controller.position.pixels == _controller.position.maxScrollExtent) {
+      if (_controller.position.pixels >= _controller.position.maxScrollExtent) {
         context.read<ChatBloc>().add(ChatLoadMore());
       }
     });
@@ -289,8 +289,7 @@ class _ChatListState extends State<_ChatList> {
     }
 
     if (index == state.chats.length) {
-      // return const Center(child: CupertinoActivityIndicator());
-      return Container(height: 40, color: Palette.lightGrey);
+      return const Center(child: CupertinoActivityIndicator());
     }
     final chat = state.chats[index];
     if (chat is! ChatEntity) {
