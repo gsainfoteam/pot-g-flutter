@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:pot_g/app/di/locator.dart';
 import 'package:pot_g/app/modules/chat/domain/enums/pot_status.dart';
+import 'package:pot_g/app/modules/chat/presentation/bloc/pot_detail_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/pot_info_bloc.dart';
 import 'package:pot_g/app/modules/common/presentation/extensions/date_time.dart';
 import 'package:pot_g/app/modules/common/presentation/extensions/toast.dart';
@@ -17,6 +18,7 @@ import 'package:pot_g/app/modules/core/data/models/stop_model.dart';
 import 'package:pot_g/app/modules/core/domain/entities/pot_summary_entity.dart';
 import 'package:pot_g/app/modules/core/domain/entities/route_entity.dart';
 import 'package:pot_g/app/modules/list/presentation/bloc/join_pot_bloc.dart';
+import 'package:pot_g/app/modules/list/presentation/bloc/pot_list_bloc.dart';
 import 'package:pot_g/app/router.gr.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
@@ -97,7 +99,11 @@ class PotListItem extends StatelessWidget {
                   initial: (_) {},
                   loading: (_) {},
                   success: (successState) {
-                    Navigator.of(context).pop(); // 로딩 다이얼로그 닫기
+                    context.read<PotListBloc>().add(PotListEvent.search());
+                    context.read<PotDetailBloc>().add(
+                      const PotDetailEvent.loadMyPots(),
+                    );
+                    Navigator.of(context).pop();
                     _navigateToChatRoom(context, successState.potId);
                   },
                   error: (errorState) {

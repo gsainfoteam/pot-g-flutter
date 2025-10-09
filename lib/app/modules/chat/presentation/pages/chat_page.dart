@@ -2,7 +2,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pot_g/app/di/locator.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/pot_detail_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/chat_list_item.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_app_bar.dart';
@@ -17,33 +16,28 @@ class ChatPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<PotDetailBloc>(
-      create:
-          (context) =>
-              sl<PotDetailBloc>()..add(const PotDetailEvent.loadMyPots()),
-      child: Scaffold(
-        appBar: PotAppBar(title: Text(context.t.chat.title)),
-        body: BlocBuilder<PotDetailBloc, PotDetailState>(
-          builder: (context, state) {
-            if (state.isLoading) {
-              return const Center(child: CircularProgressIndicator());
-            }
+    return Scaffold(
+      appBar: PotAppBar(title: Text(context.t.chat.title)),
+      body: BlocBuilder<PotDetailBloc, PotDetailState>(
+        builder: (context, state) {
+          if (state.isLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-            if (state.error != null) {
-              return Center(child: Text('Error: ${state.error}'));
-            }
+          if (state.error != null) {
+            return Center(child: Text('Error: ${state.error}'));
+          }
 
-            return Container(
-              color: Palette.lightGrey,
-              child: SafeArea(
-                child: _ChatListView(
-                  activePots: state.activePotList,
-                  closedPots: state.archivedPotList,
-                ),
+          return Container(
+            color: Palette.lightGrey,
+            child: SafeArea(
+              child: _ChatListView(
+                activePots: state.activePotList,
+                closedPots: state.archivedPotList,
               ),
-            );
-          },
-        ),
+            ),
+          );
+        },
       ),
     );
   }

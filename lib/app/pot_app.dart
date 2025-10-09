@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:pot_g/app/di/locator.dart';
 import 'package:pot_g/app/modules/auth/presentation/bloc/auth_bloc.dart';
+import 'package:pot_g/app/modules/chat/presentation/bloc/pot_detail_bloc.dart';
 import 'package:pot_g/app/modules/core/presentation/bloc/route_list_bloc.dart';
 import 'package:pot_g/app/modules/socket/presentation/bloc/socket_auth_bloc.dart';
 import 'package:pot_g/app/router.dart';
@@ -50,6 +51,11 @@ class _Providers extends StatelessWidget {
           create: (_) => sl<RouteListBloc>()..add(RouteListEvent.search()),
         ),
         BlocProvider(create: (_) => sl<SocketAuthBloc>()),
+        BlocProvider(
+          create:
+              (_) =>
+                  sl<PotDetailBloc>()..add(const PotDetailEvent.loadMyPots()),
+        ),
       ],
       child: MultiBlocListener(
         listeners: [
