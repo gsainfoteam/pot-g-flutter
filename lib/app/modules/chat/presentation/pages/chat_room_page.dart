@@ -236,51 +236,55 @@ class _ChatListState extends State<_ChatList> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ChatBloc, ChatState>(
-      builder:
-          (context, state) => ListView.separated(
-            controller: _controller,
-            reverse: true,
-            padding: const EdgeInsets.all(12) - EdgeInsets.only(right: 6),
-            separatorBuilder: (context, index) {
-              final chat = state.chats[index];
-              final nextChat =
-                  index == state.chats.length - 1
-                      ? null
-                      : state.chats[index + 1];
-              if (chat is! ChatEntity || nextChat is! ChatEntity) {
-                return const SizedBox(height: 12);
+      builder: (context, state) {
+        bool isFirst(int index) {
+          final chat = state.chats[index];
+          final nextChat =
+              index == state.chats.length - 1 ? null : state.chats[index + 1];
+          if (chat is! ChatEntity || nextChat is! ChatEntity) {
+            return true;
+          }
+          return nextChat.user.id != chat.user.id;
+        }
+
+        bool isLast(int index) {
+          final chat = state.chats[index];
+          final nextChat =
+              index == state.chats.length - 1 ? null : state.chats[index + 1];
+          if (chat is! ChatEntity || nextChat is! ChatEntity) {
+            return true;
+          }
+          return nextChat.user.id != chat.user.id;
+        }
+
+        return ListView.separated(
+          controller: _controller,
+          reverse: true,
+          padding: const EdgeInsets.all(12) - EdgeInsets.only(right: 6),
+          separatorBuilder:
+              (context, index) => SizedBox(height: isLast(index) ? 12 : 6),
+          itemBuilder: (context, index) {
+            if (index == state.chats.length) {
+              return const Center(child: CupertinoActivityIndicator());
+            }
+            final chat = state.chats[index];
+            if (chat is! ChatEntity) {
+              if (chat is SystemMessageEntity) {
+                return SystemMessage(message: chat);
               }
-              if (nextChat.user.id == chat.user.id) {
-                return const SizedBox(height: 6);
-              }
-              return const SizedBox(height: 12);
-            },
-            itemBuilder: (context, index) {
-              if (index == state.chats.length) {
-                return const Center(child: CupertinoActivityIndicator());
-              }
-              final chat = state.chats[index];
-              if (chat is! ChatEntity) {
-                if (chat is SystemMessageEntity) {
-                  return SystemMessage(message: chat);
-                }
-                throw StateError('Unknown chat type');
-              }
-              final nextChat =
-                  index == state.chats.length - 1
-                      ? null
-                      : state.chats[index + 1];
-              final isMe = chat.user.id == AuthBloc.userOf(context)?.id;
-              return ChatBubble(
-                message: chat.message,
-                isFirst:
-                    nextChat is! ChatEntity || nextChat.user.id != chat.user.id,
-                user: isMe ? null : chat.user,
-                pot: widget.pot,
-              );
-            },
-            itemCount: state.chats.length + (state.isLoading ? 1 : 0),
-          ),
+              throw StateError('Unknown chat type');
+            }
+            final isMe = chat.user.id == AuthBloc.userOf(context)?.id;
+            return ChatBubble(
+              message: chat.message,
+              isFirst: isFirst(index),
+              user: isMe ? null : chat.user,
+              pot: widget.pot,
+            );
+          },
+          itemCount: state.chats.length + (state.isLoading ? 1 : 0),
+        );
+      },
     );
   }
 }

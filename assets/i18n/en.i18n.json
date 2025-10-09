@@ -140,6 +140,9 @@
         "description": "$user was kicked from the pot."
       }
     },
+    "fofo": {
+      "name": "Notification"
+    },
     "drawer": {
       "pot_info": {
         "route_info": "Route Info",
