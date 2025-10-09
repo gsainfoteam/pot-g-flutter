@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:pot_g/app/di/locator.dart';
 import 'package:pot_g/app/modules/auth/presentation/bloc/auth_bloc.dart';
+import 'package:pot_g/app/modules/chat/domain/entities/chat_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/chat_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/pot_info_bloc.dart';
@@ -234,7 +235,10 @@ class _ChatListState extends State<_ChatList> {
                   index == state.chats.length - 1
                       ? null
                       : state.chats[index + 1];
-              if (nextChat?.user.id == chat.user.id) {
+              if (chat is! ChatEntity || nextChat is! ChatEntity) {
+                return const SizedBox(height: 12);
+              }
+              if (nextChat.user.id == chat.user.id) {
                 return const SizedBox(height: 6);
               }
               return const SizedBox(height: 12);
@@ -244,6 +248,10 @@ class _ChatListState extends State<_ChatList> {
                 return const Center(child: CupertinoActivityIndicator());
               }
               final chat = state.chats[index];
+              if (chat is! ChatEntity) {
+                // TODO: Implement system message
+                return const SizedBox(height: 12);
+              }
               final nextChat =
                   index == state.chats.length - 1
                       ? null
@@ -251,7 +259,8 @@ class _ChatListState extends State<_ChatList> {
               final isMe = chat.user.id == AuthBloc.userOf(context)?.id;
               return ChatBubble(
                 message: chat.message,
-                isFirst: nextChat?.user.id != chat.user.id,
+                isFirst:
+                    nextChat is! ChatEntity || nextChat.user.id != chat.user.id,
                 user: isMe ? null : chat.user,
                 pot: widget.pot,
               );

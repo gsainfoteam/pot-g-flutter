@@ -81,12 +81,12 @@ sealed class ChatEvent with _$ChatEvent {
 @freezed
 sealed class ChatState with _$ChatState {
   const ChatState._();
-  const factory ChatState.initial([@Default([]) List<ChatEntity> chats]) =
+  const factory ChatState.initial([@Default([]) List<Sendable> chats]) =
       ChatInitial;
-  const factory ChatState.loading([@Default([]) List<ChatEntity> chats]) =
+  const factory ChatState.loading([@Default([]) List<Sendable> chats]) =
       ChatLoading;
-  const factory ChatState.loaded(List<ChatEntity> chats) = ChatLoaded;
-  const factory ChatState.error(List<ChatEntity> chats, String message) =
+  const factory ChatState.loaded(List<Sendable> chats) = ChatLoaded;
+  const factory ChatState.error(List<Sendable> chats, String message) =
       ChatError;
 
   bool get isLoading => switch (this) {

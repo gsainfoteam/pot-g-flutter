@@ -1,5 +1,6 @@
 import 'package:injectable/injectable.dart';
 import 'package:pot_g/app/modules/chat/data/data_sources/remote/chat_pot_api.dart';
+import 'package:pot_g/app/modules/chat/data/models/chat_model.dart';
 import 'package:pot_g/app/modules/chat/data/models/get_pot_events_query_model.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/chat_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
@@ -12,7 +13,7 @@ import 'package:pot_g/app/modules/socket/data/models/requests/send_chat_model.da
 
 ChatEntity _makeChatEntity(PotEventModel<ChatV1Event> e, PotInfoEntity pot) {
   final users = pot.usersInfo.users;
-  return ChatEntity(
+  return ChatModel(
     message: e.data.content,
     user: users.firstWhere((u) => u.id == e.data.from),
     createdAt: e.timestamp,
