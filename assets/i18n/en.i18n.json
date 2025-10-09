@@ -164,7 +164,13 @@
       "members": {
         "my": "my",
         "passenger": "passengers",
-        "kick": "Kick",
+        "kick": {
+          "action": "Kick",
+          "confirm": {
+            "title": "Kick Passenger?",
+            "description(rich)": "Are you sure you want to kick $user?\nIf the kick is unreasonable, you may be reported."
+          }
+        },
         "invite": "Invite",
         "host": "Host"
       },

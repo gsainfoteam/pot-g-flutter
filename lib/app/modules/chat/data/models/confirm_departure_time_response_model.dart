@@ -1,5 +1,4 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:pot_g/app/modules/chat/data/enums/pot_departure_time_result.dart';
 
 part 'confirm_departure_time_response_model.freezed.dart';
 part 'confirm_departure_time_response_model.g.dart';
@@ -14,4 +13,15 @@ sealed class ConfirmDepartureTimeResponseModel
   factory ConfirmDepartureTimeResponseModel.fromJson(
     Map<String, dynamic> json,
   ) => _$ConfirmDepartureTimeResponseModelFromJson(json);
+}
+
+@JsonEnum(fieldRename: FieldRename.pascal)
+enum PotDepartureTimeResult {
+  @JsonValue('OK')
+  ok,
+  notAHost,
+  afterDeparture,
+  beforeNow,
+  potNotExist,
+  potAlreadyClosed,
 }
