@@ -8,6 +8,7 @@ import 'package:pot_g/app/modules/auth/domain/repositories/token_repository.dart
 import 'package:pot_g/app/modules/device/domain/repositories/device_info_repository.dart';
 import 'package:pot_g/app/modules/user/domain/entities/self_user_entity.dart';
 import 'package:rxdart/streams.dart';
+import 'package:rxdart/subjects.dart';
 
 @Injectable(as: AuthRepository)
 class OauthRestAuthRepository implements AuthRepository {
@@ -15,13 +16,33 @@ class OauthRestAuthRepository implements AuthRepository {
   final OAuthRepository _oAuthRepository;
   final UserAuthApi _userAuthApi;
   final DeviceInfoRepository _deviceInfoRepository;
+  final _userSubject = BehaviorSubject<SelfUserEntity?>.seeded(null);
 
   OauthRestAuthRepository(
     this._tokenRepository,
     this._oAuthRepository,
     this._userAuthApi,
     this._deviceInfoRepository,
-  );
+  ) {
+    _tokenRepository.token
+        .asyncMap((token) async {
+          if (token == null) return null;
+          try {
+            final user = await _userAuthApi.getUser();
+            return user;
+          } on DioException catch (e) {
+            final status = e.response?.statusCode;
+            if (status == 401 || status == 403) {
+              await _tokenRepository.deleteToken();
+            }
+            return null;
+          }
+        })
+        .shareReplay(maxSize: 1)
+        .listen((user) {
+          _userSubject.add(user);
+        });
+  }
 
   @override
   Stream<bool> get isSignedIn => user.map((user) => user != null);
@@ -53,19 +74,14 @@ class OauthRestAuthRepository implements AuthRepository {
   }
 
   @override
-  Stream<SelfUserEntity?> get user => _tokenRepository.token
-      .asyncMap((token) async {
-        if (token == null) return null;
-        try {
-          final user = await _userAuthApi.getUser();
-          return user;
-        } on DioException catch (e) {
-          final status = e.response?.statusCode;
-          if (status == 401 || status == 403) {
-            await _tokenRepository.deleteToken();
-          }
-          return null;
-        }
-      })
-      .shareReplay(maxSize: 1);
+  Stream<SelfUserEntity?> get user async* {
+    yield _userSubject.value;
+    yield* _userSubject.stream;
+  }
+
+  @override
+  Future<void> update() async {
+    final user = await _userAuthApi.getUser();
+    _userSubject.add(user);
+  }
 }

@@ -5,4 +5,5 @@ abstract class AuthRepository {
   Stream<bool> get isSignedIn;
   Future<void> signOut();
   Stream<SelfUserEntity?> get user;
+  Future<void> update();
 }

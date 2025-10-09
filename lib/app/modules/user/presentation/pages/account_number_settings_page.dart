@@ -2,6 +2,8 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pot_g/app/di/locator.dart';
+import 'package:pot_g/app/modules/auth/presentation/bloc/auth_bloc.dart';
+import 'package:pot_g/app/modules/common/presentation/extensions/toast.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_app_bar.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_bottom_sheet.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_button.dart';
@@ -9,6 +11,7 @@ import 'package:pot_g/app/modules/common/presentation/widgets/pot_pressable.dart
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_text_field.dart';
 import 'package:pot_g/app/modules/user/domain/entities/bank_entity.dart';
 import 'package:pot_g/app/modules/user/presentation/blocs/bank_list_bloc.dart';
+import 'package:pot_g/app/modules/user/presentation/blocs/set_bank_account_bloc.dart';
 import 'package:pot_g/app/modules/user/presentation/widgets/keypad.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
@@ -127,7 +130,7 @@ class _SelectBankDialogState extends State<_SelectBankDialog> {
       create: (_) => sl<BankListBloc>()..add(BankListEvent.load()),
       child:
           selectedBank != null
-              ? _BankNumber(selectedBank: selectedBank)
+              ? _BankNumber(selectedBank: selectedBank!)
               : _buildBankList(),
     );
   }
@@ -195,7 +198,7 @@ class _SelectBankDialogState extends State<_SelectBankDialog> {
 class _BankNumber extends StatefulWidget {
   const _BankNumber({required this.selectedBank});
 
-  final BankEntity? selectedBank;
+  final BankEntity selectedBank;
 
   @override
   State<_BankNumber> createState() => _BankNumberState();
@@ -203,6 +206,7 @@ class _BankNumber extends StatefulWidget {
 
 class _BankNumberState extends State<_BankNumber> {
   final controller = TextEditingController();
+  final bloc = sl<SetBankAccountBloc>();
 
   @override
   void initState() {
@@ -220,30 +224,56 @@ class _BankNumberState extends State<_BankNumber> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Text(widget.selectedBank!.name, style: TextStyles.title2),
-        const SizedBox(height: 20),
-        PotTextField(
-          filled: true,
-          controller: controller,
-          readOnly: true,
-          hintText:
-              context.t.profile.account_number_settings.bank_number.placeholder,
+    return BlocProvider.value(
+      value: bloc,
+      child: BlocListener<SetBankAccountBloc, SetBankAccountState>(
+        listener: (context, state) {
+          if (state.isSuccess) {
+            context.read<AuthBloc>().add(AuthEvent.update());
+            context.router.pop();
+          }
+          if (state.errorMessage != null) {
+            context.showToast(state.errorMessage!);
+          }
+        },
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(widget.selectedBank.name, style: TextStyles.title2),
+            const SizedBox(height: 20),
+            PotTextField(
+              filled: true,
+              controller: controller,
+              readOnly: true,
+              hintText:
+                  context
+                      .t
+                      .profile
+                      .account_number_settings
+                      .bank_number
+                      .placeholder,
+            ),
+            const SizedBox(height: 20),
+            Keypad(controller: controller),
+            const SizedBox(height: 20),
+            PotButton(
+              onPressed:
+                  controller.text.length > 5
+                      ? () => bloc.add(
+                        SetBankAccountEvent.set(
+                          widget.selectedBank,
+                          controller.text,
+                        ),
+                      )
+                      : null,
+              variant: PotButtonVariant.emphasized,
+              child: Text(
+                context.t.profile.account_number_settings.bank_number.register,
+              ),
+            ),
+          ],
         ),
-        const SizedBox(height: 20),
-        Keypad(controller: controller),
-        const SizedBox(height: 20),
-        PotButton(
-          onPressed:
-              controller.text.length > 5 ? () => context.router.pop() : null,
-          variant: PotButtonVariant.emphasized,
-          child: Text(
-            context.t.profile.account_number_settings.bank_number.register,
-          ),
-        ),
-      ],
+      ),
     );
   }
 }
