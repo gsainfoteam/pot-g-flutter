@@ -10,6 +10,7 @@ import 'package:pot_g/app/modules/socket/data/data_sources/websocket.dart';
 import 'package:pot_g/app/modules/socket/data/models/events/pot_event_model.dart';
 import 'package:pot_g/app/modules/socket/data/models/events/send_chat_response_model.dart';
 import 'package:pot_g/app/modules/socket/data/models/pot_events/chat_v1_event.dart';
+import 'package:pot_g/app/modules/socket/data/models/pot_events/popo_chat_v1_event.dart';
 import 'package:pot_g/app/modules/socket/data/models/pot_events/user_in_v1_event.dart';
 import 'package:pot_g/app/modules/socket/data/models/pot_events/user_kick_v1_event.dart';
 import 'package:pot_g/app/modules/socket/data/models/pot_events/user_leave_v1_event.dart';
@@ -19,7 +20,8 @@ bool _isChatEvent(PotEventModel e) {
   return e is PotEventModel<ChatV1Event> ||
       e is PotEventModel<UserInV1Event> ||
       e is PotEventModel<UserLeaveV1Event> ||
-      e is PotEventModel<UserKickV1Event>;
+      e is PotEventModel<UserKickV1Event> ||
+      e is PotEventModel<PopoChatV1Event>;
 }
 
 String _getRelatedUserId(PotEventModel e) {
@@ -28,6 +30,7 @@ String _getRelatedUserId(PotEventModel e) {
     PotEventModel<UserInV1Event>() => e.data.userPk,
     PotEventModel<UserLeaveV1Event>() => e.data.userPk,
     PotEventModel<UserKickV1Event>() => e.data.kickedUserPk,
+    PotEventModel<PopoChatV1Event>() => throw UnimplementedError(),
     _ => throw StateError('Unknown event type'),
   };
 }
@@ -56,6 +59,7 @@ Sendable _makeChatEntity(PotEventModel e, PotInfoEntity pot) {
       relatedUser: user,
       createdAt: e.timestamp,
     ),
+    PotEventModel<PopoChatV1Event>() => e.data.toEntity(e.timestamp),
     _ => throw StateError('Unknown event type'),
   };
 }
