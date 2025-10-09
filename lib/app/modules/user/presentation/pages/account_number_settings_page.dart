@@ -135,6 +135,7 @@ class _SelectBankDialogState extends State<_SelectBankDialog> {
         ),
         const SizedBox(height: 20),
         PotTextField(
+          filled: true,
           suffixIcon: Assets.icons.search.svg(
             colorFilter: ColorFilter.mode(Palette.textGrey, BlendMode.srcIn),
           ),
@@ -218,6 +219,7 @@ class _BankNumberState extends State<_BankNumber> {
         Text(widget.selectedBank!.name, style: TextStyles.title2),
         const SizedBox(height: 20),
         PotTextField(
+          filled: true,
           controller: controller,
           readOnly: true,
           hintText:

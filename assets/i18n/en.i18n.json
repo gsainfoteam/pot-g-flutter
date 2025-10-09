@@ -158,6 +158,34 @@
       "host_only": {
         "description": "This feature is only available for hosts."
       }
+    },
+    "accounting": {
+      "host_only": {
+        "description": "This feature is only available for hosts."
+      },
+      "dutch": {
+        "title": "Dutch Pay",
+        "fields": {
+          "amount": {
+            "label": "Amount",
+            "value": "$n Won"
+          },
+          "account_not_registered": {
+            "label": "Register your default account.",
+            "description": "You haven't registered a default account yet.\nYou need to register a default account to request settlements.",
+            "action": "Register Account"
+          },
+          "account": {
+            "label": "Settlement Account",
+            "description": "You will request settlement using your registered default account.",
+            "action": "Change"
+          },
+          "target": {
+            "label": "Settlement Target"
+          }
+        },
+        "action": "Request Dutch Pay"
+      }
     }
   }
 }

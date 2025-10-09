@@ -1,5 +1,5 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
-import 'package:auto_route/annotations.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,6 +20,7 @@ import 'package:pot_g/app/modules/common/presentation/widgets/pot_app_bar.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_icon_button.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_pressable.dart';
 import 'package:pot_g/app/modules/core/domain/entities/route_entity.dart';
+import 'package:pot_g/app/router.gr.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
 import 'package:pot_g/gen/assets.gen.dart';
@@ -116,7 +117,7 @@ class _Layout extends StatelessWidget {
               child: Row(
                 children: [
                   _SetDepartureTimeButton(pot: pot),
-                  _AccountingButton(),
+                  _AccountingButton(pot: pot),
                   Expanded(child: _ChatInput()),
                 ],
               ),
@@ -129,7 +130,9 @@ class _Layout extends StatelessWidget {
 }
 
 class _AccountingButton extends StatelessWidget {
-  const _AccountingButton();
+  const _AccountingButton({required this.pot});
+
+  final PotInfoEntity pot;
 
   @override
   Widget build(BuildContext context) {
@@ -137,7 +140,15 @@ class _AccountingButton extends StatelessWidget {
       icon: Assets.icons.dollar.svg(
         colorFilter: ColorFilter.mode(Palette.grey, BlendMode.srcIn),
       ),
-      onPressed: () {},
+      onPressed: () {
+        if (pot.meIsHost(context)) {
+          context.showToast(
+            context.t.chat_room.accounting.host_only.description,
+          );
+          return;
+        }
+        AccountingRoute(pot: pot).push(context);
+      },
     );
   }
 }
