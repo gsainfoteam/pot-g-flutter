@@ -6,9 +6,7 @@ import 'package:pot_g/app/di/locator.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/pot_detail_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/chat_list_item.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_app_bar.dart';
-import 'package:pot_g/app/modules/common/presentation/widgets/pot_pressable.dart';
 import 'package:pot_g/app/modules/core/data/models/pot_detail_model.dart';
-import 'package:pot_g/app/router.gr.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/gen/assets.gen.dart';
 import 'package:pot_g/gen/strings.g.dart';
@@ -81,10 +79,7 @@ class _ChatListViewState extends State<_ChatListView> {
             ...widget.activePots.expandIndexed(
               (index, e) => [
                 if (index != 0) const SizedBox(height: 16),
-                PotPressable(
-                  onTap: () => ChatRoomRoute(pot: e).push(context),
-                  child: ChatListItem(pot: e),
-                ),
+                ChatListItem(pot: e),
               ],
             ),
             const SizedBox(height: 32),
@@ -159,10 +154,7 @@ class _ChatListViewState extends State<_ChatListView> {
                         ...widget.closedPots.expand(
                           (e) => [
                             const SizedBox(height: 16),
-                            PotPressable(
-                              onTap: () => ChatRoomRoute(pot: e).push(context),
-                              child: ChatListItem(pot: e),
-                            ),
+                            ChatListItem(pot: e),
                           ],
                         ),
                       ],
