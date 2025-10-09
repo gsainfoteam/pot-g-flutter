@@ -3,8 +3,14 @@ import 'package:pot_g/app/modules/socket/data/models/events/authorization_respon
 import 'package:pot_g/app/modules/socket/data/models/events/pot_event_model.dart';
 import 'package:pot_g/app/modules/socket/data/models/events/request_authorization_event_model.dart';
 import 'package:pot_g/app/modules/socket/data/models/events/send_chat_response_model.dart';
+import 'package:pot_g/app/modules/socket/data/models/pot_events/accounting_confirm_v1_event.dart';
+import 'package:pot_g/app/modules/socket/data/models/pot_events/accounting_request_v1_event.dart';
+import 'package:pot_g/app/modules/socket/data/models/pot_events/archive_v1_event.dart';
 import 'package:pot_g/app/modules/socket/data/models/pot_events/chat_v1_event.dart';
+import 'package:pot_g/app/modules/socket/data/models/pot_events/departure_confirm_v1_event.dart';
 import 'package:pot_g/app/modules/socket/data/models/pot_events/user_in_v1_event.dart';
+import 'package:pot_g/app/modules/socket/data/models/pot_events/user_kick_v1_event.dart';
+import 'package:pot_g/app/modules/socket/data/models/pot_events/user_leave_v1_event.dart';
 
 PotEventModel<E> convertPotEvent<E extends PotEvent>(
   Map<String, dynamic> jsonData,
@@ -27,7 +33,7 @@ BaseServerMessageModel<T> convertServerMessage<
     jsonData,
     (json) => fromJsonT(json as Map<String, dynamic>),
   );
-  BaseServerMessageModel<PotEventModel<E>> changePotEvent<E extends PotEvent>(
+  BaseServerMessageModel<PotEventModel<E>> pe<E extends PotEvent>(
     E Function(Map<String, dynamic>) fromJsonT,
   ) => BaseServerMessageModel.fromJson(
     jsonData,
@@ -38,8 +44,14 @@ BaseServerMessageModel<T> convertServerMessage<
   );
   final data = switch (type) {
     'pot_event_receive' => switch (jsonData['body']['event_type']) {
-      'chat_v1' => changePotEvent(ChatV1Event.fromJson),
-      'user_in_v1' => changePotEvent(UserInV1Event.fromJson),
+      'chat_v1' => pe(ChatV1Event.fromJson),
+      'user_in_v1' => pe(UserInV1Event.fromJson),
+      'user_leave_v1' => pe(UserLeaveV1Event.fromJson),
+      'user_kick_v1' => pe(UserKickV1Event.fromJson),
+      'departure_confirm_v1' => pe(DepartureConfirmV1Event.fromJson),
+      'accounting_request_v1' => pe(AccountingRequestV1Event.fromJson),
+      'accounting_confirm_v1' => pe(AccountingConfirmV1Event.fromJson),
+      'archive_v1' => pe(ArchiveV1Event.fromJson),
       _ =>
         throw ArgumentError.value(
           jsonData,
