@@ -96,7 +96,7 @@ class WebsocketPotInfoRepository implements PotInfoRepository {
           throw KickUserException.potAlreadyClosed();
       }
     } on DioException catch (e) {
-      throw DepartureTimeException.networkError(e.error.toString());
+      throw KickUserException.networkError(e.error.toString());
     }
   }
 }
