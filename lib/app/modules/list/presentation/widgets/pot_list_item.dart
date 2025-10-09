@@ -7,7 +7,6 @@ import 'package:intl/intl.dart';
 import 'package:pot_g/app/di/locator.dart';
 import 'package:pot_g/app/modules/chat/domain/enums/pot_status.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/pot_detail_bloc.dart';
-import 'package:pot_g/app/modules/chat/presentation/bloc/pot_info_bloc.dart';
 import 'package:pot_g/app/modules/common/presentation/extensions/date_time.dart';
 import 'package:pot_g/app/modules/common/presentation/extensions/toast.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/general_dialog.dart';
@@ -19,6 +18,7 @@ import 'package:pot_g/app/modules/core/domain/entities/pot_summary_entity.dart';
 import 'package:pot_g/app/modules/core/domain/entities/route_entity.dart';
 import 'package:pot_g/app/modules/list/presentation/bloc/join_pot_bloc.dart';
 import 'package:pot_g/app/modules/list/presentation/bloc/pot_list_bloc.dart';
+import 'package:pot_g/app/modules/list/presentation/bloc/pot_overview_bloc.dart';
 import 'package:pot_g/app/router.gr.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
@@ -47,7 +47,9 @@ class PotListItem extends StatelessWidget {
       context: context,
       title: context.t.list.enter.title,
       child: BlocProvider(
-        create: (context) => sl<PotInfoBloc>()..add(PotInfoEvent.init(pot)),
+        create:
+            (context) =>
+                sl<PotOverviewBloc>()..add(PotOverviewEvent.init(pot.id)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -64,12 +66,12 @@ class PotListItem extends StatelessWidget {
               '${DateFormat.Hm().format(pot.startsAt)}~${DateFormat.Hm().format(pot.endsAt)}',
             ),
             const SizedBox(height: 20),
-            BlocBuilder<PotInfoBloc, PotInfoState>(
+            BlocBuilder<PotOverviewBloc, PotOverviewState>(
               builder: (context, state) {
-                if (state.pot == null) return const SizedBox.shrink();
+                if (state.overview == null) return const SizedBox.shrink();
                 return field(
                   context.t.list.enter.passengers,
-                  state.pot!.usersInfo.users.map((e) => e.name).join(', '),
+                  state.overview!.usersInfo.users.map((e) => e.name).join(', '),
                   column: true,
                 );
               },
