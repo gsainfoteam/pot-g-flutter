@@ -78,7 +78,6 @@ sealed class AuthState with _$AuthState {
 
   SelfUserEntity? get user => switch (this) {
     Authenticated(:final user) => user,
-    AuthLoading(:final user) => user,
     _ => null,
   };
 }
