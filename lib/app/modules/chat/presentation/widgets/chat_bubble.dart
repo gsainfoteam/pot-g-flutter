@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:pot_g/app/modules/user/domain/entities/user_entity.dart';
+import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
+import 'package:pot_g/app/modules/chat/domain/entities/pot_user_entity.dart';
+import 'package:pot_g/app/modules/chat/presentation/widgets/pot_profile_image.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
 import 'package:pot_g/gen/assets.gen.dart';
@@ -10,11 +12,13 @@ class ChatBubble extends StatelessWidget {
     required this.message,
     this.user,
     this.isFirst = false,
+    required this.pot,
   });
 
   final String message;
-  final UserEntity? user;
+  final PotUserEntity? user;
   final bool isFirst;
+  final PotInfoEntity pot;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +27,10 @@ class ChatBubble extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
       children: [
-        if (!isMe) isFirst ? _Avatar(user: user!) : const SizedBox(width: 40),
+        if (!isMe)
+          isFirst
+              ? PotProfileImage(user: user!, pot: pot)
+              : const SizedBox(width: 40),
         ConstrainedBox(
           constraints: BoxConstraints(maxWidth: 240),
           child: Column(
@@ -88,21 +95,6 @@ class ChatBubble extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-class _Avatar extends StatelessWidget {
-  const _Avatar({required this.user});
-
-  final UserEntity user;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 40,
-      height: 40,
-      decoration: BoxDecoration(color: Palette.grey, shape: BoxShape.circle),
     );
   }
 }

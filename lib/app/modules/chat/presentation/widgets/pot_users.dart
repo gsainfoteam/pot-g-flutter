@@ -20,9 +20,6 @@ class PotUsers extends StatelessWidget {
     final passengers = pot.usersInfo.users.where(
       (u) => u.isInPot && u.id != meUser?.id,
     );
-    final mapUserToIndex = Map.fromEntries(
-      pot.usersInfo.users.indexed.map((e) => MapEntry(e.$2.id, e.$1)),
-    );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -31,8 +28,7 @@ class PotUsers extends StatelessWidget {
           style: TextStyles.caption.copyWith(color: Palette.textGrey),
         ),
         const SizedBox(height: 8),
-        if (me != null)
-          PotUser(user: me, profileIndex: mapUserToIndex[me.id] ?? 0),
+        if (me != null) PotUser(user: me, pot: pot),
         const SizedBox(height: 20),
         Text(
           context.t.chat_room.drawer.members.passenger,
@@ -45,7 +41,7 @@ class PotUsers extends StatelessWidget {
             PotUser(
               user: e.$2,
               onKick: me?.isHost ?? false ? () {} : null,
-              profileIndex: mapUserToIndex[e.$2.id] ?? 0,
+              pot: pot,
             ),
           ],
         ),

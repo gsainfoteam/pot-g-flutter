@@ -123,6 +123,7 @@ class _Layout extends StatelessWidget {
                         message: chat.message,
                         isFirst: nextChat?.user.id != chat.user.id,
                         user: isMe ? null : chat.user,
+                        pot: pot,
                       );
                     },
                     itemCount: state.chats.length,
