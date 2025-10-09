@@ -13,6 +13,7 @@ class PotTextField extends StatelessWidget {
     this.filled = false,
     this.keyboardType,
     this.inputFormatters,
+    this.onChanged,
   });
   final Widget? suffixIcon;
   final String? hintText;
@@ -21,6 +22,7 @@ class PotTextField extends StatelessWidget {
   final bool filled;
   final TextInputType? keyboardType;
   final List<TextInputFormatter>? inputFormatters;
+  final void Function(String)? onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +31,7 @@ class PotTextField extends StatelessWidget {
       style: TextStyles.body.copyWith(color: Palette.dark),
       keyboardType: keyboardType,
       inputFormatters: inputFormatters,
+      onChanged: onChanged,
       decoration: InputDecoration(
         suffixIcon:
             suffixIcon != null

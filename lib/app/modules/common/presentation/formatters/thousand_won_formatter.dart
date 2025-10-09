@@ -7,6 +7,10 @@ class ThousandWonFormatter extends TextInputFormatter {
 
   ThousandWonFormatter(this.formatter);
 
+  static int? parse(String text) {
+    return int.tryParse(text.replaceAll(RegExp(r'[^0-9]'), ''));
+  }
+
   @override
   TextEditingValue formatEditUpdate(
     TextEditingValue oldValue,
