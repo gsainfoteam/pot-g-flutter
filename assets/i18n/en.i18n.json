@@ -183,6 +183,9 @@
       },
       "host_only": {
         "description": "This feature is only available for hosts."
+      },
+      "already_set": {
+        "description": "The departure time has already been set."
       }
     },
     "accounting": {

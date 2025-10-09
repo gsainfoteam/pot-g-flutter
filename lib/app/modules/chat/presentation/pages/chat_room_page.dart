@@ -177,6 +177,12 @@ class _SetDepartureTimeButton extends StatelessWidget {
           );
           return;
         }
+        if (pot.departureTime != null) {
+          context.showToast(
+            context.t.chat_room.set_departure_time.already_set.description,
+          );
+          return;
+        }
         DateTime date = DateTime.now();
         final result = await showGeneralOkCancelAdaptiveDialog(
           context: context,
