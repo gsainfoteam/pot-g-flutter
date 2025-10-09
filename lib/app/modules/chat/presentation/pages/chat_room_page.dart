@@ -12,6 +12,7 @@ import 'package:pot_g/app/modules/chat/presentation/bloc/chat_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/pot_info_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/extensions/pot_user_extension.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/chat_bubble.dart';
+import 'package:pot_g/app/modules/chat/presentation/widgets/fofo_bubble.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/pot_info.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/pot_users.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/system_message.dart';
@@ -271,6 +272,9 @@ class _ChatListState extends State<_ChatList> {
             if (chat is! ChatEntity) {
               if (chat is SystemMessageEntity) {
                 return SystemMessage(message: chat);
+              }
+              if (chat is FofoChatEntity) {
+                return FofoBubble();
               }
               throw StateError('Unknown chat type');
             }
