@@ -40,7 +40,11 @@ class PotInfoBloc extends Bloc<PotInfoEvent, PotInfoState> {
 
   Future<void> _onKickUser(_KickUser event, Emitter<PotInfoState> emit) async {
     if (state.pot == null) return;
-    await _repository.kickUser(state.pot!, event.user);
+    try {
+      await _repository.kickUser(state.pot!, event.user);
+    } catch (e) {
+      emit(PotInfoState.error(e.toString()));
+    }
   }
 }
 
