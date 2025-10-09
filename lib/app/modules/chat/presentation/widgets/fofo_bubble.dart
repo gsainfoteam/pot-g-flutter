@@ -10,9 +10,10 @@ import 'package:pot_g/gen/assets.gen.dart';
 import 'package:pot_g/gen/strings.g.dart';
 
 class FofoBubble extends StatelessWidget {
-  const FofoBubble({super.key, required this.message});
+  const FofoBubble({super.key, required this.message, required this.onAction});
 
   final FofoChatEntity message;
+  final void Function(FofoActionButtonType type) onAction;
 
   String action(BuildContext context, FofoActionButtonType type) {
     final fofo = context.t.chat_room.fofo.actions;
@@ -59,7 +60,7 @@ class FofoBubble extends StatelessWidget {
                       (index, e) => [
                         if (index != 0) const SizedBox(height: 8),
                         PotButton(
-                          onPressed: () {},
+                          onPressed: () => onAction(e),
                           size: PotButtonSize.medium,
                           variant:
                               index == message.actionButtons.length - 1

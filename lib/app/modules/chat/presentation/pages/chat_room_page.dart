@@ -8,6 +8,7 @@ import 'package:pot_g/app/di/locator.dart';
 import 'package:pot_g/app/modules/auth/presentation/bloc/auth_bloc.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/chat_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
+import 'package:pot_g/app/modules/chat/domain/enums/fofo_action_button_type.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/chat_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/pot_info_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/extensions/pot_user_extension.dart';
@@ -125,20 +126,25 @@ class _AccountingButton extends StatelessWidget {
 
   final PotInfoEntity pot;
 
+  static Future<void> setAccounting(
+    BuildContext context,
+    PotInfoEntity pot,
+  ) async {
+    if (!pot.meIsHost(context)) {
+      context.showToast(context.t.chat_room.accounting.host_only.description);
+      return;
+    }
+    await AccountingRoute(pot: pot).push(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return PotIconButton(
       icon: Assets.icons.dollar.svg(
         colorFilter: ColorFilter.mode(Palette.grey, BlendMode.srcIn),
       ),
-      onPressed: () {
-        if (!pot.meIsHost(context)) {
-          context.showToast(
-            context.t.chat_room.accounting.host_only.description,
-          );
-          return;
-        }
-        AccountingRoute(pot: pot).push(context);
+      onPressed: () async {
+        await setAccounting(context, pot);
       },
     );
   }
@@ -149,6 +155,45 @@ class _SetDepartureTimeButton extends StatelessWidget {
 
   final PotInfoEntity pot;
 
+  static Future<void> setDepartureTime(
+    BuildContext context,
+    PotInfoEntity pot,
+  ) async {
+    if (!pot.meIsHost(context)) {
+      context.showToast(
+        context.t.chat_room.set_departure_time.host_only.description,
+      );
+      return;
+    }
+    DateTime date = DateTime.now();
+    final result = await showGeneralOkCancelAdaptiveDialog(
+      context: context,
+      title: context.t.chat_room.set_departure_time.clock.title,
+      child: SizedBox(
+        height: 180,
+        child: CupertinoDatePicker(
+          initialDateTime: date,
+          onDateTimeChanged: (value) => date = value,
+          mode: CupertinoDatePickerMode.time,
+        ),
+      ),
+      okLabel: context.t.common.confirm,
+    );
+    if (result != OkCancelResult.ok) return;
+    if (!context.mounted) return;
+    final result2 = await showOkCancelAlertDialog(
+      context: context,
+      title: context.t.chat_room.set_departure_time.confirm.title,
+      message: context.t.chat_room.set_departure_time.confirm.description(
+        route: pot.route.name,
+        time: DateFormat.jm().format(date),
+      ),
+    );
+    if (result2 != OkCancelResult.ok) return;
+    if (!context.mounted) return;
+    context.read<PotInfoBloc>().add(PotInfoEvent.setDepartureTime(date));
+  }
+
   @override
   Widget build(BuildContext context) {
     return PotIconButton(
@@ -156,39 +201,7 @@ class _SetDepartureTimeButton extends StatelessWidget {
         colorFilter: ColorFilter.mode(Palette.grey, BlendMode.srcIn),
       ),
       onPressed: () async {
-        if (!pot.meIsHost(context)) {
-          context.showToast(
-            context.t.chat_room.set_departure_time.host_only.description,
-          );
-          return;
-        }
-        DateTime date = DateTime.now();
-        final result = await showGeneralOkCancelAdaptiveDialog(
-          context: context,
-          title: context.t.chat_room.set_departure_time.clock.title,
-          child: SizedBox(
-            height: 180,
-            child: CupertinoDatePicker(
-              initialDateTime: date,
-              onDateTimeChanged: (value) => date = value,
-              mode: CupertinoDatePickerMode.time,
-            ),
-          ),
-          okLabel: context.t.common.confirm,
-        );
-        if (result != OkCancelResult.ok) return;
-        if (!context.mounted) return;
-        final result2 = await showOkCancelAlertDialog(
-          context: context,
-          title: context.t.chat_room.set_departure_time.confirm.title,
-          message: context.t.chat_room.set_departure_time.confirm.description(
-            route: pot.route.name,
-            time: DateFormat.jm().format(date),
-          ),
-        );
-        if (result2 != OkCancelResult.ok) return;
-        if (!context.mounted) return;
-        context.read<PotInfoBloc>().add(PotInfoEvent.setDepartureTime(date));
+        await setDepartureTime(context, pot);
       },
     );
   }
@@ -226,16 +239,6 @@ class _ChatListState extends State<_ChatList> {
   Widget build(BuildContext context) {
     return BlocBuilder<ChatBloc, ChatState>(
       builder: (context, state) {
-        bool isFirst(int index) {
-          final chat = state.chats[index];
-          final nextChat =
-              index == state.chats.length - 1 ? null : state.chats[index + 1];
-          if (chat is! ChatEntity || nextChat is! ChatEntity) {
-            return true;
-          }
-          return nextChat.user.id != chat.user.id;
-        }
-
         bool isLast(int index) {
           final chat = state.chats[index];
           final nextChat =
@@ -252,32 +255,61 @@ class _ChatListState extends State<_ChatList> {
           padding: const EdgeInsets.all(12) - EdgeInsets.only(right: 6),
           separatorBuilder:
               (context, index) => SizedBox(height: isLast(index) ? 12 : 6),
-          itemBuilder: (context, index) {
-            if (index == state.chats.length) {
-              return const Center(child: CupertinoActivityIndicator());
-            }
-            final chat = state.chats[index];
-            if (chat is! ChatEntity) {
-              if (chat is SystemMessageEntity) {
-                return SystemMessage(message: chat);
-              }
-              if (chat is FofoChatEntity) {
-                return FofoBubble(message: chat);
-              }
-              throw StateError('Unknown chat type');
-            }
-            final isMe = chat.user.id == AuthBloc.userOf(context)?.id;
-            return ChatBubble(
-              message: chat.message,
-              isFirst: isFirst(index),
-              user: isMe ? null : chat.user,
-              pot: widget.pot,
-            );
-          },
+          itemBuilder: (context, index) => _buildItem(context, index, state),
           itemCount: state.chats.length + (state.isLoading ? 1 : 0),
         );
       },
     );
+  }
+
+  Widget _buildItem(BuildContext context, int index, ChatState state) {
+    bool isFirst(int index) {
+      final chat = state.chats[index];
+      final nextChat =
+          index == state.chats.length - 1 ? null : state.chats[index + 1];
+      if (chat is! ChatEntity || nextChat is! ChatEntity) {
+        return true;
+      }
+      return nextChat.user.id != chat.user.id;
+    }
+
+    if (index == state.chats.length) {
+      // return const Center(child: CupertinoActivityIndicator());
+      return Container(height: 40, color: Palette.lightGrey);
+    }
+    final chat = state.chats[index];
+    if (chat is! ChatEntity) {
+      if (chat is SystemMessageEntity) {
+        return SystemMessage(message: chat);
+      }
+      if (chat is FofoChatEntity) {
+        return FofoBubble(
+          message: chat,
+          onAction: (type) => _onAction(context, type),
+        );
+      }
+      throw StateError('Unknown chat type');
+    }
+    final isMe = chat.user.id == AuthBloc.userOf(context)?.id;
+    return ChatBubble(
+      message: chat.message,
+      isFirst: isFirst(index),
+      user: isMe ? null : chat.user,
+      pot: widget.pot,
+    );
+  }
+
+  void _onAction(BuildContext context, FofoActionButtonType type) {
+    switch (type) {
+      case FofoActionButtonType.departureConfirm:
+        _SetDepartureTimeButton.setDepartureTime(context, widget.pot);
+        break;
+      case FofoActionButtonType.accountingRequest:
+        _AccountingButton.setAccounting(context, widget.pot);
+        break;
+      default:
+        throw UnimplementedError();
+    }
   }
 }
 
