@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:pot_g/app/modules/chat/data/models/confirm_departure_time_request_model.dart';
 import 'package:pot_g/app/modules/chat/data/models/confirm_departure_time_response_model.dart';
