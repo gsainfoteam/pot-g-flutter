@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:pot_g/app/di/locator.dart';
 import 'package:pot_g/app/modules/auth/presentation/bloc/auth_bloc.dart';
+import 'package:pot_g/app/modules/chat/domain/entities/chat_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/chat_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/pot_info_bloc.dart';
@@ -13,6 +14,7 @@ import 'package:pot_g/app/modules/chat/presentation/extensions/pot_user_extensio
 import 'package:pot_g/app/modules/chat/presentation/widgets/chat_bubble.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/pot_info.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/pot_users.dart';
+import 'package:pot_g/app/modules/chat/presentation/widgets/system_message.dart';
 import 'package:pot_g/app/modules/common/presentation/extensions/toast.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/error_cover.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/general_dialog.dart';
@@ -203,16 +205,40 @@ class _SetDepartureTimeButton extends StatelessWidget {
   }
 }
 
-class _ChatList extends StatelessWidget {
+class _ChatList extends StatefulWidget {
   const _ChatList({required this.pot});
 
   final PotInfoEntity pot;
+
+  @override
+  State<_ChatList> createState() => _ChatListState();
+}
+
+class _ChatListState extends State<_ChatList> {
+  final _controller = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.addListener(() {
+      if (_controller.position.pixels == _controller.position.maxScrollExtent) {
+        context.read<ChatBloc>().add(ChatLoadMore());
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ChatBloc, ChatState>(
       builder:
           (context, state) => ListView.separated(
+            controller: _controller,
             reverse: true,
             padding: const EdgeInsets.all(12) - EdgeInsets.only(right: 6),
             separatorBuilder: (context, index) {
@@ -221,13 +247,25 @@ class _ChatList extends StatelessWidget {
                   index == state.chats.length - 1
                       ? null
                       : state.chats[index + 1];
-              if (nextChat?.user.id == chat.user.id) {
+              if (chat is! ChatEntity || nextChat is! ChatEntity) {
+                return const SizedBox(height: 12);
+              }
+              if (nextChat.user.id == chat.user.id) {
                 return const SizedBox(height: 6);
               }
               return const SizedBox(height: 12);
             },
             itemBuilder: (context, index) {
+              if (index == state.chats.length) {
+                return const Center(child: CupertinoActivityIndicator());
+              }
               final chat = state.chats[index];
+              if (chat is! ChatEntity) {
+                if (chat is SystemMessageEntity) {
+                  return SystemMessage(message: chat);
+                }
+                throw StateError('Unknown chat type');
+              }
               final nextChat =
                   index == state.chats.length - 1
                       ? null
@@ -235,12 +273,13 @@ class _ChatList extends StatelessWidget {
               final isMe = chat.user.id == AuthBloc.userOf(context)?.id;
               return ChatBubble(
                 message: chat.message,
-                isFirst: nextChat?.user.id != chat.user.id,
+                isFirst:
+                    nextChat is! ChatEntity || nextChat.user.id != chat.user.id,
                 user: isMe ? null : chat.user,
-                pot: pot,
+                pot: widget.pot,
               );
             },
-            itemCount: state.chats.length,
+            itemCount: state.chats.length + (state.isLoading ? 1 : 0),
           ),
     );
   }
@@ -255,6 +294,15 @@ class _ChatInput extends StatefulWidget {
 
 class _ChatInputState extends State<_ChatInput> {
   final _controller = TextEditingController();
+  bool _filled = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.addListener(() {
+      setState(() => _filled = _controller.text.isNotEmpty);
+    });
+  }
 
   @override
   void dispose() {
@@ -295,7 +343,10 @@ class _ChatInputState extends State<_ChatInput> {
           const SizedBox(width: 6),
           PotIconButton(
             icon: Assets.icons.sendDiagonal.svg(
-              colorFilter: ColorFilter.mode(Palette.grey, BlendMode.srcIn),
+              colorFilter: ColorFilter.mode(
+                _filled ? Palette.primary : Palette.grey,
+                BlendMode.srcIn,
+              ),
             ),
             onPressed: () {
               context.read<ChatBloc>().add(ChatSendChat(_controller.text));

@@ -129,6 +129,17 @@
     }
   },
   "chat_room": {
+    "system_messages": {
+      "user_in": {
+        "description": "$user joined the pot."
+      },
+      "user_leave": {
+        "description": "$user left the pot."
+      },
+      "user_kicked": {
+        "description": "$user was kicked from the pot."
+      }
+    },
     "drawer": {
       "pot_info": {
         "route_info": "Route Info",
