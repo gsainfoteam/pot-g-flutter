@@ -40,147 +40,104 @@ class ChatListItem extends StatelessWidget {
             ),
           ],
         ),
-        child: Column(
-          children: [
-            Container(
-              padding: EdgeInsets.only(bottom: 16, top: 12),
-              decoration: BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(color: Palette.borderGrey, width: 1.0),
-                ),
-              ),
-              child: Stack(
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '팟 정보',
-                        style: TextStyles.caption.copyWith(color: Palette.grey),
-                      ),
-                      const SizedBox(height: 8),
-                      Row(
-                        children: [
-                          Text(
-                            '노선',
-                            style: TextStyles.description.copyWith(
-                              color: textColorTitle,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            pot.route.name,
-                            style: TextStyles.description.copyWith(
-                              color: textColorDescription,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 4),
-                      Row(
-                        children: [
-                          Text(
-                            '날짜',
-                            style: TextStyles.description.copyWith(
-                              color: textColorTitle,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            DateFormat.yMd().add_E().format(pot.startsAt),
-                            style: TextStyles.description.copyWith(
-                              color: textColorDescription,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 4),
-                      Row(
-                        children: [
-                          Text(
-                            '시간',
-                            style: TextStyles.description.copyWith(
-                              color: textColorTitle,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            pot.status == PotStatus.beforeConfirmed
-                                ? '${DateFormat.Hm().format(pot.startsAt)}~${DateFormat.Hm().format(pot.endsAt)}'
-                                : DateFormat.Hm().format(pot.startsAt),
-                            style: TextStyles.description.copyWith(
-                              color: textColorDescription,
-                            ),
-                          ),
-                        ],
-                      ),
-                      if (pot.status == PotStatus.waitAccounting ||
-                          pot.status == PotStatus.archived)
-                        const SizedBox(height: 4),
-                      if (pot.status == PotStatus.waitAccounting ||
-                          pot.status == PotStatus.archived)
-                        Row(
-                          children: [
-                            Text(
-                              '정산',
-                              style: TextStyles.description.copyWith(
-                                color: textColorTitle,
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            Text(
-                              '${NumberFormat('#,###').format(pot.accountingRequested)}원',
-                              style: TextStyles.description.copyWith(
-                                color: textColorDescription,
-                              ),
-                            ),
-                          ],
-                        ),
-                    ],
-                  ),
-                  Positioned(
-                    right: 0,
-                    top: 0,
-                    child: _StatusChip(status: pot.status),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.only(bottom: 16, top: 12),
-              alignment: Alignment.centerLeft,
-              child: Column(
+        child: Container(
+          padding: EdgeInsets.only(bottom: 16, top: 12),
+          child: Stack(
+            children: [
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'chat',
+                    '팟 정보',
                     style: TextStyles.caption.copyWith(color: Palette.grey),
                   ),
+                  const SizedBox(height: 8),
                   Row(
                     children: [
-                      Expanded(
-                        child: Text(
-                          '저는 축지법이 더 편하긴 해요',
-                          style: TextStyles.title4.copyWith(
-                            color: Palette.dark,
-                          ),
-                          maxLines: 1,
+                      Text(
+                        '노선',
+                        style: TextStyles.description.copyWith(
+                          color: textColorTitle,
                         ),
                       ),
-                      Container(
-                        width: 16,
-                        height: 16,
-                        decoration: BoxDecoration(
-                          color: Palette.primary,
-                          shape: BoxShape.circle,
+                      const SizedBox(width: 8),
+                      Text(
+                        pot.route.name,
+                        style: TextStyles.description.copyWith(
+                          color: textColorDescription,
                         ),
                       ),
                     ],
                   ),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      Text(
+                        '날짜',
+                        style: TextStyles.description.copyWith(
+                          color: textColorTitle,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        DateFormat.yMd().add_E().format(pot.startsAt),
+                        style: TextStyles.description.copyWith(
+                          color: textColorDescription,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      Text(
+                        '시간',
+                        style: TextStyles.description.copyWith(
+                          color: textColorTitle,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        pot.status == PotStatus.beforeConfirmed
+                            ? '${DateFormat.Hm().format(pot.startsAt)}~${DateFormat.Hm().format(pot.endsAt)}'
+                            : DateFormat.Hm().format(pot.startsAt),
+                        style: TextStyles.description.copyWith(
+                          color: textColorDescription,
+                        ),
+                      ),
+                    ],
+                  ),
+                  if (pot.status == PotStatus.waitAccounting ||
+                      pot.status == PotStatus.archived)
+                    const SizedBox(height: 4),
+                  if (pot.status == PotStatus.waitAccounting ||
+                      pot.status == PotStatus.archived)
+                    Row(
+                      children: [
+                        Text(
+                          '정산',
+                          style: TextStyles.description.copyWith(
+                            color: textColorTitle,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          '${NumberFormat('#,###').format(pot.accountingRequested)}원',
+                          style: TextStyles.description.copyWith(
+                            color: textColorDescription,
+                          ),
+                        ),
+                      ],
+                    ),
                 ],
               ),
-            ),
-          ],
+              Positioned(
+                right: 0,
+                top: 0,
+                child: _StatusChip(status: pot.status),
+              ),
+            ],
+          ),
         ),
       ),
     );
