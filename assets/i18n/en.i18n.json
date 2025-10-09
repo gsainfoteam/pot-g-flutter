@@ -164,12 +164,24 @@
       "members": {
         "my": "my",
         "passenger": "passengers",
-        "kick": "Kick",
+        "kick": {
+          "action": "Kick",
+          "confirm": {
+            "title": "Kick Passenger?",
+            "description(rich)": "Are you sure you want to kick $user?\nIf the kick is unreasonable, you may be reported."
+          }
+        },
         "invite": "Invite",
         "host": "Host"
       },
       "actions": {
-        "leave": "Leave",
+        "leave": {
+          "action": "Leave",
+          "confirm": {
+            "title": "Leave the pot?",
+            "description": "You can leave freely before the departure time is confirmed. Do you want to leave?"
+          }
+        },
         "report": "Report"
       }
     },
@@ -183,6 +195,9 @@
       },
       "host_only": {
         "description": "This feature is only available for hosts."
+      },
+      "already_set": {
+        "description": "The departure time has already been set."
       }
     },
     "accounting": {

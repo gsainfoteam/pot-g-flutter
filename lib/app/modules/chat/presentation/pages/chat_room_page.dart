@@ -98,9 +98,9 @@ class _Layout extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     PotPressable(
-                      onTap: () {},
+                      onTap: () => _leave(context),
                       child: Text(
-                        context.t.chat_room.drawer.actions.leave,
+                        context.t.chat_room.drawer.actions.leave.action,
                         style: TextStyles.caption.copyWith(
                           color: Palette.grey,
                           decoration: TextDecoration.underline,
@@ -133,6 +133,17 @@ class _Layout extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Future<void> _leave(BuildContext context) async {
+    final result = await showOkCancelAlertDialog(
+      context: context,
+      title: context.t.chat_room.drawer.actions.leave.confirm.title,
+      message: context.t.chat_room.drawer.actions.leave.confirm.description,
+    );
+    if (result != OkCancelResult.ok) return;
+    if (!context.mounted) return;
+    context.read<PotInfoBloc>().add(PotInfoEvent.leavePot());
   }
 }
 
@@ -177,6 +188,12 @@ class _SetDepartureTimeButton extends StatelessWidget {
     if (!pot.meIsHost(context)) {
       context.showToast(
         context.t.chat_room.set_departure_time.host_only.description,
+      );
+      return;
+    }
+    if (pot.departureTime != null) {
+      context.showToast(
+        context.t.chat_room.set_departure_time.already_set.description,
       );
       return;
     }

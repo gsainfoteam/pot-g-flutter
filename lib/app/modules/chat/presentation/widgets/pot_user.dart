@@ -45,7 +45,7 @@ class PotUser extends StatelessWidget {
           PotButton(
             onPressed: onKick,
             size: PotButtonSize.tiny,
-            child: Text(context.t.chat_room.drawer.members.kick),
+            child: Text(context.t.chat_room.drawer.members.kick.action),
           ),
       ],
     );

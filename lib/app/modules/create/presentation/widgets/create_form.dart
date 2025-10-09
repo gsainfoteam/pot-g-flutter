@@ -50,6 +50,7 @@ class CreateForm extends StatelessWidget {
 
                           final pot = PotModel(
                             id: '',
+                            name: '',
                             route: state.route! as RouteModel,
                             startsAt: DateTime(
                               state.date!.year,
