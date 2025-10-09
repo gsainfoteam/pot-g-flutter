@@ -46,14 +46,14 @@ class PotListItem extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  '지송',
+                  pot.name.substring(0, 2),
                   style: TextStyles.title3.copyWith(
                     color: disabled ? Palette.grey : Palette.textGrey,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  '001',
+                  pot.name.substring(2),
                   style: TextStyles.description.copyWith(
                     color: disabled ? Palette.grey : Palette.textGrey,
                   ),

@@ -9,6 +9,7 @@ part 'pot_model.g.dart';
 sealed class PotModel with _$PotModel implements PotSummaryEntity {
   factory PotModel({
     required String id,
+    required String name,
     required RouteModel route,
     required DateTime startsAt,
     required DateTime endsAt,
