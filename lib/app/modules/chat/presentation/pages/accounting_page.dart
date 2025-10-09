@@ -6,6 +6,7 @@ import 'package:pot_g/app/modules/chat/domain/entities/pot_user_entity.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/pot_profile_image.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_app_bar.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_button.dart';
+import 'package:pot_g/app/modules/common/presentation/widgets/pot_checkbox.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_text_field.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
@@ -184,7 +185,7 @@ class _SettlementTargets extends StatelessWidget {
             style: TextStyles.description.copyWith(color: Palette.dark),
           ),
           Spacer(),
-          Checkbox(value: true, onChanged: (_) {}),
+          PotCheckbox(value: true, onChanged: (_) {}),
         ],
       ),
     );
