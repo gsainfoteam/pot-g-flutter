@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pot_g/app/modules/chat/domain/enums/pot_status.dart';
 import 'package:pot_g/app/modules/core/domain/entities/pot_detail_entity.dart';
+import 'package:pot_g/app/modules/core/domain/entities/route_entity.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
 
@@ -71,7 +72,7 @@ class ChatListItem extends StatelessWidget {
                           ),
                           const SizedBox(width: 8),
                           Text(
-                            '${pot.route.from.name} → ${pot.route.to.name}',
+                            pot.route.name,
                             style: TextStyles.description.copyWith(
                               color: textColorDescription,
                             ),
