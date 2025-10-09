@@ -274,7 +274,7 @@ class _ChatListState extends State<_ChatList> {
                 return SystemMessage(message: chat);
               }
               if (chat is FofoChatEntity) {
-                return FofoBubble();
+                return FofoBubble(message: chat);
               }
               throw StateError('Unknown chat type');
             }

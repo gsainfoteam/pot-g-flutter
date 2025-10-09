@@ -141,7 +141,21 @@
       }
     },
     "fofo": {
-      "name": "Notification"
+      "name": "Notification",
+      "title": {
+        "departure_confirm_request": "Departure Confirm Request",
+        "departure_confirmed": "Departure Confirmed",
+        "reminder_taxi_call": "Reminder Taxi Call",
+        "accounting_reminder": "Accounting Reminder",
+        "accounting_request": "Accounting Request"
+      },
+      "actions": {
+        "departure_confirm": "Departure Confirm",
+        "taxi_call": "Taxi Call",
+        "accounting_request": "Accounting Request",
+        "accounting_info_check": "Accounting Info Check",
+        "accounting_process": "Accounting Process"
+      }
     },
     "drawer": {
       "pot_info": {
