@@ -141,7 +141,7 @@ class WebsocketPotInfoRepository implements PotInfoRepository {
         pot.id,
         AccountingRequestRequestModel(
           totalCost: amount,
-          costPerUser: amount ~/ targets.length,
+          costPerUser: amount ~/ (targets.length + 1),
           accountInfo: AccountInfo(useExistInfo: true),
           requestedUser: targets.map((e) => e.id).toList(),
         ),
