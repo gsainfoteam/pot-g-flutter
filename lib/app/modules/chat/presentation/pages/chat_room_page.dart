@@ -130,7 +130,30 @@ class _Layout extends StatelessWidget {
                   ),
             ),
           ),
-          SafeArea(child: _ChatInput()),
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: Row(
+                children: [
+                  Assets.icons.clock.svg(
+                    colorFilter: ColorFilter.mode(
+                      Palette.grey,
+                      BlendMode.srcIn,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Assets.icons.dollar.svg(
+                    colorFilter: ColorFilter.mode(
+                      Palette.grey,
+                      BlendMode.srcIn,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(child: _ChatInput()),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -153,15 +176,6 @@ class _ChatInputState extends State<_ChatInput> {
       padding: EdgeInsets.symmetric(vertical: 8),
       child: Row(
         children: [
-          const SizedBox(width: 12),
-          Assets.icons.clock.svg(
-            colorFilter: ColorFilter.mode(Palette.grey, BlendMode.srcIn),
-          ),
-          const SizedBox(width: 12),
-          Assets.icons.dollar.svg(
-            colorFilter: ColorFilter.mode(Palette.grey, BlendMode.srcIn),
-          ),
-          const SizedBox(width: 12),
           Expanded(
             child: TextField(
               controller: _controller,
@@ -200,7 +214,6 @@ class _ChatInputState extends State<_ChatInput> {
               },
             ),
           ),
-          const SizedBox(width: 12),
         ],
       ),
     );
