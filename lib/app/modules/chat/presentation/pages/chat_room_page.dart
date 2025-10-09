@@ -150,6 +150,7 @@ class _SetDepartureTimeButton extends StatelessWidget {
           context.showToast(
             context.t.chat_room.set_departure_time.host_only.description,
           );
+          return;
         }
         DateTime date = DateTime.now();
         final result = await showGeneralOkCancelAdaptiveDialog(
