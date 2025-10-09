@@ -47,11 +47,14 @@ class PotAppBar extends StatelessWidget implements PreferredSizeWidget {
         actions.isEmpty
             ? [
               if (Scaffold.maybeOf(context)?.hasEndDrawer ?? false)
-                PotIconButton(
-                  icon: Assets.icons.menu.svg(),
-                  onPressed: () {
-                    Scaffold.maybeOf(context)?.openEndDrawer();
-                  },
+                AspectRatio(
+                  aspectRatio: 1,
+                  child: PotIconButton(
+                    icon: Assets.icons.menu.svg(),
+                    onPressed: () {
+                      Scaffold.maybeOf(context)?.openEndDrawer();
+                    },
+                  ),
                 ),
             ]
             : actions;
@@ -73,9 +76,12 @@ class PotAppBar extends StatelessWidget implements PreferredSizeWidget {
                 leading ??
                 (automaticallyImplyLeading
                     ? leadingType == LeadingType.back
-                        ? PotIconButton(
-                          icon: Assets.icons.arrowLeft.svg(),
-                          onPressed: action,
+                        ? AspectRatio(
+                          aspectRatio: 1,
+                          child: PotIconButton(
+                            icon: Assets.icons.arrowLeft.svg(),
+                            onPressed: action,
+                          ),
                         )
                         : title == null
                         ? logo

@@ -100,31 +100,23 @@ class _Layout extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 6),
               child: Row(
                 children: [
-                  SizedBox(
-                    width: 36,
-                    height: 36,
-                    child: PotIconButton(
-                      icon: Assets.icons.clock.svg(
-                        colorFilter: ColorFilter.mode(
-                          Palette.grey,
-                          BlendMode.srcIn,
-                        ),
+                  PotIconButton(
+                    icon: Assets.icons.clock.svg(
+                      colorFilter: ColorFilter.mode(
+                        Palette.grey,
+                        BlendMode.srcIn,
                       ),
-                      onPressed: () {},
                     ),
+                    onPressed: () {},
                   ),
-                  SizedBox(
-                    width: 36,
-                    height: 36,
-                    child: PotIconButton(
-                      icon: Assets.icons.dollar.svg(
-                        colorFilter: ColorFilter.mode(
-                          Palette.grey,
-                          BlendMode.srcIn,
-                        ),
+                  PotIconButton(
+                    icon: Assets.icons.dollar.svg(
+                      colorFilter: ColorFilter.mode(
+                        Palette.grey,
+                        BlendMode.srcIn,
                       ),
-                      onPressed: () {},
                     ),
+                    onPressed: () {},
                   ),
                   Expanded(child: _ChatInput()),
                 ],
@@ -221,18 +213,14 @@ class _ChatInputState extends State<_ChatInput> {
             ),
           ),
           const SizedBox(width: 6),
-          SizedBox(
-            width: 36,
-            height: 36,
-            child: PotIconButton(
-              icon: Assets.icons.sendDiagonal.svg(
-                colorFilter: ColorFilter.mode(Palette.grey, BlendMode.srcIn),
-              ),
-              onPressed: () {
-                context.read<ChatBloc>().add(ChatSendChat(_controller.text));
-                _controller.clear();
-              },
+          PotIconButton(
+            icon: Assets.icons.sendDiagonal.svg(
+              colorFilter: ColorFilter.mode(Palette.grey, BlendMode.srcIn),
             ),
+            onPressed: () {
+              context.read<ChatBloc>().add(ChatSendChat(_controller.text));
+              _controller.clear();
+            },
           ),
         ],
       ),
