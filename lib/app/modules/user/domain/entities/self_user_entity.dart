@@ -1,11 +1,9 @@
+import 'package:pot_g/app/modules/user/domain/entities/accounting_entity.dart';
+import 'package:pot_g/app/modules/user/domain/entities/push_setting_entity.dart';
 import 'package:pot_g/app/modules/user/domain/entities/user_entity.dart';
 
-class SelfUserEntity extends UserEntity {
-  final String email;
-
-  const SelfUserEntity({
-    required this.email,
-    required super.id,
-    required super.name,
-  });
+abstract class SelfUserEntity extends UserEntity {
+  String get email;
+  AccountingEntity get accounting;
+  PushSettingEntity get pushSetting;
 }
