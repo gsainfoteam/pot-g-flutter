@@ -60,7 +60,7 @@ BaseServerMessageModel<T> convertServerMessage<
         throw ArgumentError.value(
           jsonData,
           'jsonData',
-          'Unknown pot event type: ${jsonData['event_type']}',
+          'Unknown pot event type: ${jsonData['body']['event_type']}',
         ),
     },
     'request_authorization' => change(RequestAuthorizationEventModel.fromJson),
