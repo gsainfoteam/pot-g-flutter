@@ -1,5 +1,6 @@
-import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
+import 'package:pot_g/app/modules/chat/data/models/confirm_departure_time_request_model.dart';
+import 'package:pot_g/app/modules/chat/data/models/confirm_departure_time_response_model.dart';
 import 'package:pot_g/app/modules/chat/data/models/get_pot_events_query_model.dart';
 import 'package:pot_g/app/modules/chat/data/models/pot_events_model.dart';
 import 'package:pot_g/app/modules/chat/data/models/pot_info_model.dart';
@@ -21,5 +22,11 @@ abstract class ChatPotApi {
   Future<PotEventsModel> getPotEvents(
     @Path('id') String id,
     @Queries() GetPotEventsQueryModel query,
+  );
+
+  @POST('{id}/departure/confirm')
+  Future<ConfirmDepartureTimeResponseModel> confirmDepartureTime(
+    @Path('id') String id,
+    @Body() ConfirmDepartureTimeRequestModel request,
   );
 }
