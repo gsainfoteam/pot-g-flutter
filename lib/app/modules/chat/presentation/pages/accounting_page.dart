@@ -5,6 +5,7 @@ import 'package:pot_g/app/modules/auth/presentation/bloc/auth_bloc.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_user_entity.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/pot_profile_image.dart';
+import 'package:pot_g/app/modules/common/presentation/formatters/thousand_won_formatter.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_app_bar.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_button.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_checkbox.dart';
@@ -75,7 +76,13 @@ class _Amount extends StatelessWidget {
           style: TextStyles.title4.copyWith(color: Palette.dark),
         ),
         const SizedBox(height: 8),
-        PotTextField(),
+        PotTextField(
+          inputFormatters: [
+            ThousandWonFormatter(context.dutch.fields.amount.value),
+          ],
+          keyboardType: TextInputType.number,
+          hintText: context.dutch.fields.amount.value(n: '0'),
+        ),
       ],
     );
   }

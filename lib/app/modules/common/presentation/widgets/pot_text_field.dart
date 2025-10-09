@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
 
@@ -10,18 +11,24 @@ class PotTextField extends StatelessWidget {
     this.controller,
     this.readOnly = false,
     this.filled = false,
+    this.keyboardType,
+    this.inputFormatters,
   });
   final Widget? suffixIcon;
   final String? hintText;
   final TextEditingController? controller;
   final bool readOnly;
   final bool filled;
+  final TextInputType? keyboardType;
+  final List<TextInputFormatter>? inputFormatters;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       readOnly: readOnly,
       style: TextStyles.body.copyWith(color: Palette.dark),
+      keyboardType: keyboardType,
+      inputFormatters: inputFormatters,
       decoration: InputDecoration(
         suffixIcon:
             suffixIcon != null
