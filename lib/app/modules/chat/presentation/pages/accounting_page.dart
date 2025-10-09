@@ -1,4 +1,4 @@
-import 'package:auto_route/annotations.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,6 +7,7 @@ import 'package:pot_g/app/modules/auth/presentation/bloc/auth_bloc.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_user_entity.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/accounting_cubit.dart';
+import 'package:pot_g/app/modules/chat/presentation/bloc/pot_info_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/pot_profile_image.dart';
 import 'package:pot_g/app/modules/common/presentation/formatters/thousand_won_formatter.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_app_bar.dart';
@@ -27,11 +28,18 @@ class AccountingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create:
-          (context) =>
-              sl<AccountingCubit>()
-                ..loadTargets(pot.usersInfo.users.where((u) => u.isInPot)),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create:
+              (context) =>
+                  sl<AccountingCubit>()
+                    ..loadTargets(pot.usersInfo.users.where((u) => u.isInPot)),
+        ),
+        BlocProvider(
+          create: (context) => sl<PotInfoBloc>()..add(PotInfoEvent.init(pot)),
+        ),
+      ],
       child: _Layout(pot: pot),
     );
   }
@@ -70,7 +78,18 @@ class _Layout extends StatelessWidget {
                     BlocBuilder<AccountingCubit, AccountingState>(
                       builder: (context, state) {
                         return PotButton(
-                          onPressed: state.valid && hasBank ? () {} : null,
+                          onPressed:
+                              state.valid && hasBank
+                                  ? () {
+                                    context.read<PotInfoBloc>().add(
+                                      PotInfoEvent.accounting(
+                                        state.amount!,
+                                        state.targets!.toList(),
+                                      ),
+                                    );
+                                    context.router.pop();
+                                  }
+                                  : null,
                           variant: PotButtonVariant.emphasized,
                           child: Text(context.dutch.action),
                         );
