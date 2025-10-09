@@ -250,7 +250,7 @@ class _ChatListState extends State<_ChatList> {
                       : state.chats[index + 1];
               final isMe = chat.user.id == AuthBloc.userOf(context)?.id;
               return ChatBubble(
-                message: chat.message + index.toString(),
+                message: chat.message,
                 isFirst: nextChat?.user.id != chat.user.id,
                 user: isMe ? null : chat.user,
                 pot: widget.pot,
