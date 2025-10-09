@@ -83,7 +83,14 @@
         "all": "All Routes"
       }
     },
-    "reached_all": "You have reached all pots"
+    "reached_all": "You have reached all pots",
+    "enter": {
+      "title": "Do you want to enter the pot?",
+      "route": "Route",
+      "date": "Date",
+      "departure_time": "Time",
+      "passengers": "Passengers List"
+    }
   },
   "create": {
     "menu_title": "Create",

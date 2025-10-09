@@ -101,9 +101,9 @@ class _ListView extends StatelessWidget {
       ),
       child: Column(
         children: [
-          ...pots.indexed.expand(
+          ...pots.expand(
             (element) => [
-              PotListItem(pot: element.$2),
+              PotListItem(pot: element),
               const SizedBox(height: 15),
             ],
           ),
