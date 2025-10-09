@@ -92,18 +92,6 @@ class _Layout extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const SizedBox(width: 16),
-                    PotPressable(
-                      onTap: () {},
-                      child: Text(
-                        context.t.chat_room.drawer.actions.report,
-                        style: TextStyles.caption.copyWith(
-                          color: Palette.grey,
-                          decoration: TextDecoration.underline,
-                          decorationColor: Palette.grey,
-                        ),
-                      ),
-                    ),
                   ],
                 ),
               ],
