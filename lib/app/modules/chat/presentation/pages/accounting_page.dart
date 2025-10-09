@@ -1,6 +1,7 @@
 import 'package:auto_route/annotations.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:pot_g/app/modules/auth/presentation/bloc/auth_bloc.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_user_entity.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/pot_profile_image.dart';
@@ -29,8 +30,9 @@ class AccountingPage extends StatelessWidget {
           children: [
             _Amount(),
             const SizedBox(height: 28),
-            _DefaultNotRegistered(),
-            _BankAccount(),
+            AuthBloc.userOf(context)?.accounting.isSet == true
+                ? _BankAccount()
+                : _DefaultNotRegistered(),
             const SizedBox(height: 28),
             _SettlementTargets(pot: pot),
           ],
