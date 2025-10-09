@@ -5,7 +5,7 @@ import 'package:pot_g/app/di/locator.dart';
 import 'package:pot_g/app/modules/common/presentation/extensions/toast.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_app_bar.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_button.dart';
-import 'package:pot_g/app/modules/core/domain/entities/pot_entity.dart';
+import 'package:pot_g/app/modules/core/domain/entities/pot_summary_entity.dart';
 import 'package:pot_g/app/modules/list/presentation/bloc/list_cubit.dart';
 import 'package:pot_g/app/modules/list/presentation/bloc/pot_list_bloc.dart';
 import 'package:pot_g/app/modules/list/presentation/pages/list_filter.dart';

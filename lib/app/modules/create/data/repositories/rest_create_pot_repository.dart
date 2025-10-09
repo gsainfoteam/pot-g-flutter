@@ -1,5 +1,4 @@
 import 'package:injectable/injectable.dart';
-import 'package:pot_g/app/modules/core/domain/entities/pot_entity.dart';
 import 'package:pot_g/app/modules/core/domain/entities/route_entity.dart';
 import 'package:pot_g/app/modules/core/domain/repositories/create_pot_repository.dart';
 import 'package:pot_g/app/modules/create/data/data_source/remote/create_pot_api.dart';

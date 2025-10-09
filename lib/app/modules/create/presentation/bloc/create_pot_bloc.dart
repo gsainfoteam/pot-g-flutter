@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
-import 'package:pot_g/app/modules/core/domain/entities/pot_entity.dart';
+import 'package:pot_g/app/modules/core/domain/entities/pot_summary_entity.dart';
 import 'package:pot_g/app/modules/core/domain/repositories/create_pot_repository.dart';
 
 part 'create_pot_bloc.freezed.dart';
