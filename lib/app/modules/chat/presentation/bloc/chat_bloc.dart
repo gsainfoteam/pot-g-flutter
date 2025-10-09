@@ -80,6 +80,7 @@ sealed class ChatEvent with _$ChatEvent {
 
 @freezed
 sealed class ChatState with _$ChatState {
+  const ChatState._();
   const factory ChatState.initial([@Default([]) List<ChatEntity> chats]) =
       ChatInitial;
   const factory ChatState.loading([@Default([]) List<ChatEntity> chats]) =
@@ -87,4 +88,10 @@ sealed class ChatState with _$ChatState {
   const factory ChatState.loaded(List<ChatEntity> chats) = ChatLoaded;
   const factory ChatState.error(List<ChatEntity> chats, String message) =
       ChatError;
+
+  bool get isLoading => switch (this) {
+    ChatLoading() => true,
+    ChatLoaded() => false,
+    _ => false,
+  };
 }

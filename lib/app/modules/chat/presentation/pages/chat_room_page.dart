@@ -240,6 +240,9 @@ class _ChatListState extends State<_ChatList> {
               return const SizedBox(height: 12);
             },
             itemBuilder: (context, index) {
+              if (index == state.chats.length) {
+                return const Center(child: CupertinoActivityIndicator());
+              }
               final chat = state.chats[index];
               final nextChat =
                   index == state.chats.length - 1
@@ -247,13 +250,13 @@ class _ChatListState extends State<_ChatList> {
                       : state.chats[index + 1];
               final isMe = chat.user.id == AuthBloc.userOf(context)?.id;
               return ChatBubble(
-                message: chat.message,
+                message: chat.message + index.toString(),
                 isFirst: nextChat?.user.id != chat.user.id,
                 user: isMe ? null : chat.user,
                 pot: widget.pot,
               );
             },
-            itemCount: state.chats.length,
+            itemCount: state.chats.length + (state.isLoading ? 1 : 0),
           ),
     );
   }
