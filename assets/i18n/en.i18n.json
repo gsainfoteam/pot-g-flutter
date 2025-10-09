@@ -158,6 +158,17 @@
       "host_only": {
         "description": "This feature is only available for hosts."
       }
+    },
+    "system_messages": {
+      "user_in": {
+        "description": "$user joined the pot."
+      },
+      "user_leave": {
+        "description": "$user left the pot."
+      },
+      "user_kicked": {
+        "description": "$user was kicked from the pot."
+      }
     }
   }
 }

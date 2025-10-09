@@ -14,6 +14,7 @@ import 'package:pot_g/app/modules/chat/presentation/extensions/pot_user_extensio
 import 'package:pot_g/app/modules/chat/presentation/widgets/chat_bubble.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/pot_info.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/pot_users.dart';
+import 'package:pot_g/app/modules/chat/presentation/widgets/system_message.dart';
 import 'package:pot_g/app/modules/common/presentation/extensions/toast.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/error_cover.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/general_dialog.dart';
@@ -249,8 +250,10 @@ class _ChatListState extends State<_ChatList> {
               }
               final chat = state.chats[index];
               if (chat is! ChatEntity) {
-                // TODO: Implement system message
-                return const SizedBox(height: 12);
+                if (chat is SystemMessageEntity) {
+                  return SystemMessage(message: chat);
+                }
+                throw StateError('Unknown chat type');
               }
               final nextChat =
                   index == state.chats.length - 1
