@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intersperse/intersperse.dart';
 import 'package:intl/intl.dart';
 import 'package:pot_g/app/modules/chat/domain/enums/pot_status.dart';
+import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_pressable.dart';
 import 'package:pot_g/app/modules/core/domain/entities/pot_detail_entity.dart';
 import 'package:pot_g/app/modules/core/domain/entities/route_entity.dart';
@@ -41,7 +42,10 @@ class ChatListItem extends StatelessWidget {
     }
 
     return PotPressable(
-      onTap: () => ChatRoomRoute(pot: pot).push(context),
+      onTap: () {
+        L.c('chatRoom', properties: {'name': pot.name});
+        ChatRoomRoute(pot: pot).push(context);
+      },
       child: Container(
         padding:
             EdgeInsets.symmetric(horizontal: 16) +
