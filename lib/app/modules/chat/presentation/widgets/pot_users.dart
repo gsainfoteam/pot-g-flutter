@@ -53,6 +53,14 @@ class PotUsers extends StatelessWidget {
   }
 
   Future<void> _kickUser(BuildContext context, PotUserEntity user) async {
+    if (pot.departureTime != null) {
+      showOkAlertDialog(
+        context: context,
+        title: context.t.chat_room.drawer.members.departure_confirmed,
+        message: context.t.chat_room.drawer.members.kick.departure_confirmed,
+      );
+      return;
+    }
     final result = await showGeneralOkCancelAdaptiveDialog(
       title: context.t.chat_room.drawer.members.kick.confirm.title,
       child: Text.rich(
