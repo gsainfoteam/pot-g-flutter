@@ -24,7 +24,7 @@ class FofoBubble extends StatelessWidget {
       FofoActionButtonType.accountingRequest => fofo.accounting_request,
       FofoActionButtonType.accountingInfoCheck => fofo.accounting_info_check,
       FofoActionButtonType.accountingProcess => fofo.accounting_process,
-      null => '',
+      null => fofo.unknown,
     };
   }
 
