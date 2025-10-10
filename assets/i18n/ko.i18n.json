@@ -230,6 +230,24 @@
         },
         "action": "정산 요청"
       }
+    },
+    "taxi_call": {
+      "title": "택시 호출하러 가기",
+      "description": "$route\n택시를 빠르게 호출해보세요",
+      "actions": {
+        "kakao": "카카오택시로 호출하기",
+        "uber": "우티로 호출하기",
+        "tmoney": "티머니온다로 호출하기"
+      }
+    },
+    "send_money": {
+      "title": "송금하러 가기",
+      "description": "$account\n결제자 계좌로 택시비 $n원을 송금하세요",
+      "actions": {
+        "toss": "토스로 송금하기",
+        "kakao": "카카오페이로 송금하기",
+        "clipboard": "계좌번호 복사하기"
+      }
     }
   }
 }
