@@ -181,6 +181,7 @@
         "status": {
           "before": "정산 중",
           "payer": "결제자",
+          "done": "정산 완료",
           "not_requested": "미요청"
         },
         "edit_payer_only": "정산 현황은 결제자만 수정할 수 있어요"

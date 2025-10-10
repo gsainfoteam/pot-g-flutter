@@ -184,6 +184,7 @@
         "status": {
           "before": "Accounting",
           "payer": "Payer",
+          "done": "Done",
           "not_requested": "Not Requested"
         },
         "edit_payer_only": "Accounting status can only be edited by the payer"
