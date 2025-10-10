@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import 'package:amplitude_flutter/amplitude.dart';
 import 'package:amplitude_flutter/configuration.dart';
 import 'package:amplitude_flutter/events/base_event.dart';
 import 'package:amplitude_flutter/events/identify.dart';
+import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:pot_g/app/modules/common/domain/repositories/log_repository.dart';
 import 'package:pot_g/app/values/config.dart';
@@ -14,7 +17,11 @@ class AmplitudeLogRepository extends LogRepository {
 
   @override
   void logEvent(String eventName, Map<String, dynamic> properties) {
-    _instance.track(BaseEvent(eventName, eventProperties: properties));
+    if (kDebugMode) {
+      log('$eventName $properties', name: 'amplitude');
+    } else {
+      _instance.track(BaseEvent(eventName, eventProperties: properties));
+    }
   }
 
   @override
