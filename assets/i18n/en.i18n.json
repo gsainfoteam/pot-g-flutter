@@ -164,6 +164,12 @@
       "unknown_action_alert": {
         "title": "Unknown Action",
         "description": "This action is not available. Please update the app."
+      },
+      "accounting": {
+        "not_requested": {
+          "title": "Not Requested",
+          "description": "You don't have to send money"
+        }
       }
     },
     "drawer": {

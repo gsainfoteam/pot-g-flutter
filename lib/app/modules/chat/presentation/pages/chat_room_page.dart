@@ -333,6 +333,17 @@ class _ChatListState extends State<_ChatList> {
         break;
       case FofoActionButtonType.accountingProcess:
         final accountingInfo = widget.pot.accountingInfo;
+        if (!accountingInfo.requestedUsers.contains(
+          AuthBloc.userOf(context)?.id,
+        )) {
+          showOkAlertDialog(
+            context: context,
+            title: context.t.chat_room.fofo.accounting.not_requested.title,
+            message:
+                context.t.chat_room.fofo.accounting.not_requested.description,
+          );
+          return;
+        }
         final bank = '${accountingInfo.bankName} ${accountingInfo.bankAccount}';
         final result = await showAlertDialog(
           context: context,
