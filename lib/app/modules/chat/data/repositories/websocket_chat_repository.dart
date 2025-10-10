@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:injectable/injectable.dart';
 import 'package:pot_g/app/modules/chat/data/data_sources/remote/chat_pot_api.dart';
 import 'package:pot_g/app/modules/chat/data/models/chat_model.dart';
@@ -24,39 +25,39 @@ bool _isChatEvent(PotEventModel e) {
       e is PotEventModel<PopoChatV1Event>;
 }
 
-String _getRelatedUserId(PotEventModel e) {
+String? _getRelatedUserId(PotEventModel e) {
   return switch (e) {
     PotEventModel<ChatV1Event>() => e.data.from,
     PotEventModel<UserInV1Event>() => e.data.userPk,
     PotEventModel<UserLeaveV1Event>() => e.data.userPk,
     PotEventModel<UserKickV1Event>() => e.data.kickedUserPk,
-    PotEventModel<PopoChatV1Event>() => throw StateError('unintended'),
+    PotEventModel<PopoChatV1Event>() => null,
     _ => throw StateError('Unknown event type'),
   };
 }
 
 Sendable _makeChatEntity(PotEventModel e, PotInfoEntity pot) {
   final users = pot.usersInfo.users;
-  final user = users.firstWhere((u) => u.id == _getRelatedUserId(e));
+  final user = users.firstWhereOrNull((u) => u.id == _getRelatedUserId(e));
   return switch (e) {
     PotEventModel<ChatV1Event>() => ChatModel(
       message: e.data.content,
-      user: user,
+      user: user!,
       createdAt: e.timestamp,
     ),
     PotEventModel<UserInV1Event>() => SystemMessageModel(
       type: SystemMessageType.userIn,
-      relatedUser: user,
+      relatedUser: user!,
       createdAt: e.timestamp,
     ),
     PotEventModel<UserLeaveV1Event>() => SystemMessageModel(
       type: SystemMessageType.userLeave,
-      relatedUser: user,
+      relatedUser: user!,
       createdAt: e.timestamp,
     ),
     PotEventModel<UserKickV1Event>() => SystemMessageModel(
       type: SystemMessageType.userKicked,
-      relatedUser: user,
+      relatedUser: user!,
       createdAt: e.timestamp,
     ),
     PotEventModel<PopoChatV1Event>() => e.data.toEntity(e.timestamp),
