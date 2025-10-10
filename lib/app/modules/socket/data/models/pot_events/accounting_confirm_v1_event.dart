@@ -8,8 +8,7 @@ part 'accounting_confirm_v1_event.g.dart';
 sealed class AccountingConfirmV1Event
     with _$AccountingConfirmV1Event
     implements PotEvent {
-  const factory AccountingConfirmV1Event({required String confirmUserPk}) =
-      _AccountingConfirmV1Event;
+  const factory AccountingConfirmV1Event() = _AccountingConfirmV1Event;
 
   factory AccountingConfirmV1Event.fromJson(Map<String, dynamic> json) =>
       _$AccountingConfirmV1EventFromJson(json);
