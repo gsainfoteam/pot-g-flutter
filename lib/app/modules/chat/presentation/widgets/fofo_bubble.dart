@@ -36,23 +36,27 @@ class FofoBubble extends StatelessWidget {
         height: 40,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(100),
-          border: Border.all(color: Palette.borderGrey2, width: 0.5),
+          border: Border.all(
+            color: const Color.fromARGB(255, 62, 44, 44),
+            width: 0.5,
+          ),
         ),
         child: ClipOval(child: Assets.images.fofo.image()),
       ),
       name: context.t.chat_room.fofo.name,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
-            message.content.split('\n').first.replaceAll('**', ''),
+            message.content.split('\n').first.replaceAll('**', '').trim(),
             style: TextStyles.title4.copyWith(color: Palette.textGrey),
           ),
           const SizedBox(height: 8),
           Text(
-            message.content.split('\n').sublist(1).join('\n'),
+            message.content.split('\n').sublist(1).join('\n').trim(),
             style: TextStyles.description.copyWith(color: Palette.textGrey),
           ),
-          const SizedBox(height: 8),
+          if (message.actionButtons.isNotEmpty) const SizedBox(height: 8),
           Column(
             children:
                 message.actionButtons
