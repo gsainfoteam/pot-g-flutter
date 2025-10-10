@@ -11,8 +11,10 @@ part 'popo_chat_v1_event.g.dart';
 sealed class PopoChatV1Event with _$PopoChatV1Event implements PotEvent {
   const PopoChatV1Event._();
   const factory PopoChatV1Event({
+    @JsonKey(unknownEnumValue: PopoChatType.unknown)
     required PopoChatType popoChatType,
     required String content,
+    @JsonKey(unknownEnumValue: PopoActionButtonType.unknown)
     required List<PopoActionButtonType> actionBtns,
   }) = _PopoChatV1Event;
 
@@ -22,7 +24,8 @@ sealed class PopoChatV1Event with _$PopoChatV1Event implements PotEvent {
   FofoChat toEntity(DateTime timestamp) => FofoChat(
     type: popoChatType.fofoChatType,
     content: content,
-    actionButtons: actionBtns.map((e) => e.fofoActionButtonType).toList(),
+    actionButtons:
+        actionBtns.map((e) => e.fofoActionButtonType).nonNulls.toList(),
     createdAt: timestamp,
   );
 }
@@ -30,7 +33,7 @@ sealed class PopoChatV1Event with _$PopoChatV1Event implements PotEvent {
 @freezed
 sealed class FofoChat with _$FofoChat implements FofoChatEntity {
   const factory FofoChat({
-    required FofoChatType type,
+    required FofoChatType? type,
     required String content,
     required List<FofoActionButtonType> actionButtons,
     required DateTime createdAt,
@@ -43,14 +46,24 @@ enum PopoChatType {
   popoDepartureConfirmedV1,
   popoReminderTaxiCallV1,
   popoAccountingReminderV1,
-  popoAccountingRequestV1;
+  popoAccountingRequestV1,
+  popoAutoArchiveNoDepartureConfirmV1,
+  popoAutoArchiveAccountingFinV1,
+  popoAutoArchiveV1,
+  unknown;
 
-  FofoChatType get fofoChatType => switch (this) {
+  FofoChatType? get fofoChatType => switch (this) {
     popoDepartureConfirmRequestV1 => FofoChatType.departureConfirmRequest,
     popoDepartureConfirmedV1 => FofoChatType.departureConfirmed,
     popoReminderTaxiCallV1 => FofoChatType.reminderTaxiCall,
     popoAccountingReminderV1 => FofoChatType.accountingReminder,
     popoAccountingRequestV1 => FofoChatType.accountingRequest,
+    popoAutoArchiveNoDepartureConfirmV1 =>
+      FofoChatType.autoArchiveNoDepartureConfirm,
+    popoAutoArchiveAccountingFinV1 =>
+      FofoChatType.autoArchiveAccountingFinished,
+    popoAutoArchiveV1 => FofoChatType.autoArchive,
+    unknown => null,
   };
 }
 
@@ -60,13 +73,15 @@ enum PopoActionButtonType {
   taxiCallBtn,
   accountingRequestBtn,
   accountingInfoCheckBtn,
-  accountingProcessBtn;
+  accountingProcessBtn,
+  unknown;
 
-  FofoActionButtonType get fofoActionButtonType => switch (this) {
+  FofoActionButtonType? get fofoActionButtonType => switch (this) {
     departureConfirmBtn => FofoActionButtonType.departureConfirm,
     taxiCallBtn => FofoActionButtonType.taxiCall,
     accountingRequestBtn => FofoActionButtonType.accountingRequest,
     accountingInfoCheckBtn => FofoActionButtonType.accountingInfoCheck,
     accountingProcessBtn => FofoActionButtonType.accountingProcess,
+    unknown => null,
   };
 }

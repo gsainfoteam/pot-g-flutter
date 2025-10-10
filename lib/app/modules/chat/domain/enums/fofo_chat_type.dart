@@ -4,4 +4,7 @@ enum FofoChatType {
   reminderTaxiCall,
   accountingReminder,
   accountingRequest,
+  autoArchiveNoDepartureConfirm,
+  autoArchiveAccountingFinished,
+  autoArchive,
 }
