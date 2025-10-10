@@ -19,7 +19,7 @@ class LogObserver extends AutoRouterObserver {
   @override
   void didChangeTabRoute(TabPageRoute route, TabPageRoute previousRoute) {
     final pageName = route.routeInfo.meta['pageName'];
-    if (pageName != null) {
+    if (pageName is String) {
       L.setCurrentPage(pageName);
     }
     super.didChangeTabRoute(route, previousRoute);
@@ -28,7 +28,7 @@ class LogObserver extends AutoRouterObserver {
   @override
   void didInitTabRoute(TabPageRoute route, TabPageRoute? previousRoute) {
     final pageName = route.routeInfo.meta['pageName'];
-    if (pageName != null) {
+    if (pageName is String) {
       L.setCurrentPage(pageName);
     }
     super.didInitTabRoute(route, previousRoute);
