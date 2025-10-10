@@ -1,13 +1,18 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
+import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
+import 'package:pot_g/app/modules/common/presentation/utils/log_page.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_app_bar.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_toggle.dart';
 import 'package:pot_g/app/values/text_styles.dart';
 import 'package:pot_g/gen/strings.g.dart';
 
 @RoutePage()
-class NotificationSettingPage extends StatelessWidget {
+class NotificationSettingPage extends StatelessWidget with LogPageStateless {
   const NotificationSettingPage({super.key});
+
+  @override
+  String get pageName => 'notificationSetting';
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +30,13 @@ class NotificationSettingPage extends StatelessWidget {
               description:
                   context.t.profile.notification_settings.all.description,
               value: true,
-              onChanged: (value) {},
+              onChanged: (value) {
+                L.c(
+                  'allNotification',
+                  from: 'notificationSetting',
+                  properties: {'value': value ? 'on' : 'off'},
+                );
+              },
             ),
             const SizedBox(height: 16),
             _NotificationOption(
@@ -33,7 +44,13 @@ class NotificationSettingPage extends StatelessWidget {
               description:
                   context.t.profile.notification_settings.chat.description,
               value: true,
-              onChanged: (value) {},
+              onChanged: (value) {
+                L.c(
+                  'chattingNotification',
+                  from: 'notificationSetting',
+                  properties: {'value': value ? 'on' : 'off'},
+                );
+              },
             ),
             const SizedBox(height: 16),
             _NotificationOption(
@@ -41,7 +58,13 @@ class NotificationSettingPage extends StatelessWidget {
               description:
                   context.t.profile.notification_settings.room.description,
               value: true,
-              onChanged: (value) {},
+              onChanged: (value) {
+                L.c(
+                  'roomNotification',
+                  from: 'notificationSetting',
+                  properties: {'value': value ? 'on' : 'off'},
+                );
+              },
             ),
           ],
         ),

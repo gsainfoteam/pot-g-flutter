@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pot_g/app/modules/auth/presentation/bloc/auth_bloc.dart';
+import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_pressable.dart';
 import 'package:pot_g/app/modules/user/domain/entities/self_user_entity.dart';
 import 'package:pot_g/app/router.gr.dart';
@@ -106,6 +107,7 @@ class _Inner extends StatelessWidget {
                 _MenuButton(
                   title: context.t.profile.account_number_settings.title,
                   onTap: () {
+                    L.c('bankAccount');
                     context.router.push(const AccountNumberSettingsRoute());
                   },
                 ),
@@ -113,6 +115,7 @@ class _Inner extends StatelessWidget {
                 _MenuButton(
                   title: context.t.profile.notification_settings.title,
                   onTap: () {
+                    L.c('notificationSetting');
                     context.router.push(const NotificationSettingRoute());
                   },
                 ),
@@ -120,6 +123,7 @@ class _Inner extends StatelessWidget {
                 _MenuButton(
                   title: context.t.profile.account_management.title,
                   onTap: () {
+                    L.c('accountSetting');
                     context.router.push(const AccountManagementRoute());
                   },
                 ),

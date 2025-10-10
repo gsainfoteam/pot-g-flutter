@@ -3,6 +3,8 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pot_g/app/modules/auth/presentation/bloc/auth_bloc.dart';
+import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
+import 'package:pot_g/app/modules/common/presentation/utils/log_page.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_app_bar.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_pressable.dart';
 import 'package:pot_g/app/router.gr.dart';
@@ -12,8 +14,11 @@ import 'package:pot_g/gen/strings.g.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 @RoutePage()
-class AccountManagementPage extends StatelessWidget {
+class AccountManagementPage extends StatelessWidget with LogPageStateless {
   const AccountManagementPage({super.key});
+
+  @override
+  String get pageName => 'accountSetting';
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +34,7 @@ class AccountManagementPage extends StatelessWidget {
             _Button(
               title: context.t.profile.account_management.logout,
               onTap: () async {
+                L.c('logout');
                 final result = await showOkCancelAlertDialog(
                   title:
                       context
@@ -49,7 +55,10 @@ class AccountManagementPage extends StatelessWidget {
             const SizedBox(height: 16),
             _Button(
               title: context.t.profile.account_management.withdraw,
-              onTap: () => launchUrl(Uri.parse('https://idp.gistory.me')),
+              onTap: () {
+                L.c('withdraw');
+                launchUrl(Uri.parse('https://idp.gistory.me'));
+              },
             ),
           ],
         ),

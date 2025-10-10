@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pot_g/app/di/locator.dart';
 import 'package:pot_g/app/modules/auth/presentation/bloc/auth_bloc.dart';
 import 'package:pot_g/app/modules/common/presentation/extensions/toast.dart';
+import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
 import 'package:pot_g/app/modules/common/presentation/utils/log_page.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_app_bar.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_bottom_sheet.dart';
@@ -24,6 +25,7 @@ class AccountNumberSettingsPage extends StatelessWidget with LogPageStateless {
   const AccountNumberSettingsPage({super.key});
 
   static void showAccountNumberSetting(BuildContext context) {
+    L.v('registerBankAlert');
     PotBottomSheet.show(context, _AlertDialog());
   }
 
@@ -33,7 +35,7 @@ class AccountNumberSettingsPage extends StatelessWidget with LogPageStateless {
   }
 
   @override
-  String get pageName => 'asdf';
+  String get pageName => 'bankAccount';
 }
 
 class _Layout extends StatelessWidget {
@@ -70,11 +72,12 @@ class _Layout extends StatelessWidget {
                   ),
                   Spacer(),
                   PotButton(
-                    onPressed:
-                        () =>
-                            AccountNumberSettingsPage.showAccountNumberSetting(
-                              context,
-                            ),
+                    onPressed: () {
+                      L.c('changeBankAccount');
+                      AccountNumberSettingsPage.showAccountNumberSetting(
+                        context,
+                      );
+                    },
                     size: PotButtonSize.small,
                     child: Text(
                       context
@@ -99,10 +102,10 @@ class _Layout extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               PotButton(
-                onPressed:
-                    () => AccountNumberSettingsPage.showAccountNumberSetting(
-                      context,
-                    ),
+                onPressed: () {
+                  L.c('registerBankAccount');
+                  AccountNumberSettingsPage.showAccountNumberSetting(context);
+                },
                 variant: PotButtonVariant.emphasized,
                 prefixIcon: Assets.icons.dollar.svg(
                   width: 24,
@@ -146,7 +149,9 @@ class _AlertDialog extends StatelessWidget {
         const SizedBox(height: 32),
         PotButton(
           onPressed: () {
+            L.c('registerBankContinue', from: 'registerBankAlert');
             context.router.pop();
+            L.v('selectBank', from: 'registerBankAlert');
             PotBottomSheet.show(context, _SelectBankDialog());
           },
           variant: PotButtonVariant.outlined,
@@ -204,10 +209,15 @@ class _SelectBankDialogState extends State<_SelectBankDialog> {
                   itemBuilder:
                       (_, index) => PotPressable(
                         hitTestBehavior: HitTestBehavior.opaque,
-                        onTap:
-                            () => setState(
-                              () => selectedBank = state.banks[index],
-                            ),
+                        onTap: () {
+                          L.c(
+                            'bank',
+                            from: 'selectBank',
+                            properties: {'bank': state.banks[index].name},
+                          );
+                          L.v('bankAccountNumber', from: 'selectBank');
+                          setState(() => selectedBank = state.banks[index]);
+                        },
                         child: SizedBox(
                           height: 48,
                           child: Row(
@@ -302,12 +312,15 @@ class _BankNumberState extends State<_BankNumber> {
             PotButton(
               onPressed:
                   controller.text.length > 5
-                      ? () => bloc.add(
-                        SetBankAccountEvent.set(
-                          widget.selectedBank,
-                          controller.text,
-                        ),
-                      )
+                      ? () {
+                        L.c('registerBankAccount', from: 'bankAccountNumber');
+                        bloc.add(
+                          SetBankAccountEvent.set(
+                            widget.selectedBank,
+                            controller.text,
+                          ),
+                        );
+                      }
                       : null,
               variant: PotButtonVariant.emphasized,
               child: Text(

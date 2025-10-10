@@ -27,8 +27,12 @@ class L {
   });
   static void v(
     String eventName, {
+    String? from,
     Map<String, dynamic> properties = const {},
-  }) => _log('view_$eventName', properties);
+  }) => _log('view_$eventName', {
+    ...properties,
+    if (from?.isNotEmpty ?? false) 'from': from,
+  });
 
   static void setUserId(String userId) => sl<LogRepository>().setUserId(userId);
 
