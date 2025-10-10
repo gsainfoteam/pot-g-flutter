@@ -233,6 +233,24 @@
         },
         "action": "Request Dutch Pay"
       }
+    },
+    "taxi_call": {
+      "title": "Call Taxi",
+      "description": "Call Taxi for $route speedily",
+      "actions": {
+        "kakao": "Call with KakaoT",
+        "uber": "Call with Uber Taxi",
+        "tmoney": "Call with Tmoney Onda"
+      }
+    },
+    "send_money": {
+      "title": "Send Money",
+      "description": "send $n won to host bank account $account",
+      "actions": {
+        "toss": "Send with Toss",
+        "kakao": "Send with KakaoPay",
+        "clipboard": "Copy to Clipboard"
+      }
     }
   }
 }

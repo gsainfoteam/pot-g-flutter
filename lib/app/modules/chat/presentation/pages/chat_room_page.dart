@@ -2,6 +2,7 @@ import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:pot_g/app/di/locator.dart';
@@ -289,7 +290,7 @@ class _ChatListState extends State<_ChatList> {
     );
   }
 
-  void _onAction(BuildContext context, FofoActionButtonType type) {
+  void _onAction(BuildContext context, FofoActionButtonType type) async {
     switch (type) {
       case FofoActionButtonType.departureConfirm:
         _SetDepartureTimeButton.setDepartureTime(context, widget.pot);
@@ -300,10 +301,74 @@ class _ChatListState extends State<_ChatList> {
       case FofoActionButtonType.accountingInfoCheck:
         Scaffold.of(context).openEndDrawer();
         break;
-      case FofoActionButtonType.accountingProcess:
       case FofoActionButtonType.taxiCall:
-        // TODO: implement these actions
+        // final result = await showAlertDialog(
+        //   context: context,
+        //   title: context.t.chat_room.taxi_call.title,
+        //   message: context.t.chat_room.taxi_call.description(
+        //     route: widget.pot.route.name,
+        //   ),
+        //   actions: [
+        //     AlertDialogAction(
+        //       key: 'kakao',
+        //       label: context.t.chat_room.taxi_call.actions.kakao,
+        //     ),
+        //     AlertDialogAction(
+        //       key: 'uber',
+        //       label: context.t.chat_room.taxi_call.actions.uber,
+        //     ),
+        //     AlertDialogAction(
+        //       key: 'tmoney',
+        //       label: context.t.chat_room.taxi_call.actions.tmoney,
+        //     ),
+        //   ],
+        // );
+        // if (result == null) return;
+        // switch (result) {
+        //   case 'kakao':
+        //     break;
+        //   case 'uber':
+        //     break;
+        //   case 'tmoney':
+        //     break;
+        // }
+        // TODO: implement this action
         context.showToast('service is not available yet');
+        break;
+      case FofoActionButtonType.accountingProcess:
+        final result = await showAlertDialog(
+          context: context,
+          title: context.t.chat_room.send_money.title,
+          message: context.t.chat_room.send_money.description(
+            // TODO: fix this
+            n: 0,
+            account: '1234567890',
+          ),
+          actions: [
+            // AlertDialogAction(
+            //   key: 'toss',
+            //   label: context.t.chat_room.send_money.actions.toss,
+            // ),
+            // AlertDialogAction(
+            //   key: 'kakao',
+            //   label: context.t.chat_room.send_money.actions.kakao,
+            // ),
+            AlertDialogAction(
+              key: 'clipboard',
+              label: context.t.chat_room.send_money.actions.clipboard,
+            ),
+          ],
+        );
+        if (result == null) return;
+        switch (result) {
+          case 'toss':
+          case 'kakao':
+            break;
+          case 'clipboard':
+            // TODO: fix this
+            Clipboard.setData(ClipboardData(text: ''));
+            break;
+        }
         break;
     }
   }
