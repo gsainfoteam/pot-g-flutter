@@ -155,7 +155,8 @@
         "taxi_call": "택시 호출하러 가기",
         "accounting_request": "정산 요청 하기",
         "accounting_info_check": "정산 내역 확인",
-        "accounting_process": "송금하러 가기"
+        "accounting_process": "송금하러 가기",
+        "unknown": "알 수 없음"
       }
     },
     "drawer": {

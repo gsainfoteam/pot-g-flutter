@@ -1,3 +1,4 @@
+import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/chat_entity.dart';
@@ -15,7 +16,7 @@ class FofoBubble extends StatelessWidget {
   final FofoChatEntity message;
   final void Function(FofoActionButtonType type) onAction;
 
-  String action(BuildContext context, FofoActionButtonType type) {
+  String action(BuildContext context, FofoActionButtonType? type) {
     final fofo = context.t.chat_room.fofo.actions;
     return switch (type) {
       FofoActionButtonType.departureConfirm => fofo.departure_confirm,
@@ -23,6 +24,7 @@ class FofoBubble extends StatelessWidget {
       FofoActionButtonType.accountingRequest => fofo.accounting_request,
       FofoActionButtonType.accountingInfoCheck => fofo.accounting_info_check,
       FofoActionButtonType.accountingProcess => fofo.accounting_process,
+      null => '',
     };
   }
 
@@ -64,7 +66,10 @@ class FofoBubble extends StatelessWidget {
                       (index, e) => [
                         if (index != 0) const SizedBox(height: 8),
                         PotButton(
-                          onPressed: () => onAction(e),
+                          onPressed:
+                              e != null
+                                  ? () => onAction(e)
+                                  : () => _onUnknownAction(context),
                           size: PotButtonSize.medium,
                           variant:
                               index == message.actionButtons.length - 1
@@ -78,6 +83,14 @@ class FofoBubble extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  void _onUnknownAction(BuildContext context) {
+    showOkAlertDialog(
+      context: context,
+      title: context.t.chat_room.fofo.unknown_action_alert.title,
+      message: context.t.chat_room.fofo.unknown_action_alert.description,
     );
   }
 }

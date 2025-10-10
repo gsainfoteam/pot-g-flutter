@@ -21,5 +21,5 @@ abstract class SystemMessageEntity implements Sendable {
 abstract class FofoChatEntity implements Sendable {
   FofoChatType? get type;
   String get content;
-  List<FofoActionButtonType> get actionButtons;
+  List<FofoActionButtonType?> get actionButtons;
 }

@@ -24,8 +24,7 @@ sealed class PopoChatV1Event with _$PopoChatV1Event implements PotEvent {
   FofoChat toEntity(DateTime timestamp) => FofoChat(
     type: popoChatType.fofoChatType,
     content: content,
-    actionButtons:
-        actionBtns.map((e) => e.fofoActionButtonType).nonNulls.toList(),
+    actionButtons: actionBtns.map((e) => e.fofoActionButtonType).toList(),
     createdAt: timestamp,
   );
 }
@@ -35,7 +34,7 @@ sealed class FofoChat with _$FofoChat implements FofoChatEntity {
   const factory FofoChat({
     required FofoChatType? type,
     required String content,
-    required List<FofoActionButtonType> actionButtons,
+    required List<FofoActionButtonType?> actionButtons,
     required DateTime createdAt,
   }) = _FofoChat;
 }

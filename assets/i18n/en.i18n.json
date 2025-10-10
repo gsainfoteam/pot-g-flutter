@@ -158,7 +158,12 @@
         "taxi_call": "Taxi Call",
         "accounting_request": "Accounting Request",
         "accounting_info_check": "Accounting Info Check",
-        "accounting_process": "Accounting Process"
+        "accounting_process": "Accounting Process",
+        "unknown": "Unknown"
+      },
+      "unknown_action_alert": {
+        "title": "Unknown Action",
+        "description": "This action is not available. Please update the app."
       }
     },
     "drawer": {
