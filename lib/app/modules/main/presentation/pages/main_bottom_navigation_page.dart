@@ -20,7 +20,8 @@ class MainBottomNavigationPage extends StatefulWidget {
       _MainBottomNavigationPageState();
 }
 
-class _MainBottomNavigationPageState extends State<MainBottomNavigationPage> {
+class _MainBottomNavigationPageState extends State<MainBottomNavigationPage>
+    with AutoRouteAwareStateMixin {
   @override
   Widget build(BuildContext context) {
     return AutoTabsRouter.tabBar(

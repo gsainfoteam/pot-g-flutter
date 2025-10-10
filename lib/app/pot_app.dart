@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -5,6 +6,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:pot_g/app/di/locator.dart';
 import 'package:pot_g/app/modules/auth/presentation/bloc/auth_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/pot_detail_bloc.dart';
+import 'package:pot_g/app/modules/common/presentation/utils/log_observer.dart';
 import 'package:pot_g/app/modules/core/presentation/bloc/route_list_bloc.dart';
 import 'package:pot_g/app/modules/socket/presentation/bloc/socket_auth_bloc.dart';
 import 'package:pot_g/app/router.dart';
@@ -25,7 +27,9 @@ class PotApp extends StatelessWidget {
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
         child: MaterialApp.router(
           theme: PotTheme.theme,
-          routerConfig: _appRouter.config(),
+          routerConfig: _appRouter.config(
+            navigatorObservers: () => [AutoRouteObserver(), LogObserver()],
+          ),
           locale: TranslationProvider.of(context).flutterLocale,
           supportedLocales: AppLocaleUtils.supportedLocales,
           localizationsDelegates: GlobalMaterialLocalizations.delegates,

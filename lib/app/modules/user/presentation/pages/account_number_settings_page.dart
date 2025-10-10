@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pot_g/app/di/locator.dart';
 import 'package:pot_g/app/modules/auth/presentation/bloc/auth_bloc.dart';
 import 'package:pot_g/app/modules/common/presentation/extensions/toast.dart';
+import 'package:pot_g/app/modules/common/presentation/utils/log_page.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_app_bar.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_bottom_sheet.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_button.dart';
@@ -19,7 +20,7 @@ import 'package:pot_g/gen/assets.gen.dart';
 import 'package:pot_g/gen/strings.g.dart';
 
 @RoutePage()
-class AccountNumberSettingsPage extends StatelessWidget {
+class AccountNumberSettingsPage extends StatelessWidget with LogPageStateless {
   const AccountNumberSettingsPage({super.key});
 
   static void showAccountNumberSetting(BuildContext context) {
@@ -30,6 +31,9 @@ class AccountNumberSettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return _Layout();
   }
+
+  @override
+  String get pageName => 'asdf';
 }
 
 class _Layout extends StatelessWidget {
