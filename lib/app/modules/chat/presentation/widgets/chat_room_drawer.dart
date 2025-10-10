@@ -7,6 +7,7 @@ import 'package:pot_g/app/modules/chat/presentation/bloc/pot_info_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/pot_accounting.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/pot_info.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/pot_users.dart';
+import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_pressable.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
@@ -59,6 +60,7 @@ class ChatRoomDrawer extends StatelessWidget {
   }
 
   Future<void> _leave(BuildContext context) async {
+    L.c('leave', properties: {'roomId': pot.id});
     if (pot.departureTime != null) {
       showOkAlertDialog(
         context: context,

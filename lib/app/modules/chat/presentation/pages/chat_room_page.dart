@@ -18,6 +18,8 @@ import 'package:pot_g/app/modules/chat/presentation/widgets/chat_room_drawer.dar
 import 'package:pot_g/app/modules/chat/presentation/widgets/fofo_bubble.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/system_message.dart';
 import 'package:pot_g/app/modules/common/presentation/extensions/toast.dart';
+import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
+import 'package:pot_g/app/modules/common/presentation/utils/log_page.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/error_cover.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/general_dialog.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_app_bar.dart';
@@ -31,8 +33,11 @@ import 'package:pot_g/gen/assets.gen.dart';
 import 'package:pot_g/gen/strings.g.dart';
 
 @RoutePage()
-class ChatRoomPage extends StatelessWidget {
+class ChatRoomPage extends StatelessWidget with LogPageStateless {
   const ChatRoomPage({super.key, required this.pot});
+
+  @override
+  String get pageName => 'chatRoom';
 
   final PotDetailEntity pot;
 
@@ -87,6 +92,11 @@ class _Layout extends StatelessWidget {
     return Scaffold(
       backgroundColor: disabled ? Palette.borderGrey : null,
       appBar: PotAppBar(title: Text(pot.name)),
+      onEndDrawerChanged: (value) {
+        if (value) {
+          L.c('sidebar');
+        }
+      },
       endDrawer: ChatRoomDrawer(pot: pot),
       body: Column(
         children: [
@@ -155,6 +165,7 @@ class _SetDepartureTimeButton extends StatelessWidget {
       );
       return;
     }
+    L.v('setDepartureTime');
     DateTime date = DateTime.now();
     final result = await showGeneralOkCancelAdaptiveDialog(
       context: context,
@@ -171,6 +182,7 @@ class _SetDepartureTimeButton extends StatelessWidget {
     );
     if (result != OkCancelResult.ok) return;
     if (!context.mounted) return;
+    L.v('departureTimeConfirm', from: 'setDepartureTime');
     final result2 = await showOkCancelAlertDialog(
       context: context,
       title: context.t.chat_room.set_departure_time.confirm.title,
@@ -180,6 +192,7 @@ class _SetDepartureTimeButton extends StatelessWidget {
       ),
     );
     if (result2 != OkCancelResult.ok) return;
+    L.c('confirmDepartureTime', from: 'departureTimeConfirm');
     if (!context.mounted) return;
     context.read<PotInfoBloc>().add(PotInfoEvent.setDepartureTime(date));
   }
@@ -191,6 +204,7 @@ class _SetDepartureTimeButton extends StatelessWidget {
         colorFilter: ColorFilter.mode(Palette.grey, BlendMode.srcIn),
       ),
       onPressed: () async {
+        L.c('setDepartureTime');
         await setDepartureTime(context, pot);
       },
     );
@@ -453,6 +467,7 @@ class _ChatInputState extends State<_ChatInput> {
               ),
             ),
             onPressed: () {
+              L.c('sendMessage');
               context.read<ChatBloc>().add(ChatSendChat(_controller.text));
               _controller.clear();
             },
