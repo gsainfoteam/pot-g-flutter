@@ -2,7 +2,9 @@ import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
+import 'package:pot_g/app/modules/chat/domain/enums/pot_status.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/pot_info_bloc.dart';
+import 'package:pot_g/app/modules/chat/presentation/widgets/pot_accounting.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/pot_info.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/pot_users.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_pressable.dart';
@@ -28,7 +30,10 @@ class ChatRoomDrawer extends StatelessWidget {
               const SizedBox(height: 20),
               Container(height: 1, color: Palette.borderGrey2),
               const SizedBox(height: 20),
-              PotUsers(pot: pot),
+              if (pot.status == PotStatus.waitAccounting)
+                PotAccounting(pot: pot)
+              else
+                PotUsers(pot: pot),
               Spacer(),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
