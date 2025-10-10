@@ -13,16 +13,14 @@ import 'package:pot_g/app/modules/chat/presentation/bloc/chat_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/pot_info_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/extensions/pot_user_extension.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/chat_bubble.dart';
+import 'package:pot_g/app/modules/chat/presentation/widgets/chat_room_drawer.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/fofo_bubble.dart';
-import 'package:pot_g/app/modules/chat/presentation/widgets/pot_info.dart';
-import 'package:pot_g/app/modules/chat/presentation/widgets/pot_users.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/system_message.dart';
 import 'package:pot_g/app/modules/common/presentation/extensions/toast.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/error_cover.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/general_dialog.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_app_bar.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_icon_button.dart';
-import 'package:pot_g/app/modules/common/presentation/widgets/pot_pressable.dart';
 import 'package:pot_g/app/modules/core/domain/entities/pot_detail_entity.dart';
 import 'package:pot_g/app/modules/core/domain/entities/route_entity.dart';
 import 'package:pot_g/app/router.gr.dart';
@@ -81,40 +79,7 @@ class _Layout extends StatelessWidget {
     final pot = state.pot!;
     return Scaffold(
       appBar: PotAppBar(title: Text(pot.name)),
-      endDrawer: Drawer(
-        child: SafeArea(
-          child: Padding(
-            padding: EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                PotInfo(pot: pot),
-                const SizedBox(height: 20),
-                Container(height: 1, color: Palette.borderGrey2),
-                const SizedBox(height: 20),
-                PotUsers(pot: pot),
-                Spacer(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    PotPressable(
-                      onTap: () => _leave(context),
-                      child: Text(
-                        context.t.chat_room.drawer.actions.leave.action,
-                        style: TextStyles.caption.copyWith(
-                          color: Palette.grey,
-                          decoration: TextDecoration.underline,
-                          decorationColor: Palette.grey,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
+      endDrawer: ChatRoomDrawer(pot: pot),
       body: Column(
         children: [
           Expanded(child: _ChatList(pot: pot)),
@@ -133,17 +98,6 @@ class _Layout extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  Future<void> _leave(BuildContext context) async {
-    final result = await showOkCancelAlertDialog(
-      context: context,
-      title: context.t.chat_room.drawer.actions.leave.confirm.title,
-      message: context.t.chat_room.drawer.actions.leave.confirm.description,
-    );
-    if (result != OkCancelResult.ok) return;
-    if (!context.mounted) return;
-    context.read<PotInfoBloc>().add(PotInfoEvent.leavePot());
   }
 }
 
