@@ -178,6 +178,16 @@
         "departure_date": "Departure Date",
         "departure_time": "Departure Time"
       },
+      "accounting": {
+        "amount": "Accounting Amount",
+        "status_title": "Accounting Status",
+        "status": {
+          "before": "Accounting",
+          "payer": "Payer",
+          "not_requested": "Not Requested"
+        },
+        "edit_payer_only": "Accounting status can only be edited by the payer"
+      },
       "members": {
         "my": "my",
         "passenger": "passengers",

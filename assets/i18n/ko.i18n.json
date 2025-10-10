@@ -175,6 +175,16 @@
         "departure_date": "출발 날짜",
         "departure_time": "출발 시간"
       },
+      "accounting": {
+        "amount": "정산 금액",
+        "status_title": "정산 현황",
+        "status": {
+          "before": "정산 중",
+          "payer": "결제자",
+          "not_requested": "미요청"
+        },
+        "edit_payer_only": "정산 현황은 결제자만 수정할 수 있어요"
+      },
       "members": {
         "my": "my",
         "passenger": "동승자",
