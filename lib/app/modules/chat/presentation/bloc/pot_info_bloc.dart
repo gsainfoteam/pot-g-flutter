@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
+import 'package:pot_g/app/modules/chat/data/models/accounting_result_model.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_user_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/repositories/pot_info_repository.dart';
@@ -18,6 +19,7 @@ class PotInfoBloc extends Bloc<PotInfoEvent, PotInfoState> {
     on<_LeavePot>(_onLeavePot);
     on<_KickUser>(_onKickUser);
     on<_Accounting>(_onAccounting);
+    on<_ConfirmAccounting>(_onConfirmAccounting);
   }
 
   Future<void> _onInit(_Init event, Emitter<PotInfoState> emit) async {
@@ -74,6 +76,23 @@ class PotInfoBloc extends Bloc<PotInfoEvent, PotInfoState> {
       emit(PotInfoState.loaded(pot));
     }
   }
+
+  Future<void> _onConfirmAccounting(
+    _ConfirmAccounting event,
+    Emitter<PotInfoState> emit,
+  ) async {
+    if (state.pot == null) return;
+    final pot = state.pot!;
+    try {
+      emit(const PotInfoState.loading());
+      await _repository.confirmAccounting(pot, event.accountingResults);
+      emit(const PotInfoState.accountingConfirmSuccess());
+    } catch (e) {
+      emit(PotInfoState.error(e.toString()));
+    } finally {
+      emit(PotInfoState.loaded(pot));
+    }
+  }
 }
 
 @freezed
@@ -87,6 +106,9 @@ sealed class PotInfoEvent with _$PotInfoEvent {
     int amount,
     List<PotUserEntity> targets,
   ) = _Accounting;
+  const factory PotInfoEvent.confirmAccounting(
+    List<AccountingResultModel> accountingResults,
+  ) = _ConfirmAccounting;
 }
 
 @freezed
@@ -95,6 +117,8 @@ sealed class PotInfoState with _$PotInfoState {
   const factory PotInfoState.loading() = _Loading;
   const factory PotInfoState.loaded(PotInfoEntity pot) = _Loaded;
   const factory PotInfoState.accountingSuccess() = AccountingSuccess;
+  const factory PotInfoState.accountingConfirmSuccess() =
+      AccountingConfirmSuccess;
   const factory PotInfoState.error(String message) = _Error;
 
   PotInfoEntity? get pot => switch (this) {

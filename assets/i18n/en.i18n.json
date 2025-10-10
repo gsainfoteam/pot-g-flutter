@@ -187,7 +187,8 @@
           "done": "Done",
           "not_requested": "Not Requested"
         },
-        "edit_payer_only": "Accounting status can only be edited by the payer"
+        "edit_payer_only": "Accounting status can only be edited by the payer",
+        "save": "Save"
       },
       "members": {
         "my": "my",

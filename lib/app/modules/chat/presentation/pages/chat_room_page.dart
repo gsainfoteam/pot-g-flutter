@@ -333,9 +333,9 @@ class _ChatListState extends State<_ChatList> {
         break;
       case FofoActionButtonType.accountingProcess:
         final accountingInfo = widget.pot.accountingInfo;
-        if (!accountingInfo.requestedUsers.contains(
-          AuthBloc.userOf(context)?.id,
-        )) {
+        if (!accountingInfo.accountingResults
+            .map((e) => e.userPk)
+            .contains(AuthBloc.userOf(context)?.id)) {
           showOkAlertDialog(
             context: context,
             title: context.t.chat_room.fofo.accounting.not_requested.title,

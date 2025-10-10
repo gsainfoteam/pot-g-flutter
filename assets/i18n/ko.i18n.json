@@ -184,7 +184,8 @@
           "done": "정산 완료",
           "not_requested": "미요청"
         },
-        "edit_payer_only": "정산 현황은 결제자만 수정할 수 있어요"
+        "edit_payer_only": "정산 현황은 결제자만 수정할 수 있어요",
+        "save": "저장"
       },
       "members": {
         "my": "my",
