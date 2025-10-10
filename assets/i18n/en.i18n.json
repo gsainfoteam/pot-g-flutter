@@ -6,8 +6,7 @@
   },
   "unauthorized": {
     "title": "Login to continue",
-    "description": "To access your information, you need to login.\nWould you like to login?",
-    "button": "Login"
+    "description": "To access your information, you need to login.\nWould you like to login?"
   },
   "profile": {
     "menu_title": "My Profile",

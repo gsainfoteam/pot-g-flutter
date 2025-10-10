@@ -1,0 +1,235 @@
+{
+  "name": "팟쥐",
+  "common": {
+    "confirm": "확인",
+    "cancel": "취소"
+  },
+  "unauthorized": {
+    "title": "로그인 하러 가시겠습니까?",
+    "description": "내 정보에 접근하려면 로그인이 필요합니다.\n로그인 하러 가시겠습니까?"
+  },
+  "profile": {
+    "menu_title": "내 정보",
+    "basic_info": {
+      "title": "내 정보",
+      "name": "이름",
+      "email": "이메일",
+      "description": "이름과 이메일은 변경할 수 없습니다"
+    },
+    "settings": {
+      "title": "설정"
+    },
+    "notification_settings": {
+      "title": "알림 설정",
+      "all": {
+        "title": "전체 알림",
+        "description": "팟쥐가 보내는 모든 알림"
+      },
+      "chat": {
+        "title": "채팅 알림",
+        "description": "참여중인 팟의 채팅 알림"
+      },
+      "room": {
+        "title": "입/퇴장 알림",
+        "description": "참여중인 팟의 멤버 변동 알림"
+      }
+    },
+    "account_number_settings": {
+      "title": "정산 계좌 설정",
+      "default_account": "기본 계좌",
+      "no_account": {
+        "description": "기본 계좌를 등록하면 매번 계좌를 입력할 필요 없이 간편하고 빠르게 정산을 요청할 수 있어요",
+        "button": "계좌 등록"
+      },
+      "has_account": {
+        "change": "변경"
+      },
+      "alert": {
+        "title": "주의!\n본인 명의의 계좌를 등록하세요",
+        "description": "등록된 이름과 예금주가 다를 경우\n정산에 혼동이 발생할 수 있습니다",
+        "next": "알겠습니다"
+      },
+      "select_bank": {
+        "bank": "은행",
+        "placeholder": "은행 검색"
+      },
+      "bank_number": {
+        "register": "등록",
+        "placeholder": "계좌 입력"
+      }
+    },
+    "account_management": {
+      "title": "계정 설정",
+      "logout": "로그아웃",
+      "withdraw": "회원탈퇴",
+      "logout_dialog": {
+        "description": "로그아웃 하시겠습니까?"
+      }
+    }
+  },
+  "list": {
+    "title": "팟 검색",
+    "empty": {
+      "description": "해당 조건의 택시 팟이\n존재하지 않습니다",
+      "button": "새 팟 만들기"
+    },
+    "filters": {
+      "date": {
+        "all": "전체 날짜",
+        "select": "선택"
+      },
+      "route": {
+        "all": "전체 노선"
+      }
+    },
+    "reached_all": "모든 팟을 확인하셨습니다",
+    "enter": {
+      "title": "입장하시겠습니까?",
+      "route": "노선",
+      "date": "날짜",
+      "departure_time": "시간",
+      "passengers": "참여자 목록"
+    }
+  },
+  "create": {
+    "menu_title": "팟 생성",
+    "title": "새 팟 생성",
+    "action": "새 팟 생성",
+    "info": {
+      "title": "택시 팟 정보",
+      "fields": {
+        "route": {
+          "label": "노선",
+          "placeholder": "노선 선택"
+        },
+        "date": {
+          "label": "날짜",
+          "placeholder": "날짜 선택"
+        }
+      }
+    },
+    "capacity": {
+      "title": "택시 팟 최대 인원",
+      "description": "택시팟의 최대 인원 수를 설정하세요",
+      "fields": {
+        "max_capacity": {
+          "item": "$n명"
+        }
+      }
+    },
+    "time_interval": {
+      "title": "출발 가능 시간대",
+      "description": "출발 가능한 가장 이른 시각과 가장 늦은 시각을 설정하세요",
+      "fields": {
+        "start_time": {
+          "from": "부터",
+          "input_first": "true"
+        },
+        "end_time": {
+          "to": "까지",
+          "input_first": "true"
+        }
+      }
+    }
+  },
+  "chat": {
+    "title": "채팅",
+    "menu_title": "채팅방"
+  },
+  "chat_room": {
+    "system_messages": {
+      "user_in": {
+        "description": "$user 님이 입장하셨습니다"
+      },
+      "user_leave": {
+        "description": "$user 님이 나갔습니다"
+      },
+      "user_kicked": {
+        "description": "$user 님이 팟에서 제외되었습니다"
+      }
+    },
+    "fofo": {
+      "name": "알림",
+      "actions": {
+        "departure_confirm": "출발 시간 확정하러 가기",
+        "taxi_call": "택시 호출하러 가기",
+        "accounting_request": "정산 요청 하기",
+        "accounting_info_check": "정산 내역 확인",
+        "accounting_process": "송금하러 가기"
+      }
+    },
+    "drawer": {
+      "pot_info": {
+        "route_info": "노선 정보",
+        "departure_date": "출발 날짜",
+        "departure_time": "출발 시간"
+      },
+      "members": {
+        "my": "my",
+        "passenger": "동승자",
+        "kick": {
+          "action": "강퇴",
+          "confirm": {
+            "title": "동승자를 강퇴할까요?",
+            "description(rich)": "$user를 강퇴할까요?\n불합리한 강퇴일 경우\n신고를 당할 수 있습니다"
+          }
+        },
+        "invite": "초대하기",
+        "host": "방장"
+      },
+      "actions": {
+        "leave": {
+          "action": "퇴장하기",
+          "confirm": {
+            "title": "퇴장하시겠습니까?",
+            "description": "출발 시간 확정 이전에는\n자유로운 퇴장이 가능합니다\n퇴장하시겠습니까?"
+          }
+        },
+        "report": "신고하기"
+      }
+    },
+    "set_departure_time": {
+      "clock": {
+        "title": "출발 시간을 확정하세요"
+      },
+      "confirm": {
+        "title": "확정하시겠습니까?",
+        "description": "$route 택시팟의 출발 시간을\n$time로 확정하시겠습니까?\n시간 확정 이후에는 시간, 파티원 등을\n변경할 수 없습니다."
+      },
+      "host_only": {
+        "description": "이 기능은 방장만 사용할 수 있습니다."
+      },
+      "already_set": {
+        "description": "출발 시간이 이미 확정되었습니다."
+      }
+    },
+    "accounting": {
+      "host_only": {
+        "description": "이 기능은 방장만 사용할 수 있습니다."
+      },
+      "dutch": {
+        "title": "정산하기",
+        "fields": {
+          "amount": {
+            "label": "정산 금액",
+            "value": "$n원"
+          },
+          "account_not_registered": {
+            "label": "기본 계좌를 등록하세요",
+            "description": "기본 계좌를 아직 등록하지 않으셨네요.\n기본 계좌를 등록해야 정산을 요청할 수 있어요.",
+            "action": "계좌 등록"
+          },
+          "account": {
+            "label": "정산 계좌",
+            "description": "등록하신 기본 계좌로 정산을 요청할게요.",
+            "action": "변경"
+          },
+          "target": {
+            "label": "정산 대상"
+          }
+        },
+        "action": "정산 요청"
+      }
+    }
+  }
+}
