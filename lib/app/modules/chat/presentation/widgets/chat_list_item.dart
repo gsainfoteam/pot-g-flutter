@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intersperse/intersperse.dart';
 import 'package:intl/intl.dart';
 import 'package:pot_g/app/modules/chat/domain/enums/pot_status.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_pressable.dart';
@@ -22,6 +23,22 @@ class ChatListItem extends StatelessWidget {
         pot.status == PotStatus.archived ? Palette.grey : Palette.dark;
     final textColorDescription =
         pot.status == PotStatus.archived ? Palette.grey : Palette.textGrey;
+
+    Widget field({required String label, required String value}) {
+      return Row(
+        children: [
+          Text(
+            label,
+            style: TextStyles.description.copyWith(color: textColorTitle),
+          ),
+          const SizedBox(width: 8),
+          Text(
+            value,
+            style: TextStyles.description.copyWith(color: textColorDescription),
+          ),
+        ],
+      );
+    }
 
     return PotPressable(
       onTap: () => ChatRoomRoute(pot: pot).push(context),
@@ -49,90 +66,32 @@ class ChatListItem extends StatelessWidget {
             children: [
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '팟 정보',
-                    style: TextStyles.caption.copyWith(color: Palette.grey),
-                  ),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
+                children:
+                    [
                       Text(
-                        '노선',
-                        style: TextStyles.description.copyWith(
-                          color: textColorTitle,
-                        ),
+                        '팟 정보',
+                        style: TextStyles.caption.copyWith(color: Palette.grey),
                       ),
-                      const SizedBox(width: 8),
-                      Text(
-                        pot.route.name,
-                        style: TextStyles.description.copyWith(
-                          color: textColorDescription,
-                        ),
+                      field(label: '노선', value: pot.route.name),
+                      field(
+                        label: '날짜',
+                        value: DateFormat.yMd().add_E().format(pot.startsAt),
                       ),
-                    ],
-                  ),
-                  const SizedBox(height: 4),
-                  Row(
-                    children: [
-                      Text(
-                        '날짜',
-                        style: TextStyles.description.copyWith(
-                          color: textColorTitle,
-                        ),
+                      field(
+                        label: '시간',
+                        value:
+                            pot.status == PotStatus.beforeConfirmed
+                                ? '${DateFormat.Hm().format(pot.startsAt)}~${DateFormat.Hm().format(pot.endsAt)}'
+                                : DateFormat.Hm().format(pot.startsAt),
                       ),
-                      const SizedBox(width: 8),
-                      Text(
-                        DateFormat.yMd().add_E().format(pot.startsAt),
-                        style: TextStyles.description.copyWith(
-                          color: textColorDescription,
+                      if (pot.status == PotStatus.waitAccounting ||
+                          pot.status == PotStatus.archived)
+                        field(
+                          label: '정산',
+                          value:
+                              '${NumberFormat('#,###').format(pot.accountingRequested)}원',
                         ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 4),
-                  Row(
-                    children: [
-                      Text(
-                        '시간',
-                        style: TextStyles.description.copyWith(
-                          color: textColorTitle,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        pot.status == PotStatus.beforeConfirmed
-                            ? '${DateFormat.Hm().format(pot.startsAt)}~${DateFormat.Hm().format(pot.endsAt)}'
-                            : DateFormat.Hm().format(pot.startsAt),
-                        style: TextStyles.description.copyWith(
-                          color: textColorDescription,
-                        ),
-                      ),
-                    ],
-                  ),
-                  if (pot.status == PotStatus.waitAccounting ||
-                      pot.status == PotStatus.archived)
-                    const SizedBox(height: 4),
-                  if (pot.status == PotStatus.waitAccounting ||
-                      pot.status == PotStatus.archived)
-                    Row(
-                      children: [
-                        Text(
-                          '정산',
-                          style: TextStyles.description.copyWith(
-                            color: textColorTitle,
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          '${NumberFormat('#,###').format(pot.accountingRequested)}원',
-                          style: TextStyles.description.copyWith(
-                            color: textColorDescription,
-                          ),
-                        ),
-                      ],
-                    ),
-                ],
+                    ].intersperse(const SizedBox(height: 4)).toList(),
               ),
               Positioned(
                 right: 0,
