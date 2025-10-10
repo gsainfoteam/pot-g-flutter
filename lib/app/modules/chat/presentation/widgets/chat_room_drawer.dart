@@ -54,6 +54,14 @@ class ChatRoomDrawer extends StatelessWidget {
   }
 
   Future<void> _leave(BuildContext context) async {
+    if (pot.departureTime != null) {
+      showOkAlertDialog(
+        context: context,
+        title: context.t.chat_room.drawer.members.departure_confirmed,
+        message: context.t.chat_room.drawer.actions.leave.departure_confirmed,
+      );
+      return;
+    }
     final result = await showOkCancelAlertDialog(
       context: context,
       title: context.t.chat_room.drawer.actions.leave.confirm.title,
