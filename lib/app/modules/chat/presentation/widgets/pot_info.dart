@@ -29,7 +29,9 @@ class PotInfo extends StatelessWidget {
         _Field(
           label: context.t.chat_room.drawer.pot_info.departure_time,
           value:
-              '${DateFormat.Hm().format(pot.startsAt)}~${DateFormat.Hm().format(pot.endsAt)}',
+              pot.departureTime != null
+                  ? DateFormat.Hm().format(pot.departureTime!)
+                  : '${DateFormat.Hm().format(pot.startsAt)}~${DateFormat.Hm().format(pot.endsAt)}',
         ),
       ],
     );
