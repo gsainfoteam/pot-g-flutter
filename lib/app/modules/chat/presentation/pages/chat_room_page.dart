@@ -56,6 +56,11 @@ class ChatRoomPage extends StatelessWidget {
                 (context, state) =>
                     context.read<ChatBloc>().add(ChatInit(state.pot!)),
           ),
+          BlocListener<ChatBloc, ChatState>(
+            listenWhen:
+                (prev, curr) => prev.error != curr.error && curr.error != null,
+            listener: (context, state) => context.showToast(state.error!),
+          ),
         ],
         child: BlocBuilder<PotInfoBloc, PotInfoState>(
           builder: (context, state) {

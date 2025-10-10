@@ -94,4 +94,8 @@ sealed class ChatState with _$ChatState {
     ChatLoaded() => false,
     _ => false,
   };
+  String? get error => switch (this) {
+    ChatError(:final message) => message,
+    _ => null,
+  };
 }
