@@ -17,6 +17,7 @@ class ChatPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Palette.lightGrey,
       appBar: PotAppBar(title: Text(context.t.chat.title)),
       body: BlocBuilder<PotDetailBloc, PotDetailState>(
         builder: (context, state) {
@@ -28,14 +29,9 @@ class ChatPage extends StatelessWidget {
             return Center(child: Text('Error: ${state.error}'));
           }
 
-          return Container(
-            color: Palette.lightGrey,
-            child: SafeArea(
-              child: _ChatListView(
-                activePots: state.activePotList,
-                closedPots: state.archivedPotList,
-              ),
-            ),
+          return _ChatListView(
+            activePots: state.activePotList,
+            closedPots: state.archivedPotList,
           );
         },
       ),
@@ -60,12 +56,8 @@ class _ChatListViewState extends State<_ChatListView> {
     final hasActivePots = widget.activePots.isNotEmpty;
 
     return SingleChildScrollView(
-      padding: EdgeInsets.fromLTRB(
-        16,
-        20,
-        16,
-        MediaQuery.of(context).size.height * 0.3,
-      ),
+      clipBehavior: Clip.none,
+      padding: EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -131,19 +123,13 @@ class _ChatListViewState extends State<_ChatListView> {
             ),
           ),
 
-          AnimatedSwitcher(
+          AnimatedSize(
             duration: const Duration(milliseconds: 200),
-            transitionBuilder: (child, animation) {
-              return SizeTransition(
-                sizeFactor: animation,
-                axis: Axis.vertical,
-                child: child,
-              );
-            },
+            alignment: Alignment.topCenter,
+            curve: Curves.easeInOut,
             child:
                 _showClosed
                     ? Column(
-                      key: const ValueKey('closedList'),
                       children: [
                         ...widget.closedPots.expand(
                           (e) => [
@@ -153,7 +139,7 @@ class _ChatListViewState extends State<_ChatListView> {
                         ),
                       ],
                     )
-                    : const SizedBox.shrink(key: ValueKey('empty')),
+                    : const SizedBox(width: double.infinity, height: 0),
           ),
         ],
       ),
