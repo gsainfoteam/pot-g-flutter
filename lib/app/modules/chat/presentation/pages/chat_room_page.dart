@@ -336,13 +336,16 @@ class _ChatListState extends State<_ChatList> {
         context.showToast('service is not available yet');
         break;
       case FofoActionButtonType.accountingProcess:
+        final accountingInfo = widget.pot.accountingInfo;
+        final bank = '${accountingInfo.bankName} ${accountingInfo.bankAccount}';
         final result = await showAlertDialog(
           context: context,
           title: context.t.chat_room.send_money.title,
           message: context.t.chat_room.send_money.description(
-            // TODO: fix this
-            n: 0,
-            account: '1234567890',
+            n: NumberFormat.decimalPattern().format(
+              accountingInfo.totalCost ?? 0,
+            ),
+            account: bank,
           ),
           actions: [
             // AlertDialogAction(
@@ -365,8 +368,7 @@ class _ChatListState extends State<_ChatList> {
           case 'kakao':
             break;
           case 'clipboard':
-            // TODO: fix this
-            Clipboard.setData(ClipboardData(text: ''));
+            Clipboard.setData(ClipboardData(text: bank));
             break;
         }
         break;
