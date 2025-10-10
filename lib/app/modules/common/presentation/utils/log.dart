@@ -12,14 +12,19 @@ class L {
   static void _log(String eventName, Map<String, dynamic> properties) =>
       sl<LogRepository>().logEvent(eventName, {
         ...properties,
-        'from': _currentPage,
+        if (_currentPage.isNotEmpty && !properties.containsKey('from'))
+          'from': _currentPage,
       });
 
   /// Click log
   static void c(
     String eventName, {
+    String? from,
     Map<String, dynamic> properties = const {},
-  }) => _log('click_$eventName', properties);
+  }) => _log('click_$eventName', {
+    ...properties,
+    if (from?.isNotEmpty ?? false) 'from': from,
+  });
   static void v(
     String eventName, {
     Map<String, dynamic> properties = const {},
