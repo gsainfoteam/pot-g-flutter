@@ -28,11 +28,18 @@ class PotAccounting extends StatelessWidget {
       if (!meRequesting) pot.accountingInfo.requestingUser,
     ].map((id) => pot.usersInfo.users.firstWhere((u) => (u.id == id)));
 
-    return BlocProvider(
-      create:
-          (context) =>
-              sl<AccountingConfirmCubit>()
-                ..loadInitialState(pot.accountingInfo.accountingResults),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create:
+              (context) =>
+                  sl<AccountingConfirmCubit>()
+                    ..loadInitialState(pot.accountingInfo.accountingResults),
+        ),
+        BlocProvider(
+          create: (context) => sl<PotInfoBloc>()..add(PotInfoEvent.init(pot)),
+        ),
+      ],
       child: BlocListener<PotInfoBloc, PotInfoState>(
         listener: (context, state) {
           if (state is AccountingConfirmSuccess) {
