@@ -11,6 +11,7 @@ import 'package:pot_g/gen/strings.g.dart';
 
 Future<void> main() async {
   final binding = WidgetsFlutterBinding.ensureInitialized();
+  LocaleSettings.useDeviceLocale();
   FlutterNativeSplash.preserve(widgetsBinding: binding);
   if (kDebugMode) {
     Bloc.observer = AppBlocObserver();
