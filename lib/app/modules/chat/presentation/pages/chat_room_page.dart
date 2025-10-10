@@ -298,6 +298,8 @@ class _ChatListState extends State<_ChatList> {
         _AccountingButton.setAccounting(context, widget.pot);
         break;
       case FofoActionButtonType.accountingInfoCheck:
+        Scaffold.of(context).openEndDrawer();
+        break;
       case FofoActionButtonType.accountingProcess:
       case FofoActionButtonType.taxiCall:
         // TODO: implement these actions
