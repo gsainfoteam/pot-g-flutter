@@ -4,6 +4,7 @@ import 'package:injectable/injectable.dart';
 import 'package:pot_g/app/modules/chat/data/models/accounting_result_model.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_user_entity.dart';
+import 'package:pot_g/app/modules/chat/domain/enums/pot_status.dart';
 import 'package:pot_g/app/modules/chat/domain/repositories/pot_info_repository.dart';
 import 'package:pot_g/app/modules/core/domain/entities/pot_id_entity.dart';
 
@@ -128,5 +129,9 @@ sealed class PotInfoState with _$PotInfoState {
   String? get error => switch (this) {
     _Error(:final message) => message,
     _ => null,
+  };
+  bool get isArchived => switch (this) {
+    _Loaded(:final pot) => pot.status == PotStatus.archived,
+    _ => false,
   };
 }

@@ -83,7 +83,9 @@ class _Layout extends StatelessWidget {
     if (state.error != null) return ErrorCover(message: state.error!);
     if (state.pot == null) return Scaffold();
     final pot = state.pot!;
+    final disabled = state.isArchived;
     return Scaffold(
+      backgroundColor: disabled ? Palette.borderGrey : null,
       appBar: PotAppBar(title: Text(pot.name)),
       endDrawer: ChatRoomDrawer(pot: pot),
       body: Column(
@@ -410,12 +412,16 @@ class _ChatInputState extends State<_ChatInput> {
 
   @override
   Widget build(BuildContext context) {
+    final disabled = context.select<PotInfoBloc, bool>(
+      (bloc) => bloc.state.isArchived,
+    );
     return Container(
       padding: EdgeInsets.symmetric(vertical: 8),
       child: Row(
         children: [
           Expanded(
             child: TextField(
+              enabled: !disabled,
               controller: _controller,
               style: TextStyles.description.copyWith(
                 height: 19 / 16,
