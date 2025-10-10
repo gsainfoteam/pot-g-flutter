@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:pot_g/app/modules/chat/data/models/pot_users_info_model.dart';
+import 'package:pot_g/app/modules/core/data/converter/date_time_converter.dart';
 import 'package:pot_g/app/modules/core/data/models/route_model.dart';
 import 'package:pot_g/app/modules/list/domain/entities/pot_overview_entity.dart';
 
@@ -14,8 +15,8 @@ sealed class PotOverviewModel
     required String id,
     required String name,
     required RouteModel route,
-    required DateTime startsAt,
-    required DateTime endsAt,
+    @dateTimeConverter required DateTime startsAt,
+    @dateTimeConverter required DateTime endsAt,
     required PotUsersInfoModel usersInfo,
   }) = _PotOverviewModel;
 
