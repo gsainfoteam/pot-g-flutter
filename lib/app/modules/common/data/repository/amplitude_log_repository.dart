@@ -1,14 +1,35 @@
 import 'package:amplitude_flutter/amplitude.dart';
 import 'package:amplitude_flutter/configuration.dart';
 import 'package:amplitude_flutter/events/base_event.dart';
+import 'package:amplitude_flutter/events/identify.dart';
+import 'package:injectable/injectable.dart';
+import 'package:pot_g/app/modules/common/domain/repositories/log_repository.dart';
 import 'package:pot_g/app/values/config.dart';
 
-class AmplitudeLogRepository {
+@Singleton(as: LogRepository)
+class AmplitudeLogRepository extends LogRepository {
   late final _instance = Amplitude(
     Configuration(apiKey: Config.amplitudeApiKey),
   );
 
+  @override
   void logEvent(String eventName, Map<String, dynamic> properties) {
     _instance.track(BaseEvent(eventName, eventProperties: properties));
+  }
+
+  @override
+  void setUserId(String userId) {
+    _instance.setUserId(userId);
+  }
+
+  @override
+  void setUserProperty(String key, String? value) {
+    final identify = Identify();
+    if (value != null) {
+      identify.set(key, value);
+    } else {
+      identify.unset(key);
+    }
+    _instance.identify(identify);
   }
 }
