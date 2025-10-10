@@ -75,7 +75,12 @@ class FofoBubble extends StatelessWidget {
                               index == message.actionButtons.length - 1
                                   ? PotButtonVariant.outlined
                                   : null,
-                          child: Text(action(context, e)),
+                          child: Expanded(
+                            child: Text(
+                              action(context, e),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
                         ),
                       ],
                     )
