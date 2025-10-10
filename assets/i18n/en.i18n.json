@@ -212,9 +212,6 @@
       }
     },
     "accounting": {
-      "host_only": {
-        "description": "This feature is only available for hosts."
-      },
       "dutch": {
         "title": "Dutch Pay",
         "fields": {
@@ -250,7 +247,7 @@
     },
     "send_money": {
       "title": "Send Money",
-      "description": "send $n won to host bank account $account",
+      "description": "send $n won to payment account $account",
       "actions": {
         "toss": "Send with Toss",
         "kakao": "Send with KakaoPay",

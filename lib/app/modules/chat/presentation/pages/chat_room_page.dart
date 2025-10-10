@@ -116,10 +116,6 @@ class _AccountingButton extends StatelessWidget {
     BuildContext context,
     PotInfoEntity pot,
   ) async {
-    if (!pot.meIsHost(context)) {
-      context.showToast(context.t.chat_room.accounting.host_only.description);
-      return;
-    }
     await AccountingRoute(pot: pot).push(context);
   }
 

@@ -34,8 +34,11 @@ class AccountingPage extends StatelessWidget {
         BlocProvider(
           create:
               (context) =>
-                  sl<AccountingCubit>()
-                    ..loadTargets(pot.usersInfo.users.where((u) => u.isInPot)),
+                  sl<AccountingCubit>()..loadTargets(
+                    pot.usersInfo.users.where(
+                      (u) => u.isInPot && u.id != AuthBloc.userOf(context)?.id,
+                    ),
+                  ),
         ),
         BlocProvider(
           create: (context) => sl<PotInfoBloc>()..add(PotInfoEvent.init(pot)),
@@ -236,7 +239,10 @@ class _SettlementTargets extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final users = pot.usersInfo.users.where((u) => u.isInPot).toList();
+    final users =
+        pot.usersInfo.users
+            .where((u) => u.isInPot && u.id != AuthBloc.userOf(context)?.id)
+            .toList();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
