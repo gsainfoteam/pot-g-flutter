@@ -6,6 +6,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:pot_g/app/di/locator.dart';
 import 'package:pot_g/app/modules/auth/presentation/bloc/auth_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/pot_detail_bloc.dart';
+import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
 import 'package:pot_g/app/modules/common/presentation/utils/log_observer.dart';
 import 'package:pot_g/app/modules/core/presentation/bloc/route_list_bloc.dart';
 import 'package:pot_g/app/modules/socket/presentation/bloc/socket_auth_bloc.dart';
@@ -65,6 +66,13 @@ class _Providers extends StatelessWidget {
         listeners: [
           BlocListener<AuthBloc, AuthState>(
             listener: (context, state) {
+              L.setUserId(state.user?.id);
+              if (state.user != null) {
+                L.setUserProperties({
+                  'email': state.user!.email,
+                  'name': state.user!.name,
+                });
+              }
               final event = switch (state) {
                 Authenticated() => SocketAuthEvent.connect(),
                 Unauthenticated() => SocketAuthEvent.disconnect(),

@@ -34,7 +34,8 @@ class L {
     if (from?.isNotEmpty ?? false) 'from': from,
   });
 
-  static void setUserId(String userId) => sl<LogRepository>().setUserId(userId);
+  static void setUserId(String? userId) =>
+      sl<LogRepository>().setUserId(userId);
 
   static void setUserProperties(Map<String, String?> properties) =>
       sl<LogRepository>().setUserProperties(properties);

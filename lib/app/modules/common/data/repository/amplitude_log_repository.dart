@@ -25,8 +25,13 @@ class AmplitudeLogRepository extends LogRepository {
   }
 
   @override
-  void setUserId(String userId) {
+  void setUserId(String? userId) {
     _instance.setUserId(userId);
+    if (userId == null) {
+      final identify = Identify();
+      identify.clearAll();
+      _instance.identify(identify);
+    }
   }
 
   @override
