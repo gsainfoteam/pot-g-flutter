@@ -26,22 +26,30 @@ class AmplitudeLogRepository extends LogRepository {
 
   @override
   void setUserId(String? userId) {
-    _instance.setUserId(userId);
-    if (userId == null) {
-      final identify = Identify();
-      identify.clearAll();
-      _instance.identify(identify);
+    if (kDebugMode) {
+      log('setUserId $userId', name: 'amplitude');
+    } else {
+      _instance.setUserId(userId);
+      if (userId == null) {
+        final identify = Identify();
+        identify.clearAll();
+        _instance.identify(identify);
+      }
     }
   }
 
   @override
   void setUserProperty(String key, String? value) {
-    final identify = Identify();
-    if (value != null) {
-      identify.set(key, value);
+    if (kDebugMode) {
+      log('setUserProperty $key $value', name: 'amplitude');
     } else {
-      identify.unset(key);
+      final identify = Identify();
+      if (value != null) {
+        identify.set(key, value);
+      } else {
+        identify.unset(key);
+      }
+      _instance.identify(identify);
     }
-    _instance.identify(identify);
   }
 }
