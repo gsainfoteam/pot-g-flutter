@@ -167,14 +167,23 @@
       "members": {
         "my": "my",
         "passenger": "동승자",
+        "departure_confirmed": "이미 확정된 팟입니다",
         "kick": {
           "action": "강퇴",
           "confirm": {
             "title": "동승자를 강퇴할까요?",
             "description(rich)": "$user를 강퇴할까요?\n불합리한 강퇴일 경우\n신고를 당할 수 있습니다"
-          }
+          },
+          "departure_confirmed": "출발 시간을 확정한 이후에는 강퇴가 불가능합니다"
         },
-        "invite": "초대하기",
+        "invite": {
+          "action": "초대하기",
+          "success": {
+            "title": "초대 링크 복사",
+            "description": "초대 링크가 복사 되었습니다\n친구에게 링크를 전송하세요"
+          },
+          "departure_confirmed": "출발 시간을 확정한 이후에는 초대가 불가능합니다"
+        },
         "host": "방장"
       },
       "actions": {
@@ -183,7 +192,8 @@
           "confirm": {
             "title": "퇴장하시겠습니까?",
             "description": "출발 시간 확정 이전에는\n자유로운 퇴장이 가능합니다\n퇴장하시겠습니까?"
-          }
+          },
+          "departure_confirmed": "출발 시간을 확정한 이후에는 퇴장이 불가능합니다"
         },
         "report": "신고하기"
       }
