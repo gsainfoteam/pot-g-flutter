@@ -1,11 +1,14 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
+import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/date_select.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/path_select.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_button.dart';
 import 'package:pot_g/app/modules/core/data/models/pot_model.dart';
 import 'package:pot_g/app/modules/core/data/models/route_model.dart';
+import 'package:pot_g/app/modules/core/domain/entities/route_entity.dart';
 import 'package:pot_g/app/modules/core/presentation/bloc/route_list_bloc.dart';
 import 'package:pot_g/app/modules/create/presentation/bloc/create_cubit.dart';
 import 'package:pot_g/app/modules/create/presentation/bloc/create_pot_bloc.dart';
@@ -46,6 +49,7 @@ class CreateForm extends StatelessWidget {
                 (CreateCubit cubit) =>
                     cubit.state.valid
                         ? () {
+                          L.c('createPot');
                           final state = cubit.state;
 
                           final pot = PotModel(
@@ -131,10 +135,17 @@ class _PathInput extends StatelessWidget {
       showAll: false,
       selectedRoute: selected,
       routes: context.select((RouteListBloc bloc) => bloc.state.routes),
-      onSelected: (route) => context.read<CreateCubit>().routeChanged(route!),
+      onSelected: (route) {
+        L.c('routeSelectorItem', properties: {'item': route!.name});
+        context.read<CreateCubit>().routeChanged(route);
+      },
       isOpen: opened,
-      onOpenChanged:
-          (value) => context.read<CreateCubit>().pathOpenedChanged(value),
+      onOpenChanged: (value) {
+        if (value) {
+          L.c('routeSelector');
+        }
+        context.read<CreateCubit>().pathOpenedChanged(value);
+      },
     );
   }
 }
@@ -150,10 +161,20 @@ class _DateInput extends StatelessWidget {
     final selected = context.select((CreateCubit cubit) => cubit.state.date);
     return DateSelect(
       selectedDate: selected,
-      onSelected: (date) => context.read<CreateCubit>().dateChanged(date),
+      onSelected: (date) {
+        L.c(
+          'dateSelectorItem',
+          properties: {'item': DateFormat.yMd().format(date)},
+        );
+        context.read<CreateCubit>().dateChanged(date);
+      },
       isOpen: opened,
-      onOpenChanged:
-          (value) => context.read<CreateCubit>().dateOpenedChanged(value),
+      onOpenChanged: (value) {
+        if (value) {
+          L.c('dateSelector');
+        }
+        context.read<CreateCubit>().dateOpenedChanged(value);
+      },
     );
   }
 }
@@ -183,8 +204,10 @@ class _Capacity extends StatelessWidget {
               Expanded(
                 child: PotButton(
                   padding: EdgeInsets.symmetric(vertical: 10),
-                  onPressed:
-                      () => context.read<CreateCubit>().maxCapacityChanged(i),
+                  onPressed: () {
+                    L.c('capacity', properties: {'item': i.toString()});
+                    context.read<CreateCubit>().maxCapacityChanged(i);
+                  },
                   size: PotButtonSize.medium,
                   child: Text(
                     context.t.create.capacity.fields.max_capacity.item(n: i),
@@ -235,10 +258,20 @@ class _TimeInterval extends StatelessWidget {
             (CreateCubit cubit) => cubit.state.startTime,
           ),
           endTime: context.select((CreateCubit cubit) => cubit.state.endTime),
-          onStartChanged:
-              (time) => context.read<CreateCubit>().startTimeChanged(time),
-          onEndChanged:
-              (time) => context.read<CreateCubit>().endTimeChanged(time),
+          onStartChanged: (time) {
+            L.c(
+              'startTimeSelector',
+              properties: {'item': DateFormat.Hm().format(time)},
+            );
+            context.read<CreateCubit>().startTimeChanged(time);
+          },
+          onEndChanged: (time) {
+            L.c(
+              'endTimeSelector',
+              properties: {'item': DateFormat.Hm().format(time)},
+            );
+            context.read<CreateCubit>().endTimeChanged(time);
+          },
         ),
       ],
     );
