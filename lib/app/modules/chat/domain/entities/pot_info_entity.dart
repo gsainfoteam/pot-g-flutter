@@ -1,3 +1,4 @@
+import 'package:pot_g/app/modules/chat/domain/entities/pot_accounting_info_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_users_info_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/enums/pot_status.dart';
 import 'package:pot_g/app/modules/core/domain/entities/pot_id_entity.dart';
@@ -11,4 +12,5 @@ abstract class PotInfoEntity implements PotIdEntity {
   DateTime? get departureTime;
   PotStatus get status;
   PotUsersInfoEntity get usersInfo;
+  PotAccountingInfoEntity get accountingInfo;
 }
