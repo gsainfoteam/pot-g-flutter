@@ -35,4 +35,7 @@ class PotAlreadyClosedException extends LeavePotException {
 class NetworkErrorException extends LeavePotException {
   final String error;
   const NetworkErrorException(this.error);
+
+  @override
+  String toString() => error;
 }

@@ -56,4 +56,7 @@ class PotAlreadyClosedException extends AccountingRequestException {
 class NetworkErrorException extends AccountingRequestException {
   final String error;
   const NetworkErrorException(this.error);
+
+  @override
+  String toString() => error;
 }

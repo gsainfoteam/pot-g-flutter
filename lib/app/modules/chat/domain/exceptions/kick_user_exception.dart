@@ -44,4 +44,7 @@ class PotAlreadyClosedException extends KickUserException {
 class NetworkErrorException extends KickUserException {
   final String error;
   const NetworkErrorException(this.error);
+
+  @override
+  String toString() => error;
 }

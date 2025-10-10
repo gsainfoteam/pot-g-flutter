@@ -33,4 +33,7 @@ class PotAlreadyClosedException extends DepartureTimeException {
 class NetworkErrorException extends DepartureTimeException {
   final String error;
   const NetworkErrorException(this.error);
+
+  @override
+  String toString() => error;
 }
