@@ -10,7 +10,6 @@ import 'package:pot_g/app/modules/chat/presentation/widgets/pot_user.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/general_dialog.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
-import 'package:pot_g/gen/assets.gen.dart';
 import 'package:pot_g/gen/strings.g.dart';
 
 class PotUsers extends StatelessWidget {
@@ -48,20 +47,6 @@ class PotUsers extends StatelessWidget {
               pot: pot,
             ),
           ],
-        ),
-        Container(
-          padding: EdgeInsets.symmetric(vertical: 8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                context.t.chat_room.drawer.members.invite,
-                style: TextStyles.description.copyWith(color: Palette.grey),
-              ),
-              SizedBox(width: 6),
-              Assets.icons.add.svg(),
-            ],
-          ),
         ),
       ],
     );
