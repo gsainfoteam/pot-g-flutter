@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
-import 'package:pot_g/app/modules/core/domain/entities/pot_summary_entity.dart';
 import 'package:pot_g/app/modules/core/domain/repositories/create_pot_repository.dart';
 
 part 'create_pot_bloc.freezed.dart';
@@ -20,10 +19,10 @@ class CreatePotBloc extends Bloc<CreatePotEvent, CreatePotState> {
     emit(state.copyWith(isLoading: true, error: null));
     try {
       final potResponse = await _repository.createPot(
-        routeId: event.potData.route.id,
-        startsAt: event.potData.startsAt,
-        endsAt: event.potData.endsAt,
-        maxCount: event.potData.total,
+        routeId: event.routeId,
+        startsAt: event.startsAt,
+        endsAt: event.endsAt,
+        maxCount: event.maxCount,
       );
 
       final potId = json.decode(potResponse)['id'];
@@ -37,8 +36,12 @@ class CreatePotBloc extends Bloc<CreatePotEvent, CreatePotState> {
 
 @freezed
 sealed class CreatePotEvent with _$CreatePotEvent {
-  const factory CreatePotEvent.create({required PotSummaryEntity potData}) =
-      _Create;
+  const factory CreatePotEvent.create({
+    required String routeId,
+    required DateTime startsAt,
+    required DateTime endsAt,
+    required int maxCount,
+  }) = _Create;
 }
 
 @freezed

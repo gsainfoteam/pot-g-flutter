@@ -6,8 +6,6 @@ import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/date_select.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/path_select.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_button.dart';
-import 'package:pot_g/app/modules/core/data/models/pot_model.dart';
-import 'package:pot_g/app/modules/core/data/models/route_model.dart';
 import 'package:pot_g/app/modules/core/domain/entities/route_entity.dart';
 import 'package:pot_g/app/modules/core/presentation/bloc/route_list_bloc.dart';
 import 'package:pot_g/app/modules/create/presentation/bloc/create_cubit.dart';
@@ -51,33 +49,19 @@ class CreateForm extends StatelessWidget {
                         ? () {
                           L.c('createPot');
                           final state = cubit.state;
-
-                          final pot = PotModel(
-                            id: '',
-                            name: '',
-                            route: state.route! as RouteModel,
-                            startsAt: DateTime(
-                              state.date!.year,
-                              state.date!.month,
-                              state.date!.day,
-                              state.startTime!.hour,
-                              state.startTime!.minute,
-                              0,
-                            ),
-                            endsAt: DateTime(
-                              state.date!.year,
-                              state.date!.month,
-                              state.date!.day,
-                              state.endTime!.hour,
-                              state.endTime!.minute,
-                              0,
-                            ),
-                            current: 1,
-                            total: state.maxCapacity!,
-                          );
-
                           context.read<CreatePotBloc>().add(
-                            CreatePotEvent.create(potData: pot),
+                            CreatePotEvent.create(
+                              routeId: state.route!.id,
+                              startsAt: state.date!.copyWith(
+                                hour: state.startTime!.hour,
+                                minute: state.startTime!.minute,
+                              ),
+                              endsAt: state.date!.copyWith(
+                                hour: state.endTime!.hour,
+                                minute: state.endTime!.minute,
+                              ),
+                              maxCount: state.maxCapacity!,
+                            ),
                           );
 
                           context.router.push(ListRoute());
