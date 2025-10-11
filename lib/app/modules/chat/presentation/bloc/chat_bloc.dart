@@ -31,7 +31,9 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     _completer.complete();
     try {
       final chats = await _chatRepository.getChats(_pot, DateTime.now());
-      emit(ChatState.loaded(chats.reversed.toList()));
+      emit(
+        ChatState.loaded(chats.reversed.toList(), endReached: chats.isEmpty),
+      );
       return emit.forEach(
         _chatRepository.getChatsStream(_pot),
         onData: (chat) {
