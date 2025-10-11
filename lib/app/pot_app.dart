@@ -5,11 +5,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:pot_g/app/di/locator.dart';
 import 'package:pot_g/app/modules/auth/presentation/bloc/auth_bloc.dart';
-import 'package:pot_g/app/modules/core/presentation/bloc/link_bloc.dart';
-import 'package:pot_g/app/modules/core/presentation/bloc/messaging_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/pot_detail_bloc.dart';
 import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
 import 'package:pot_g/app/modules/common/presentation/utils/log_observer.dart';
+import 'package:pot_g/app/modules/core/presentation/bloc/link_bloc.dart';
+import 'package:pot_g/app/modules/core/presentation/bloc/messaging_bloc.dart';
 import 'package:pot_g/app/modules/core/presentation/bloc/route_list_bloc.dart';
 import 'package:pot_g/app/modules/socket/presentation/bloc/socket_auth_bloc.dart';
 import 'package:pot_g/app/router.dart';
@@ -36,8 +36,8 @@ class PotApp extends StatelessWidget {
           locale: TranslationProvider.of(context).flutterLocale,
           supportedLocales: AppLocaleUtils.supportedLocales,
           localizationsDelegates: GlobalMaterialLocalizations.delegates,
-          builder:
-              (_, child) => _Providers(child: child ?? const SizedBox.shrink()),
+          builder: (_, child) =>
+              _Providers(child: child ?? const SizedBox.shrink()),
         ),
       ),
     );
@@ -68,9 +68,8 @@ class _Providers extends StatelessWidget {
         ),
         BlocProvider(
           lazy: false,
-          create:
-              (_) =>
-                  sl<PotDetailBloc>()..add(const PotDetailEvent.loadMyPots()),
+          create: (_) =>
+              sl<PotDetailBloc>()..add(const PotDetailEvent.loadMyPots()),
         ),
       ],
       child: MultiBlocListener(
@@ -83,6 +82,9 @@ class _Providers extends StatelessWidget {
                   'email': state.user!.email,
                   'name': state.user!.name,
                 });
+                context.read<PotDetailBloc>().add(
+                  const PotDetailEvent.loadMyPots(),
+                );
               }
               final event = switch (state) {
                 Authenticated() => SocketAuthEvent.connect(),
@@ -95,26 +97,22 @@ class _Providers extends StatelessWidget {
             },
           ),
           BlocListener<AuthBloc, AuthState>(
-            listenWhen:
-                (previous, current) =>
-                    current.mapOrNull(
-                      authenticated: (_) => true,
-                      unauthenticated: (_) => true,
-                    ) ??
-                    false,
-            listener:
-                (context, state) => context.read<MessagingBloc>().add(
-                  const MessagingEvent.refresh(),
-                ),
+            listenWhen: (previous, current) =>
+                current.mapOrNull(
+                  authenticated: (_) => true,
+                  unauthenticated: (_) => true,
+                ) ??
+                false,
+            listener: (context, state) => context.read<MessagingBloc>().add(
+              const MessagingEvent.refresh(),
+            ),
           ),
           BlocListener<LinkBloc, LinkState>(
-            listener:
-                (context, state) => state.mapOrNull(
-                  loaded:
-                      (s) => WidgetsBinding.instance.addPostFrameCallback((_) {
-                        _appRouter.pushPath(s.link);
-                      }),
-                ),
+            listener: (context, state) => state.mapOrNull(
+              loaded: (s) => WidgetsBinding.instance.addPostFrameCallback((_) {
+                _appRouter.pushPath(s.link);
+              }),
+            ),
           ),
         ],
         child: child,
