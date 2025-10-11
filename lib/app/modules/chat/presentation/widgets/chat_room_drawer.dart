@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/enums/pot_status.dart';
-import 'package:pot_g/app/modules/chat/presentation/bloc/pot_info_bloc.dart';
+import 'package:pot_g/app/modules/chat/presentation/bloc/pot_action_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/pot_accounting.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/pot_info.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/pot_users.dart';
@@ -76,6 +76,6 @@ class ChatRoomDrawer extends StatelessWidget {
     );
     if (result != OkCancelResult.ok) return;
     if (!context.mounted) return;
-    context.read<PotInfoBloc>().add(PotInfoEvent.leavePot());
+    context.read<PotActionBloc>().add(PotActionEvent.leavePot(pot));
   }
 }
