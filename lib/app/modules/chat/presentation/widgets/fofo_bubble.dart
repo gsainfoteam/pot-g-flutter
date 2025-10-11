@@ -43,7 +43,7 @@ class FofoBubble extends StatelessWidget {
             width: 0.5,
           ),
         ),
-        child: ClipOval(child: Assets.images.fofo.image()),
+        child: ClipOval(child: Assets.images.fofo.svg()),
       ),
       name: context.t.chat_room.fofo.name,
       child: Column(
@@ -60,31 +60,28 @@ class FofoBubble extends StatelessWidget {
           ),
           if (message.actionButtons.isNotEmpty) const SizedBox(height: 8),
           Column(
-            children:
-                message.actionButtons
-                    .expandIndexed(
-                      (index, e) => [
-                        if (index != 0) const SizedBox(height: 8),
-                        PotButton(
-                          onPressed:
-                              e != null
-                                  ? () => onAction(e)
-                                  : () => _onUnknownAction(context),
-                          size: PotButtonSize.medium,
-                          variant:
-                              index == message.actionButtons.length - 1
-                                  ? PotButtonVariant.outlined
-                                  : null,
-                          child: Expanded(
-                            child: Text(
-                              action(context, e),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
+            children: message.actionButtons
+                .expandIndexed(
+                  (index, e) => [
+                    if (index != 0) const SizedBox(height: 8),
+                    PotButton(
+                      onPressed: e != null
+                          ? () => onAction(e)
+                          : () => _onUnknownAction(context),
+                      size: PotButtonSize.medium,
+                      variant: index == message.actionButtons.length - 1
+                          ? PotButtonVariant.outlined
+                          : null,
+                      child: Expanded(
+                        child: Text(
+                          action(context, e),
+                          textAlign: TextAlign.center,
                         ),
-                      ],
-                    )
-                    .toList(),
+                      ),
+                    ),
+                  ],
+                )
+                .toList(),
           ),
         ],
       ),
