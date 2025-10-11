@@ -26,7 +26,7 @@ import 'package:pot_g/app/modules/common/presentation/widgets/error_cover.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/general_dialog.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_app_bar.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_icon_button.dart';
-import 'package:pot_g/app/modules/core/domain/entities/pot_detail_entity.dart';
+import 'package:pot_g/app/modules/core/domain/entities/pot_id_entity.dart';
 import 'package:pot_g/app/modules/core/domain/entities/route_entity.dart';
 import 'package:pot_g/app/router.gr.dart';
 import 'package:pot_g/app/values/palette.dart';
@@ -34,14 +34,20 @@ import 'package:pot_g/app/values/text_styles.dart';
 import 'package:pot_g/gen/assets.gen.dart';
 import 'package:pot_g/gen/strings.g.dart';
 
+class _PotId implements PotIdEntity {
+  _PotId({@PathParam() required this.id});
+  @override
+  final String id;
+}
+
 @RoutePage()
 class ChatRoomPage extends StatelessWidget with LogPageStateless {
-  const ChatRoomPage({super.key, required this.pot});
+  const ChatRoomPage({super.key, required this.id});
 
   @override
   String get pageName => 'chatRoom';
 
-  final PotDetailEntity pot;
+  final String id;
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +55,8 @@ class ChatRoomPage extends StatelessWidget with LogPageStateless {
       providers: [
         BlocProvider(create: (context) => sl<ChatBloc>()),
         BlocProvider(
-          create: (context) => sl<PotInfoBloc>()..add(PotInfoEvent.init(pot)),
+          create: (context) =>
+              sl<PotInfoBloc>()..add(PotInfoEvent.init(_PotId(id: id))),
         ),
         BlocProvider(create: (context) => sl<PotActionBloc>()),
         BlocProvider(create: (context) => sl<PotAccountingBloc>()),
