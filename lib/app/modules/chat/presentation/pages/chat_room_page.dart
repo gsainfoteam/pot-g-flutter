@@ -90,7 +90,7 @@ class _Layout extends StatelessWidget {
     final pot = state.pot!;
     final disabled = state.isArchived;
     return Scaffold(
-      backgroundColor: disabled ? Palette.borderGrey : null,
+      backgroundColor: disabled ? const Color(0xfff0f0f0) : null,
       appBar: PotAppBar(title: Text(pot.name)),
       onEndDrawerChanged: (value) {
         if (value) {
