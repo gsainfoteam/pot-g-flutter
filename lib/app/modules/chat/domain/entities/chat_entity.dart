@@ -11,7 +11,7 @@ abstract class ChatEntity implements Sendable {
   PotUserEntity get user;
 }
 
-enum SystemMessageType { userIn, userLeave, userKicked }
+enum SystemMessageType { userIn, userLeave, userKicked, created }
 
 abstract class SystemMessageEntity implements Sendable {
   SystemMessageType get type;

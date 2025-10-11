@@ -138,6 +138,9 @@
   },
   "chat_room": {
     "system_messages": {
+      "created": {
+        "description": "$user 님이 팟을 생성하셨습니다"
+      },
       "user_in": {
         "description": "$user 님이 입장하셨습니다"
       },

@@ -141,6 +141,9 @@
   },
   "chat_room": {
     "system_messages": {
+      "created": {
+        "description": "$user created the pot."
+      },
       "user_in": {
         "description": "$user joined the pot."
       },
