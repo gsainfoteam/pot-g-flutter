@@ -14,20 +14,22 @@ class SystemMessage extends StatelessWidget {
     final trans = context.t.chat_room.system_messages;
     final text = switch (message.type) {
       SystemMessageType.created => trans.created.description(
-        user: message.relatedUser!.name,
+        user: message.relatedUser?.name ?? 'Unknown',
       ),
       SystemMessageType.userIn => trans.user_in.description(
-        user: message.relatedUser!.name,
+        user: message.relatedUser?.name ?? 'Unknown',
       ),
       SystemMessageType.userLeave =>
         message.auxRelatedUser == null
-            ? trans.user_leave.description(user: message.relatedUser!.name)
+            ? trans.user_leave.description(
+              user: message.relatedUser?.name ?? 'Unknown',
+            )
             : trans.user_leave.description_with_aux_user(
-              user: message.relatedUser!.name,
+              user: message.relatedUser?.name ?? 'Unknown',
               aux_user: message.auxRelatedUser!.name,
             ),
       SystemMessageType.userKicked => trans.user_kicked.description(
-        user: message.relatedUser!.name,
+        user: message.relatedUser?.name ?? 'Unknown',
       ),
       SystemMessageType.archived => trans.archived.description,
     };
