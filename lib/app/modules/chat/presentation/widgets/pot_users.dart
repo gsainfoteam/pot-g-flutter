@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_user_entity.dart';
-import 'package:pot_g/app/modules/chat/presentation/bloc/pot_info_bloc.dart';
+import 'package:pot_g/app/modules/chat/presentation/bloc/pot_action_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/extensions/pot_user_extension.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/pot_user.dart';
 import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
@@ -44,16 +44,15 @@ class PotUsers extends StatelessWidget {
             if (index != 0) const SizedBox(height: 8),
             PotUser(
               user: e,
-              onKick:
-                  me?.isHost ?? false
-                      ? () {
-                        L.c(
-                          'kick',
-                          properties: {'userId': e.id, 'roomId': pot.id},
-                        );
-                        _kickUser(context, e);
-                      }
-                      : null,
+              onKick: me?.isHost ?? false
+                  ? () {
+                      L.c(
+                        'kick',
+                        properties: {'userId': e.id, 'roomId': pot.id},
+                      );
+                      _kickUser(context, e);
+                    }
+                  : null,
               pot: pot,
             ),
           ],
@@ -85,6 +84,6 @@ class PotUsers extends StatelessWidget {
     );
     if (result != OkCancelResult.ok) return;
     if (!context.mounted) return;
-    context.read<PotInfoBloc>().add(PotInfoEvent.kickUser(user));
+    context.read<PotActionBloc>().add(PotActionEvent.kickUser(pot, user));
   }
 }

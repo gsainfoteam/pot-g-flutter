@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:pot_g/app/di/locator.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/accounting_confirm_cubit.dart';
-import 'package:pot_g/app/modules/chat/presentation/bloc/pot_info_bloc.dart';
+import 'package:pot_g/app/modules/chat/presentation/bloc/pot_accounting_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/extensions/pot_user_extension.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/pot_user.dart';
 import 'package:pot_g/app/modules/common/presentation/extensions/toast.dart';
@@ -31,23 +31,18 @@ class PotAccounting extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create:
-              (context) =>
-                  sl<AccountingConfirmCubit>()
-                    ..loadInitialState(pot.accountingInfo.accountingResults),
+          create: (context) =>
+              sl<AccountingConfirmCubit>()
+                ..loadInitialState(pot.accountingInfo.accountingResults),
         ),
-        BlocProvider(
-          create: (context) => sl<PotInfoBloc>()..add(PotInfoEvent.init(pot)),
-        ),
+        BlocProvider(create: (context) => sl<PotAccountingBloc>()),
       ],
-      child: BlocListener<PotInfoBloc, PotInfoState>(
+      child: BlocListener<PotAccountingBloc, PotAccountingState>(
         listener: (context, state) {
-          if (state is AccountingConfirmSuccess) {
-            Scaffold.of(context).closeEndDrawer();
-          }
-          if (state.error != null) {
-            context.showToast(state.error!);
-          }
+          state.mapOrNull(
+            confirmSuccess: (_) => Scaffold.of(context).closeEndDrawer(),
+            error: (e) => context.showToast(e.message),
+          );
         },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -104,10 +99,9 @@ class PotAccounting extends StatelessWidget {
                       user: e,
                       pot: pot,
                       payStatus: isDone ? PayStatus.done : PayStatus.notPaid,
-                      onPay:
-                          (value) => context
-                              .read<AccountingConfirmCubit>()
-                              .toggleUser(e.id),
+                      onPay: (value) => context
+                          .read<AccountingConfirmCubit>()
+                          .toggleUser(e.id),
                     );
                   },
                 ),
@@ -125,12 +119,11 @@ class PotAccounting extends StatelessWidget {
                   children: [
                     PotButton(
                       onPressed: () {
-                        final results =
-                            context
-                                .read<AccountingConfirmCubit>()
-                                .getAccountingResults();
-                        context.read<PotInfoBloc>().add(
-                          PotInfoEvent.confirmAccounting(results),
+                        final results = context
+                            .read<AccountingConfirmCubit>()
+                            .getAccountingResults();
+                        context.read<PotAccountingBloc>().add(
+                          PotAccountingEvent.confirmAccounting(pot, results),
                         );
                       },
                       variant: PotButtonVariant.emphasized,

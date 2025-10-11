@@ -7,7 +7,7 @@ import 'package:pot_g/app/modules/auth/presentation/bloc/auth_bloc.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_user_entity.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/accounting_cubit.dart';
-import 'package:pot_g/app/modules/chat/presentation/bloc/pot_info_bloc.dart';
+import 'package:pot_g/app/modules/chat/presentation/bloc/pot_accounting_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/pot_profile_image.dart';
 import 'package:pot_g/app/modules/common/presentation/extensions/toast.dart';
 import 'package:pot_g/app/modules/common/presentation/formatters/thousand_won_formatter.dart';
@@ -32,26 +32,21 @@ class AccountingPage extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create:
-              (context) =>
-                  sl<AccountingCubit>()..loadTargets(
-                    pot.usersInfo.users.where(
-                      (u) => u.isInPot && u.id != AuthBloc.userOf(context)?.id,
-                    ),
-                  ),
+          create: (context) => sl<AccountingCubit>()
+            ..loadTargets(
+              pot.usersInfo.users.where(
+                (u) => u.isInPot && u.id != AuthBloc.userOf(context)?.id,
+              ),
+            ),
         ),
-        BlocProvider(
-          create: (context) => sl<PotInfoBloc>()..add(PotInfoEvent.init(pot)),
-        ),
+        BlocProvider(create: (context) => sl<PotAccountingBloc>()),
       ],
-      child: BlocListener<PotInfoBloc, PotInfoState>(
+      child: BlocListener<PotAccountingBloc, PotAccountingState>(
         listener: (context, state) {
-          if (state is AccountingSuccess) {
-            context.router.pop();
-          }
-          if (state.error != null) {
-            context.showToast(state.error!);
-          }
+          state.mapOrNull(
+            requestSuccess: (_) => context.router.pop(),
+            error: (e) => context.showToast(e.message),
+          );
         },
         child: _Layout(pot: pot),
       ),
@@ -92,18 +87,19 @@ class _Layout extends StatelessWidget {
                     BlocBuilder<AccountingCubit, AccountingState>(
                       builder: (context, state) {
                         return PotButton(
-                          onPressed:
-                              state.valid && hasBank
-                                  ? () {
-                                    final bloc = context.read<PotInfoBloc>();
-                                    bloc.add(
-                                      PotInfoEvent.accounting(
-                                        state.amount!,
-                                        state.targets!.toList(),
-                                      ),
-                                    );
-                                  }
-                                  : null,
+                          onPressed: state.valid && hasBank
+                              ? () {
+                                  final bloc = context
+                                      .read<PotAccountingBloc>();
+                                  bloc.add(
+                                    PotAccountingEvent.requestAccounting(
+                                      pot,
+                                      state.amount!,
+                                      state.targets!.toList(),
+                                    ),
+                                  );
+                                }
+                              : null,
                           variant: PotButtonVariant.emphasized,
                           child: Text(context.dutch.action),
                         );
@@ -168,8 +164,8 @@ class _DefaultNotRegistered extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         PotButton(
-          onPressed:
-              () => AccountNumberSettingsPage.showAccountNumberSetting(context),
+          onPressed: () =>
+              AccountNumberSettingsPage.showAccountNumberSetting(context),
           variant: PotButtonVariant.emphasized,
           prefixIcon: Assets.icons.dollar.svg(
             width: 24,
@@ -218,10 +214,8 @@ class _BankAccount extends StatelessWidget {
             ),
             Spacer(),
             PotButton(
-              onPressed:
-                  () => AccountNumberSettingsPage.showAccountNumberSetting(
-                    context,
-                  ),
+              onPressed: () =>
+                  AccountNumberSettingsPage.showAccountNumberSetting(context),
               size: PotButtonSize.small,
               child: Text(context.dutch.fields.account.action),
             ),
@@ -239,10 +233,9 @@ class _SettlementTargets extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final users =
-        pot.usersInfo.users
-            .where((u) => u.isInPot && u.id != AuthBloc.userOf(context)?.id)
-            .toList();
+    final users = pot.usersInfo.users
+        .where((u) => u.isInPot && u.id != AuthBloc.userOf(context)?.id)
+        .toList();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -257,16 +250,15 @@ class _SettlementTargets extends StatelessWidget {
             border: Border.all(color: Palette.borderGrey),
           ),
           child: Column(
-            children:
-                users
-                    .expandIndexed(
-                      (index, user) => [
-                        if (index != 0)
-                          Container(height: 1, color: Palette.borderGrey),
-                        _card(user),
-                      ],
-                    )
-                    .toList(),
+            children: users
+                .expandIndexed(
+                  (index, user) => [
+                    if (index != 0)
+                      Container(height: 1, color: Palette.borderGrey),
+                    _card(user),
+                  ],
+                )
+                .toList(),
           ),
         ),
       ],

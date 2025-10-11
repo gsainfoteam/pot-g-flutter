@@ -11,6 +11,8 @@ import 'package:pot_g/app/modules/chat/domain/entities/chat_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/enums/fofo_action_button_type.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/chat_bloc.dart';
+import 'package:pot_g/app/modules/chat/presentation/bloc/pot_accounting_bloc.dart';
+import 'package:pot_g/app/modules/chat/presentation/bloc/pot_action_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/pot_info_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/extensions/pot_user_extension.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/chat_bubble.dart';
@@ -49,20 +51,28 @@ class ChatRoomPage extends StatelessWidget with LogPageStateless {
         BlocProvider(
           create: (context) => sl<PotInfoBloc>()..add(PotInfoEvent.init(pot)),
         ),
+        BlocProvider(create: (context) => sl<PotActionBloc>()),
+        BlocProvider(create: (context) => sl<PotAccountingBloc>()),
       ],
       child: MultiBlocListener(
         listeners: [
           BlocListener<PotInfoBloc, PotInfoState>(
-            listenWhen:
-                (prev, curr) =>
-                    prev.pot?.id != curr.pot?.id && curr.pot != null,
-            listener:
-                (context, state) =>
-                    context.read<ChatBloc>().add(ChatInit(state.pot!)),
+            listenWhen: (prev, curr) =>
+                prev.pot?.id != curr.pot?.id && curr.pot != null,
+            listener: (context, state) =>
+                context.read<ChatBloc>().add(ChatInit(state.pot!)),
           ),
           BlocListener<ChatBloc, ChatState>(
-            listenWhen:
-                (prev, curr) => prev.error != curr.error && curr.error != null,
+            listenWhen: (prev, curr) =>
+                prev.error != curr.error && curr.error != null,
+            listener: (context, state) => context.showToast(state.error!),
+          ),
+          BlocListener<PotActionBloc, PotActionState>(
+            listenWhen: (prev, curr) => curr.error != null,
+            listener: (context, state) => context.showToast(state.error!),
+          ),
+          BlocListener<PotAccountingBloc, PotAccountingState>(
+            listenWhen: (prev, curr) => curr.error != null,
             listener: (context, state) => context.showToast(state.error!),
           ),
         ],
@@ -194,7 +204,9 @@ class _SetDepartureTimeButton extends StatelessWidget {
     if (result2 != OkCancelResult.ok) return;
     L.c('confirmDepartureTime', from: 'departureTimeConfirm');
     if (!context.mounted) return;
-    context.read<PotInfoBloc>().add(PotInfoEvent.setDepartureTime(date));
+    context.read<PotActionBloc>().add(
+      PotActionEvent.setDepartureTime(pot, date),
+    );
   }
 
   @override
@@ -245,8 +257,9 @@ class _ChatListState extends State<_ChatList> {
       builder: (context, state) {
         bool isLast(int index) {
           final chat = state.chats[index];
-          final nextChat =
-              index == state.chats.length - 1 ? null : state.chats[index + 1];
+          final nextChat = index == state.chats.length - 1
+              ? null
+              : state.chats[index + 1];
           if (chat is! ChatEntity || nextChat is! ChatEntity) {
             return true;
           }
@@ -257,8 +270,8 @@ class _ChatListState extends State<_ChatList> {
           controller: _controller,
           reverse: true,
           padding: const EdgeInsets.all(12) - EdgeInsets.only(right: 6),
-          separatorBuilder:
-              (context, index) => SizedBox(height: isLast(index) ? 12 : 6),
+          separatorBuilder: (context, index) =>
+              SizedBox(height: isLast(index) ? 12 : 6),
           itemBuilder: (context, index) => _buildItem(context, index, state),
           itemCount: state.chats.length + (state.isLoading ? 1 : 0),
         );
@@ -269,8 +282,9 @@ class _ChatListState extends State<_ChatList> {
   Widget _buildItem(BuildContext context, int index, ChatState state) {
     bool isFirst(int index) {
       final chat = state.chats[index];
-      final nextChat =
-          index == state.chats.length - 1 ? null : state.chats[index + 1];
+      final nextChat = index == state.chats.length - 1
+          ? null
+          : state.chats[index + 1];
       if (chat is! ChatEntity || nextChat is! ChatEntity) {
         return true;
       }
