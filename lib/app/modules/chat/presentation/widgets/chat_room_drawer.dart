@@ -83,7 +83,8 @@ class ChatRoomDrawer extends StatelessWidget {
     final blocker = bloc.stream.firstWhere(
       (s) => !s.isLoading || s.error != null,
     );
-    context.router.pop();
+    final router = context.router;
+    router.pop();
     bloc.add(PotActionEvent.leavePot(pot));
     final state = await blocker;
     if (!context.mounted) return;
@@ -91,7 +92,7 @@ class ChatRoomDrawer extends StatelessWidget {
       context.showToast(state.error!);
       return;
     }
-    context.router.pop();
+    router.pop();
     context.read<PotDetailBloc>().add(PotDetailEvent.loadMyPots());
   }
 }
