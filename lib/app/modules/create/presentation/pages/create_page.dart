@@ -45,10 +45,9 @@ class CreatePage extends StatelessWidget with LogPageStateless {
               context.showToast(state.error!);
               return;
             }
-            if (state.createdPotId != null) return;
+            if (state.createdPotId == null) return;
             context.read<PotDetailBloc>().add(PotDetailEvent.loadMyPots());
-            ChatRoute().push(context);
-            ChatRoomRoute(id: state.createdPotId!).push(context);
+            context.router.popAndPush(ChatRoomRoute(id: state.createdPotId!));
           },
           child: const CreateForm(),
         ),
