@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
-import 'package:pot_g/app/modules/chat/data/models/accounting_result_model.dart';
+import 'package:pot_g/app/modules/chat/domain/entities/accounting_result_entity.dart';
 
 part 'accounting_confirm_cubit.freezed.dart';
 
@@ -9,7 +9,7 @@ part 'accounting_confirm_cubit.freezed.dart';
 class AccountingConfirmCubit extends Cubit<AccountingConfirmState> {
   AccountingConfirmCubit() : super(const AccountingConfirmState());
 
-  void loadInitialState(List<AccountingResultModel> accountingResults) {
+  void loadInitialState(List<AccountingResultEntity> accountingResults) {
     final Map<String, bool> userStates = {};
     for (final result in accountingResults) {
       userStates[result.userPk] = result.accountingDone;
@@ -24,10 +24,10 @@ class AccountingConfirmCubit extends Cubit<AccountingConfirmState> {
     emit(AccountingConfirmState(userStates: newStates));
   }
 
-  List<AccountingResultModel> getAccountingResults() {
+  List<AccountingResultEntity> getAccountingResults() {
     return state.userStates.entries
         .map(
-          (entry) => AccountingResultModel(
+          (entry) => AccountingResultEntity(
             userPk: entry.key,
             accountingDone: entry.value,
           ),
@@ -43,7 +43,7 @@ sealed class AccountingConfirmState with _$AccountingConfirmState {
     @Default({}) Map<String, bool> userStates,
   }) = _AccountingConfirmState;
 
-  bool hasChanges(List<AccountingResultModel> originalResults) {
+  bool hasChanges(List<AccountingResultEntity> originalResults) {
     if (userStates.isEmpty) return false;
 
     for (final original in originalResults) {
@@ -55,4 +55,3 @@ sealed class AccountingConfirmState with _$AccountingConfirmState {
     return false;
   }
 }
-

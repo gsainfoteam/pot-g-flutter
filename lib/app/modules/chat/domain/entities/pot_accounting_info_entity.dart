@@ -1,4 +1,4 @@
-import 'package:pot_g/app/modules/chat/data/models/accounting_result_model.dart';
+import 'package:pot_g/app/modules/chat/domain/entities/accounting_result_entity.dart';
 
 abstract class PotAccountingInfoEntity {
   String? get requestingUser;
@@ -6,5 +6,5 @@ abstract class PotAccountingInfoEntity {
   int? get costPerUser;
   String? get bankName;
   String? get bankAccount;
-  List<AccountingResultModel> get accountingResults;
+  List<AccountingResultEntity> get accountingResults;
 }

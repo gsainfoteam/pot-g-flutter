@@ -6,6 +6,7 @@ import 'package:pot_g/app/modules/chat/data/models/accounting_confirm_response_m
 import 'package:pot_g/app/modules/chat/data/models/accounting_request_request_model.dart';
 import 'package:pot_g/app/modules/chat/data/models/accounting_request_response_model.dart';
 import 'package:pot_g/app/modules/chat/data/models/accounting_result_model.dart';
+import 'package:pot_g/app/modules/chat/domain/entities/accounting_result_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_user_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/exceptions/accounting_confirm_exception.dart';
@@ -64,12 +65,14 @@ class WebsocketPotAccountingRepository implements PotAccountingRepository {
   @override
   Future<void> confirmAccounting(
     PotInfoEntity pot,
-    List<AccountingResultModel> accountingResults,
+    List<AccountingResultEntity> accountingResults,
   ) async {
     try {
       final result = await _accountingApi.confirmAccounting(
         pot.id,
-        AccountingConfirmRequestModel(accountingResults: accountingResults),
+        AccountingConfirmRequestModel(
+          accountingResults: accountingResults.map(_toModel).toList(),
+        ),
       );
       switch (result.result) {
         case AccountingConfirmResult.ok:
@@ -88,5 +91,12 @@ class WebsocketPotAccountingRepository implements PotAccountingRepository {
         e.message ?? e.error.toString(),
       );
     }
+  }
+
+  AccountingResultModel _toModel(AccountingResultEntity entity) {
+    return AccountingResultModel(
+      userPk: entity.userPk,
+      accountingDone: entity.accountingDone,
+    );
   }
 }

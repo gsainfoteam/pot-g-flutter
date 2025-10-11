@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
-import 'package:pot_g/app/modules/chat/data/models/accounting_result_model.dart';
+import 'package:pot_g/app/modules/chat/domain/entities/accounting_result_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_user_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/repositories/pot_accounting_repository.dart';
@@ -54,7 +54,7 @@ sealed class PotAccountingEvent with _$PotAccountingEvent {
   ) = _RequestAccounting;
   const factory PotAccountingEvent.confirmAccounting(
     PotInfoEntity pot,
-    List<AccountingResultModel> accountingResults,
+    List<AccountingResultEntity> accountingResults,
   ) = _ConfirmAccounting;
 }
 
