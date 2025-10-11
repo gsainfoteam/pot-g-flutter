@@ -1,12 +1,15 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/enums/pot_status.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/pot_action_bloc.dart';
+import 'package:pot_g/app/modules/chat/presentation/bloc/pot_detail_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/pot_accounting.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/pot_info.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/pot_users.dart';
+import 'package:pot_g/app/modules/common/presentation/extensions/toast.dart';
 import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_pressable.dart';
 import 'package:pot_g/app/values/palette.dart';
@@ -76,6 +79,19 @@ class ChatRoomDrawer extends StatelessWidget {
     );
     if (result != OkCancelResult.ok) return;
     if (!context.mounted) return;
-    context.read<PotActionBloc>().add(PotActionEvent.leavePot(pot));
+    final bloc = context.read<PotActionBloc>();
+    final blocker = bloc.stream.firstWhere(
+      (s) => !s.isLoading || s.error != null,
+    );
+    context.router.pop();
+    bloc.add(PotActionEvent.leavePot(pot));
+    final state = await blocker;
+    if (!context.mounted) return;
+    if (state.error != null) {
+      context.showToast(state.error!);
+      return;
+    }
+    context.router.pop();
+    context.read<PotDetailBloc>().add(PotDetailEvent.loadMyPots());
   }
 }
