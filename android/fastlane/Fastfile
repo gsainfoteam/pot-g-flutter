@@ -45,7 +45,6 @@ platform :android do
     end
 
     upload_to_play_store(
-      release_status: "draft",  # TODO: remove this when ready
       aab: "../build/app/outputs/bundle/release/app-release.aab",
       track: "internal",
       version_name: version_string,
@@ -57,15 +56,14 @@ platform :android do
       skip_upload_images: true,
       skip_upload_screenshots: true,
     )
-    # TODO: uncomment this when ready
-    # internal_app_url = upload_to_play_store_internal_app_sharing(
-    #   aab: "../build/app/outputs/bundle/release/app-release.aab",
-    # )
+    internal_app_url = upload_to_play_store_internal_app_sharing(
+      aab: "../build/app/outputs/bundle/release/app-release.aab",
+    )
     slack(
       payload: {
         "Build Date" => Time.now.to_s,
         "Build Number" => build_number,
-        # "Internal App" => "<#{internal_app_url}>",
+        "Internal App" => "<#{internal_app_url}>",
       }
     ) if ENV['CI']
   end
