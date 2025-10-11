@@ -145,7 +145,8 @@
         "description": "$user 님이 입장하셨습니다"
       },
       "user_leave": {
-        "description": "$user 님이 나갔습니다"
+        "description": "$user 님이 나갔습니다",
+        "description_with_aux_user": "$user 님이 나갔습니다. $aux_user 님이 방장이 되었습니다"
       },
       "user_kicked": {
         "description": "$user 님이 팟에서 제외되었습니다"

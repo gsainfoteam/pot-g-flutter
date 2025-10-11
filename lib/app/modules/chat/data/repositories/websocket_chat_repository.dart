@@ -42,9 +42,19 @@ String? _getRelatedUserId(PotEventModel e) {
   };
 }
 
+String? _getAuxRelatedUserId(PotEventModel e) {
+  return switch (e) {
+    PotEventModel<UserLeaveV1Event>() => e.data.hostChangedTo,
+    _ => null,
+  };
+}
+
 Sendable _makeChatEntity(PotEventModel e, PotInfoEntity pot) {
   final users = pot.usersInfo.users;
   final user = users.firstWhereOrNull((u) => u.id == _getRelatedUserId(e));
+  final auxUser = users.firstWhereOrNull(
+    (u) => u.id == _getAuxRelatedUserId(e),
+  );
   return switch (e) {
     PotEventModel<ChatV1Event>() => ChatModel(
       message: e.data.content,
@@ -53,28 +63,28 @@ Sendable _makeChatEntity(PotEventModel e, PotInfoEntity pot) {
     ),
     PotEventModel<CreateV1Event>() => SystemMessageModel(
       type: SystemMessageType.created,
-      relatedUser: user!,
+      relatedUser: user,
       createdAt: e.timestamp,
     ),
     PotEventModel<UserInV1Event>() => SystemMessageModel(
       type: SystemMessageType.userIn,
-      relatedUser: user!,
+      relatedUser: user,
       createdAt: e.timestamp,
     ),
     PotEventModel<UserLeaveV1Event>() => SystemMessageModel(
       type: SystemMessageType.userLeave,
-      relatedUser: user!,
+      relatedUser: user,
+      auxRelatedUser: auxUser,
       createdAt: e.timestamp,
     ),
     PotEventModel<UserKickV1Event>() => SystemMessageModel(
       type: SystemMessageType.userKicked,
-      relatedUser: user!,
+      relatedUser: user,
       createdAt: e.timestamp,
     ),
     PotEventModel<PopoChatV1Event>() => e.data.toEntity(e.timestamp),
     PotEventModel<ArchiveV1Event>() => SystemMessageModel(
       type: SystemMessageType.archived,
-      relatedUser: null,
       createdAt: e.timestamp,
     ),
     _ => throw StateError('Unknown event type'),

@@ -19,9 +19,13 @@ class SystemMessage extends StatelessWidget {
       SystemMessageType.userIn => trans.user_in.description(
         user: message.relatedUser!.name,
       ),
-      SystemMessageType.userLeave => trans.user_leave.description(
-        user: message.relatedUser!.name,
-      ),
+      SystemMessageType.userLeave =>
+        message.auxRelatedUser == null
+            ? trans.user_leave.description(user: message.relatedUser!.name)
+            : trans.user_leave.description_with_aux_user(
+              user: message.relatedUser!.name,
+              aux_user: message.auxRelatedUser!.name,
+            ),
       SystemMessageType.userKicked => trans.user_kicked.description(
         user: message.relatedUser!.name,
       ),

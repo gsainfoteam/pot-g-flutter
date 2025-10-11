@@ -148,7 +148,8 @@
         "description": "$user joined the pot."
       },
       "user_leave": {
-        "description": "$user left the pot."
+        "description": "$user left the pot.",
+        "description_with_aux_user": "$user left the pot. $aux_user is now the host."
       },
       "user_kicked": {
         "description": "$user was kicked from the pot."

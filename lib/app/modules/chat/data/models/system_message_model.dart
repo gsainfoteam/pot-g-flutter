@@ -11,7 +11,8 @@ sealed class SystemMessageModel
     implements SystemMessageEntity {
   const factory SystemMessageModel({
     required SystemMessageType type,
-    required PotUserEntity? relatedUser,
+    PotUserEntity? relatedUser,
+    PotUserEntity? auxRelatedUser,
     @dateTimeConverter required DateTime createdAt,
   }) = _SystemMessageModel;
 }

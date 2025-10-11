@@ -16,6 +16,7 @@ enum SystemMessageType { userIn, userLeave, userKicked, created, archived }
 abstract class SystemMessageEntity implements Sendable {
   SystemMessageType get type;
   PotUserEntity? get relatedUser;
+  PotUserEntity? get auxRelatedUser;
 }
 
 abstract class FofoChatEntity implements Sendable {
