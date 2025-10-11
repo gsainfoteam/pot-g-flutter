@@ -13,7 +13,9 @@ class SystemMessage extends StatelessWidget {
   Widget build(BuildContext context) {
     final trans = context.t.chat_room.system_messages;
     final text = switch (message.type) {
-      SystemMessageType.created => trans.created.description(user: ''),
+      SystemMessageType.created => trans.created.description(
+        user: message.relatedUser!.name,
+      ),
       SystemMessageType.userIn => trans.user_in.description(
         user: message.relatedUser!.name,
       ),

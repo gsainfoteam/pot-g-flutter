@@ -32,7 +32,7 @@ bool _isChatEvent(PotEventModel e) {
 String? _getRelatedUserId(PotEventModel e) {
   return switch (e) {
     PotEventModel<ChatV1Event>() => e.data.from,
-    PotEventModel<CreateV1Event>() => null,
+    PotEventModel<CreateV1Event>() => e.data.createdBy,
     PotEventModel<UserInV1Event>() => e.data.userPk,
     PotEventModel<UserLeaveV1Event>() => e.data.userPk,
     PotEventModel<UserKickV1Event>() => e.data.kickedUserPk,
@@ -53,7 +53,7 @@ Sendable _makeChatEntity(PotEventModel e, PotInfoEntity pot) {
     ),
     PotEventModel<CreateV1Event>() => SystemMessageModel(
       type: SystemMessageType.created,
-      relatedUser: null,
+      relatedUser: user!,
       createdAt: e.timestamp,
     ),
     PotEventModel<UserInV1Event>() => SystemMessageModel(

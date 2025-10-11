@@ -6,7 +6,7 @@ part 'create_v1_event.g.dart';
 
 @Freezed(toJson: false)
 sealed class CreateV1Event with _$CreateV1Event implements PotEvent {
-  const factory CreateV1Event() = _CreateV1Event;
+  const factory CreateV1Event({required String createdBy}) = _CreateV1Event;
 
   factory CreateV1Event.fromJson(Map<String, dynamic> json) =>
       _$CreateV1EventFromJson(json);
