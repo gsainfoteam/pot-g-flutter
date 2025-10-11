@@ -244,6 +244,7 @@
       }
     },
     "accounting": {
+      "before_confirm": "출발 시간을 확정하지 않아 정산을 요청할 수 없습니다",
       "dutch": {
         "title": "정산하기",
         "fields": {
