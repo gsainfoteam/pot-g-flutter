@@ -149,6 +149,9 @@
       },
       "user_kicked": {
         "description": "$user 님이 팟에서 제외되었습니다"
+      },
+      "archived": {
+        "description": "팟이 해산되었습니다"
       }
     },
     "fofo": {

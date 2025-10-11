@@ -10,6 +10,7 @@ import 'package:pot_g/app/modules/chat/domain/repositories/chat_repository.dart'
 import 'package:pot_g/app/modules/socket/data/data_sources/websocket.dart';
 import 'package:pot_g/app/modules/socket/data/models/events/pot_event_model.dart';
 import 'package:pot_g/app/modules/socket/data/models/events/send_chat_response_model.dart';
+import 'package:pot_g/app/modules/socket/data/models/pot_events/archive_v1_event.dart';
 import 'package:pot_g/app/modules/socket/data/models/pot_events/chat_v1_event.dart';
 import 'package:pot_g/app/modules/socket/data/models/pot_events/create_v1_event.dart';
 import 'package:pot_g/app/modules/socket/data/models/pot_events/popo_chat_v1_event.dart';
@@ -24,7 +25,8 @@ bool _isChatEvent(PotEventModel e) {
       e is PotEventModel<UserInV1Event> ||
       e is PotEventModel<UserLeaveV1Event> ||
       e is PotEventModel<UserKickV1Event> ||
-      e is PotEventModel<PopoChatV1Event>;
+      e is PotEventModel<PopoChatV1Event> ||
+      e is PotEventModel<ArchiveV1Event>;
 }
 
 String? _getRelatedUserId(PotEventModel e) {
@@ -35,6 +37,7 @@ String? _getRelatedUserId(PotEventModel e) {
     PotEventModel<UserLeaveV1Event>() => e.data.userPk,
     PotEventModel<UserKickV1Event>() => e.data.kickedUserPk,
     PotEventModel<PopoChatV1Event>() => null,
+    PotEventModel<ArchiveV1Event>() => null,
     _ => throw StateError('Unknown event type'),
   };
 }
@@ -50,7 +53,7 @@ Sendable _makeChatEntity(PotEventModel e, PotInfoEntity pot) {
     ),
     PotEventModel<CreateV1Event>() => SystemMessageModel(
       type: SystemMessageType.created,
-      relatedUser: users.firstWhere((u) => u.isHost),
+      relatedUser: null,
       createdAt: e.timestamp,
     ),
     PotEventModel<UserInV1Event>() => SystemMessageModel(
@@ -69,6 +72,11 @@ Sendable _makeChatEntity(PotEventModel e, PotInfoEntity pot) {
       createdAt: e.timestamp,
     ),
     PotEventModel<PopoChatV1Event>() => e.data.toEntity(e.timestamp),
+    PotEventModel<ArchiveV1Event>() => SystemMessageModel(
+      type: SystemMessageType.archived,
+      relatedUser: null,
+      createdAt: e.timestamp,
+    ),
     _ => throw StateError('Unknown event type'),
   };
 }

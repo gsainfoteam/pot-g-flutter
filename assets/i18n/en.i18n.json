@@ -152,6 +152,9 @@
       },
       "user_kicked": {
         "description": "$user was kicked from the pot."
+      },
+      "archived": {
+        "description": "The pot has been archived."
       }
     },
     "fofo": {

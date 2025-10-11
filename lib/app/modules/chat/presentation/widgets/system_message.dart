@@ -13,18 +13,17 @@ class SystemMessage extends StatelessWidget {
   Widget build(BuildContext context) {
     final trans = context.t.chat_room.system_messages;
     final text = switch (message.type) {
-      SystemMessageType.created => trans.created.description(
-        user: message.relatedUser.name,
-      ),
+      SystemMessageType.created => trans.created.description(user: ''),
       SystemMessageType.userIn => trans.user_in.description(
-        user: message.relatedUser.name,
+        user: message.relatedUser!.name,
       ),
       SystemMessageType.userLeave => trans.user_leave.description(
-        user: message.relatedUser.name,
+        user: message.relatedUser!.name,
       ),
       SystemMessageType.userKicked => trans.user_kicked.description(
-        user: message.relatedUser.name,
+        user: message.relatedUser!.name,
       ),
+      SystemMessageType.archived => trans.archived.description,
     };
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 8),
