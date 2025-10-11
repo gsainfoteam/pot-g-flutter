@@ -100,7 +100,7 @@ class _Layout extends StatelessWidget {
     final pot = state.pot!;
     final disabled = state.isArchived;
     return Scaffold(
-      backgroundColor: disabled ? Palette.borderGrey : null,
+      backgroundColor: disabled ? const Color(0xfff0f0f0) : null,
       appBar: PotAppBar(title: Text(pot.name)),
       onEndDrawerChanged: (value) {
         if (value) {
@@ -238,11 +238,14 @@ class _ChatListState extends State<_ChatList> {
   @override
   void initState() {
     super.initState();
-    _controller.addListener(() {
-      if (_controller.position.pixels >= _controller.position.maxScrollExtent) {
-        context.read<ChatBloc>().add(ChatLoadMore());
-      }
-    });
+    _controller.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    if (!_controller.hasClients) return;
+    if (_controller.position.pixels >= _controller.position.maxScrollExtent) {
+      context.read<ChatBloc>().add(ChatLoadMore());
+    }
   }
 
   @override
@@ -253,7 +256,12 @@ class _ChatListState extends State<_ChatList> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ChatBloc, ChatState>(
+    return BlocConsumer<ChatBloc, ChatState>(
+      listener: (context, state) {
+        if (!state.endReached && !state.isLoading) {
+          _onScroll();
+        }
+      },
       builder: (context, state) {
         bool isLast(int index) {
           final chat = state.chats[index];
@@ -267,6 +275,7 @@ class _ChatListState extends State<_ChatList> {
         }
 
         return ListView.separated(
+          physics: const AlwaysScrollableScrollPhysics(),
           controller: _controller,
           reverse: true,
           padding: const EdgeInsets.all(12) - EdgeInsets.only(right: 6),

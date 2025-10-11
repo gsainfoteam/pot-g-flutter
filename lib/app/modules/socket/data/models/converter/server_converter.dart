@@ -7,6 +7,7 @@ import 'package:pot_g/app/modules/socket/data/models/pot_events/accounting_confi
 import 'package:pot_g/app/modules/socket/data/models/pot_events/accounting_request_v1_event.dart';
 import 'package:pot_g/app/modules/socket/data/models/pot_events/archive_v1_event.dart';
 import 'package:pot_g/app/modules/socket/data/models/pot_events/chat_v1_event.dart';
+import 'package:pot_g/app/modules/socket/data/models/pot_events/create_v1_event.dart';
 import 'package:pot_g/app/modules/socket/data/models/pot_events/departure_confirm_v1_event.dart';
 import 'package:pot_g/app/modules/socket/data/models/pot_events/popo_chat_v1_event.dart';
 import 'package:pot_g/app/modules/socket/data/models/pot_events/user_in_v1_event.dart';
@@ -45,8 +46,7 @@ BaseServerMessageModel<T> convertServerMessage<
   );
   final data = switch (type) {
     'pot_event_receive' => switch (jsonData['body']['event_type']) {
-      // TODO: handle create_v1 event
-      'create_v1' => pe(ArchiveV1Event.fromJson),
+      'create_v1' => pe(CreateV1Event.fromJson),
       'chat_v1' => pe(ChatV1Event.fromJson),
       'popo_chat_v1' => pe(PopoChatV1Event.fromJson),
       'user_in_v1' => pe(UserInV1Event.fromJson),
