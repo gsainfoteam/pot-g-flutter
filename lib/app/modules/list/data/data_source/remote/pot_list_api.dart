@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:pot_g/app/modules/core/data/dio/pot_dio.dart';
+import 'package:pot_g/app/modules/list/data/model/get_pot_list_query_model.dart';
 import 'package:pot_g/app/modules/list/data/model/pot_list_model.dart';
 import 'package:retrofit/retrofit.dart';
 
@@ -14,10 +15,6 @@ abstract class PotListApi {
 
   @GET('list')
   Future<PotListModel> getList({
-    @Query('route_id') String? routeId,
-    @Query('starts_at') DateTime? startsAt,
-    @Query('ends_at') DateTime? endsAt,
-    @Query('offset') required int offset,
-    @Query('limit') required int limit,
+    @Queries() required GetPotListQueryModel query,
   });
 }
