@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
@@ -18,14 +16,12 @@ class CreatePotBloc extends Bloc<CreatePotEvent, CreatePotState> {
   Future<void> _onCreate(_Create event, Emitter<CreatePotState> emit) async {
     emit(state.copyWith(isLoading: true, error: null));
     try {
-      final potResponse = await _repository.createPot(
+      final potId = await _repository.createPot(
         routeId: event.routeId,
         startsAt: event.startsAt,
         endsAt: event.endsAt,
         maxCount: event.maxCount,
       );
-
-      final potId = json.decode(potResponse)['id'];
 
       emit(state.copyWith(isLoading: false, createdPotId: potId));
     } catch (e) {
