@@ -1,4 +1,3 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -11,7 +10,6 @@ import 'package:pot_g/app/modules/core/presentation/bloc/route_list_bloc.dart';
 import 'package:pot_g/app/modules/create/presentation/bloc/create_cubit.dart';
 import 'package:pot_g/app/modules/create/presentation/bloc/create_pot_bloc.dart';
 import 'package:pot_g/app/modules/create/presentation/widgets/time_interval_selector.dart';
-import 'package:pot_g/app/router.gr.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
 import 'package:pot_g/gen/strings.g.dart';
@@ -44,29 +42,27 @@ class CreateForm extends StatelessWidget {
             padding: const EdgeInsets.all(10),
             child: PotButton(
               onPressed: context.select(
-                (CreateCubit cubit) =>
-                    cubit.state.valid
-                        ? () {
-                          L.c('createPot');
-                          final state = cubit.state;
-                          context.read<CreatePotBloc>().add(
-                            CreatePotEvent.create(
-                              routeId: state.route!.id,
-                              startsAt: state.date!.copyWith(
-                                hour: state.startTime!.hour,
-                                minute: state.startTime!.minute,
-                              ),
-                              endsAt: state.date!.copyWith(
-                                hour: state.endTime!.hour,
-                                minute: state.endTime!.minute,
-                              ),
-                              maxCount: state.maxCapacity!,
+                (CreateCubit cubit) => cubit.state.valid
+                    ? () {
+                        L.c('createPot');
+                        final state = cubit.state;
+                        final bloc = context.read<CreatePotBloc>();
+                        bloc.add(
+                          CreatePotEvent.create(
+                            routeId: state.route!.id,
+                            startsAt: state.date!.copyWith(
+                              hour: state.startTime!.hour,
+                              minute: state.startTime!.minute,
                             ),
-                          );
-
-                          context.router.push(ListRoute());
-                        }
-                        : null,
+                            endsAt: state.date!.copyWith(
+                              hour: state.endTime!.hour,
+                              minute: state.endTime!.minute,
+                            ),
+                            maxCount: state.maxCapacity!,
+                          ),
+                        );
+                      }
+                    : null,
               ),
               variant: PotButtonVariant.emphasized,
               child: Text(context.t.create.action),
@@ -196,12 +192,11 @@ class _Capacity extends StatelessWidget {
                   child: Text(
                     context.t.create.capacity.fields.max_capacity.item(n: i),
                     style: TextStyle(
-                      color:
-                          selected == i
-                              ? Palette.primary
-                              : preFilled
-                              ? Palette.textGrey
-                              : Palette.grey,
+                      color: selected == i
+                          ? Palette.primary
+                          : preFilled
+                          ? Palette.textGrey
+                          : Palette.grey,
                     ),
                   ),
                 ),
