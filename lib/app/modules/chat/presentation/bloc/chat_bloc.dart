@@ -59,12 +59,18 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     Emitter<ChatState> emit,
   ) async {
     await _completer.future;
+    if (state.endReached) return;
     await _mutex.acquire();
     try {
       emit(ChatState.loading(state.chats));
       final lastChat = state.chats.last;
       final chats = await _chatRepository.getChats(_pot, lastChat.createdAt);
-      emit(ChatState.loaded([...state.chats, ...chats.reversed]));
+      emit(
+        ChatState.loaded([
+          ...state.chats,
+          ...chats.reversed,
+        ], endReached: chats.isEmpty),
+      );
     } finally {
       _mutex.release();
     }
@@ -85,7 +91,10 @@ sealed class ChatState with _$ChatState {
       ChatInitial;
   const factory ChatState.loading([@Default([]) List<Sendable> chats]) =
       ChatLoading;
-  const factory ChatState.loaded(List<Sendable> chats) = ChatLoaded;
+  const factory ChatState.loaded(
+    List<Sendable> chats, {
+    @Default(false) bool endReached,
+  }) = ChatLoaded;
   const factory ChatState.error(List<Sendable> chats, String message) =
       ChatError;
 
@@ -97,5 +106,9 @@ sealed class ChatState with _$ChatState {
   String? get error => switch (this) {
     ChatError(:final message) => message,
     _ => null,
+  };
+  bool get endReached => switch (this) {
+    ChatLoaded(:final endReached) => endReached,
+    _ => false,
   };
 }
