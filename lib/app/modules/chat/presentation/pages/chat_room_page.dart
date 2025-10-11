@@ -230,6 +230,7 @@ class _ChatListState extends State<_ChatList> {
   }
 
   void _onScroll() {
+    if (!_controller.hasClients) return;
     if (_controller.position.pixels >= _controller.position.maxScrollExtent) {
       context.read<ChatBloc>().add(ChatLoadMore());
     }
