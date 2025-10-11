@@ -10,7 +10,6 @@ import 'package:pot_g/app/modules/core/domain/entities/route_entity.dart';
 import 'package:pot_g/app/modules/create/presentation/bloc/create_cubit.dart';
 import 'package:pot_g/app/modules/create/presentation/bloc/create_pot_bloc.dart';
 import 'package:pot_g/app/modules/create/presentation/widgets/create_form.dart';
-import 'package:pot_g/app/modules/list/presentation/bloc/pot_list_bloc.dart';
 import 'package:pot_g/app/router.gr.dart';
 import 'package:pot_g/gen/strings.g.dart';
 
@@ -47,9 +46,8 @@ class CreatePage extends StatelessWidget with LogPageStateless {
               return;
             }
             if (state.createdPotId != null) return;
-            context.read<PotListBloc>().add(PotListEvent.search());
             context.read<PotDetailBloc>().add(PotDetailEvent.loadMyPots());
-            ListRoute().push(context);
+            ChatRoute().push(context);
             ChatRoomRoute(id: state.createdPotId!).push(context);
           },
           child: const CreateForm(),
