@@ -247,6 +247,7 @@
       }
     },
     "accounting": {
+      "before_confirm": "You cannot request accounting before confirming the departure time",
       "dutch": {
         "title": "Dutch Pay",
         "fields": {

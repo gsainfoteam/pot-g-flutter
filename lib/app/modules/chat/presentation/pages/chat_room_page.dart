@@ -138,6 +138,10 @@ class _AccountingButton extends StatelessWidget {
     BuildContext context,
     PotInfoEntity pot,
   ) async {
+    if (pot.departureTime == null) {
+      context.showToast(context.t.chat_room.accounting.before_confirm);
+      return;
+    }
     await AccountingRoute(pot: pot).push(context);
   }
 
