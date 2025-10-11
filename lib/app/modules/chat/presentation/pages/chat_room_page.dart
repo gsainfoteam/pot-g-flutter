@@ -35,14 +35,14 @@ import 'package:pot_g/gen/assets.gen.dart';
 import 'package:pot_g/gen/strings.g.dart';
 
 class _PotId implements PotIdEntity {
-  _PotId({@PathParam() required this.id});
+  _PotId({required this.id});
   @override
   final String id;
 }
 
 @RoutePage()
 class ChatRoomPage extends StatelessWidget with LogPageStateless {
-  const ChatRoomPage({super.key, required this.id});
+  const ChatRoomPage({super.key, @PathParam() required this.id});
 
   @override
   String get pageName => 'chatRoom';
