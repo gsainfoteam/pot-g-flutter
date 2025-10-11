@@ -66,11 +66,7 @@ class _Providers extends StatelessWidget {
           lazy: false,
           create: (_) => sl<LinkBloc>()..add(const LinkEvent.init()),
         ),
-        BlocProvider(
-          lazy: false,
-          create: (_) =>
-              sl<PotDetailBloc>()..add(const PotDetailEvent.loadMyPots()),
-        ),
+        BlocProvider(lazy: false, create: (_) => sl<PotDetailBloc>()),
       ],
       child: MultiBlocListener(
         listeners: [
