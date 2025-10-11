@@ -59,9 +59,10 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     Emitter<ChatState> emit,
   ) async {
     await _completer.future;
-    if (state.endReached) return;
     await _mutex.acquire();
     try {
+      if (state.endReached) return;
+      if (state.chats.isEmpty) return;
       emit(ChatState.loading(state.chats));
       final lastChat = state.chats.last;
       final chats = await _chatRepository.getChats(_pot, lastChat.createdAt);
