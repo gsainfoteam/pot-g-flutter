@@ -51,7 +51,7 @@ class PotProfileImage extends StatelessWidget {
       height: 40,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(100),
-        border: Border.all(color: Palette.borderGrey2, width: 0.5),
+        border: Border.all(color: Palette.borderGrey, width: 0.5),
       ),
       child: ClipOval(child: getImageByIndex(index, user.isInPot)),
     );

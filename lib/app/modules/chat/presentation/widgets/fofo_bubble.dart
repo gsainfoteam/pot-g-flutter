@@ -38,10 +38,7 @@ class FofoBubble extends StatelessWidget {
         height: 40,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(100),
-          border: Border.all(
-            color: const Color.fromARGB(255, 62, 44, 44),
-            width: 0.5,
-          ),
+          border: Border.all(color: Palette.borderGrey, width: 0.5),
         ),
         child: ClipOval(child: Assets.images.fofo.svg()),
       ),
