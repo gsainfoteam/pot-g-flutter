@@ -37,7 +37,10 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       return emit.forEach(
         _chatRepository.getChatsStream(_pot),
         onData: (chat) {
-          return ChatState.loaded([chat, ...state.chats]);
+          return ChatState.loaded([
+            chat,
+            ...state.chats,
+          ], endReached: state.endReached);
         },
       );
     } catch (e) {
