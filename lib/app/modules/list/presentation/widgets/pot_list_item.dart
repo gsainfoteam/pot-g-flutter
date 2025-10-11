@@ -79,7 +79,6 @@ class PotListItem extends StatelessWidget {
     if (result != OkCancelResult.ok) return;
     if (!context.mounted) return;
 
-    // JoinPotBloc을 사용하여 입장 처리
     await _joinPot(context);
   }
 
@@ -101,10 +100,10 @@ class PotListItem extends StatelessWidget {
                 potListBloc.add(PotListEvent.search());
                 potDetailBloc.add(const PotDetailEvent.loadMyPots());
                 Navigator.of(context).pop();
-                _navigateToChatRoom(context, successState.potId);
+                ChatRoomRoute(id: successState.potId).push(context);
               },
               error: (errorState) {
-                Navigator.of(context).pop(); // 로딩 다이얼로그 닫기
+                Navigator.of(context).pop();
                 context.showToast(errorState.message);
               },
             );
@@ -123,11 +122,6 @@ class PotListItem extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  void _navigateToChatRoom(BuildContext context, String potId) {
-    // 채팅방으로 이동
-    ChatRoomRoute(id: pot.id).push(context);
   }
 
   @override
