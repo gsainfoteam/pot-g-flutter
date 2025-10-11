@@ -23,8 +23,7 @@ class RestCreatePotRepository implements CreatePotRepository {
       maxCount: maxCount,
     );
 
-    final String potId = await _api.createPot(createPotModel);
-
-    return potId;
+    final result = await _api.createPot(createPotModel);
+    return result.id;
   }
 }

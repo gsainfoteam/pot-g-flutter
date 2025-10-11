@@ -20,10 +20,12 @@ class ChatListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textColorTitle =
-        pot.status == PotStatus.archived ? Palette.grey : Palette.dark;
-    final textColorDescription =
-        pot.status == PotStatus.archived ? Palette.grey : Palette.textGrey;
+    final textColorTitle = pot.status == PotStatus.archived
+        ? Palette.grey
+        : Palette.dark;
+    final textColorDescription = pot.status == PotStatus.archived
+        ? Palette.grey
+        : Palette.textGrey;
 
     Widget field({required String label, required String value}) {
       return Row(
@@ -44,7 +46,7 @@ class ChatListItem extends StatelessWidget {
     return PotPressable(
       onTap: () {
         L.c('chatRoom', properties: {'name': pot.name});
-        ChatRoomRoute(pot: pot).push(context);
+        ChatRoomRoute(id: pot.id).push(context);
       },
       child: Container(
         padding:
@@ -70,32 +72,30 @@ class ChatListItem extends StatelessWidget {
           children: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children:
-                  [
-                    Text(
-                      '팟 정보',
-                      style: TextStyles.caption.copyWith(color: Palette.grey),
-                    ),
-                    field(label: '노선', value: pot.route.name),
-                    field(
-                      label: '날짜',
-                      value: DateFormat.yMd().add_E().format(pot.startsAt),
-                    ),
-                    field(
-                      label: '시간',
-                      value:
-                          pot.status == PotStatus.beforeConfirmed
-                              ? '${DateFormat.Hm().format(pot.startsAt)}~${DateFormat.Hm().format(pot.endsAt)}'
-                              : DateFormat.Hm().format(pot.startsAt),
-                    ),
-                    if (pot.status == PotStatus.waitAccounting ||
-                        pot.status == PotStatus.archived)
-                      field(
-                        label: '정산',
-                        value:
-                            '${NumberFormat('#,###').format(pot.accountingRequested)}원',
-                      ),
-                  ].intersperse(const SizedBox(height: 4)).toList(),
+              children: [
+                Text(
+                  '팟 정보',
+                  style: TextStyles.caption.copyWith(color: Palette.grey),
+                ),
+                field(label: '노선', value: pot.route.name),
+                field(
+                  label: '날짜',
+                  value: DateFormat.yMd().add_E().format(pot.startsAt),
+                ),
+                field(
+                  label: '시간',
+                  value: pot.status == PotStatus.beforeConfirmed
+                      ? '${DateFormat.Hm().format(pot.startsAt)}~${DateFormat.Hm().format(pot.endsAt)}'
+                      : DateFormat.Hm().format(pot.startsAt),
+                ),
+                if (pot.status == PotStatus.waitAccounting ||
+                    pot.status == PotStatus.archived)
+                  field(
+                    label: '정산',
+                    value:
+                        '${NumberFormat('#,###').format(pot.accountingRequested)}원',
+                  ),
+              ].intersperse(const SizedBox(height: 4)).toList(),
             ),
             Positioned(
               right: 0,
