@@ -9,5 +9,6 @@ sealed class GetPotEventsQueryModel with _$GetPotEventsQueryModel {
   const factory GetPotEventsQueryModel({
     @Default(20) int? limit,
     @EpochDateTimeConverter() required DateTime startsFrom,
+    int? except,
   }) = _GetPotEventsQueryModel;
 }

@@ -12,6 +12,7 @@ sealed class PotEventModel<T extends PotEvent>
     implements BaseServerMessageEvent {
   const factory PotEventModel({
     required String potPk,
+    required String id,
     @EpochDateTimeConverter() required DateTime timestamp,
     required String eventType,
     required T data,
