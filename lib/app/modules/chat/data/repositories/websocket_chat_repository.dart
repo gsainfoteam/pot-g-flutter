@@ -60,32 +60,38 @@ Sendable _makeChatEntity(PotEventModel e, PotInfoEntity pot) {
       message: e.data.content,
       user: user!,
       createdAt: e.timestamp,
+      id: e.id,
     ),
     PotEventModel<CreateV1Event>() => SystemMessageModel(
       type: SystemMessageType.created,
       relatedUser: user,
       createdAt: e.timestamp,
+      id: e.id,
     ),
     PotEventModel<UserInV1Event>() => SystemMessageModel(
       type: SystemMessageType.userIn,
       relatedUser: user,
       createdAt: e.timestamp,
+      id: e.id,
     ),
     PotEventModel<UserLeaveV1Event>() => SystemMessageModel(
       type: SystemMessageType.userLeave,
       relatedUser: user,
       auxRelatedUser: auxUser,
       createdAt: e.timestamp,
+      id: e.id,
     ),
     PotEventModel<UserKickV1Event>() => SystemMessageModel(
       type: SystemMessageType.userKicked,
       relatedUser: user,
       createdAt: e.timestamp,
+      id: e.id,
     ),
-    PotEventModel<PopoChatV1Event>() => e.data.toEntity(e.timestamp),
+    PotEventModel<PopoChatV1Event>() => e.data.toEntity(e.timestamp, e.id),
     PotEventModel<ArchiveV1Event>() => SystemMessageModel(
       type: SystemMessageType.archived,
       createdAt: e.timestamp,
+      id: e.id,
     ),
     _ => throw StateError('Unknown event type'),
   };
@@ -99,14 +105,14 @@ class WebsocketChatRepository implements ChatRepository {
   WebsocketChatRepository(this._socket, this._api);
 
   @override
-  Future<List<Sendable>> getChats(
-    PotInfoEntity pot,
-    DateTime startsFrom,
-  ) async {
+  Future<List<Sendable>> getChats(PotInfoEntity pot, Sendable? last) async {
     final localPot = await _api.getPotInfo(pot.id);
     final events = await _api.getPotEvents(
       pot.id,
-      GetPotEventsQueryModel(startsFrom: startsFrom),
+      GetPotEventsQueryModel(
+        startsFrom: last?.createdAt ?? DateTime.now(),
+        except: last?.id,
+      ),
     );
     return events.events
         .where((e) => e.potPk == pot.id)

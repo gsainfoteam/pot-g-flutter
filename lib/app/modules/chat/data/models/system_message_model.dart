@@ -1,7 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/chat_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_user_entity.dart';
-import 'package:pot_g/app/modules/core/data/converter/date_time_converter.dart';
 
 part 'system_message_model.freezed.dart';
 
@@ -13,6 +12,7 @@ sealed class SystemMessageModel
     required SystemMessageType type,
     PotUserEntity? relatedUser,
     PotUserEntity? auxRelatedUser,
-    @dateTimeConverter required DateTime createdAt,
+    required DateTime createdAt,
+    required int id,
   }) = _SystemMessageModel;
 }

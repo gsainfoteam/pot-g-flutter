@@ -21,11 +21,12 @@ sealed class PopoChatV1Event with _$PopoChatV1Event implements PotEvent {
   factory PopoChatV1Event.fromJson(Map<String, dynamic> json) =>
       _$PopoChatV1EventFromJson(json);
 
-  FofoChat toEntity(DateTime timestamp) => FofoChat(
+  FofoChat toEntity(DateTime timestamp, int id) => FofoChat(
     type: popoChatType.fofoChatType,
     content: content,
     actionButtons: actionBtns.map((e) => e.fofoActionButtonType).toList(),
     createdAt: timestamp,
+    id: id,
   );
 }
 
@@ -36,6 +37,7 @@ sealed class FofoChat with _$FofoChat implements FofoChatEntity {
     required String content,
     required List<FofoActionButtonType?> actionButtons,
     required DateTime createdAt,
+    required int id,
   }) = _FofoChat;
 }
 

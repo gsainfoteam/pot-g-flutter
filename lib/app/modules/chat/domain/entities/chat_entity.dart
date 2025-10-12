@@ -4,6 +4,7 @@ import 'package:pot_g/app/modules/chat/domain/enums/fofo_chat_type.dart';
 
 sealed class Sendable {
   DateTime get createdAt;
+  int get id;
 }
 
 abstract class ChatEntity implements Sendable {
