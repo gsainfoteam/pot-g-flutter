@@ -55,8 +55,12 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     Emitter<ChatState> emit,
   ) async {
     await _completer.future;
-    await _chatRepository.sendChat(event.message, _pot);
-    // TODO: optimistic UI
+    try {
+      await _chatRepository.sendChat(event.message, _pot);
+      // TODO: optimistic UI
+    } catch (e) {
+      emit(ChatState.error(state.chats, e.toString()));
+    }
   }
 
   Future<void> _onChatLoadMore(
