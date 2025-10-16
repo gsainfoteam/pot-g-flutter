@@ -61,14 +61,22 @@ class _Layout extends StatelessWidget {
             if (bank?.isSet ?? false)
               Row(
                 children: [
-                  Text(
-                    bank?.bankShortName ?? '',
-                    style: TextStyles.title4.copyWith(color: Palette.dark),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    bank?.account ?? '',
-                    style: TextStyles.body.copyWith(color: Palette.dark),
+                  Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: bank?.bankShortName ?? '',
+                          style: TextStyles.title4.copyWith(
+                            color: Palette.dark,
+                          ),
+                        ),
+                        TextSpan(text: ' '),
+                        TextSpan(
+                          text: bank?.account ?? '',
+                          style: TextStyles.body.copyWith(color: Palette.dark),
+                        ),
+                      ],
+                    ),
                   ),
                   Spacer(),
                   PotButton(
@@ -176,10 +184,9 @@ class _SelectBankDialogState extends State<_SelectBankDialog> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => sl<BankListBloc>()..add(BankListEvent.load()),
-      child:
-          selectedBank != null
-              ? _BankNumber(selectedBank: selectedBank!)
-              : _buildBankList(),
+      child: selectedBank != null
+          ? _BankNumber(selectedBank: selectedBank!)
+          : _buildBankList(),
     );
   }
 
@@ -204,43 +211,36 @@ class _SelectBankDialogState extends State<_SelectBankDialog> {
         SizedBox(
           height: 300,
           child: BlocBuilder<BankListBloc, BankListState>(
-            builder:
-                (context, state) => ListView.separated(
-                  itemBuilder:
-                      (_, index) => PotPressable(
-                        hitTestBehavior: HitTestBehavior.opaque,
-                        onTap: () {
-                          L.c(
-                            'bank',
-                            from: 'selectBank',
-                            properties: {'bank': state.banks[index].name},
-                          );
-                          L.v('bankAccountNumber', from: 'selectBank');
-                          setState(() => selectedBank = state.banks[index]);
-                        },
-                        child: SizedBox(
-                          height: 48,
-                          child: Row(
-                            children: [
-                              SizedBox(
-                                width: 24,
-                                height: 24,
-                                child: Image.network(
-                                  'https://placehold.co/40.png',
-                                ),
-                              ),
-                              const SizedBox(width: 12),
-                              Text(
-                                state.banks[index].name,
-                                style: TextStyles.title3,
-                              ),
-                            ],
-                          ),
-                        ),
+            builder: (context, state) => ListView.separated(
+              itemBuilder: (_, index) => PotPressable(
+                hitTestBehavior: HitTestBehavior.opaque,
+                onTap: () {
+                  L.c(
+                    'bank',
+                    from: 'selectBank',
+                    properties: {'bank': state.banks[index].name},
+                  );
+                  L.v('bankAccountNumber', from: 'selectBank');
+                  setState(() => selectedBank = state.banks[index]);
+                },
+                child: SizedBox(
+                  height: 48,
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: 24,
+                        height: 24,
+                        child: Image.network('https://placehold.co/40.png'),
                       ),
-                  separatorBuilder: (_, _) => const SizedBox(height: 8),
-                  itemCount: state.banks.length,
+                      const SizedBox(width: 12),
+                      Text(state.banks[index].name, style: TextStyles.title3),
+                    ],
+                  ),
                 ),
+              ),
+              separatorBuilder: (_, _) => const SizedBox(height: 8),
+              itemCount: state.banks.length,
+            ),
           ),
         ),
       ],
@@ -297,31 +297,29 @@ class _BankNumberState extends State<_BankNumber> {
             PotTextField(
               filled: true,
               controller: controller,
-              readOnly: true,
-              hintText:
-                  context
-                      .t
-                      .profile
-                      .account_number_settings
-                      .bank_number
-                      .placeholder,
+              keyboardType: TextInputType.none,
+              hintText: context
+                  .t
+                  .profile
+                  .account_number_settings
+                  .bank_number
+                  .placeholder,
             ),
             const SizedBox(height: 20),
             Keypad(controller: controller),
             const SizedBox(height: 20),
             PotButton(
-              onPressed:
-                  controller.text.length > 5
-                      ? () {
-                        L.c('registerBankAccount', from: 'bankAccountNumber');
-                        bloc.add(
-                          SetBankAccountEvent.set(
-                            widget.selectedBank,
-                            controller.text,
-                          ),
-                        );
-                      }
-                      : null,
+              onPressed: controller.text.length > 5
+                  ? () {
+                      L.c('registerBankAccount', from: 'bankAccountNumber');
+                      bloc.add(
+                        SetBankAccountEvent.set(
+                          widget.selectedBank,
+                          controller.text,
+                        ),
+                      );
+                    }
+                  : null,
               variant: PotButtonVariant.emphasized,
               child: Text(
                 context.t.profile.account_number_settings.bank_number.register,
