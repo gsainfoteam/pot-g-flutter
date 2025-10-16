@@ -142,6 +142,7 @@ class _DateInput extends StatelessWidget {
     final selected = context.select((CreateCubit cubit) => cubit.state.date);
     return DateSelect(
       selectedDate: selected,
+      minDate: DateTime.now(),
       onSelected: (date) {
         L.c(
           'dateSelectorItem',
