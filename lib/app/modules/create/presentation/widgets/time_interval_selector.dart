@@ -14,6 +14,7 @@ class TimeIntervalSelector extends StatelessWidget {
     this.startTime,
     this.endTime,
     this.disabled = false,
+    this.minStartTime,
   });
 
   final DateTime? startTime;
@@ -21,6 +22,7 @@ class TimeIntervalSelector extends StatelessWidget {
   final Function(DateTime) onStartChanged;
   final Function(DateTime) onEndChanged;
   final bool disabled;
+  final DateTime? minStartTime;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +32,9 @@ class TimeIntervalSelector extends StatelessWidget {
           onPressed: () async {
             final date = await TimeIntervalForm.select(
               context,
-              startTime ?? DateTime.now().copyWith(hour: 0, minute: 0),
+              startTime ??
+                  (minStartTime ?? DateTime.now().copyWith(hour: 0, minute: 0)),
+              minTime: minStartTime,
             );
             if (date != null) {
               onStartChanged(date);
@@ -39,15 +43,15 @@ class TimeIntervalSelector extends StatelessWidget {
           size: PotButtonSize.medium,
           child: Text(
             DateFormat.Hm().format(
-              startTime ?? DateTime.now().copyWith(hour: 0, minute: 0),
+              startTime ??
+                  (minStartTime ?? DateTime.now().copyWith(hour: 0, minute: 0)),
             ),
             style: TextStyle(
-              color:
-                  startTime != null
-                      ? Palette.primary
-                      : disabled
-                      ? Palette.grey
-                      : null,
+              color: startTime != null
+                  ? Palette.primary
+                  : disabled
+                  ? Palette.grey
+                  : null,
             ),
           ),
         ),
@@ -76,12 +80,11 @@ class TimeIntervalSelector extends StatelessWidget {
               endTime ?? DateTime.now().copyWith(hour: 23, minute: 59),
             ),
             style: TextStyle(
-              color:
-                  endTime != null
-                      ? Palette.primary
-                      : disabled
-                      ? Palette.grey
-                      : null,
+              color: endTime != null
+                  ? Palette.primary
+                  : disabled
+                  ? Palette.grey
+                  : null,
             ),
           ),
         ),
@@ -100,9 +103,9 @@ class TimeIntervalSelector extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children:
                 context.t.create.time_interval.fields.start_time.input_first !=
-                        'true'
-                    ? startWidget.reversed.toList()
-                    : startWidget,
+                    'true'
+                ? startWidget.reversed.toList()
+                : startWidget,
           ),
         ),
         const SizedBox(width: 8),
@@ -111,9 +114,9 @@ class TimeIntervalSelector extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children:
                 context.t.create.time_interval.fields.end_time.input_first !=
-                        'true'
-                    ? endWidget.reversed.toList()
-                    : endWidget,
+                    'true'
+                ? endWidget.reversed.toList()
+                : endWidget,
           ),
         ),
       ],

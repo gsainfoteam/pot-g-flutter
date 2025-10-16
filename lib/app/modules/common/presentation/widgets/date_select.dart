@@ -15,12 +15,14 @@ class DateSelect extends StatefulWidget {
     required this.onSelected,
     required this.isOpen,
     required this.onOpenChanged,
+    this.minDate,
   });
 
   final DateTime? selectedDate;
   final void Function(DateTime) onSelected;
   final bool isOpen;
   final void Function(bool) onOpenChanged;
+  final DateTime? minDate;
 
   @override
   State<DateSelect> createState() => _DateSelectState();
@@ -51,10 +53,9 @@ class _DateSelectState extends State<DateSelect> {
       child: AnimatedCrossFade(
         duration: Duration(milliseconds: 200),
         sizeCurve: Curves.easeInOut,
-        crossFadeState:
-            widget.isOpen
-                ? CrossFadeState.showFirst
-                : CrossFadeState.showSecond,
+        crossFadeState: widget.isOpen
+            ? CrossFadeState.showFirst
+            : CrossFadeState.showSecond,
         firstChild: Padding(
           padding: const EdgeInsets.all(15) - EdgeInsets.only(top: 5),
           child: Column(
@@ -62,6 +63,7 @@ class _DateSelectState extends State<DateSelect> {
             children: [
               _Calendar(
                 selectedDate: _selectedDate,
+                minDate: widget.minDate,
                 onSelected: (date) => setState(() => _selectedDate = date),
               ),
               SizedBox(height: 8),
@@ -69,13 +71,12 @@ class _DateSelectState extends State<DateSelect> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   PotButton(
-                    onPressed:
-                        _selectedDate == null
-                            ? null
-                            : () {
-                              widget.onOpenChanged(false);
-                              widget.onSelected(_selectedDate!);
-                            },
+                    onPressed: _selectedDate == null
+                        ? null
+                        : () {
+                            widget.onOpenChanged(false);
+                            widget.onSelected(_selectedDate!);
+                          },
                     variant: PotButtonVariant.emphasized,
                     size: PotButtonSize.small,
                     child: Text(context.t.list.filters.date.select),
@@ -95,22 +96,17 @@ class _DateSelectState extends State<DateSelect> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Expanded(
-                  child:
-                      widget.selectedDate == null
-                          ? Text(
-                            context.t.list.filters.date.all,
-                            style: TextStyles.body.copyWith(
-                              color: Palette.textGrey,
-                            ),
-                          )
-                          : Text(
-                            DateFormat.yMd().add_E().format(
-                              widget.selectedDate!,
-                            ),
-                            style: TextStyles.body.copyWith(
-                              color: Palette.dark,
-                            ),
+                  child: widget.selectedDate == null
+                      ? Text(
+                          context.t.list.filters.date.all,
+                          style: TextStyles.body.copyWith(
+                            color: Palette.textGrey,
                           ),
+                        )
+                      : Text(
+                          DateFormat.yMd().add_E().format(widget.selectedDate!),
+                          style: TextStyles.body.copyWith(color: Palette.dark),
+                        ),
                 ),
                 if (!widget.isOpen)
                   Assets.icons.calendar.svg(
@@ -129,10 +125,11 @@ class _DateSelectState extends State<DateSelect> {
 }
 
 class _Calendar extends StatefulWidget {
-  const _Calendar({this.selectedDate, required this.onSelected});
+  const _Calendar({this.selectedDate, required this.onSelected, this.minDate});
 
   final DateTime? selectedDate;
   final void Function(DateTime) onSelected;
+  final DateTime? minDate;
 
   @override
   State<_Calendar> createState() => __CalendarState();
@@ -239,20 +236,22 @@ class __CalendarState extends State<_Calendar> {
                     .startOfWeek()
                     .addWeeks(i)
                     .addDays(j);
+                final isDisabled =
+                    widget.minDate != null && date.isBefore(widget.minDate!);
                 return Expanded(
                   child: GestureDetector(
-                    onTap:
-                        () => setState(() {
-                          widget.onSelected(date);
-                          _currentMonth = date;
-                        }),
+                    onTap: isDisabled
+                        ? null
+                        : () => setState(() {
+                            widget.onSelected(date);
+                            _currentMonth = date;
+                          }),
                     child: Container(
                       height: 40,
                       decoration: BoxDecoration(
-                        color:
-                            widget.selectedDate?.isSameDay(date) ?? false
-                                ? Palette.primary
-                                : null,
+                        color: widget.selectedDate?.isSameDay(date) ?? false
+                            ? Palette.primary
+                            : null,
                         borderRadius: BorderRadius.all(Radius.circular(10)),
                       ),
                       child: Center(
@@ -262,12 +261,13 @@ class __CalendarState extends State<_Calendar> {
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                             height: 1,
-                            color:
-                                widget.selectedDate?.isSameDay(date) ?? false
-                                    ? Palette.primaryLight
-                                    : date.isSameMonth(_currentMonth)
-                                    ? Palette.textGrey
-                                    : Palette.grey,
+                            color: isDisabled
+                                ? Palette.grey
+                                : widget.selectedDate?.isSameDay(date) ?? false
+                                ? Palette.primaryLight
+                                : date.isSameMonth(_currentMonth)
+                                ? Palette.textGrey
+                                : Palette.grey,
                           ),
                         ),
                       ),

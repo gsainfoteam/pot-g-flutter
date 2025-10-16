@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:pot_g/app/modules/common/presentation/utils/date_time_utils.dart';
 import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/date_select.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/path_select.dart';
@@ -141,6 +142,7 @@ class _DateInput extends StatelessWidget {
     final selected = context.select((CreateCubit cubit) => cubit.state.date);
     return DateSelect(
       selectedDate: selected,
+      minDate: DateTime.now(),
       onSelected: (date) {
         L.c(
           'dateSelectorItem',
@@ -231,25 +233,31 @@ class _TimeInterval extends StatelessWidget {
           style: TextStyles.caption,
         ),
         const SizedBox(height: 12),
-        TimeIntervalSelector(
-          disabled: !preFilled,
-          startTime: context.select(
-            (CreateCubit cubit) => cubit.state.startTime,
-          ),
-          endTime: context.select((CreateCubit cubit) => cubit.state.endTime),
-          onStartChanged: (time) {
-            L.c(
-              'startTimeSelector',
-              properties: {'item': DateFormat.Hm().format(time)},
+        Builder(
+          builder: (context) {
+            final cubit = context.watch<CreateCubit>();
+            final minStartTime = cubit.state.date?.minTimeForDate;
+
+            return TimeIntervalSelector(
+              disabled: !preFilled,
+              minStartTime: minStartTime,
+              startTime: cubit.state.startTime,
+              endTime: cubit.state.endTime,
+              onStartChanged: (time) {
+                L.c(
+                  'startTimeSelector',
+                  properties: {'item': DateFormat.Hm().format(time)},
+                );
+                context.read<CreateCubit>().startTimeChanged(time);
+              },
+              onEndChanged: (time) {
+                L.c(
+                  'endTimeSelector',
+                  properties: {'item': DateFormat.Hm().format(time)},
+                );
+                context.read<CreateCubit>().endTimeChanged(time);
+              },
             );
-            context.read<CreateCubit>().startTimeChanged(time);
-          },
-          onEndChanged: (time) {
-            L.c(
-              'endTimeSelector',
-              properties: {'item': DateFormat.Hm().format(time)},
-            );
-            context.read<CreateCubit>().endTimeChanged(time);
           },
         ),
       ],
