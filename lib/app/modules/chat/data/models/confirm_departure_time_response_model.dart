@@ -24,4 +24,5 @@ enum PotDepartureTimeResult {
   beforeNow,
   potNotExist,
   potAlreadyClosed,
+  notInAvailableTimeRange,
 }
