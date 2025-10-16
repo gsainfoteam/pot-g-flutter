@@ -38,6 +38,8 @@ class WebsocketPotActionRepository implements PotActionRepository {
           throw DepartureTimeException.potNotExist();
         case PotDepartureTimeResult.potAlreadyClosed:
           throw DepartureTimeException.potAlreadyClosed();
+        case PotDepartureTimeResult.notInAvailableTimeRange:
+          throw DepartureTimeException.notInAvailableTimeRange();
       }
     } on DioException catch (e) {
       throw DepartureTimeException.networkError(

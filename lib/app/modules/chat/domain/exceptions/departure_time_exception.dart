@@ -6,6 +6,8 @@ sealed class DepartureTimeException implements Exception {
   factory DepartureTimeException.beforeNow() = BeforeNowException;
   factory DepartureTimeException.potNotExist() = PotNotExistException;
   factory DepartureTimeException.potAlreadyClosed() = PotAlreadyClosedException;
+  factory DepartureTimeException.notInAvailableTimeRange() =
+      NotInAvailableTimeRangeException;
   factory DepartureTimeException.networkError(String error) =
       NetworkErrorException;
 }
@@ -28,6 +30,10 @@ class PotNotExistException extends DepartureTimeException {
 
 class PotAlreadyClosedException extends DepartureTimeException {
   const PotAlreadyClosedException();
+}
+
+class NotInAvailableTimeRangeException extends DepartureTimeException {
+  const NotInAvailableTimeRangeException();
 }
 
 class NetworkErrorException extends DepartureTimeException {

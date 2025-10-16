@@ -23,7 +23,18 @@ class PotActionBloc extends Bloc<PotActionEvent, PotActionState> {
   ) async {
     emit(const PotActionState.loading());
     try {
-      await _repository.setDepartureTime(event.pot, event.date);
+      final s = event.pot.startsAt;
+      final adjustedDate = event.date.copyWith(
+        year: s.year,
+        month: s.month,
+        day: s.day,
+      );
+      await _repository.setDepartureTime(
+        event.pot,
+        adjustedDate.isBefore(s)
+            ? adjustedDate.add(Duration(days: 1))
+            : adjustedDate,
+      );
       emit(const PotActionState.success());
     } catch (e) {
       emit(PotActionState.error(e.toString()));
