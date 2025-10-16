@@ -5,17 +5,23 @@ import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/gen/strings.g.dart';
 
 class TimeIntervalForm extends StatefulWidget {
-  const TimeIntervalForm({super.key, required this.initialDateTime});
+  const TimeIntervalForm({
+    super.key,
+    required this.initialDateTime,
+    this.minTime,
+  });
 
   final DateTime initialDateTime;
+  final DateTime? minTime;
 
   static Future<DateTime?> select(
     BuildContext context,
-    DateTime initialDateTime,
-  ) {
+    DateTime initialDateTime, {
+    DateTime? minTime,
+  }) {
     return PotBottomSheet.show(
       context,
-      TimeIntervalForm(initialDateTime: initialDateTime),
+      TimeIntervalForm(initialDateTime: initialDateTime, minTime: minTime),
     );
   }
 
@@ -42,6 +48,7 @@ class _TimeIntervalFormState extends State<TimeIntervalForm> {
             child: CupertinoDatePicker(
               initialDateTime: widget.initialDateTime,
               mode: CupertinoDatePickerMode.time,
+              minimumDate: widget.minTime,
               onDateTimeChanged: (date) {
                 setState(() {
                   selectedDate = date;
