@@ -31,7 +31,9 @@ class PotActionBloc extends Bloc<PotActionEvent, PotActionState> {
       );
       await _repository.setDepartureTime(
         event.pot,
-        adjustedDate.isBefore(s) ? adjustedDate.add(Duration(days: 1)) : s,
+        adjustedDate.isBefore(s)
+            ? adjustedDate.add(Duration(days: 1))
+            : adjustedDate,
       );
       emit(const PotActionState.success());
     } catch (e) {
