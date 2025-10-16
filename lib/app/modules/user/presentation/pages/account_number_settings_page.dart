@@ -297,7 +297,7 @@ class _BankNumberState extends State<_BankNumber> {
             PotTextField(
               filled: true,
               controller: controller,
-              readOnly: true,
+              keyboardType: TextInputType.none,
               hintText: context
                   .t
                   .profile

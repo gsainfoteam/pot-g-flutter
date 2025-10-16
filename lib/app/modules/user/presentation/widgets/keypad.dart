@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_pressable.dart';
 
@@ -44,10 +42,30 @@ class Keypad extends StatelessWidget {
               _buildNumberButton(0),
               _Button(
                 onTap: () {
-                  controller.text = controller.text.substring(
-                    0,
-                    max(controller.text.length - 1, 0),
-                  );
+                  final text = controller.text;
+                  final cursorPosition = controller.selection.baseOffset;
+
+                  if (cursorPosition > 0) {
+                    final newText = controller.selection.isCollapsed
+                        ? text.replaceRange(
+                            cursorPosition - 1,
+                            cursorPosition,
+                            '',
+                          )
+                        : text.replaceRange(
+                            controller.selection.start,
+                            controller.selection.end,
+                            '',
+                          );
+                    controller.value = controller.value.copyWith(
+                      text: newText,
+                      selection: TextSelection.collapsed(
+                        offset: controller.selection.isCollapsed
+                            ? cursorPosition - 1
+                            : controller.selection.start,
+                      ),
+                    );
+                  }
                 },
                 child: Icon(Icons.backspace_outlined),
               ),
@@ -61,7 +79,20 @@ class Keypad extends StatelessWidget {
   Widget _buildNumberButton(int value) {
     return _Button(
       onTap: () {
-        controller.text += value.toString();
+        final text = controller.text;
+        final cursorPosition = controller.selection.baseOffset;
+
+        if (cursorPosition >= 0) {
+          final newText = text.replaceRange(
+            cursorPosition,
+            controller.selection.end,
+            value.toString(),
+          );
+          controller.value = controller.value.copyWith(
+            text: newText,
+            selection: TextSelection.collapsed(offset: cursorPosition + 1),
+          );
+        }
       },
       child: Text(value.toString()),
     );
