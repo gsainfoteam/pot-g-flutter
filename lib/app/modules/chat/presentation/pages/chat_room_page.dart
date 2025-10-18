@@ -89,9 +89,11 @@ class ChatRoomPage extends StatelessWidget with LogPageStateless {
             listenWhen: (prev, curr) =>
                 prev.mapOrNull(reconnecting: (_) => true) == true &&
                 curr.mapOrNull(connected: (_) => true) == true,
-            listener: (context, state) => context.read<ChatBloc>().add(
-              ChatEvent.init(context.read<PotInfoBloc>().state.pot!),
-            ),
+            listener: (context, state) {
+              final pot = context.read<PotInfoBloc>().state.pot;
+              if (pot == null) return;
+              context.read<ChatBloc>().add(ChatEvent.init(pot));
+            },
           ),
         ],
         child: BlocBuilder<PotInfoBloc, PotInfoState>(
