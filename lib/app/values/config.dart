@@ -15,8 +15,8 @@ abstract class Config {
   static const String idpRedirectUri = _Config.idpRedirectUri;
   @EnviedField(defaultValue: 'https://api.idp.gistory.me/')
   static const String idpApiBaseUrl = _Config.idpApiBaseUrl;
-  @EnviedField(defaultValue: 'http://api.pot-g.gistory.me:3000/')
+  @EnviedField(defaultValue: 'https://api.pot-g.gistory.me/')
   static const String apiBaseUrl = _Config.apiBaseUrl;
-  @EnviedField(defaultValue: 'ws://api.pot-g.gistory.me:3000/ws')
+  @EnviedField(defaultValue: 'wss://api.pot-g.gistory.me/ws')
   static const String wsUrl = _Config.wsUrl;
 }
