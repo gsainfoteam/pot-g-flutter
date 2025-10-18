@@ -11,16 +11,34 @@ import 'package:pot_g/app/modules/socket/data/models/converter/server_converter.
 import 'package:pot_g/app/values/config.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
+enum SocketConnectionState {
+  connected,
+  connecting,
+  reconnecting,
+  disconnected,
+  failed,
+}
+
 @lazySingleton
 class PotGSocket {
+  static const int _maxRetries = 5;
+  static const int _maxBackoffSeconds = 30;
+  
   final _wsUrl = Uri.parse(Config.wsUrl);
   WebSocketChannel? _channel;
   final _socketEventController =
       StreamController<BaseServerMessageModel>.broadcast();
+  final _connectionStateController =
+      StreamController<SocketConnectionState>.broadcast();
   StreamSubscription? _channelSubscription;
   bool _shouldConnected = false;
+  int _retryCount = 0;
+  Timer? _reconnectTimer;
 
   bool get isConnected => _channel != null && _channel!.closeCode == null;
+
+  Stream<SocketConnectionState> get connectionState =>
+      _connectionStateController.stream;
 
   WebSocketChannel get channel {
     if (!isConnected) {
@@ -32,16 +50,32 @@ class PotGSocket {
   /// 이미 연결되어 있으면 기존 연결을 끊고 새로 연결
   Future<void> connect() async {
     _shouldConnected = true;
+    _reconnectTimer?.cancel();
+    _reconnectTimer = null;
+    
     if (isConnected) {
       await disconnect();
     }
 
-    final channel = WebSocketChannel.connect(_wsUrl);
-    _channel = channel;
-    await channel.ready;
+    _connectionStateController.add(SocketConnectionState.connecting);
+    
+    try {
+      final channel = WebSocketChannel.connect(_wsUrl);
+      _channel = channel;
+      await channel.ready;
 
-    // 새로운 channel의 stream을 기존 controller에 연결
-    _setupChannelSubscription();
+      _retryCount = 0;
+      _connectionStateController.add(SocketConnectionState.connected);
+
+      // 새로운 channel의 stream을 기존 controller에 연결
+      _setupChannelSubscription();
+    } catch (e) {
+      _connectionStateController.add(SocketConnectionState.disconnected);
+      if (_shouldConnected) {
+        _reconnect();
+      }
+      rethrow;
+    }
   }
 
   void _setupChannelSubscription() {
@@ -68,11 +102,24 @@ class PotGSocket {
       onError: (error) {
         _socketEventController.addError(error);
       },
+      onDone: () {
+        if (kDebugMode) {
+          log('WebSocket connection closed', name: 'websocket');
+        }
+        _connectionStateController.add(SocketConnectionState.disconnected);
+        if (_shouldConnected) {
+          _reconnect();
+        }
+      },
     );
   }
 
   Future<void> disconnect() async {
     _shouldConnected = false;
+    _reconnectTimer?.cancel();
+    _reconnectTimer = null;
+    _retryCount = 0;
+    
     _channelSubscription?.cancel();
     _channelSubscription = null;
 
@@ -80,6 +127,8 @@ class PotGSocket {
       await _channel!.sink.close();
       _channel = null;
     }
+    
+    _connectionStateController.add(SocketConnectionState.disconnected);
   }
 
   /// 연결 상태를 확인하고 필요시 자동 재연결
@@ -122,6 +171,38 @@ class PotGSocket {
     }
     final message = await future;
     return message as BaseServerMessageModel<T>;
+  }
+
+  /// 지수 백오프 전략으로 재연결 시도
+  void _reconnect() {
+    if (!_shouldConnected) return;
+    if (_retryCount >= _maxRetries) {
+      if (kDebugMode) {
+        log('Max retry attempts reached', name: 'websocket');
+      }
+      _connectionStateController.add(SocketConnectionState.failed);
+      return;
+    }
+
+    _retryCount++;
+    final backoffSeconds = (1 << (_retryCount - 1)).clamp(1, _maxBackoffSeconds);
+    
+    if (kDebugMode) {
+      log(
+        'Reconnecting in $backoffSeconds seconds (attempt $_retryCount/$_maxRetries)',
+        name: 'websocket',
+      );
+    }
+    
+    _connectionStateController.add(SocketConnectionState.reconnecting);
+    
+    _reconnectTimer = Timer(Duration(seconds: backoffSeconds), () {
+      connect().catchError((error) {
+        if (kDebugMode) {
+          log('Reconnection failed: $error', name: 'websocket');
+        }
+      });
+    });
   }
 
   Future<void> sendRequest(
