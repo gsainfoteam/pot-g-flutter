@@ -8,6 +8,7 @@ import 'package:pot_g/app/modules/auth/presentation/bloc/auth_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/pot_detail_bloc.dart';
 import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
 import 'package:pot_g/app/modules/common/presentation/utils/log_observer.dart';
+import 'package:pot_g/app/modules/core/presentation/bloc/api_channel_bloc.dart';
 import 'package:pot_g/app/modules/core/presentation/bloc/link_bloc.dart';
 import 'package:pot_g/app/modules/core/presentation/bloc/messaging_bloc.dart';
 import 'package:pot_g/app/modules/core/presentation/bloc/route_list_bloc.dart';
@@ -67,6 +68,11 @@ class _Providers extends StatelessWidget {
           create: (_) => sl<LinkBloc>()..add(const LinkEvent.init()),
         ),
         BlocProvider(lazy: false, create: (_) => sl<PotDetailBloc>()),
+        BlocProvider(
+          lazy: false,
+          create: (_) =>
+              sl<ApiChannelBloc>()..add(const ApiChannelEvent.init()),
+        ),
       ],
       child: MultiBlocListener(
         listeners: [
@@ -108,6 +114,15 @@ class _Providers extends StatelessWidget {
               loaded: (s) => WidgetsBinding.instance.addPostFrameCallback((_) {
                 _appRouter.pushPath(s.link);
               }),
+            ),
+          ),
+          BlocListener<ApiChannelBloc, ApiChannelState>(
+            listenWhen: (prev, curr) =>
+                prev.channel != null &&
+                curr.channel != null &&
+                prev.channel != curr.channel,
+            listener: (context, state) => state.mapOrNull(
+              loaded: (s) => context.read<AuthBloc>().add(AuthEvent.logout()),
             ),
           ),
         ],
