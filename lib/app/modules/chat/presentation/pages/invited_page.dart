@@ -5,15 +5,15 @@ import 'package:pot_g/gen/strings.g.dart';
 
 @RoutePage()
 class InvitedPage extends StatelessWidget {
-  const InvitedPage({super.key, required this.potId});
+  const InvitedPage({super.key, @PathParam() required this.id});
 
-  final String potId;
+  final String id;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PotAppBar(title: Text(context.t.invited.title)),
-      body: Column(children: [Text(potId)]),
+      body: Column(children: [Text(id)]),
     );
   }
 }
