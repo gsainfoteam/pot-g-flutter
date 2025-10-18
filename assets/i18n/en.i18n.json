@@ -220,6 +220,10 @@
         },
         "invite": {
           "action": "Invite",
+          "fulled": {
+            "title": "Already reached the maximum number of people",
+            "description": "You have reached the maximum number of people. You cannot invite."
+          },
           "success": {
             "title": "Invite Link Copied",
             "description": "The invite link has been copied.\nPlease send the link to your friend."

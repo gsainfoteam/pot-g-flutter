@@ -60,7 +60,26 @@ class PotUsers extends StatelessWidget {
           ],
         ),
         PotPressable(
-          onTap: () {},
+          onTap: () {
+            final inviteText = context.t.chat_room.drawer.members.invite;
+            if (pot.departureTime != null) {
+              showOkAlertDialog(
+                context: context,
+                title: inviteText.departure_confirmed,
+                message: inviteText.departure_confirmed,
+              );
+              return;
+            }
+            if (pot.usersInfo.users.where((u) => u.isInPot).length ==
+                pot.usersInfo.total) {
+              showOkAlertDialog(
+                context: context,
+                title: inviteText.fulled.title,
+                message: inviteText.fulled.description,
+              );
+              return;
+            }
+          },
           child: Container(
             padding: EdgeInsets.symmetric(vertical: 8),
             child: Row(
