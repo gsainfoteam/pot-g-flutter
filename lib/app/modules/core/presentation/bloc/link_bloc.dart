@@ -1,3 +1,4 @@
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
@@ -17,7 +18,7 @@ class LinkBloc extends Bloc<LinkEvent, LinkState> {
         onData: (state) => state != null ? _Loaded(state) : const _Initial(),
         onError: (error, _) => const _Error(),
       );
-    });
+    }, transformer: restartable());
   }
 }
 
