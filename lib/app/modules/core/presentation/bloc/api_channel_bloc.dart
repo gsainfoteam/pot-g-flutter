@@ -17,6 +17,7 @@ class ApiChannelBloc extends Bloc<ApiChannelEvent, ApiChannelState> {
       return emit.forEach(
         _apiChannelRepository.channel,
         onData: (channel) => ApiChannelState.loaded(channel),
+        onError: (error, stackTrace) => ApiChannelState.initial(),
       );
     }, transformer: restartable());
     on<_SetChannel>((event, emit) {
