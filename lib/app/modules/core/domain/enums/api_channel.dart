@@ -6,7 +6,8 @@ enum ApiChannel {
   prod('https://api.pot-g.gistory.me/', 'wss://api.pot-g.gistory.me/ws');
 
   final String url;
-  final String wsUrl;
-  const ApiChannel(this.url, this.wsUrl);
+  final String _wsUrl;
+  Uri get wsUrl => Uri.parse(_wsUrl);
+  const ApiChannel(this.url, this._wsUrl);
   factory ApiChannel.byMode() => kDebugMode ? dev : prod;
 }

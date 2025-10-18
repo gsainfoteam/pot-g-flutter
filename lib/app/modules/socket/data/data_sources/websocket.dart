@@ -4,11 +4,11 @@ import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
+import 'package:pot_g/app/modules/core/domain/repositories/api_channel_repository.dart';
 import 'package:pot_g/app/modules/socket/data/models/base/base_server_message_model.dart';
 import 'package:pot_g/app/modules/socket/data/models/base/base_socket_request_model.dart';
 import 'package:pot_g/app/modules/socket/data/models/converter/client_converter.dart';
 import 'package:pot_g/app/modules/socket/data/models/converter/server_converter.dart';
-import 'package:pot_g/app/values/config.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 enum SocketConnectionState {
@@ -23,8 +23,8 @@ enum SocketConnectionState {
 class PotGSocket {
   static const int _maxRetries = 5;
   static const int _maxBackoffSeconds = 30;
-  
-  final _wsUrl = Uri.parse(Config.wsUrl);
+
+  final ApiChannelRepository _apiChannelRepository;
   WebSocketChannel? _channel;
   final _socketEventController =
       StreamController<BaseServerMessageModel>.broadcast();
@@ -47,20 +47,22 @@ class PotGSocket {
     return _channel!;
   }
 
+  PotGSocket(this._apiChannelRepository);
+
   /// 이미 연결되어 있으면 기존 연결을 끊고 새로 연결
   Future<void> connect() async {
     _shouldConnected = true;
     _reconnectTimer?.cancel();
     _reconnectTimer = null;
-    
+
     if (isConnected) {
       await disconnect();
     }
 
     _connectionStateController.add(SocketConnectionState.connecting);
-    
+
     try {
-      final channel = WebSocketChannel.connect(_wsUrl);
+      final channel = WebSocketChannel.connect(_apiChannelRepository.wsUrl);
       _channel = channel;
       await channel.ready;
 
@@ -119,7 +121,7 @@ class PotGSocket {
     _reconnectTimer?.cancel();
     _reconnectTimer = null;
     _retryCount = 0;
-    
+
     _channelSubscription?.cancel();
     _channelSubscription = null;
 
@@ -127,7 +129,7 @@ class PotGSocket {
       await _channel!.sink.close();
       _channel = null;
     }
-    
+
     _connectionStateController.add(SocketConnectionState.disconnected);
   }
 
@@ -162,11 +164,9 @@ class PotGSocket {
     if (timeout != null) {
       future = future.timeout(
         timeout,
-        onTimeout:
-            () =>
-                throw TimeoutException(
-                  'No message received within the specified timeout',
-                ),
+        onTimeout: () => throw TimeoutException(
+          'No message received within the specified timeout',
+        ),
       );
     }
     final message = await future;
@@ -185,17 +185,20 @@ class PotGSocket {
     }
 
     _retryCount++;
-    final backoffSeconds = (1 << (_retryCount - 1)).clamp(1, _maxBackoffSeconds);
-    
+    final backoffSeconds = (1 << (_retryCount - 1)).clamp(
+      1,
+      _maxBackoffSeconds,
+    );
+
     if (kDebugMode) {
       log(
         'Reconnecting in $backoffSeconds seconds (attempt $_retryCount/$_maxRetries)',
         name: 'websocket',
       );
     }
-    
+
     _connectionStateController.add(SocketConnectionState.reconnecting);
-    
+
     _reconnectTimer = Timer(Duration(seconds: backoffSeconds), () {
       connect().catchError((error) {
         if (kDebugMode) {
