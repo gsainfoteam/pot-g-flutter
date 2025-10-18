@@ -34,6 +34,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       emit(
         ChatState.loaded(chats.reversed.toList(), endReached: chats.isEmpty),
       );
+      // NOTE: getChats의 응답이 도착하고 다시 getChatsStream을 구독하는 사이에
+      //       도착하는 메시지들이 누락 될 수 있습니다.
       return emit.forEach(
         _chatRepository.getChatsStream(_pot),
         onData: (chat) {
