@@ -305,6 +305,10 @@
     }
   },
   "invited": {
-    "title": "Invited"
+    "title": "Invited",
+    "button": "Join Pot",
+    "loading": "Joining...",
+    "fulled": "Fulled (Maximum Capacity)",
+    "error": "Failed to join"
   }
 }
