@@ -19,7 +19,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   final _mutex = Mutex();
 
   ChatBloc(this._chatRepository) : super(const ChatInitial()) {
-    on<ChatInit>(_onChatInit);
+    on<ChatInit>(_onChatInit, transformer: restartable());
     on<ChatLoadMore>(_onChatLoadMore, transformer: droppable());
     on<ChatSendChat>(_onChatSendChat);
   }
