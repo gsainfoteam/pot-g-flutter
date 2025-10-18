@@ -10,10 +10,12 @@ import 'package:pot_g/app/modules/chat/presentation/widgets/pot_user.dart';
 import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/general_dialog.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_pressable.dart';
+import 'package:pot_g/app/modules/core/presentation/bloc/api_channel_bloc.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
 import 'package:pot_g/gen/assets.gen.dart';
 import 'package:pot_g/gen/strings.g.dart';
+import 'package:share_plus/share_plus.dart';
 
 class PotUsers extends StatelessWidget {
   const PotUsers({super.key, required this.pot});
@@ -79,6 +81,19 @@ class PotUsers extends StatelessWidget {
               );
               return;
             }
+            final appLinkUrl = context
+                .read<ApiChannelBloc>()
+                .state
+                .channel
+                ?.appLinkUrl;
+            if (appLinkUrl == null) return;
+            SharePlus.instance.share(
+              ShareParams(
+                uri: Uri.parse('${appLinkUrl}invited/${pot.id}'),
+                // https://github.com/fluttercommunity/plus_plugins/issues/3645#issuecomment-3360156193
+                sharePositionOrigin: Rect.fromLTWH(0, 0, 1, 1),
+              ),
+            );
           },
           child: Container(
             padding: EdgeInsets.symmetric(vertical: 8),
