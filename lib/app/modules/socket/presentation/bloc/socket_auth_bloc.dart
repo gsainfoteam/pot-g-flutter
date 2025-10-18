@@ -25,10 +25,7 @@ class SocketAuthBloc extends Bloc<SocketAuthEvent, SocketAuthState> {
     SocketAuthEvent event,
     Emitter<SocketAuthState> emit,
   ) async {
-    await _repository.connect();
-
-    // 연결 상태 Stream을 구독하여 State에 반영
-    return emit.forEach(
+    final stream = emit.forEach(
       _socket.connectionState,
       onData: (state) {
         return switch (state) {
@@ -43,6 +40,8 @@ class SocketAuthBloc extends Bloc<SocketAuthEvent, SocketAuthState> {
         };
       },
     );
+    await _repository.connect();
+    return stream;
   }
 
   Future<void> _onDisconnect(
