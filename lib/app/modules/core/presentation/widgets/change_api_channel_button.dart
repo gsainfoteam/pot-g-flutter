@@ -32,13 +32,11 @@ class _ChangeApiChannelButtonState extends State<ChangeApiChannelButton> {
         onTap: () async {
           _timer?.cancel();
           _timer = Timer(const Duration(seconds: 1), () {
-            setState(() {
-              _count = 0;
-            });
+            setState(() => _count = 0);
           });
-          _count++;
+          setState(() => _count++);
           if (_count >= 15) {
-            _count = 0;
+            setState(() => _count = 0);
             final text = await showTextInputDialog(
               context: context,
               textFields: [DialogTextField()],
@@ -62,7 +60,6 @@ class _ChangeApiChannelButtonState extends State<ChangeApiChannelButton> {
               );
             }
           }
-          setState(() {});
         },
         child: Container(
           color: Colors.black.withValues(
