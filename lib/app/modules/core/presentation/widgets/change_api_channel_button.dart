@@ -25,6 +25,12 @@ class _ChangeApiChannelButtonState extends State<ChangeApiChannelButton> {
   Timer? _timer;
 
   @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return AspectRatio(
       aspectRatio: 1,
