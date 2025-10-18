@@ -143,12 +143,20 @@ class WebsocketChatRepository implements ChatRepository {
         .where((e) => e.potPk == pot.id)
         .where(_isChatEvent)
         .asyncMap((e) async {
-          if (!localPot.usersInfo.users.any(
-            (u) => u.id == _getRelatedUserId(e),
-          )) {
-            localPot = await _api.getPotInfo(pot.id);
+          try {
+            if (!localPot.usersInfo.users.any(
+              (u) => u.id == _getRelatedUserId(e),
+            )) {
+              localPot = await _api.getPotInfo(pot.id);
+            }
+            return _makeChatEntity(e, localPot);
+          } catch (err) {
+            return ChatErrorModel(
+              createdAt: e.timestamp,
+              id: e.id,
+              message: err.toString(),
+            );
           }
-          return _makeChatEntity(e, localPot);
         });
   }
 
