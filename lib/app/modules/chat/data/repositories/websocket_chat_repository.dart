@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:injectable/injectable.dart';
 import 'package:pot_g/app/modules/chat/data/data_sources/remote/chat_pot_api.dart';
+import 'package:pot_g/app/modules/chat/data/models/chat_error_model.dart';
 import 'package:pot_g/app/modules/chat/data/models/chat_model.dart';
 import 'package:pot_g/app/modules/chat/data/models/get_pot_events_query_model.dart';
 import 'package:pot_g/app/modules/chat/data/models/system_message_model.dart';
@@ -117,7 +120,17 @@ class WebsocketChatRepository implements ChatRepository {
     return events.events
         .where((e) => e.potPk == pot.id)
         .where(_isChatEvent)
-        .map((e) => _makeChatEntity(e, localPot))
+        .map((e) {
+          try {
+            return _makeChatEntity(e, localPot);
+          } catch (err) {
+            return ChatErrorModel(
+              createdAt: e.timestamp,
+              id: e.id,
+              message: err.toString(),
+            );
+          }
+        })
         .toList();
   }
 

@@ -25,3 +25,7 @@ abstract class FofoChatEntity implements Sendable {
   String get content;
   List<FofoActionButtonType?> get actionButtons;
 }
+
+abstract class ChatEntityError implements Sendable {
+  String get message;
+}

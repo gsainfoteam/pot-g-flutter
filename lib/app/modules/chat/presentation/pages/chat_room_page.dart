@@ -15,6 +15,7 @@ import 'package:pot_g/app/modules/chat/presentation/bloc/pot_accounting_bloc.dar
 import 'package:pot_g/app/modules/chat/presentation/bloc/pot_action_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/pot_info_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/extensions/pot_user_extension.dart';
+import 'package:pot_g/app/modules/chat/presentation/widgets/bubble.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/chat_bubble.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/chat_room_drawer.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/fofo_bubble.dart';
@@ -323,6 +324,15 @@ class _ChatListState extends State<_ChatList> {
         return FofoBubble(
           message: chat,
           onAction: (type) => _onAction(context, type),
+        );
+      }
+      if (chat is ChatEntityError) {
+        return Bubble(
+          isFirst: true,
+          isMe: false,
+          profileImage: SizedBox(),
+          name: context.t.chat_room.error.header,
+          child: Text('${chat.message}\n${context.t.chat_room.error.update}'),
         );
       }
       throw StateError('Unknown chat type');

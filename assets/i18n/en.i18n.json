@@ -140,6 +140,10 @@
     "menu_title": "Chat Rooms"
   },
   "chat_room": {
+    "error": {
+      "header": "Error Occurred",
+      "update": "This message is supported in this version of app. Please update the app."
+    },
     "system_messages": {
       "created": {
         "description": "$user created the pot."
