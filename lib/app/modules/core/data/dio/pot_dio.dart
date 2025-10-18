@@ -13,9 +13,14 @@ class PotDio extends DioForNative {
     ApiChannelRepository apiChannelRepository,
   ) {
     interceptors.add(interceptor);
-    _channelSubscription = apiChannelRepository.channel.listen((channel) {
-      options.baseUrl = channel.url;
-    });
+    _channelSubscription = apiChannelRepository.channel.listen(
+      (channel) {
+        options.baseUrl = channel.url;
+      },
+      onError: (error, stackTrace) {
+        // TODO: error log
+      },
+    );
   }
 
   @override
