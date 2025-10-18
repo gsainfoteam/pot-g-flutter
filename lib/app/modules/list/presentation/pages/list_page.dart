@@ -6,6 +6,7 @@ import 'package:pot_g/app/modules/common/presentation/extensions/toast.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_app_bar.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_button.dart';
 import 'package:pot_g/app/modules/core/domain/entities/pot_summary_entity.dart';
+import 'package:pot_g/app/modules/core/presentation/widgets/change_api_channel_button.dart';
 import 'package:pot_g/app/modules/list/presentation/bloc/list_cubit.dart';
 import 'package:pot_g/app/modules/list/presentation/bloc/pot_list_bloc.dart';
 import 'package:pot_g/app/modules/list/presentation/pages/list_filter.dart';
@@ -31,17 +32,15 @@ class ListPage extends StatelessWidget {
         ),
       ],
       child: BlocListener<PotListBloc, PotListState>(
-        listenWhen:
-            (prev, curr) => prev.error != curr.error && curr.error != null,
+        listenWhen: (prev, curr) =>
+            prev.error != curr.error && curr.error != null,
         listener: (context, state) => context.showToast(state.error!),
         child: BlocListener<ListCubit, ListState>(
-          listenWhen:
-              (prev, curr) =>
-                  prev.date != curr.date || prev.route != curr.route,
-          listener:
-              (context, state) => context.read<PotListBloc>().add(
-                PotListEvent.search(date: state.date, route: state.route),
-              ),
+          listenWhen: (prev, curr) =>
+              prev.date != curr.date || prev.route != curr.route,
+          listener: (context, state) => context.read<PotListBloc>().add(
+            PotListEvent.search(date: state.date, route: state.route),
+          ),
           child: _Layout(),
         ),
       ),
@@ -55,32 +54,27 @@ class _Layout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PotAppBar(),
+      appBar: PotAppBar(actions: [ChangeApiChannelButton()]),
       body: SafeArea(
         child: LayoutBuilder(
-          builder:
-              (context, constraints) => Stack(
-                children: [
-                  Positioned.fill(
-                    child: Container(
-                      color: Palette.lightGrey,
-                      child: BlocBuilder<PotListBloc, PotListState>(
-                        builder:
-                            (context, state) =>
-                                state.pots.isEmpty
-                                    ? _EmptyScreen()
-                                    : _ListView(pots: state.pots),
-                      ),
-                    ),
+          builder: (context, constraints) => Stack(
+            children: [
+              Positioned.fill(
+                child: Container(
+                  color: Palette.lightGrey,
+                  child: BlocBuilder<PotListBloc, PotListState>(
+                    builder: (context, state) => state.pots.isEmpty
+                        ? _EmptyScreen()
+                        : _ListView(pots: state.pots),
                   ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: PanelDraggable(
-                      builder: (context) => const ListFilter(),
-                    ),
-                  ),
-                ],
+                ),
               ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: PanelDraggable(builder: (context) => const ListFilter()),
+              ),
+            ],
+          ),
         ),
       ),
     );
