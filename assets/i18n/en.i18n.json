@@ -299,5 +299,8 @@
         "clipboard": "Copy to Clipboard"
       }
     }
+  },
+  "invited": {
+    "title": "Invited"
   }
 }
