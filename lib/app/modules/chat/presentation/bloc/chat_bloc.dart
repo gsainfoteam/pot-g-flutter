@@ -19,7 +19,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   final _mutex = Mutex();
 
   ChatBloc(this._chatRepository) : super(const ChatInitial()) {
-    on<ChatInit>(_onChatInit);
+    on<ChatInit>(_onChatInit, transformer: restartable());
     on<ChatLoadMore>(_onChatLoadMore, transformer: droppable());
     on<ChatSendChat>(_onChatSendChat);
   }
@@ -30,11 +30,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     _pot = event.pot;
     _completer.complete();
     try {
-      final chats = await _chatRepository.getChats(_pot, null);
-      emit(
-        ChatState.loaded(chats.reversed.toList(), endReached: chats.isEmpty),
-      );
-      return emit.forEach(
+      final stream = emit.forEach(
         _chatRepository.getChatsStream(_pot),
         onData: (chat) {
           return ChatState.loaded([
@@ -43,6 +39,14 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
           ], endReached: state.endReached);
         },
       );
+      final chats = await _chatRepository.getChats(_pot, null);
+      emit(
+        ChatState.loaded([
+          ...state.chats,
+          ...chats.reversed,
+        ], endReached: chats.isEmpty),
+      );
+      return stream;
     } catch (e) {
       emit(ChatState.error(state.chats, e.toString()));
     } finally {
@@ -55,8 +59,12 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     Emitter<ChatState> emit,
   ) async {
     await _completer.future;
-    await _chatRepository.sendChat(event.message, _pot);
-    // TODO: optimistic UI
+    try {
+      await _chatRepository.sendChat(event.message, _pot);
+      // TODO: optimistic UI
+    } catch (e) {
+      emit(ChatState.error(state.chats, e.toString()));
+    }
   }
 
   Future<void> _onChatLoadMore(

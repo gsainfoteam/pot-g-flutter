@@ -1,3 +1,4 @@
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -12,7 +13,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository _repository;
 
   AuthBloc(this._repository) : super(const AuthState.initial()) {
-    on<_Load>(_onLoad);
+    on<_Load>(_onLoad, transformer: restartable());
     on<_Login>(_onLogin);
     on<_Logout>(_onLogout);
     on<_Update>(_onUpdate);
@@ -54,8 +55,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   static SelfUserEntity? userOf(BuildContext context, [bool watch = false]) =>
       watch
-          ? context.watch<AuthBloc>().state.user
-          : context.read<AuthBloc>().state.user;
+      ? context.watch<AuthBloc>().state.user
+      : context.read<AuthBloc>().state.user;
 }
 
 @freezed

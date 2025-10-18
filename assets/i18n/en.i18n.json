@@ -140,6 +140,15 @@
     "menu_title": "Chat Rooms"
   },
   "chat_room": {
+    "connection": {
+      "reconnecting": "Connection lost. Reconnecting...",
+      "failed": "Connection failed.",
+      "retry": "Retry"
+    },
+    "error": {
+      "header": "Error Occurred",
+      "update": "This message is not supported in this version of app. Please update the app."
+    },
     "system_messages": {
       "created": {
         "description": "$user created the pot."

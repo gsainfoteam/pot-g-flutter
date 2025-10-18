@@ -15,9 +15,11 @@ import 'package:pot_g/app/modules/chat/presentation/bloc/pot_accounting_bloc.dar
 import 'package:pot_g/app/modules/chat/presentation/bloc/pot_action_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/pot_info_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/extensions/pot_user_extension.dart';
+import 'package:pot_g/app/modules/chat/presentation/widgets/bubble.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/chat_bubble.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/chat_room_drawer.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/fofo_bubble.dart';
+import 'package:pot_g/app/modules/chat/presentation/widgets/status_banner.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/system_message.dart';
 import 'package:pot_g/app/modules/common/presentation/extensions/toast.dart';
 import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
@@ -28,6 +30,7 @@ import 'package:pot_g/app/modules/common/presentation/widgets/pot_app_bar.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_icon_button.dart';
 import 'package:pot_g/app/modules/core/domain/entities/pot_id_entity.dart';
 import 'package:pot_g/app/modules/core/domain/entities/route_entity.dart';
+import 'package:pot_g/app/modules/socket/presentation/bloc/socket_auth_bloc.dart';
 import 'package:pot_g/app/router.gr.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
@@ -82,6 +85,16 @@ class ChatRoomPage extends StatelessWidget with LogPageStateless {
             listenWhen: (prev, curr) => curr.error != null,
             listener: (context, state) => context.showToast(state.error!),
           ),
+          BlocListener<SocketAuthBloc, SocketAuthState>(
+            listenWhen: (prev, curr) =>
+                prev.mapOrNull(reconnecting: (_) => true) == true &&
+                curr.mapOrNull(connected: (_) => true) == true,
+            listener: (context, state) {
+              final pot = context.read<PotInfoBloc>().state.pot;
+              if (pot == null) return;
+              context.read<ChatBloc>().add(ChatEvent.init(pot));
+            },
+          ),
         ],
         child: BlocBuilder<PotInfoBloc, PotInfoState>(
           builder: (context, state) {
@@ -117,6 +130,11 @@ class _Layout extends StatelessWidget {
       endDrawer: ChatRoomDrawer(pot: pot),
       body: Column(
         children: [
+          BlocBuilder<SocketAuthBloc, SocketAuthState>(
+            builder: (context, socketState) {
+              return _buildConnectionBanner(context, socketState);
+            },
+          ),
           Expanded(child: _ChatList(pot: pot)),
           SafeArea(
             child: Padding(
@@ -133,6 +151,35 @@ class _Layout extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Widget _buildConnectionBanner(BuildContext context, SocketAuthState state) {
+    return state.mapOrNull(
+          reconnecting: (_) => StatusBanner(
+            color: Colors.orange,
+            child: Text(t.chat_room.connection.reconnecting),
+          ),
+          failed: (_) => StatusBanner(
+            icon: const Icon(Icons.wifi_off, color: Colors.white, size: 16),
+            color: Palette.warning,
+            action: TextButton(
+              onPressed: () {
+                context.read<SocketAuthBloc>().add(
+                  const SocketAuthEvent.retry(),
+                );
+              },
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                minimumSize: Size.zero,
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
+              child: Text(t.chat_room.connection.retry),
+            ),
+            child: Text(t.chat_room.connection.failed),
+          ),
+        ) ??
+        const SizedBox.shrink();
   }
 }
 
@@ -323,6 +370,15 @@ class _ChatListState extends State<_ChatList> {
         return FofoBubble(
           message: chat,
           onAction: (type) => _onAction(context, type),
+        );
+      }
+      if (chat is ChatEntityError) {
+        return Bubble(
+          isFirst: true,
+          isMe: false,
+          profileImage: SizedBox(),
+          name: context.t.chat_room.error.header,
+          child: Text('${chat.message}\n${context.t.chat_room.error.update}'),
         );
       }
       throw StateError('Unknown chat type');

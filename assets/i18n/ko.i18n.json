@@ -137,6 +137,15 @@
     "menu_title": "채팅방"
   },
   "chat_room": {
+    "connection": {
+      "reconnecting": "연결이 끊어졌습니다. 재연결 중...",
+      "failed": "연결에 실패했습니다.",
+      "retry": "재시도"
+    },
+    "error": {
+      "header": "오류가 발생했습니다",
+      "update": "이 메시지는 이 버전의 앱에서 지원되지 않습니다. 앱을 업데이트해주세요."
+    },
     "system_messages": {
       "created": {
         "description": "$user 님이 팟을 생성하셨습니다"

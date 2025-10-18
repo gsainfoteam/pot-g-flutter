@@ -1,3 +1,4 @@
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
@@ -13,7 +14,7 @@ class PotInfoBloc extends Bloc<PotInfoEvent, PotInfoState> {
   final PotInfoRepository _repository;
 
   PotInfoBloc(this._repository) : super(const PotInfoState.loading()) {
-    on<_Init>(_onInit);
+    on<_Init>(_onInit, transformer: restartable());
   }
 
   Future<void> _onInit(_Init event, Emitter<PotInfoState> emit) async {
