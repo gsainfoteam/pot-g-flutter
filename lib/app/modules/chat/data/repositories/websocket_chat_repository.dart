@@ -144,9 +144,9 @@ class WebsocketChatRepository implements ChatRepository {
         .where(_isChatEvent)
         .asyncMap((e) async {
           try {
-            if (!localPot.usersInfo.users.any(
-              (u) => u.id == _getRelatedUserId(e),
-            )) {
+            final relatedUser = _getRelatedUserId(e);
+            if (relatedUser != null &&
+                !localPot.usersInfo.users.any((u) => u.id == relatedUser)) {
               localPot = await _api.getPotInfo(pot.id);
             }
             return _makeChatEntity(e, localPot);
