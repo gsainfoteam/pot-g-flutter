@@ -147,7 +147,7 @@
     },
     "error": {
       "header": "Error Occurred",
-      "update": "This message is supported in this version of app. Please update the app."
+      "update": "This message is not supported in this version of app. Please update the app."
     },
     "system_messages": {
       "created": {
