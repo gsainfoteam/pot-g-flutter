@@ -4,7 +4,7 @@ import 'package:pot_g/app/modules/core/data/models/pot_model.dart';
 part 'pot_list_model.freezed.dart';
 part 'pot_list_model.g.dart';
 
-@freezed
+@Freezed(toJson: false)
 sealed class PotListModel with _$PotListModel {
   factory PotListModel({
     required int total,
