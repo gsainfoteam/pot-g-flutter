@@ -99,7 +99,9 @@ class _ListView extends StatelessWidget {
         );
 
         // isLoading이 false가 될 때까지 대기
-        await potListBloc.stream.firstWhere((state) => !state.isLoading);
+        await potListBloc.stream
+            .firstWhere((state) => !state.isLoading)
+            .timeout(const Duration(seconds: 10));
       },
       child: SingleChildScrollView(
         padding: EdgeInsets.fromLTRB(

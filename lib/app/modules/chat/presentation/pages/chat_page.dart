@@ -63,7 +63,9 @@ class _ChatListViewState extends State<_ChatListView> {
         potDetailBloc.add(const PotDetailEvent.loadMyPots());
 
         // isLoading이 false가 될 때까지 대기
-        await potDetailBloc.stream.firstWhere((state) => !state.isLoading);
+        await potDetailBloc.stream
+            .firstWhere((state) => !state.isLoading)
+            .timeout(const Duration(seconds: 10));
       },
       child: SingleChildScrollView(
         clipBehavior: Clip.none,
