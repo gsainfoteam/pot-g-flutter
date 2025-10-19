@@ -22,7 +22,9 @@ class PotListBloc extends Bloc<PotListEvent, PotListState> {
 
   Future<void> _onSearch(_Search event, Emitter<PotListState> emit) async {
     _search = event;
-    emit(state.copyWith(pots: [], isLoading: true));
+    emit(
+      state.copyWith(pots: [], isLoading: true, endReached: false, error: null),
+    );
     await _load(emit);
   }
 
