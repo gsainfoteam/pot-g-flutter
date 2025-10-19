@@ -43,7 +43,7 @@ class RestAppVersionRepository implements AppVersionRepository {
     final response = await _api.getVersion();
     return Version.parse(
       _getOS() == OS.android
-          ? response.androidLatestVersion
+          ? response.aosLatestVersion
           : response.iosLatestVersion,
     );
   }
@@ -52,9 +52,7 @@ class RestAppVersionRepository implements AppVersionRepository {
   Future<Version> getMinVersion() async {
     final response = await _api.getVersion();
     return Version.parse(
-      _getOS() == OS.android
-          ? response.androidMinVersion
-          : response.iosMinVersion,
+      _getOS() == OS.android ? response.aosMinVersion : response.iosMinVersion,
     );
   }
 }
