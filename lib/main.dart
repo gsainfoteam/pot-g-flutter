@@ -14,10 +14,9 @@ Future<void> main() async {
   final binding = WidgetsFlutterBinding.ensureInitialized();
   LocaleSettings.useDeviceLocale();
   FlutterNativeSplash.preserve(widgetsBinding: binding);
+  Bloc.observer = AppBlocObserver();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  if (kDebugMode) {
-    Bloc.observer = AppBlocObserver();
-  } else {
+  if (!kDebugMode) {
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
     PlatformDispatcher.instance.onError = (error, stack) {
       FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
