@@ -1,11 +1,17 @@
-import 'package:auto_route/annotations.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intersperse/intersperse.dart';
+import 'package:pot_g/app/di/locator.dart';
+import 'package:pot_g/app/modules/auth/presentation/bloc/auth_bloc.dart';
+import 'package:pot_g/app/modules/common/presentation/extensions/toast.dart';
 import 'package:pot_g/app/modules/common/presentation/utils/log_page.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_button.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_pressable.dart';
 import 'package:pot_g/app/modules/user/data/data_source/constant/term_storage.dart';
 import 'package:pot_g/app/modules/user/domain/entities/term_entity.dart';
+import 'package:pot_g/app/modules/user/presentation/blocs/consent_bloc.dart';
+import 'package:pot_g/app/router.gr.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
 import 'package:pot_g/gen/assets.gen.dart';
@@ -20,7 +26,34 @@ class ConsentPage extends StatelessWidget with LogPage {
 
   @override
   Widget build(BuildContext context) {
-    return _Layout();
+    return BlocProvider(
+      create: (_) => sl<ConsentBloc>(),
+      child: MultiBlocListener(
+        listeners: [
+          BlocListener<ConsentBloc, ConsentState>(
+            listener: (context, state) {
+              state.mapOrNull(error: (e) => context.showToast(e.message));
+            },
+          ),
+          BlocListener<AuthBloc, AuthState>(
+            listener: (context, state) {
+              state.mapOrNull(
+                authenticated: (user) {
+                  if (user.user.agreedTerms.allRequired) {
+                    if (onDone != null) {
+                      onDone!();
+                    } else {
+                      context.router.replaceAll([ListRoute()]);
+                    }
+                  }
+                },
+              );
+            },
+          ),
+        ],
+        child: _Layout(),
+      ),
+    );
   }
 
   @override
@@ -110,7 +143,13 @@ class _LayoutState extends State<_Layout> {
               )).intersperse(const SizedBox(height: 4)),
               const SizedBox(height: 24),
               PotButton(
-                onPressed: _agreedTerms.allRequired ? () {} : null,
+                onPressed: _agreedTerms.allRequired
+                    ? () {
+                        context.read<ConsentBloc>().add(
+                          ConsentEvent.update(_agreedTerms),
+                        );
+                      }
+                    : null,
                 variant: PotButtonVariant.emphasized,
                 child: Text(context.t.consent.cta),
               ),
