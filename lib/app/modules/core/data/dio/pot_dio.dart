@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:injectable/injectable.dart';
 import 'package:pot_g/app/modules/auth/data/data_sources/remote/authorize_interceptor.dart';
@@ -19,6 +20,11 @@ class PotDio extends DioForNative {
         options.baseUrl = channel.url;
       },
       onError: (error, stackTrace) {
+        if (error is DioException) {
+          if (error.response?.statusCode == 401) {
+            return;
+          }
+        }
         L.e(error, stackTrace);
       },
     );
