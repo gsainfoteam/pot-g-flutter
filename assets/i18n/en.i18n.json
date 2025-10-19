@@ -326,5 +326,15 @@
       "message": "Please update to the latest version to continue.\n\nCurrent version: $currentVersion\nLatest version: $latestVersion",
       "button": "Update"
     }
+  },
+  "consent": {
+    "welcome": "Welcome to PotG!",
+    "description": "To use PotG, please agree to the terms of service.",
+    "all_agree": "All Agree",
+    "type(context=TermType)": {
+      "privacyPolicy": "Privacy Policy (Required)",
+      "termsOfService": "Terms of Service (Required)"
+    },
+    "cta": "Start PotG"
   }
 }

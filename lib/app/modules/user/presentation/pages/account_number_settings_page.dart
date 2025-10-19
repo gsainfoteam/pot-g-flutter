@@ -21,7 +21,7 @@ import 'package:pot_g/gen/assets.gen.dart';
 import 'package:pot_g/gen/strings.g.dart';
 
 @RoutePage()
-class AccountNumberSettingsPage extends StatelessWidget with LogPageStateless {
+class AccountNumberSettingsPage extends StatelessWidget with LogPage {
   const AccountNumberSettingsPage({super.key});
 
   static void showAccountNumberSetting(BuildContext context) {

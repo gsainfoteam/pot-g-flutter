@@ -1,0 +1,1 @@
+enum TermType { privacyPolicy, termsOfService }

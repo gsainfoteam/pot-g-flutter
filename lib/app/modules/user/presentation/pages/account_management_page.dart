@@ -14,7 +14,7 @@ import 'package:pot_g/gen/strings.g.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 @RoutePage()
-class AccountManagementPage extends StatelessWidget with LogPageStateless {
+class AccountManagementPage extends StatelessWidget with LogPage {
   const AccountManagementPage({super.key});
 
   @override
@@ -36,13 +36,12 @@ class AccountManagementPage extends StatelessWidget with LogPageStateless {
               onTap: () async {
                 L.c('logout');
                 final result = await showOkCancelAlertDialog(
-                  title:
-                      context
-                          .t
-                          .profile
-                          .account_management
-                          .logout_dialog
-                          .description,
+                  title: context
+                      .t
+                      .profile
+                      .account_management
+                      .logout_dialog
+                      .description,
                   context: context,
                 );
                 if (!context.mounted) return;

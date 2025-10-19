@@ -14,7 +14,7 @@ import 'package:pot_g/app/router.gr.dart';
 import 'package:pot_g/gen/strings.g.dart';
 
 @RoutePage()
-class CreatePage extends StatelessWidget with LogPageStateless {
+class CreatePage extends StatelessWidget with LogPage {
   const CreatePage({super.key, this.date, this.route});
 
   @override
