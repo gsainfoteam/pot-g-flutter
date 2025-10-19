@@ -81,9 +81,37 @@ class _Layout extends StatelessWidget {
   }
 }
 
-class _ListView extends StatelessWidget {
+class _ListView extends StatefulWidget {
   const _ListView({required this.pots});
   final List<PotSummaryEntity> pots;
+
+  @override
+  State<_ListView> createState() => _ListViewState();
+}
+
+class _ListViewState extends State<_ListView> {
+  late ScrollController _scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
+      context.read<PotListBloc>().add(PotListEvent.loadMore());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator.adaptive(
@@ -98,12 +126,12 @@ class _ListView extends StatelessWidget {
           ),
         );
 
-        // isLoading이 false가 될 때까지 대기
         await potListBloc.stream
             .firstWhere((state) => !state.isLoading)
             .timeout(const Duration(seconds: 10));
       },
-      child: SingleChildScrollView(
+      child: ListView.builder(
+        controller: _scrollController,
         physics: const AlwaysScrollableScrollPhysics(),
         padding: EdgeInsets.fromLTRB(
           16,
@@ -111,23 +139,39 @@ class _ListView extends StatelessWidget {
           16,
           MediaQuery.of(context).size.height * 0.4,
         ),
-        child: Column(
-          children: [
-            ...pots.expand(
-              (element) => [
-                PotListItem(pot: element),
+        itemCount: widget.pots.length + 1, // +1 for loading indicator
+        itemBuilder: (context, index) {
+          if (index < widget.pots.length) {
+            return Column(
+              children: [
+                PotListItem(pot: widget.pots[index]),
                 const SizedBox(height: 15),
               ],
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 8, bottom: 32),
-              child: Text(
-                context.t.list.reached_all,
-                style: TextStyles.description.copyWith(color: Palette.grey),
-              ),
-            ),
-          ],
-        ),
+            );
+          } else {
+            return BlocBuilder<PotListBloc, PotListState>(
+              builder: (context, state) {
+                if (state.isLoading) {
+                  return const Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Center(child: CircularProgressIndicator.adaptive()),
+                  );
+                } else {
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 8, bottom: 32),
+                    child: Text(
+                      context.t.list.reached_all,
+                      style: TextStyles.description.copyWith(
+                        color: Palette.grey,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  );
+                }
+              },
+            );
+          }
+        },
       ),
     );
   }
