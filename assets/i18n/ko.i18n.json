@@ -314,13 +314,13 @@
   "update": {
     "available": {
       "title": "업데이트 가능",
-      "message": "최신 버전으로 업데이트해주세요.",
+      "message": "최신 버전으로 업데이트해주세요.\n현재 버전: $currentVersion\n최신 버전: $latestVersion",
       "button": "업데이트",
       "next": "다음에 업데이트"
     },
     "required": {
       "title": "업데이트 필요",
-      "message": "팟쥐를 계속 사용하기 위해서 최신 버전으로 업데이트해주세요.",
+      "message": "팟쥐를 계속 사용하기 위해서 최신 버전으로 업데이트해주세요.\n현재 버전: $currentVersion\n최신 버전: $latestVersion",
       "button": "업데이트"
     }
   }

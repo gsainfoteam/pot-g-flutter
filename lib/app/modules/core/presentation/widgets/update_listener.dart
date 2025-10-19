@@ -37,7 +37,10 @@ class UpdateListener extends StatelessWidget {
               await showOkAlertDialog(
                 context: context,
                 title: context.t.update.required.title,
-                message: context.t.update.required.message,
+                message: context.t.update.required.message(
+                  currentVersion: versionInfo.currentVersion,
+                  latestVersion: versionInfo.latestVersion,
+                ),
                 okLabel: context.t.update.required.button,
               );
               _launchStore();
@@ -47,7 +50,10 @@ class UpdateListener extends StatelessWidget {
               final result = await showOkCancelAlertDialog(
                 context: context,
                 title: context.t.update.available.title,
-                message: context.t.update.available.message,
+                message: context.t.update.available.message(
+                  currentVersion: versionInfo.currentVersion,
+                  latestVersion: versionInfo.latestVersion,
+                ),
                 okLabel: context.t.update.available.button,
                 cancelLabel: context.t.update.available.next,
               );
