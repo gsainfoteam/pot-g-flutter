@@ -151,7 +151,7 @@ Updating, improving and correcting the documentation
 
 ## Join The Project Team
 
-<!-- TODO -->
+Please refer to [Infoteam introduce page](https://introduce.gistory.me) for more information.
 
 ## Attribution <!-- omit in toc -->
 
