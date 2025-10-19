@@ -7,6 +7,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:injectable/injectable.dart';
 import 'package:pot_g/app/modules/core/data/data_sources/fcm_api.dart';
 import 'package:pot_g/app/modules/core/data/models/fcm_request_model.dart';
+import 'package:pot_g/app/modules/core/domain/repositories/app_version_repository.dart';
 import 'package:pot_g/app/modules/core/domain/repositories/link_repository.dart';
 import 'package:pot_g/app/modules/core/domain/repositories/messaging_repository.dart';
 import 'package:rxdart/rxdart.dart';
@@ -24,8 +25,9 @@ class FcmMessagingRepository implements MessagingRepository, LinkRepository {
     'potg',
     importance: Importance.max,
   );
+  final AppVersionRepository _appVersionRepository;
 
-  FcmMessagingRepository(this._api);
+  FcmMessagingRepository(this._api, this._appVersionRepository);
 
   @override
   Future<void> init() async {
@@ -108,16 +110,15 @@ class FcmMessagingRepository implements MessagingRepository, LinkRepository {
     final android = message.notification?.android;
     if (android == null) return;
     final imageUrl = android.imageUrl;
-    final image =
-        imageUrl != null && imageUrl.isNotEmpty
-            ? BigPictureStyleInformation(
-              ByteArrayAndroidBitmap(
-                await NetworkAssetBundle(
-                  Uri.parse(imageUrl),
-                ).load(imageUrl).then((value) => value.buffer.asUint8List()),
-              ),
-            )
-            : null;
+    final image = imageUrl != null && imageUrl.isNotEmpty
+        ? BigPictureStyleInformation(
+            ByteArrayAndroidBitmap(
+              await NetworkAssetBundle(
+                Uri.parse(imageUrl),
+              ).load(imageUrl).then((value) => value.buffer.asUint8List()),
+            ),
+          )
+        : null;
     FlutterLocalNotificationsPlugin().show(
       notification.hashCode,
       notification.title,
@@ -143,14 +144,10 @@ class FcmMessagingRepository implements MessagingRepository, LinkRepository {
     final fcmToken = token ?? _tokenSubject.value;
     if (fcmToken == null) return;
 
-    final os = Platform.isAndroid ? 'AOS' : 'iOS';
-    //final packageInfo = await PackageInfo.fromPlatform();
-    //final version = packageInfo.version;
-    // TODO: package_info_plus가 호환 안됨 추후 수정 필요
     final request = FcmRequestModel(
       fcmToken: fcmToken,
-      os: os,
-      version: '1.0.0',
+      os: await _appVersionRepository.getPlatform(),
+      version: await _appVersionRepository.getCurrentVersion(),
     );
 
     await _api.fcm(request);
