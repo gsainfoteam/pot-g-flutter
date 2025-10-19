@@ -212,7 +212,10 @@ class _SelectBankDialogState extends State<_SelectBankDialog> {
       child: AnimatedSwitcher(
         duration: const Duration(milliseconds: 300),
         child: selectedBank != null
-            ? _BankNumber(selectedBank: selectedBank!)
+            ? _BankNumber(
+                selectedBank: selectedBank!,
+                onSelectBank: () => setState(() => selectedBank = null),
+              )
             : _buildBankList(),
       ),
     );
@@ -336,9 +339,10 @@ class _Bank extends StatelessWidget {
 }
 
 class _BankNumber extends StatefulWidget {
-  const _BankNumber({required this.selectedBank});
+  const _BankNumber({required this.selectedBank, required this.onSelectBank});
 
   final BankEntity selectedBank;
+  final VoidCallback onSelectBank;
 
   @override
   State<_BankNumber> createState() => _BankNumberState();
@@ -379,7 +383,27 @@ class _BankNumberState extends State<_BankNumber> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(widget.selectedBank.name, style: TextStyles.title2),
+            Row(
+              children: [
+                Container(
+                  padding: EdgeInsets.all(4),
+                  height: 28,
+                  width: 28,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Palette.borderGrey),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Image.network(widget.selectedBank.logoUrl),
+                ),
+                const SizedBox(width: 8),
+                Text(widget.selectedBank.name, style: TextStyles.title3),
+                const SizedBox(width: 12),
+                PotPressable(
+                  onTap: widget.onSelectBank,
+                  child: Assets.icons.navArrowDown.svg(),
+                ),
+              ],
+            ),
             const SizedBox(height: 20),
             PotTextField(
               filled: true,
