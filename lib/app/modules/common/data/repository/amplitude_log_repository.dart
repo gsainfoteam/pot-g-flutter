@@ -25,7 +25,7 @@ class AmplitudeLogRepository extends LogRepository {
       _instance.track(BaseEvent(eventName, eventProperties: properties));
       if (eventName.startsWith('pageview_')) {
         _firebaseAnalytics.logScreenView(
-          screenName: eventName.substring(7),
+          screenName: eventName.substring(9),
           parameters: properties,
         );
       } else {
