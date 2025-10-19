@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:pot_g/app/modules/user/data/data_source/constant/terms.dart';
+import 'package:pot_g/app/modules/user/data/data_source/constant/term_storage.dart';
 import 'package:pot_g/app/modules/user/data/models/accounting_model.dart';
 import 'package:pot_g/app/modules/user/data/models/push_setting_model.dart';
 import 'package:pot_g/app/modules/user/domain/entities/self_user_entity.dart';
@@ -24,7 +24,6 @@ sealed class SelfUserModel with _$SelfUserModel implements SelfUserEntity {
       _$SelfUserModelFromJson(json);
 
   @override
-  List<TermEntity> get agreedTerms => terms
-      .map((e) => TermStorage.terms.firstWhere((element) => element.slug == e))
-      .toList();
+  List<TermEntity> get agreedTerms =>
+      terms.map(TermStorage.getTermBySlug).toList();
 }

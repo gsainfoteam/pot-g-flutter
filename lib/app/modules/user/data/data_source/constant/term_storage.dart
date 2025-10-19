@@ -18,4 +18,7 @@ abstract class TermStorage {
       required: true,
     ),
   ];
+
+  static TermEntity getTermBySlug(String slug) =>
+      terms.firstWhere((element) => element.slug == slug);
 }
