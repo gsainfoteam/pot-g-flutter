@@ -44,7 +44,7 @@ class _PotId implements PotIdEntity {
 }
 
 @RoutePage()
-class ChatRoomPage extends StatelessWidget with LogPageStateless {
+class ChatRoomPage extends StatelessWidget with LogPage {
   const ChatRoomPage({super.key, @PathParam() required this.id});
 
   @override

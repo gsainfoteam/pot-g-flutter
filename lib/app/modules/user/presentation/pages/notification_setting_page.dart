@@ -13,7 +13,7 @@ import 'package:pot_g/app/values/text_styles.dart';
 import 'package:pot_g/gen/strings.g.dart';
 
 @RoutePage()
-class NotificationSettingPage extends StatelessWidget with LogPageStateless {
+class NotificationSettingPage extends StatelessWidget with LogPage {
   const NotificationSettingPage({super.key});
 
   @override
@@ -53,19 +53,18 @@ class _NotificationSettingPage extends StatelessWidget {
                   children: [
                     _NotificationOption(
                       title: context.t.profile.notification_settings.all.title,
-                      description:
-                          context
-                              .t
-                              .profile
-                              .notification_settings
-                              .all
-                              .description,
+                      description: context
+                          .t
+                          .profile
+                          .notification_settings
+                          .all
+                          .description,
                       value: pushSetting.anyPush,
                       onChanged: (value) {
                         L.c(
                           'allNotification',
-                           from: 'notificationSetting',
-                           properties: {'value': value ? 'on' : 'off'},
+                          from: 'notificationSetting',
+                          properties: {'value': value ? 'on' : 'off'},
                         );
                         final updated = PushSettingModel(
                           anyPush: value,
@@ -79,19 +78,18 @@ class _NotificationSettingPage extends StatelessWidget {
                     const SizedBox(height: 16),
                     _NotificationOption(
                       title: context.t.profile.notification_settings.chat.title,
-                      description:
-                          context
-                              .t
-                              .profile
-                              .notification_settings
-                              .chat
-                              .description,
+                      description: context
+                          .t
+                          .profile
+                          .notification_settings
+                          .chat
+                          .description,
                       value: pushSetting.chatPush,
                       onChanged: (value) {
                         L.c(
-                            'chattingNotification',
-                             from: 'notificationSetting',
-                              properties: {'value': value ? 'on' : 'off'},
+                          'chattingNotification',
+                          from: 'notificationSetting',
+                          properties: {'value': value ? 'on' : 'off'},
                         );
                         final updated = PushSettingModel(
                           anyPush: pushSetting.anyPush,
@@ -105,13 +103,12 @@ class _NotificationSettingPage extends StatelessWidget {
                     const SizedBox(height: 16),
                     _NotificationOption(
                       title: context.t.profile.notification_settings.room.title,
-                      description:
-                          context
-                              .t
-                              .profile
-                              .notification_settings
-                              .room
-                              .description,
+                      description: context
+                          .t
+                          .profile
+                          .notification_settings
+                          .room
+                          .description,
                       value: pushSetting.potInOutPush,
                       onChanged: (value) {
                         L.c(
