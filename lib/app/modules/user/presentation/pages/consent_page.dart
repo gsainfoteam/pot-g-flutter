@@ -32,7 +32,10 @@ class ConsentPage extends StatelessWidget with LogPage {
         listeners: [
           BlocListener<ConsentBloc, ConsentState>(
             listener: (context, state) {
-              state.mapOrNull(error: (e) => context.showToast(e.message));
+              state.mapOrNull(
+                error: (e) => context.showToast(e.message),
+                loaded: (_) => context.read<AuthBloc>().add(AuthEvent.update()),
+              );
             },
           ),
           BlocListener<AuthBloc, AuthState>(
