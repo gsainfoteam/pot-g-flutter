@@ -16,33 +16,23 @@ class PotListBloc extends Bloc<PotListEvent, PotListState> {
   _Search? _search;
 
   PotListBloc(this._repository) : super(_State()) {
-    on<PotListEvent>((event, emit) {
-      switch (event) {
-        case _Search():
-          return _onSearch(event, emit);
-        case _LoadMore():
-          return _onLoadMore(event, emit);
-      }
-    }, transformer: droppable());
+    on<_Search>(_onSearch, transformer: restartable());
+    on<_LoadMore>(_onLoadMore, transformer: droppable());
   }
 
   Future<void> _onSearch(_Search event, Emitter<PotListState> emit) async {
-    emit(state.copyWith(isLoading: true));
-    try {
-      _search = event;
-      final pots = await _repository.getPotList(
-        date: event.date,
-        route: event.route,
-      );
-      emit(state.copyWith(pots: pots, isLoading: false));
-    } catch (e, stackTrace) {
-      L.e(e, stackTrace);
-      emit(state.copyWith(error: e.toString(), isLoading: false));
-    }
+    _search = event;
+    emit(state.copyWith(pots: [], isLoading: true));
+    await _load(emit);
   }
 
   Future<void> _onLoadMore(_LoadMore event, Emitter<PotListState> emit) async {
+    await _load(emit);
+  }
+
+  Future<void> _load(Emitter<PotListState> emit) async {
     if (_search == null) return;
+    if (state.endReached) return;
     emit(state.copyWith(isLoading: true));
     try {
       final pots = await _repository.getPotList(
@@ -50,7 +40,13 @@ class PotListBloc extends Bloc<PotListEvent, PotListState> {
         route: _search!.route,
         offset: state.pots.length,
       );
-      emit(state.copyWith(pots: [...state.pots, ...pots], isLoading: false));
+      emit(
+        state.copyWith(
+          pots: [...state.pots, ...pots],
+          isLoading: false,
+          endReached: pots.isEmpty,
+        ),
+      );
     } catch (e, stackTrace) {
       L.e(e, stackTrace);
       emit(state.copyWith(error: e.toString(), isLoading: false));
@@ -70,6 +66,7 @@ sealed class PotListState with _$PotListState {
   const factory PotListState({
     @Default([]) List<PotSummaryEntity> pots,
     @Default(false) bool isLoading,
+    @Default(false) bool endReached,
     String? error,
   }) = _State;
 }
