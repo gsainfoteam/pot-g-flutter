@@ -68,7 +68,17 @@ class _Layout extends StatelessWidget {
                               ? const Center(
                                   child: CircularProgressIndicator.adaptive(),
                                 )
-                              : _EmptyScreen()
+                              : _Refresh(
+                                  child: CustomScrollView(
+                                    physics:
+                                        const AlwaysScrollableScrollPhysics(),
+                                    slivers: [
+                                      SliverFillRemaining(
+                                        child: _EmptyScreen(),
+                                      ),
+                                    ],
+                                  ),
+                                )
                         : _ListView(pots: state.pots),
                   ),
                 ),
@@ -122,22 +132,7 @@ class _ListViewState extends State<_ListView> {
 
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator.adaptive(
-      onRefresh: () async {
-        final listCubit = context.read<ListCubit>();
-        final potListBloc = context.read<PotListBloc>();
-
-        potListBloc.add(
-          PotListEvent.search(
-            date: listCubit.state.date,
-            route: listCubit.state.route,
-          ),
-        );
-
-        await potListBloc.stream
-            .firstWhere((state) => !state.isLoading)
-            .timeout(const Duration(seconds: 10));
-      },
+    return _Refresh(
       child: ListView.builder(
         controller: _scrollController,
         physics: const AlwaysScrollableScrollPhysics(),
@@ -234,6 +229,34 @@ class _EmptyScreen extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _Refresh extends StatelessWidget {
+  const _Refresh({required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return RefreshIndicator.adaptive(
+      onRefresh: () async {
+        final listCubit = context.read<ListCubit>();
+        final potListBloc = context.read<PotListBloc>();
+
+        potListBloc.add(
+          PotListEvent.search(
+            date: listCubit.state.date,
+            route: listCubit.state.route,
+          ),
+        );
+
+        await potListBloc.stream
+            .firstWhere((state) => !state.isLoading)
+            .timeout(const Duration(seconds: 10));
+      },
+      child: child,
     );
   }
 }
