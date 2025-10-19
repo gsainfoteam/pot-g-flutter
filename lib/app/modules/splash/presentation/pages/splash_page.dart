@@ -18,13 +18,11 @@ class _SplashPageState extends State<SplashPage> {
     super.initState();
     Future.delayed(const Duration(seconds: 1), () async {
       if (!mounted) return;
-      Future.delayed(const Duration(milliseconds: 100), () {
-        setState(() {
-          _isReady = true;
-        });
-        Future.delayed(const Duration(milliseconds: 200), () {
-          FlutterNativeSplash.remove();
-        });
+      setState(() {
+        _isReady = true;
+      });
+      Future.delayed(const Duration(milliseconds: 200), () {
+        FlutterNativeSplash.remove();
       });
     });
   }
