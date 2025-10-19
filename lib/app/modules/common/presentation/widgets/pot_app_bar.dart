@@ -4,7 +4,6 @@ import 'package:pot_g/app/modules/common/presentation/widgets/pot_icon_button.da
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
 import 'package:pot_g/gen/assets.gen.dart';
-import 'package:pot_g/gen/strings.g.dart';
 
 class PotAppBar extends StatelessWidget implements PreferredSizeWidget {
   const PotAppBar({
@@ -22,50 +21,27 @@ class PotAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final logo = Padding(
-      padding: const EdgeInsets.only(left: 16),
-      child: SizedBox(
-        height: 32,
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            AspectRatio(aspectRatio: 1, child: Assets.logo.color.image()),
-            const SizedBox(width: 4),
-            Text(
-              context.t.name,
-              style: TextStyle(
-                fontWeight: FontWeight.w900,
-                fontSize: 28,
-                height: 1,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-    final effectiveActions =
-        actions.isEmpty
-            ? [
-              if (Scaffold.maybeOf(context)?.hasEndDrawer ?? false)
-                AspectRatio(
-                  aspectRatio: 1,
-                  child: PotIconButton(
-                    icon: Assets.icons.menu.svg(),
-                    onPressed: () {
-                      Scaffold.maybeOf(context)?.openEndDrawer();
-                    },
-                  ),
+    final effectiveActions = actions.isEmpty
+        ? [
+            if (Scaffold.maybeOf(context)?.hasEndDrawer ?? false)
+              AspectRatio(
+                aspectRatio: 1,
+                child: PotIconButton(
+                  icon: Assets.icons.menu.svg(),
+                  onPressed: () {
+                    Scaffold.maybeOf(context)?.openEndDrawer();
+                  },
                 ),
-            ]
-            : actions;
+              ),
+          ]
+        : actions;
 
     return Container(
       decoration: BoxDecoration(
         color: Palette.white,
-        border:
-            title == null
-                ? null
-                : Border(bottom: BorderSide(color: Palette.borderGrey2)),
+        border: title == null
+            ? null
+            : Border(bottom: BorderSide(color: Palette.borderGrey2)),
       ),
       child: SafeArea(
         bottom: false,
@@ -76,30 +52,25 @@ class PotAppBar extends StatelessWidget implements PreferredSizeWidget {
                 leading ??
                 (automaticallyImplyLeading
                     ? leadingType == LeadingType.back
-                        ? AspectRatio(
-                          aspectRatio: 1,
-                          child: PotIconButton(
-                            icon: Assets.icons.arrowLeft.svg(),
-                            onPressed: action,
-                          ),
-                        )
-                        : title == null
-                        ? logo
-                        : null
+                          ? AspectRatio(
+                              aspectRatio: 1,
+                              child: PotIconButton(
+                                icon: Assets.icons.arrowLeft.svg(),
+                                onPressed: action,
+                              ),
+                            )
+                          : null
                     : null);
             return ConstrainedBox(
               constraints: BoxConstraints.tightFor(height: 50),
               child: NavigationToolbar(
                 leading: effectiveLeading,
-                middle:
-                    title == null
-                        ? null
-                        : DefaultTextStyle.merge(
-                          style: TextStyles.title3.copyWith(
-                            color: Palette.dark,
-                          ),
-                          child: title!,
-                        ),
+                middle: title == null
+                    ? null
+                    : DefaultTextStyle.merge(
+                        style: TextStyles.title3.copyWith(color: Palette.dark),
+                        child: title!,
+                      ),
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: effectiveActions,
