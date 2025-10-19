@@ -13,6 +13,7 @@ class DateSelect extends StatefulWidget {
     super.key,
     this.selectedDate,
     required this.onSelected,
+    this.onUnselected,
     required this.isOpen,
     required this.onOpenChanged,
     this.minDate,
@@ -20,6 +21,7 @@ class DateSelect extends StatefulWidget {
 
   final DateTime? selectedDate;
   final void Function(DateTime) onSelected;
+  final VoidCallback? onUnselected;
   final bool isOpen;
   final void Function(bool) onOpenChanged;
   final DateTime? minDate;
@@ -70,6 +72,20 @@ class _DateSelectState extends State<DateSelect> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
+                  if (widget.onUnselected != null &&
+                      widget.selectedDate != null)
+                    PotButton(
+                      onPressed: widget.selectedDate == null
+                          ? null
+                          : () {
+                              widget.onOpenChanged(false);
+                              widget.onUnselected!();
+                            },
+                      // variant: PotButtonVariant.outlined,
+                      size: PotButtonSize.small,
+                      child: Text(context.t.list.filters.date.unselect),
+                    ),
+                  const SizedBox(width: 10),
                   PotButton(
                     onPressed: _selectedDate == null
                         ? null

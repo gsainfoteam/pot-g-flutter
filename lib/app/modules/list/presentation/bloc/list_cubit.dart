@@ -11,7 +11,7 @@ class ListCubit extends Cubit<ListState> {
 
   void routeChanged(RouteEntity? route) =>
       emit(state.copyWith(route: route, dateOpened: false));
-  void dateChanged(DateTime date) =>
+  void dateChanged(DateTime? date) =>
       emit(state.copyWith(date: date, pathOpened: false));
 
   void pathOpenedChanged(bool value) =>
