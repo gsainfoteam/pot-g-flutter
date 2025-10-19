@@ -185,6 +185,7 @@ class _SelectBankDialogState extends State<_SelectBankDialog> {
   BankEntity? selectedBank;
   final _controller = ScrollController();
   double _pixels = 0;
+  String _search = '';
 
   @override
   initState() {
@@ -208,9 +209,12 @@ class _SelectBankDialogState extends State<_SelectBankDialog> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => sl<BankListBloc>()..add(BankListEvent.load()),
-      child: selectedBank != null
-          ? _BankNumber(selectedBank: selectedBank!)
-          : _buildBankList(),
+      child: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 300),
+        child: selectedBank != null
+            ? _BankNumber(selectedBank: selectedBank!)
+            : _buildBankList(),
+      ),
     );
   }
 
@@ -224,6 +228,7 @@ class _SelectBankDialogState extends State<_SelectBankDialog> {
         ),
         const SizedBox(height: 20),
         PotTextField(
+          onChanged: (value) => setState(() => _search = value),
           filled: true,
           suffixIcon: Assets.icons.search.svg(
             colorFilter: ColorFilter.mode(Palette.textGrey, BlendMode.srcIn),
@@ -241,6 +246,13 @@ class _SelectBankDialogState extends State<_SelectBankDialog> {
                 children: [
                   ...state.banks
                       .where((b) => !b.isSecurities)
+                      .where(
+                        (b) =>
+                            _search.isEmpty ||
+                            b.name.toLowerCase().contains(
+                              _search.toLowerCase(),
+                            ),
+                      )
                       .toList()
                       .chunked(3)
                       .map(_buildBankRow)
@@ -252,6 +264,13 @@ class _SelectBankDialogState extends State<_SelectBankDialog> {
                   ),
                   ...state.banks
                       .where((b) => b.isSecurities)
+                      .where(
+                        (b) =>
+                            _search.isEmpty ||
+                            b.name.toLowerCase().contains(
+                              _search.toLowerCase(),
+                            ),
+                      )
                       .toList()
                       .chunked(3)
                       .map(_buildBankRow)
