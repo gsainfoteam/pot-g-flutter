@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:pot_g/app/modules/common/presentation/utils/date_time_utils.dart';
+import 'package:pot_g/app/modules/common/presentation/extensions/date_time.dart';
 import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/date_select.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/path_select.dart';
@@ -142,7 +142,7 @@ class _DateInput extends StatelessWidget {
     final selected = context.select((CreateCubit cubit) => cubit.state.date);
     return DateSelect(
       selectedDate: selected,
-      minDate: DateTime.now(),
+      minDate: DateTime.now().startOfDay(),
       onSelected: (date) {
         L.c(
           'dateSelectorItem',
