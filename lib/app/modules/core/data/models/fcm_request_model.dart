@@ -1,16 +1,14 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:pot_g/app/modules/core/domain/enums/os.dart';
 
 part 'fcm_request_model.freezed.dart';
 part 'fcm_request_model.g.dart';
 
-@freezed
+@Freezed(toJson: true)
 sealed class FcmRequestModel with _$FcmRequestModel {
   factory FcmRequestModel({
     required String fcmToken,
-    required String os,
+    required OS os,
     required String version,
   }) = _FcmRequestModel;
-
-  factory FcmRequestModel.fromJson(Map<String, dynamic> json) =>
-      _$FcmRequestModelFromJson(json);
 }

@@ -313,5 +313,18 @@
     "loading": "Joining...",
     "fulled": "Fulled (Maximum Capacity)",
     "error": "Failed to join"
+  },
+  "update": {
+    "available": {
+      "title": "Update Available",
+      "message": "Please update to the latest version to continue.\n\nCurrent version: $currentVersion\nLatest version: $latestVersion",
+      "button": "Update",
+      "next": "Update next time"
+    },
+    "required": {
+      "title": "Update Required",
+      "message": "Please update to the latest version to continue.\n\nCurrent version: $currentVersion\nLatest version: $latestVersion",
+      "button": "Update"
+    }
   }
 }

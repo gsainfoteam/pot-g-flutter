@@ -49,6 +49,8 @@ dependencies:
   app_links: ^6.4.1
   intersperse: ^2.0.0
   share_plus: ^12.0.0
+  package_info_plus: ^9.0.0
+  pub_semver: ^2.2.0
 
 dev_dependencies:
   flutter_test:
