@@ -1,11 +1,6 @@
 abstract class BankEntity {
-  const BankEntity({
-    required this.id,
-    required this.name,
-    required this.logoUrl,
-  });
-
-  final String id;
-  final String name;
-  final String logoUrl;
+  String get id;
+  String get name;
+  String get logoUrl;
+  bool get isSecurities;
 }

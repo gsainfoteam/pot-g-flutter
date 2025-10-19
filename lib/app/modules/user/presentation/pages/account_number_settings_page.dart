@@ -1,6 +1,10 @@
+import 'dart:math';
+import 'dart:ui';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intersperse/intersperse.dart';
 import 'package:pot_g/app/di/locator.dart';
 import 'package:pot_g/app/modules/auth/presentation/bloc/auth_bloc.dart';
 import 'package:pot_g/app/modules/common/presentation/extensions/toast.dart';
@@ -179,14 +183,41 @@ class _SelectBankDialog extends StatefulWidget {
 
 class _SelectBankDialogState extends State<_SelectBankDialog> {
   BankEntity? selectedBank;
+  final _controller = ScrollController();
+  double _pixels = 0;
+  String _search = '';
+
+  @override
+  initState() {
+    super.initState();
+    _controller.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    setState(() {
+      _pixels = _controller.position.pixels;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => sl<BankListBloc>()..add(BankListEvent.load()),
-      child: selectedBank != null
-          ? _BankNumber(selectedBank: selectedBank!)
-          : _buildBankList(),
+      child: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 300),
+        child: selectedBank != null
+            ? _BankNumber(
+                selectedBank: selectedBank!,
+                onSelectBank: () => setState(() => selectedBank = null),
+              )
+            : _buildBankList(),
+      ),
     );
   }
 
@@ -200,6 +231,7 @@ class _SelectBankDialogState extends State<_SelectBankDialog> {
         ),
         const SizedBox(height: 20),
         PotTextField(
+          onChanged: (value) => setState(() => _search = value),
           filled: true,
           suffixIcon: Assets.icons.search.svg(
             colorFilter: ColorFilter.mode(Palette.textGrey, BlendMode.srcIn),
@@ -209,49 +241,108 @@ class _SelectBankDialogState extends State<_SelectBankDialog> {
         ),
         const SizedBox(height: 20),
         SizedBox(
-          height: 300,
+          height: lerpDouble(300, 500, clampDouble(_pixels / 100, 0, 1)),
           child: BlocBuilder<BankListBloc, BankListState>(
-            builder: (context, state) => ListView.separated(
-              itemBuilder: (_, index) => PotPressable(
-                hitTestBehavior: HitTestBehavior.opaque,
-                onTap: () {
-                  L.c(
-                    'bank',
-                    from: 'selectBank',
-                    properties: {'bank': state.banks[index].name},
-                  );
-                  L.v('bankAccountNumber', from: 'selectBank');
-                  setState(() => selectedBank = state.banks[index]);
-                },
-                child: SizedBox(
-                  height: 48,
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        width: 24,
-                        height: 24,
-                        child: Image.network('https://placehold.co/40.png'),
-                      ),
-                      const SizedBox(width: 12),
-                      Text(state.banks[index].name, style: TextStyles.title3),
-                    ],
+            builder: (context, state) => SingleChildScrollView(
+              controller: _controller,
+              child: Column(
+                children: [
+                  ...state.banks
+                      .where((b) => !b.isSecurities)
+                      .where(
+                        (b) =>
+                            _search.isEmpty ||
+                            b.name.toLowerCase().contains(
+                              _search.toLowerCase(),
+                            ),
+                      )
+                      .toList()
+                      .chunked(3)
+                      .map(_buildBankRow)
+                      .intersperse(const SizedBox(height: 20)),
+                  Container(
+                    height: 1,
+                    margin: EdgeInsets.symmetric(vertical: 20),
+                    color: Palette.borderGrey,
                   ),
-                ),
+                  ...state.banks
+                      .where((b) => b.isSecurities)
+                      .where(
+                        (b) =>
+                            _search.isEmpty ||
+                            b.name.toLowerCase().contains(
+                              _search.toLowerCase(),
+                            ),
+                      )
+                      .toList()
+                      .chunked(3)
+                      .map(_buildBankRow)
+                      .intersperse(const SizedBox(height: 20)),
+                  const SizedBox(height: 20),
+                  SizedBox(height: MediaQuery.of(context).viewInsets.bottom),
+                ],
               ),
-              separatorBuilder: (_, _) => const SizedBox(height: 8),
-              itemCount: state.banks.length,
             ),
           ),
         ),
       ],
     );
   }
+
+  Widget _buildBankRow(List<BankEntity> banks) {
+    return Row(
+      children: [...banks, null, null]
+          .sublist(0, 3)
+          .map<Widget>(
+            (b) => Expanded(
+              child: b == null
+                  ? const SizedBox()
+                  : PotPressable(
+                      onTap: () {
+                        L.c('selectBank', from: 'selectBank');
+                        setState(() => selectedBank = b);
+                      },
+                      child: _Bank(bank: b),
+                    ),
+            ),
+          )
+          .intersperse(const SizedBox(width: 8))
+          .toList(),
+    );
+  }
+}
+
+class _Bank extends StatelessWidget {
+  const _Bank({required this.bank});
+
+  final BankEntity bank;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          padding: EdgeInsets.all(8),
+          height: 64,
+          width: 64,
+          decoration: BoxDecoration(
+            border: Border.all(color: Palette.borderGrey),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Image.network(bank.logoUrl),
+        ),
+        const SizedBox(height: 4),
+        Text(bank.name, style: TextStyles.description),
+      ],
+    );
+  }
 }
 
 class _BankNumber extends StatefulWidget {
-  const _BankNumber({required this.selectedBank});
+  const _BankNumber({required this.selectedBank, required this.onSelectBank});
 
   final BankEntity selectedBank;
+  final VoidCallback onSelectBank;
 
   @override
   State<_BankNumber> createState() => _BankNumberState();
@@ -292,9 +383,30 @@ class _BankNumberState extends State<_BankNumber> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(widget.selectedBank.name, style: TextStyles.title2),
+            Row(
+              children: [
+                Container(
+                  padding: EdgeInsets.all(4),
+                  height: 28,
+                  width: 28,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Palette.borderGrey),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Image.network(widget.selectedBank.logoUrl),
+                ),
+                const SizedBox(width: 8),
+                Text(widget.selectedBank.name, style: TextStyles.title3),
+                const SizedBox(width: 12),
+                PotPressable(
+                  onTap: widget.onSelectBank,
+                  child: Assets.icons.navArrowDown.svg(),
+                ),
+              ],
+            ),
             const SizedBox(height: 20),
             PotTextField(
+              autoFocus: true,
               filled: true,
               controller: controller,
               keyboardType: TextInputType.none,
@@ -329,5 +441,15 @@ class _BankNumberState extends State<_BankNumber> {
         ),
       ),
     );
+  }
+}
+
+extension on List<BankEntity> {
+  List<List<BankEntity>> chunked(int size) {
+    final result = <List<BankEntity>>[];
+    for (var i = 0; i < length; i += size) {
+      result.add(sublist(i, min(i + size, length)));
+    }
+    return result;
   }
 }
