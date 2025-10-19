@@ -108,7 +108,10 @@ class _ListViewState extends State<_ListView> {
   void _onScroll() {
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent - 200) {
-      context.read<PotListBloc>().add(PotListEvent.loadMore());
+      final bloc = context.read<PotListBloc>();
+      if (!bloc.state.endReached && !bloc.state.isLoading) {
+        bloc.add(PotListEvent.loadMore());
+      }
     }
   }
 
@@ -156,7 +159,8 @@ class _ListViewState extends State<_ListView> {
                     padding: EdgeInsets.all(16.0),
                     child: Center(child: CircularProgressIndicator.adaptive()),
                   );
-                } else {
+                }
+                if (state.endReached) {
                   return Padding(
                     padding: const EdgeInsets.only(top: 8, bottom: 32),
                     child: Text(
@@ -168,6 +172,7 @@ class _ListViewState extends State<_ListView> {
                     ),
                   );
                 }
+                return const SizedBox.shrink();
               },
             );
           }
