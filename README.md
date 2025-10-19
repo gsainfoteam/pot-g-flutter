@@ -31,6 +31,7 @@ Thanks goes to these wonderful people
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/GwanLiZa"><img src="https://avatars.githubusercontent.com/u/144007144?v=4?s=100" width="100px;" alt="GwanLiZa"/><br /><sub><b>GwanLiZa</b></sub></a><br /><a href="https://github.com/gsainfoteam/pot-g-flutter/commits?author=GwanLiZa" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/controlZ"><img src="https://avatars.githubusercontent.com/u/101192718?v=4?s=100" width="100px;" alt="controlZ"/><br /><sub><b>controlZ</b></sub></a><br /><a href="#projectManagement-controlZ" title="Project Management">📆</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Yejin-02"><img src="https://avatars.githubusercontent.com/u/110380670?v=4?s=100" width="100px;" alt="Yejin-02"/><br /><sub><b>Yejin-02</b></sub></a><br /><a href="#design-Yejin-02" title="Design">🎨</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/BranKein"><img src="https://avatars.githubusercontent.com/u/32633156?v=4?s=100" width="100px;" alt="YeonhyukKim"/><br /><sub><b>YeonhyukKim</b></sub></a><br /><a href="https://github.com/gsainfoteam/pot-g-flutter/commits?author=BranKein" title="Code">💻</a></td>
     </tr>
   </tbody>
   <tfoot>
