@@ -9,6 +9,7 @@ import 'package:pot_g/app/modules/chat/presentation/bloc/pot_detail_bloc.dart';
 import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
 import 'package:pot_g/app/modules/common/presentation/utils/log_observer.dart';
 import 'package:pot_g/app/modules/core/presentation/bloc/api_channel_bloc.dart';
+import 'package:pot_g/app/modules/core/presentation/bloc/app_version_bloc.dart';
 import 'package:pot_g/app/modules/core/presentation/bloc/link_bloc.dart';
 import 'package:pot_g/app/modules/core/presentation/bloc/messaging_bloc.dart';
 import 'package:pot_g/app/modules/core/presentation/bloc/route_list_bloc.dart';
@@ -73,6 +74,11 @@ class _Providers extends StatelessWidget {
           lazy: false,
           create: (_) =>
               sl<ApiChannelBloc>()..add(const ApiChannelEvent.init()),
+        ),
+        BlocProvider(
+          lazy: false,
+          create: (_) =>
+              sl<AppVersionBloc>()..add(const AppVersionEvent.init()),
         ),
       ],
       child: MultiBlocListener(

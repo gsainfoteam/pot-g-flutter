@@ -13,22 +13,27 @@ class AppVersionBloc extends Bloc<AppVersionEvent, AppVersionState> {
 
   AppVersionBloc(this._appVersionRepository)
     : super(const AppVersionState.initial()) {
-    on<_Init>((event, emit) async {
-      emit(const AppVersionState.loading());
-      try {
-        emit(
-          AppVersionState(
-            currentVersion: await _appVersionRepository.getCurrentVersion(),
-            latestVersion: await _appVersionRepository.getLatestVersion(),
-            minVersion: await _appVersionRepository.getMinVersion(),
-            updateAvailable: await _appVersionRepository.updateAvailable(),
-            updateRequired: await _appVersionRepository.updateRequired(),
-          ),
-        );
-      } catch (e) {
-        emit(AppVersionState.error(e.toString()));
-      }
-    }, transformer: droppable());
+    on<_Init>(_onInit, transformer: droppable());
+  }
+
+  Future<void> _onInit(
+    AppVersionEvent event,
+    Emitter<AppVersionState> emit,
+  ) async {
+    emit(const AppVersionState.loading());
+    try {
+      emit(
+        AppVersionState(
+          currentVersion: await _appVersionRepository.getCurrentVersion(),
+          latestVersion: await _appVersionRepository.getLatestVersion(),
+          minVersion: await _appVersionRepository.getMinVersion(),
+          updateAvailable: await _appVersionRepository.updateAvailable(),
+          updateRequired: await _appVersionRepository.updateRequired(),
+        ),
+      );
+    } catch (e) {
+      emit(AppVersionState.error(e.toString()));
+    }
   }
 }
 
