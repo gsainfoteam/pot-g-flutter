@@ -15,10 +15,11 @@ class ConsentBloc extends Bloc<ConsentEvent, ConsentState> {
     on<_Update>(_onUpdate);
   }
 
-  Future<void> _onUpdate(ConsentEvent event, Emitter<ConsentState> emit) async {
+  Future<void> _onUpdate(_Update event, Emitter<ConsentState> emit) async {
     emit(const ConsentState.loading());
     try {
       await _repository.updateConsent(event.terms);
+      emit(const ConsentState.loaded());
     } catch (e, stackTrace) {
       L.e(e, stackTrace);
       emit(ConsentState.error(e.toString()));
