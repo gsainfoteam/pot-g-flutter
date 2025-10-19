@@ -30,13 +30,10 @@ class UpdateListener extends StatelessWidget {
     return BlocListener<AppVersionBloc, AppVersionState>(
       listener: (context, state) async {
         switch (state) {
-          case AppVersionStateData(
-            :final updateAvailable,
-            :final updateRequired,
-          ):
+          case AppVersionStateData(:final versionInfo):
             final context = getAppRouter().navigatorKey.currentContext;
             if (context == null) return;
-            if (updateRequired) {
+            if (versionInfo.updateRequired) {
               await showOkAlertDialog(
                 context: context,
                 title: context.t.update.required.title,
@@ -46,7 +43,7 @@ class UpdateListener extends StatelessWidget {
               _launchStore();
               return;
             }
-            if (updateAvailable) {
+            if (versionInfo.updateAvailable) {
               final result = await showOkCancelAlertDialog(
                 context: context,
                 title: context.t.update.available.title,

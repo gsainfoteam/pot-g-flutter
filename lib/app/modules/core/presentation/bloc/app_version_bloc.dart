@@ -2,8 +2,8 @@ import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
+import 'package:pot_g/app/modules/core/domain/entities/version_info_entity.dart';
 import 'package:pot_g/app/modules/core/domain/repositories/app_version_repository.dart';
-import 'package:pub_semver/pub_semver.dart';
 
 part 'app_version_bloc.freezed.dart';
 
@@ -22,15 +22,8 @@ class AppVersionBloc extends Bloc<AppVersionEvent, AppVersionState> {
   ) async {
     emit(const AppVersionState.loading());
     try {
-      emit(
-        AppVersionState.data(
-          currentVersion: await _appVersionRepository.getCurrentVersion(),
-          latestVersion: await _appVersionRepository.getLatestVersion(),
-          minVersion: await _appVersionRepository.getMinVersion(),
-          updateAvailable: await _appVersionRepository.updateAvailable(),
-          updateRequired: await _appVersionRepository.updateRequired(),
-        ),
-      );
+      final versionInfo = await _appVersionRepository.getVersionInfo();
+      emit(AppVersionState.data(versionInfo));
     } catch (e) {
       emit(AppVersionState.error(e.toString()));
     }
@@ -47,11 +40,6 @@ sealed class AppVersionState with _$AppVersionState {
   const factory AppVersionState.initial() = _Initial;
   const factory AppVersionState.loading() = _Loading;
   const factory AppVersionState.error(String message) = AppVersionStateError;
-  const factory AppVersionState.data({
-    required Version currentVersion,
-    required Version latestVersion,
-    required Version minVersion,
-    required bool updateAvailable,
-    required bool updateRequired,
-  }) = AppVersionStateData;
+  const factory AppVersionState.data(VersionInfoEntity versionInfo) =
+      AppVersionStateData;
 }

@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:injectable/injectable.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:pot_g/app/modules/core/data/data_sources/version_api.dart';
+import 'package:pot_g/app/modules/core/data/models/version_response_model.dart';
+import 'package:pot_g/app/modules/core/domain/entities/version_info_entity.dart';
 import 'package:pot_g/app/modules/core/domain/enums/os.dart';
 import 'package:pot_g/app/modules/core/domain/repositories/app_version_repository.dart';
 import 'package:pub_semver/pub_semver.dart';
@@ -35,30 +37,34 @@ class RestAppVersionRepository implements AppVersionRepository {
   }
 
   @override
-  Future<bool> updateAvailable() async {
-    return await getCurrentVersion() < await getLatestVersion();
-  }
-
-  @override
-  Future<bool> updateRequired() async {
-    return await getCurrentVersion() < await getMinVersion();
-  }
-
-  @override
-  Future<Version> getLatestVersion() async {
+  Future<VersionInfoEntity> getVersionInfo() async {
+    final currentVersion = await getCurrentVersion();
     final response = await _api.getVersion();
-    return Version.parse(
-      _getOS() == OS.android
-          ? response.aosLatestVersion
-          : response.iosLatestVersion,
+    final os = _getOS();
+    final latestVersion = response.latestVersion(os);
+    final minVersion = response.minVersion(os);
+    return VersionInfoEntity(
+      currentVersion: currentVersion.toString(),
+      latestVersion: latestVersion.toString(),
+      minVersion: minVersion.toString(),
+      updateAvailable: currentVersion < latestVersion,
+      updateRequired: currentVersion < minVersion,
     );
   }
+}
 
-  @override
-  Future<Version> getMinVersion() async {
-    final response = await _api.getVersion();
-    return Version.parse(
-      _getOS() == OS.android ? response.aosMinVersion : response.iosMinVersion,
-    );
+extension on VersionResponseModel {
+  Version latestVersion(OS os) {
+    return switch (os) {
+      OS.android => Version.parse(aosLatestVersion),
+      OS.ios => Version.parse(iosLatestVersion),
+    };
+  }
+
+  Version minVersion(OS os) {
+    return switch (os) {
+      OS.android => Version.parse(aosMinVersion),
+      OS.ios => Version.parse(iosMinVersion),
+    };
   }
 }
