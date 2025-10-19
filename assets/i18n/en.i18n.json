@@ -313,5 +313,17 @@
     "loading": "Joining...",
     "fulled": "Fulled (Maximum Capacity)",
     "error": "Failed to join"
+  },
+  "update": {
+    "available": {
+      "title": "Update Available",
+      "message": "Please update to the latest version to continue.",
+      "button": "Update"
+    },
+    "required": {
+      "title": "Update Required",
+      "message": "Please update to the latest version to continue.",
+      "button": "Update"
+    }
   }
 }

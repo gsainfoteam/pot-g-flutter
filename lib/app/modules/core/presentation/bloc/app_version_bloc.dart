@@ -23,7 +23,7 @@ class AppVersionBloc extends Bloc<AppVersionEvent, AppVersionState> {
     emit(const AppVersionState.loading());
     try {
       emit(
-        AppVersionState(
+        AppVersionState.data(
           currentVersion: await _appVersionRepository.getCurrentVersion(),
           latestVersion: await _appVersionRepository.getLatestVersion(),
           minVersion: await _appVersionRepository.getMinVersion(),
@@ -46,12 +46,12 @@ sealed class AppVersionEvent with _$AppVersionEvent {
 sealed class AppVersionState with _$AppVersionState {
   const factory AppVersionState.initial() = _Initial;
   const factory AppVersionState.loading() = _Loading;
-  const factory AppVersionState.error(String message) = _Error;
-  const factory AppVersionState({
+  const factory AppVersionState.error(String message) = AppVersionStateError;
+  const factory AppVersionState.data({
     required Version currentVersion,
     required Version latestVersion,
     required Version minVersion,
     required bool updateAvailable,
     required bool updateRequired,
-  }) = _AppVersionState;
+  }) = AppVersionStateData;
 }
