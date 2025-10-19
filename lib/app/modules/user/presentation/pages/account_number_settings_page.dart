@@ -1,6 +1,9 @@
+import 'dart:math';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intersperse/intersperse.dart';
 import 'package:pot_g/app/di/locator.dart';
 import 'package:pot_g/app/modules/auth/presentation/bloc/auth_bloc.dart';
 import 'package:pot_g/app/modules/common/presentation/extensions/toast.dart';
@@ -211,41 +214,79 @@ class _SelectBankDialogState extends State<_SelectBankDialog> {
         SizedBox(
           height: 300,
           child: BlocBuilder<BankListBloc, BankListState>(
-            builder: (context, state) => ListView.separated(
-              itemBuilder: (_, index) {
-                final bank = state.banks[index];
-                return PotPressable(
-                  hitTestBehavior: HitTestBehavior.opaque,
-                  onTap: () {
-                    L.c(
-                      'bank',
-                      from: 'selectBank',
-                      properties: {'bank': bank.name},
-                    );
-                    L.v('bankAccountNumber', from: 'selectBank');
-                    setState(() => selectedBank = bank);
-                  },
-                  child: SizedBox(
-                    height: 48,
-                    child: Row(
-                      children: [
-                        SizedBox(
-                          width: 24,
-                          height: 24,
-                          child: Image.network(bank.logoUrl),
-                        ),
-                        const SizedBox(width: 12),
-                        Text(bank.name, style: TextStyles.title3),
-                      ],
-                    ),
+            builder: (context, state) => SingleChildScrollView(
+              child: Column(
+                children: [
+                  ...state.banks
+                      .where((b) => !b.isSecurities)
+                      .toList()
+                      .chunked(3)
+                      .map(_buildBankRow)
+                      .intersperse(const SizedBox(height: 20)),
+                  Container(
+                    height: 1,
+                    margin: EdgeInsets.symmetric(vertical: 20),
+                    color: Palette.borderGrey,
                   ),
-                );
-              },
-              separatorBuilder: (_, _) => const SizedBox(height: 8),
-              itemCount: state.banks.length,
+                  ...state.banks
+                      .where((b) => b.isSecurities)
+                      .toList()
+                      .chunked(3)
+                      .map(_buildBankRow)
+                      .intersperse(const SizedBox(height: 20)),
+                ],
+              ),
             ),
           ),
         ),
+      ],
+    );
+  }
+
+  Widget _buildBankRow(List<BankEntity> banks) {
+    return Row(
+      children: [...banks, null, null]
+          .sublist(0, 3)
+          .map<Widget>(
+            (b) => Expanded(
+              child: b == null
+                  ? const SizedBox()
+                  : PotPressable(
+                      onTap: () {
+                        L.c('selectBank', from: 'selectBank');
+                        setState(() => selectedBank = b);
+                      },
+                      child: _Bank(bank: b),
+                    ),
+            ),
+          )
+          .intersperse(const SizedBox(width: 8))
+          .toList(),
+    );
+  }
+}
+
+class _Bank extends StatelessWidget {
+  const _Bank({required this.bank});
+
+  final BankEntity bank;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          padding: EdgeInsets.all(8),
+          height: 64,
+          width: 64,
+          decoration: BoxDecoration(
+            border: Border.all(color: Palette.borderGrey),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Image.network(bank.logoUrl),
+        ),
+        const SizedBox(height: 4),
+        Text(bank.name, style: TextStyles.description),
       ],
     );
   }
@@ -332,5 +373,15 @@ class _BankNumberState extends State<_BankNumber> {
         ),
       ),
     );
+  }
+}
+
+extension on List<BankEntity> {
+  List<List<BankEntity>> chunked(int size) {
+    final result = <List<BankEntity>>[];
+    for (var i = 0; i < length; i += size) {
+      result.add(sublist(i, min(i + size, length)));
+    }
+    return result;
   }
 }

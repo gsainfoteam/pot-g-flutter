@@ -11,6 +11,7 @@ sealed class BankModel with _$BankModel implements BankEntity {
     required String id,
     required String bankFullName,
     required String logo,
+    required bool isSecurities,
   }) = _BankModel;
 
   factory BankModel.fromJson(Map<String, dynamic> json) =>
