@@ -34,9 +34,11 @@ class UpdateListener extends StatelessWidget {
             :final updateAvailable,
             :final updateRequired,
           ):
+            final context = getAppRouter().navigatorKey.currentContext;
+            if (context == null) return;
             if (updateRequired) {
               await showOkAlertDialog(
-                context: getAppRouter().navigatorKey.currentContext!,
+                context: context,
                 title: context.t.update.required.title,
                 message: context.t.update.required.message,
                 okLabel: context.t.update.required.button,
@@ -46,7 +48,7 @@ class UpdateListener extends StatelessWidget {
             }
             if (updateAvailable) {
               final result = await showOkCancelAlertDialog(
-                context: getAppRouter().navigatorKey.currentContext!,
+                context: context,
                 title: context.t.update.available.title,
                 message: context.t.update.available.message,
                 okLabel: context.t.update.available.button,
