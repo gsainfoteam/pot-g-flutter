@@ -67,8 +67,8 @@ class PotUsers extends StatelessWidget {
             if (pot.departureTime != null) {
               showOkAlertDialog(
                 context: context,
-                title: inviteText.departure_confirmed,
-                message: inviteText.departure_confirmed,
+                title: inviteText.departure_confirmed.title,
+                message: inviteText.departure_confirmed.description,
               );
               return;
             }

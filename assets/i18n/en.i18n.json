@@ -228,7 +228,10 @@
             "title": "Invite Link Copied",
             "description": "The invite link has been copied.\nPlease send the link to your friend."
           },
-          "departure_confirmed": "After the departure time is confirmed, you cannot invite."
+          "departure_confirmed": {
+            "title": "Departure Time Confirmed",
+            "description": "After the departure time is confirmed, you cannot invite."
+          }
         },
         "host": "Host"
       },

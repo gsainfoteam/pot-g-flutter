@@ -225,7 +225,10 @@
             "title": "초대 링크 복사",
             "description": "초대 링크가 복사 되었습니다\n친구에게 링크를 전송하세요"
           },
-          "departure_confirmed": "출발 시간을 확정한 이후에는 초대가 불가능합니다"
+          "departure_confirmed": {
+            "title": "출발 시간 확정됨",
+            "description": "출발 시간을 확정한 이후에는 초대가 불가능합니다"
+          }
         },
         "host": "방장"
       },
