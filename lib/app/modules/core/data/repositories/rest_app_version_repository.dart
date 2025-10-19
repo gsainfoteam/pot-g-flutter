@@ -20,7 +20,13 @@ class RestAppVersionRepository implements AppVersionRepository {
   }
 
   OS _getOS() {
-    return Platform.isAndroid ? OS.android : OS.ios;
+    if (Platform.isAndroid) {
+      return OS.android;
+    } else if (Platform.isIOS) {
+      return OS.ios;
+    } else {
+      throw UnsupportedError('Unsupported platform');
+    }
   }
 
   @override
