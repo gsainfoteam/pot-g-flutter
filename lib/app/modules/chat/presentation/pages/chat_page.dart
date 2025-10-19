@@ -56,88 +56,100 @@ class _ChatListViewState extends State<_ChatListView> {
   Widget build(BuildContext context) {
     final hasActivePots = widget.activePots.isNotEmpty;
 
-    return SingleChildScrollView(
-      clipBehavior: Clip.none,
-      padding: EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (hasActivePots) ...[
-            ...widget.activePots.expandIndexed(
-              (index, e) => [
-                if (index != 0) const SizedBox(height: 16),
-                ChatListItem(pot: e),
-              ],
-            ),
-            const SizedBox(height: 32),
-          ] else ...[
-            AnimatedSize(
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.easeInOut,
-              child: SizedBox(
-                height:
-                    _showClosed ? 0 : MediaQuery.of(context).size.height * 0.65,
-                child: Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Assets.icons.fofoSad.svg(
-                        colorFilter: ColorFilter.mode(
-                          Palette.grey,
-                          BlendMode.srcIn,
+    return RefreshIndicator.adaptive(
+      onRefresh: () async {
+        final potDetailBloc = context.read<PotDetailBloc>();
+
+        potDetailBloc.add(const PotDetailEvent.loadMyPots());
+
+        // isLoading이 false가 될 때까지 대기
+        await potDetailBloc.stream.firstWhere((state) => !state.isLoading);
+      },
+      child: SingleChildScrollView(
+        clipBehavior: Clip.none,
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (hasActivePots) ...[
+              ...widget.activePots.expandIndexed(
+                (index, e) => [
+                  if (index != 0) const SizedBox(height: 16),
+                  ChatListItem(pot: e),
+                ],
+              ),
+              const SizedBox(height: 32),
+            ] else ...[
+              AnimatedSize(
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+                child: SizedBox(
+                  height: _showClosed
+                      ? 0
+                      : MediaQuery.of(context).size.height * 0.65,
+                  child: Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Assets.icons.fofoSad.svg(
+                          colorFilter: ColorFilter.mode(
+                            Palette.grey,
+                            BlendMode.srcIn,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 16),
-                      const Text(
-                        "참여 중인 팟이 없습니다",
-                        style: TextStyle(fontSize: 16, color: Palette.textGrey),
-                      ),
-                    ],
+                        const SizedBox(height: 16),
+                        const Text(
+                          "참여 중인 팟이 없습니다",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Palette.textGrey,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
 
-          GestureDetector(
-            onTap:
-                () => setState(() {
-                  _showClosed = !_showClosed;
-                  L.c(
-                    'expiredRoom',
-                    properties: {'toggle': _showClosed ? 'show' : 'hide'},
-                  );
-                }),
-            behavior: HitTestBehavior.opaque,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    _showClosed ? "해산된 팟 접기" : "해산된 팟 보기",
-                    style: const TextStyle(fontSize: 16, color: Palette.grey),
-                  ),
-                  const SizedBox(width: 8),
-                  Icon(
-                    _showClosed
-                        ? Icons.keyboard_arrow_up
-                        : Icons.keyboard_arrow_down,
-                    color: Palette.grey,
-                    size: 20,
-                  ),
-                ],
+            GestureDetector(
+              onTap: () => setState(() {
+                _showClosed = !_showClosed;
+                L.c(
+                  'expiredRoom',
+                  properties: {'toggle': _showClosed ? 'show' : 'hide'},
+                );
+              }),
+              behavior: HitTestBehavior.opaque,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      _showClosed ? "해산된 팟 접기" : "해산된 팟 보기",
+                      style: const TextStyle(fontSize: 16, color: Palette.grey),
+                    ),
+                    const SizedBox(width: 8),
+                    Icon(
+                      _showClosed
+                          ? Icons.keyboard_arrow_up
+                          : Icons.keyboard_arrow_down,
+                      color: Palette.grey,
+                      size: 20,
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
 
-          AnimatedSize(
-            duration: const Duration(milliseconds: 200),
-            alignment: Alignment.topCenter,
-            curve: Curves.easeInOut,
-            child:
-                _showClosed
-                    ? Column(
+            AnimatedSize(
+              duration: const Duration(milliseconds: 200),
+              alignment: Alignment.topCenter,
+              curve: Curves.easeInOut,
+              child: _showClosed
+                  ? Column(
                       children: [
                         ...widget.closedPots.expand(
                           (e) => [
@@ -147,9 +159,10 @@ class _ChatListViewState extends State<_ChatListView> {
                         ),
                       ],
                     )
-                    : const SizedBox(width: double.infinity, height: 0),
-          ),
-        ],
+                  : const SizedBox(width: double.infinity, height: 0),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -86,29 +86,45 @@ class _ListView extends StatelessWidget {
   final List<PotSummaryEntity> pots;
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: EdgeInsets.fromLTRB(
-        16,
-        20,
-        16,
-        MediaQuery.of(context).size.height * 0.4,
-      ),
-      child: Column(
-        children: [
-          ...pots.expand(
-            (element) => [
-              PotListItem(pot: element),
-              const SizedBox(height: 15),
-            ],
+    return RefreshIndicator.adaptive(
+      onRefresh: () async {
+        final listCubit = context.read<ListCubit>();
+        final potListBloc = context.read<PotListBloc>();
+
+        potListBloc.add(
+          PotListEvent.search(
+            date: listCubit.state.date,
+            route: listCubit.state.route,
           ),
-          Padding(
-            padding: EdgeInsets.only(top: 8, bottom: 32),
-            child: Text(
-              context.t.list.reached_all,
-              style: TextStyles.description.copyWith(color: Palette.grey),
+        );
+
+        // isLoading이 false가 될 때까지 대기
+        await potListBloc.stream.firstWhere((state) => !state.isLoading);
+      },
+      child: SingleChildScrollView(
+        padding: EdgeInsets.fromLTRB(
+          16,
+          20,
+          16,
+          MediaQuery.of(context).size.height * 0.4,
+        ),
+        child: Column(
+          children: [
+            ...pots.expand(
+              (element) => [
+                PotListItem(pot: element),
+                const SizedBox(height: 15),
+              ],
             ),
-          ),
-        ],
+            Padding(
+              padding: EdgeInsets.only(top: 8, bottom: 32),
+              child: Text(
+                context.t.list.reached_all,
+                style: TextStyles.description.copyWith(color: Palette.grey),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
