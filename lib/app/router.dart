@@ -9,8 +9,7 @@ class AppRouter extends RootStackRouter {
   @override
   List<AutoRouteGuard> get guards => [
     AutoRouteGuard.simple((resolver, router) async {
-      if (resolver.route.name == SplashRoute.name ||
-          resolver.route.name == MainBottomNavigationRoute.name ||
+      if (resolver.route.name == MainBottomNavigationRoute.name ||
           resolver.route.name == ListRoute.name) {
         return resolver.next(true);
       }
@@ -29,9 +28,8 @@ class AppRouter extends RootStackRouter {
 
   @override
   List<AutoRoute> get routes => [
-    AutoRoute(path: '/', page: SplashRoute.page),
     AutoRoute(
-      path: '/main',
+      path: '/',
       page: MainBottomNavigationRoute.page,
       children: [
         AutoRoute(

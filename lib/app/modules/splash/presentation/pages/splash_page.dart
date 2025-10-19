@@ -1,24 +1,27 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:pot_g/app/router.gr.dart';
 
-@RoutePage()
 class SplashPage extends StatefulWidget {
-  const SplashPage({super.key});
+  const SplashPage({super.key, required this.child});
+
+  final Widget child;
 
   @override
   State<SplashPage> createState() => _SplashPageState();
 }
 
 class _SplashPageState extends State<SplashPage> {
+  bool _isReady = false;
+
   @override
   void initState() {
     super.initState();
     Future.delayed(const Duration(seconds: 1), () async {
       if (!mounted) return;
-      await context.router.replaceAll([const ListRoute()]);
-      Future.delayed(const Duration(milliseconds: 300), () {
+      setState(() {
+        _isReady = true;
+      });
+      Future.delayed(const Duration(milliseconds: 200), () {
         FlutterNativeSplash.remove();
       });
     });
@@ -26,6 +29,6 @@ class _SplashPageState extends State<SplashPage> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold();
+    return _isReady ? widget.child : const Scaffold();
   }
 }
