@@ -48,17 +48,21 @@ class CreateForm extends StatelessWidget {
                         L.c('createPot');
                         final state = cubit.state;
                         final bloc = context.read<CreatePotBloc>();
+                        final startsAt = state.date!.copyWith(
+                          hour: state.startTime!.hour,
+                          minute: state.startTime!.minute,
+                        );
+                        final endsAt = state.date!.copyWith(
+                          hour: state.endTime!.hour,
+                          minute: state.endTime!.minute,
+                        );
                         bloc.add(
                           CreatePotEvent.create(
                             routeId: state.route!.id,
-                            startsAt: state.date!.copyWith(
-                              hour: state.startTime!.hour,
-                              minute: state.startTime!.minute,
-                            ),
-                            endsAt: state.date!.copyWith(
-                              hour: state.endTime!.hour,
-                              minute: state.endTime!.minute,
-                            ),
+                            startsAt: startsAt,
+                            endsAt: endsAt.isBefore(startsAt)
+                                ? endsAt.add(const Duration(days: 1))
+                                : endsAt,
                             maxCount: state.maxCapacity!,
                           ),
                         );
@@ -236,9 +240,11 @@ class _TimeInterval extends StatelessWidget {
         Builder(
           builder: (context) {
             final cubit = context.watch<CreateCubit>();
-            final minStartTime = cubit.state.date?.minTimeForDate?.add(
-              const Duration(minutes: 10),
-            );
+            final minStartTime = cubit.state.date?.isToday == true
+                ? DateTime.now()
+                      .add(const Duration(minutes: 10))
+                      .copyWith(second: 0, millisecond: 0, microsecond: 0)
+                : null;
 
             return TimeIntervalSelector(
               disabled: !preFilled,

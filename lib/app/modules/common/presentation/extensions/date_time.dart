@@ -22,9 +22,6 @@ extension DateTimeX on DateTime {
   bool isSameDay(DateTime other) =>
       year == other.year && month == other.month && day == other.day;
   bool get isToday => isSameDay(DateTime.now());
-  DateTime? get minTimeForDate {
-    return isToday ? DateTime.now() : null;
-  }
 
   DateTime combineWithTime(DateTime time) {
     return DateTime(year, month, day, time.hour, time.minute);

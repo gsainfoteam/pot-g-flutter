@@ -39,33 +39,10 @@ class CreateCubit extends Cubit<CreateState> {
       }
     }
 
-    // 시작 시간이 종료 시간보다 늦으면 종료 시간 초기화
-    if (state.endTime != null && state.date != null) {
-      final startDateTime = state.date!.combineWithTime(startTime);
-      final endDateTime = state.date!.combineWithTime(state.endTime!);
-
-      if (startDateTime.isAfter(endDateTime) ||
-          startDateTime.isAtSameMomentAs(endDateTime)) {
-        emit(state.copyWith(startTime: startTime, endTime: null));
-        return;
-      }
-    }
-
     emit(state.copyWith(startTime: startTime));
   }
 
   void endTimeChanged(DateTime endTime) {
-    // 시작 시간이 설정되어 있으면 종료 시간이 시작 시간보다 늦어야 함
-    if (state.startTime != null && state.date != null) {
-      final startDateTime = state.date!.combineWithTime(state.startTime!);
-      final endDateTime = state.date!.combineWithTime(endTime);
-
-      if (endDateTime.isBefore(startDateTime) ||
-          endDateTime.isAtSameMomentAs(startDateTime)) {
-        return; // 무시
-      }
-    }
-
     emit(state.copyWith(endTime: endTime));
   }
 
