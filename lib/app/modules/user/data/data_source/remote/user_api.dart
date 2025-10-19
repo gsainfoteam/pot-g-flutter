@@ -21,5 +21,5 @@ abstract class UserApi {
   Future<PushSettingModel> updatePush(@Body() PushSettingModel body);
 
   @POST('consent')
-  Future updateConsent(@Body() ConsentModel body);
+  Future<void> updateConsent(@Body() ConsentModel body);
 }
