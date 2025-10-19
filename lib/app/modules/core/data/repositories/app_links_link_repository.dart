@@ -32,6 +32,6 @@ class AppLinksLinkRepository implements LinkRepository {
   @override
   Stream<String> getLinkStream() => _linkSubject.stream.map((event) {
     final uri = Uri.parse(event);
-    return uri.queryParameters['redirect'] ?? '/';
+    return uri.path;
   });
 }

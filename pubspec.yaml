@@ -48,6 +48,7 @@ dependencies:
   flutter_local_notifications: ^19.4.2
   app_links: ^6.4.1
   intersperse: ^2.0.0
+  share_plus: ^12.0.0
 
 dev_dependencies:
   flutter_test:
