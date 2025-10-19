@@ -23,7 +23,14 @@ class AmplitudeLogRepository extends LogRepository {
       log('$eventName $properties', name: 'amplitude');
     } else {
       _instance.track(BaseEvent(eventName, eventProperties: properties));
-      _firebaseAnalytics.logEvent(name: eventName, parameters: properties);
+      if (eventName.startsWith('pageview_')) {
+        _firebaseAnalytics.logScreenView(
+          screenName: eventName.substring(7),
+          parameters: properties,
+        );
+      } else {
+        _firebaseAnalytics.logEvent(name: eventName, parameters: properties);
+      }
     }
   }
 
