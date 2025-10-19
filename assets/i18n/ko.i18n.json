@@ -315,7 +315,8 @@
     "available": {
       "title": "업데이트 가능",
       "message": "최신 버전으로 업데이트해주세요.",
-      "button": "업데이트"
+      "button": "업데이트",
+      "next": "다음에 업데이트"
     },
     "required": {
       "title": "업데이트 필요",

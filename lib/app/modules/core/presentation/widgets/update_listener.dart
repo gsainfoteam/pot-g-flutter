@@ -45,11 +45,12 @@ class UpdateListener extends StatelessWidget {
               return;
             }
             if (updateAvailable) {
-              final result = await showOkAlertDialog(
+              final result = await showOkCancelAlertDialog(
                 context: getAppRouter().navigatorKey.currentContext!,
                 title: context.t.update.available.title,
                 message: context.t.update.available.message,
                 okLabel: context.t.update.available.button,
+                cancelLabel: context.t.update.available.next,
               );
               if (result == OkCancelResult.ok) _launchStore();
             }

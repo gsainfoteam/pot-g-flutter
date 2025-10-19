@@ -318,7 +318,8 @@
     "available": {
       "title": "Update Available",
       "message": "Please update to the latest version to continue.",
-      "button": "Update"
+      "button": "Update",
+      "next": "Update next time"
     },
     "required": {
       "title": "Update Required",
