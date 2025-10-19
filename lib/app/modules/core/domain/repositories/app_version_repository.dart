@@ -1,9 +1,11 @@
 import 'package:pot_g/app/modules/core/domain/enums/os.dart';
+import 'package:pub_semver/pub_semver.dart';
 
 abstract class AppVersionRepository {
-  Future<String> getCurrentVersion();
+  Future<Version> getCurrentVersion();
   Future<OS> getPlatform();
+  Future<bool> updateAvailable();
   Future<bool> updateRequired();
-  Future<String> getLatestVersion();
-  Future<String> getMinVersion();
+  Future<Version> getLatestVersion();
+  Future<Version> getMinVersion();
 }

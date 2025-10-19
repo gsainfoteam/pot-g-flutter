@@ -5,6 +5,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:pot_g/app/modules/core/data/data_sources/version_api.dart';
 import 'package:pot_g/app/modules/core/domain/enums/os.dart';
 import 'package:pot_g/app/modules/core/domain/repositories/app_version_repository.dart';
+import 'package:pub_semver/pub_semver.dart';
 
 @Injectable(as: AppVersionRepository)
 class RestAppVersionRepository implements AppVersionRepository {
@@ -13,32 +14,47 @@ class RestAppVersionRepository implements AppVersionRepository {
   RestAppVersionRepository(this._api);
 
   @override
-  Future<String> getCurrentVersion() async {
+  Future<Version> getCurrentVersion() async {
     final packageInfo = await PackageInfo.fromPlatform();
-    return packageInfo.version;
+    return Version.parse(packageInfo.version);
   }
 
-  @override
-  Future<OS> getPlatform() async {
+  OS _getOS() {
     return Platform.isAndroid ? OS.android : OS.ios;
   }
 
   @override
+  Future<OS> getPlatform() async {
+    return _getOS();
+  }
+
+  @override
+  Future<bool> updateAvailable() async {
+    return await getCurrentVersion() < await getLatestVersion();
+  }
+
+  @override
   Future<bool> updateRequired() async {
+    return await getCurrentVersion() < await getMinVersion();
+  }
+
+  @override
+  Future<Version> getLatestVersion() async {
     final response = await _api.getVersion();
-    print(response);
-    return false;
+    return Version.parse(
+      _getOS() == OS.android
+          ? response.androidLatestVersion
+          : response.iosLatestVersion,
+    );
   }
 
   @override
-  Future<String> getLatestVersion() {
-    // TODO: implement getLatestVersion
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<String> getMinVersion() {
-    // TODO: implement getMinVersion
-    throw UnimplementedError();
+  Future<Version> getMinVersion() async {
+    final response = await _api.getVersion();
+    return Version.parse(
+      _getOS() == OS.android
+          ? response.androidMinVersion
+          : response.iosMinVersion,
+    );
   }
 }

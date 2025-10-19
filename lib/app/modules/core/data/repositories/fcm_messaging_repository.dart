@@ -147,7 +147,7 @@ class FcmMessagingRepository implements MessagingRepository, LinkRepository {
     final request = FcmRequestModel(
       fcmToken: fcmToken,
       os: await _appVersionRepository.getPlatform(),
-      version: await _appVersionRepository.getCurrentVersion(),
+      version: (await _appVersionRepository.getCurrentVersion()).toString(),
     );
 
     await _api.fcm(request);
