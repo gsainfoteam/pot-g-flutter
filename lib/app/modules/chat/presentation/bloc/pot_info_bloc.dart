@@ -5,6 +5,7 @@ import 'package:injectable/injectable.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/enums/pot_status.dart';
 import 'package:pot_g/app/modules/chat/domain/repositories/pot_info_repository.dart';
+import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
 import 'package:pot_g/app/modules/core/domain/entities/pot_id_entity.dart';
 
 part 'pot_info_bloc.freezed.dart';
@@ -21,7 +22,10 @@ class PotInfoBloc extends Bloc<PotInfoEvent, PotInfoState> {
     return emit.forEach(
       _repository.getPotInfoStream(event.pot),
       onData: (pot) => PotInfoState.loaded(pot),
-      onError: (error, stackTrace) => PotInfoState.error(error.toString()),
+      onError: (error, stackTrace) {
+        L.e(error, stackTrace);
+        return PotInfoState.error(error.toString());
+      },
     );
   }
 }

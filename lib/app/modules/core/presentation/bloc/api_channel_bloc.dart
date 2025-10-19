@@ -2,6 +2,7 @@ import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
+import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
 import 'package:pot_g/app/modules/core/domain/enums/api_channel.dart';
 import 'package:pot_g/app/modules/core/domain/repositories/api_channel_repository.dart';
 
@@ -17,7 +18,10 @@ class ApiChannelBloc extends Bloc<ApiChannelEvent, ApiChannelState> {
       return emit.forEach(
         _apiChannelRepository.channel,
         onData: (channel) => ApiChannelState.loaded(channel),
-        onError: (error, stackTrace) => ApiChannelState.initial(),
+        onError: (error, stackTrace) {
+          L.e(error, stackTrace);
+          return ApiChannelState.initial();
+        },
       );
     }, transformer: restartable());
     on<_SetChannel>((event, emit) {

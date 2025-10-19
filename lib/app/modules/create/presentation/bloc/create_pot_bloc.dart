@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
+import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
 import 'package:pot_g/app/modules/core/domain/repositories/create_pot_repository.dart';
 
 part 'create_pot_bloc.freezed.dart';
@@ -24,7 +25,8 @@ class CreatePotBloc extends Bloc<CreatePotEvent, CreatePotState> {
       );
 
       emit(state.copyWith(isLoading: false, createdPotId: potId));
-    } catch (e) {
+    } catch (e, stackTrace) {
+      L.e(e, stackTrace);
       emit(state.copyWith(isLoading: false, error: e.toString()));
     }
   }

@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
+import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
 import 'package:pot_g/app/modules/user/domain/entities/bank_entity.dart';
 import 'package:pot_g/app/modules/user/domain/repositories/accounting_repository.dart';
 
@@ -19,7 +20,8 @@ class BankListBloc extends Bloc<BankListEvent, BankListState> {
     try {
       final banks = await _accountingRepository.getBankList();
       emit(BankListState.loaded(banks));
-    } catch (e) {
+    } catch (e, stackTrace) {
+      L.e(e, stackTrace);
       emit(BankListState.error(e.toString()));
     }
   }

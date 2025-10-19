@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:pot_g/app/modules/chat/domain/repositories/pot_detail_repository.dart';
+import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
 import 'package:pot_g/app/modules/core/data/models/pot_detail_model.dart';
 
 part 'pot_detail_bloc.freezed.dart';
@@ -28,7 +29,8 @@ class PotDetailBloc extends Bloc<PotDetailEvent, PotDetailState> {
           archivedPotList: pots.archivedPotList,
         ),
       );
-    } catch (e) {
+    } catch (e, stackTrace) {
+      L.e(e, stackTrace);
       emit(state.copyWith(isLoading: false, error: e.toString()));
     }
   }

@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
+import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
 import 'package:pot_g/app/modules/user/domain/entities/bank_entity.dart';
 import 'package:pot_g/app/modules/user/domain/repositories/accounting_repository.dart';
 
@@ -22,7 +23,8 @@ class SetBankAccountBloc
     try {
       await _repository.setAccounting(event.bank, event.accountNumber);
       emit(const SetBankAccountState.success());
-    } catch (e) {
+    } catch (e, stackTrace) {
+      L.e(e, stackTrace);
       emit(SetBankAccountState.error(e.toString()));
     }
   }

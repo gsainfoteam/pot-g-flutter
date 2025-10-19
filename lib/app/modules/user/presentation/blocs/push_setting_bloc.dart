@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
+import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
 import 'package:pot_g/app/modules/user/domain/entities/push_setting_entity.dart';
 import 'package:pot_g/app/modules/user/domain/repositories/push_setting_repository.dart';
 
@@ -24,7 +25,8 @@ class PushSettingBloc extends Bloc<PushSettingEvent, PushSettingState> {
     try {
       final user = await _pushSettingRepository.getUser();
       emit(PushSettingState.loaded(user.pushSetting));
-    } catch (e) {
+    } catch (e, stackTrace) {
+      L.e(e, stackTrace);
       emit(PushSettingState.error(e.toString()));
     }
   }
@@ -38,7 +40,8 @@ class PushSettingBloc extends Bloc<PushSettingEvent, PushSettingState> {
         (event as _Update).pushSetting,
       );
       emit(PushSettingState.loaded(updated));
-    } catch (e) {
+    } catch (e, stackTrace) {
+      L.e(e, stackTrace);
       emit(PushSettingState.error(e.toString()));
     }
   }
