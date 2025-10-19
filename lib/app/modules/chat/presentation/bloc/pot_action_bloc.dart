@@ -4,6 +4,7 @@ import 'package:injectable/injectable.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_user_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/repositories/pot_action_repository.dart';
+import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
 
 part 'pot_action_bloc.freezed.dart';
 
@@ -36,7 +37,8 @@ class PotActionBloc extends Bloc<PotActionEvent, PotActionState> {
             : adjustedDate,
       );
       emit(const PotActionState.success());
-    } catch (e) {
+    } catch (e, stackTrace) {
+      L.e(e, stackTrace);
       emit(PotActionState.error(e.toString()));
     }
   }
@@ -49,7 +51,8 @@ class PotActionBloc extends Bloc<PotActionEvent, PotActionState> {
     try {
       await _repository.leavePot(event.pot);
       emit(const PotActionState.success());
-    } catch (e) {
+    } catch (e, stackTrace) {
+      L.e(e, stackTrace);
       emit(PotActionState.error(e.toString()));
     }
   }
@@ -62,7 +65,8 @@ class PotActionBloc extends Bloc<PotActionEvent, PotActionState> {
     try {
       await _repository.kickUser(event.pot, event.user);
       emit(const PotActionState.success());
-    } catch (e) {
+    } catch (e, stackTrace) {
+      L.e(e, stackTrace);
       emit(PotActionState.error(e.toString()));
     }
   }

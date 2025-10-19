@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:pot_g/app/modules/auth/domain/repositories/auth_repository.dart';
+import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
 import 'package:pot_g/app/modules/user/domain/entities/self_user_entity.dart';
 
 part 'auth_bloc.freezed.dart';
@@ -38,7 +39,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     try {
       final user = await _repository.signIn();
       emit(AuthState.authenticated(user));
-    } catch (e) {
+    } catch (e, stackTrace) {
+      L.e(e, stackTrace);
       emit(AuthState.error(e.toString()));
       emit(const AuthState.unauthenticated());
     }

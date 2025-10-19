@@ -4,6 +4,7 @@ import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
+import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
 import 'package:pot_g/app/modules/socket/data/data_sources/websocket.dart';
 import 'package:pot_g/app/modules/socket/domain/socket_authorization_repository.dart';
 
@@ -58,7 +59,8 @@ class SocketAuthBloc extends Bloc<SocketAuthEvent, SocketAuthState> {
   ) async {
     try {
       await _socket.connect();
-    } catch (e) {
+    } catch (e, stackTrace) {
+      L.e(e, stackTrace);
       emit(SocketAuthState.error(e.toString()));
     }
   }

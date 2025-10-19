@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dio/io.dart';
 import 'package:injectable/injectable.dart';
 import 'package:pot_g/app/modules/auth/data/data_sources/remote/authorize_interceptor.dart';
+import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
 import 'package:pot_g/app/modules/core/domain/repositories/api_channel_repository.dart';
 
 @singleton
@@ -18,7 +19,7 @@ class PotDio extends DioForNative {
         options.baseUrl = channel.url;
       },
       onError: (error, stackTrace) {
-        // TODO: error log
+        L.e(error, stackTrace);
       },
     );
   }

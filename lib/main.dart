@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,10 +14,15 @@ Future<void> main() async {
   final binding = WidgetsFlutterBinding.ensureInitialized();
   LocaleSettings.useDeviceLocale();
   FlutterNativeSplash.preserve(widgetsBinding: binding);
-  if (kDebugMode) {
-    Bloc.observer = AppBlocObserver();
-  }
+  Bloc.observer = AppBlocObserver();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  if (!kDebugMode) {
+    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+    PlatformDispatcher.instance.onError = (error, stack) {
+      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+      return true;
+    };
+  }
   await configureDependencies();
   runApp(TranslationProvider(child: const PotApp()));
 }

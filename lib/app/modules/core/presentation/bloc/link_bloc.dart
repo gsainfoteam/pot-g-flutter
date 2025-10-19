@@ -2,6 +2,7 @@ import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
+import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
 import 'package:pot_g/app/modules/core/domain/repositories/link_repository.dart';
 
 part 'link_bloc.freezed.dart';
@@ -16,7 +17,10 @@ class LinkBloc extends Bloc<LinkEvent, LinkState> {
       return emit.forEach(
         _repository.getLinkStream().expand((event) => [null, event]),
         onData: (state) => state != null ? _Loaded(state) : const _Initial(),
-        onError: (error, _) => const _Error(),
+        onError: (error, stackTrace) {
+          L.e(error, stackTrace);
+          return const _Error();
+        },
       );
     }, transformer: restartable());
   }

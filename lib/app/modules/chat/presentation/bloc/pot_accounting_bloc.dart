@@ -5,6 +5,7 @@ import 'package:pot_g/app/modules/chat/domain/entities/accounting_result_entity.
 import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_user_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/repositories/pot_accounting_repository.dart';
+import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
 
 part 'pot_accounting_bloc.freezed.dart';
 
@@ -26,7 +27,8 @@ class PotAccountingBloc extends Bloc<PotAccountingEvent, PotAccountingState> {
     try {
       await _repository.accounting(event.pot, event.amount, event.targets);
       emit(const PotAccountingState.requestSuccess());
-    } catch (e) {
+    } catch (e, stackTrace) {
+      L.e(e, stackTrace);
       emit(PotAccountingState.error(e.toString()));
     }
   }
@@ -39,7 +41,8 @@ class PotAccountingBloc extends Bloc<PotAccountingEvent, PotAccountingState> {
     try {
       await _repository.confirmAccounting(event.pot, event.accountingResults);
       emit(const PotAccountingState.confirmSuccess());
-    } catch (e) {
+    } catch (e, stackTrace) {
+      L.e(e, stackTrace);
       emit(PotAccountingState.error(e.toString()));
     }
   }

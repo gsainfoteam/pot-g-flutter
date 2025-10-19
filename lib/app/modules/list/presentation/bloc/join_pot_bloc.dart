@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
+import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
 import 'package:pot_g/app/modules/list/domain/repositories/join_pot_repository.dart';
 
 part 'join_pot_bloc.freezed.dart';
@@ -18,7 +19,8 @@ class JoinPotBloc extends Bloc<JoinPotEvent, JoinPotState> {
     try {
       await _repository.joinPot(event.potId);
       emit(JoinPotState.success(event.potId));
-    } catch (e) {
+    } catch (e, stackTrace) {
+      L.e(e, stackTrace);
       emit(JoinPotState.error(e.toString()));
     }
   }

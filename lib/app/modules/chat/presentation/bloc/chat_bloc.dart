@@ -8,6 +8,7 @@ import 'package:mutex/mutex.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/chat_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/repositories/chat_repository.dart';
+import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
 
 part 'chat_bloc.freezed.dart';
 
@@ -47,7 +48,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         ], endReached: chats.isEmpty),
       );
       return stream;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      L.e(e, stackTrace);
       emit(ChatState.error(state.chats, e.toString()));
     } finally {
       _mutex.release();
@@ -62,7 +64,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     try {
       await _chatRepository.sendChat(event.message, _pot);
       // TODO: optimistic UI
-    } catch (e) {
+    } catch (e, stackTrace) {
+      L.e(e, stackTrace);
       emit(ChatState.error(state.chats, e.toString()));
     }
   }

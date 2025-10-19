@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
+import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
 import 'package:pot_g/app/modules/list/domain/entities/pot_overview_entity.dart';
 import 'package:pot_g/app/modules/list/domain/repositories/pot_overview_repository.dart';
 
@@ -19,7 +20,8 @@ class PotOverviewBloc extends Bloc<PotOverviewEvent, PotOverviewState> {
     try {
       final overview = await _repository.getPotOverview(event.potId);
       emit(PotOverviewState.loaded(overview));
-    } catch (e) {
+    } catch (e, stackTrace) {
+      L.e(e, stackTrace);
       emit(PotOverviewState.error(e.toString()));
     }
   }
