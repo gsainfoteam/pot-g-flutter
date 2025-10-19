@@ -8,8 +8,8 @@
 
 ## Download
 
-[![Play Store](https://img.shields.io/badge/Google%20Play-Visit-green?logo=google-play&logoColor=white)](/)
-[![App Store](https://img.shields.io/badge/App%20Store-Visit-blue?logo=app-store&logoColor=white)](/)
+[![Play Store](https://img.shields.io/badge/Google%20Play-Visit-green?logo=google-play&logoColor=white)](https://play.google.com/store/apps/details?id=me.gistory.pot_g)
+[![App Store](https://img.shields.io/badge/App%20Store-Visit-blue?logo=app-store&logoColor=white)](https://apps.apple.com/app/id6744280856)
 
 ## Contribution
 
