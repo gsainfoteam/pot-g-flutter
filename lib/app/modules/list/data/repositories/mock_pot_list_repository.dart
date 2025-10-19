@@ -109,9 +109,11 @@ class MockPotListRepository implements PotListRepository {
   Future<List<PotSummaryEntity>> getPotList({
     DateTime? date,
     RouteEntity? route,
+    int offset = 0,
   }) async {
-    final effectiveList =
-        _list.expand((e) => [e, e, e, e, e, e, e, e, e]).toList();
+    final effectiveList = _list
+        .expand((e) => [e, e, e, e, e, e, e, e, e])
+        .toList();
     if (date == null) {
       return effectiveList;
     }

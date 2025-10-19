@@ -14,8 +14,19 @@ extension DateTimeX on DateTime {
   DateTime addYears(int years) => DateTime(year + years, month, day);
   DateTime subtractYears(int years) => DateTime(year - years, month, day);
 
+  DateTime startOfDay() => DateTime(year, month, day, 0, 0, 0, 0);
+  DateTime endOfDay() => DateTime(year, month, day, 23, 59, 59, 999);
+
   bool isSameMonth(DateTime other) =>
       year == other.year && month == other.month;
   bool isSameDay(DateTime other) =>
       year == other.year && month == other.month && day == other.day;
+  bool get isToday => isSameDay(DateTime.now());
+  DateTime? get minTimeForDate {
+    return isToday ? DateTime.now() : null;
+  }
+
+  DateTime combineWithTime(DateTime time) {
+    return DateTime(year, month, day, time.hour, time.minute);
+  }
 }
