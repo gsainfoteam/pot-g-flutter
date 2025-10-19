@@ -15,6 +15,7 @@ import 'package:pot_g/app/modules/core/presentation/bloc/messaging_bloc.dart';
 import 'package:pot_g/app/modules/core/presentation/bloc/route_list_bloc.dart';
 import 'package:pot_g/app/modules/core/presentation/widgets/update_listener.dart';
 import 'package:pot_g/app/modules/socket/presentation/bloc/socket_auth_bloc.dart';
+import 'package:pot_g/app/modules/splash/presentation/pages/splash_page.dart';
 import 'package:pot_g/app/router.dart';
 import 'package:pot_g/app/router.gr.dart';
 import 'package:pot_g/app/values/palette.dart';
@@ -73,12 +74,10 @@ class _Providers extends StatelessWidget {
         ),
         BlocProvider(lazy: false, create: (_) => sl<PotDetailBloc>()),
         BlocProvider(
-          lazy: false,
           create: (_) =>
               sl<ApiChannelBloc>()..add(const ApiChannelEvent.init()),
         ),
         BlocProvider(
-          lazy: false,
           create: (_) =>
               sl<AppVersionBloc>()..add(const AppVersionEvent.init()),
         ),
@@ -137,7 +136,7 @@ class _Providers extends StatelessWidget {
             },
           ),
         ],
-        child: UpdateListener(child: child),
+        child: SplashPage(child: UpdateListener(child: child)),
       ),
     );
   }
