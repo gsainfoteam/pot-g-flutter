@@ -4,6 +4,7 @@ import 'package:amplitude_flutter/amplitude.dart';
 import 'package:amplitude_flutter/configuration.dart';
 import 'package:amplitude_flutter/events/base_event.dart';
 import 'package:amplitude_flutter/events/identify.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:pot_g/app/modules/common/domain/repositories/log_repository.dart';
@@ -14,13 +15,15 @@ class AmplitudeLogRepository extends LogRepository {
   late final _instance = Amplitude(
     Configuration(apiKey: Config.amplitudeApiKey),
   );
+  late final _firebaseAnalytics = FirebaseAnalytics.instance;
 
   @override
-  void logEvent(String eventName, Map<String, dynamic> properties) {
+  void logEvent(String eventName, Map<String, Object> properties) {
     if (kDebugMode) {
       log('$eventName $properties', name: 'amplitude');
     } else {
       _instance.track(BaseEvent(eventName, eventProperties: properties));
+      _firebaseAnalytics.logEvent(name: eventName, parameters: properties);
     }
   }
 
@@ -35,6 +38,7 @@ class AmplitudeLogRepository extends LogRepository {
         identify.clearAll();
         _instance.identify(identify);
       }
+      _firebaseAnalytics.setUserId(id: userId);
     }
   }
 
@@ -50,6 +54,7 @@ class AmplitudeLogRepository extends LogRepository {
         identify.unset(key);
       }
       _instance.identify(identify);
+      _firebaseAnalytics.setUserProperty(name: key, value: value);
     }
   }
 }
