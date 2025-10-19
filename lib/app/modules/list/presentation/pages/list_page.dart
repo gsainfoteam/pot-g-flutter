@@ -118,75 +118,66 @@ class _ListViewState extends State<_ListView> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<PotListBloc, PotListState>(
-      listener: (context, state) {
-        if (!state.endReached && !state.isLoading) {
-          _onScroll();
-        }
-      },
-      child: RefreshIndicator.adaptive(
-        onRefresh: () async {
-          final listCubit = context.read<ListCubit>();
-          final potListBloc = context.read<PotListBloc>();
+    return RefreshIndicator.adaptive(
+      onRefresh: () async {
+        final listCubit = context.read<ListCubit>();
+        final potListBloc = context.read<PotListBloc>();
 
-          potListBloc.add(
-            PotListEvent.search(
-              date: listCubit.state.date,
-              route: listCubit.state.route,
-            ),
-          );
-
-          await potListBloc.stream
-              .firstWhere((state) => !state.isLoading)
-              .timeout(const Duration(seconds: 10));
-        },
-        child: ListView.builder(
-          controller: _scrollController,
-          physics: const AlwaysScrollableScrollPhysics(),
-          padding: EdgeInsets.fromLTRB(
-            16,
-            20,
-            16,
-            MediaQuery.of(context).size.height * 0.4,
+        potListBloc.add(
+          PotListEvent.search(
+            date: listCubit.state.date,
+            route: listCubit.state.route,
           ),
-          itemCount: widget.pots.length + 1, // +1 for loading indicator
-          itemBuilder: (context, index) {
-            if (index < widget.pots.length) {
-              return Column(
-                children: [
-                  PotListItem(pot: widget.pots[index]),
-                  const SizedBox(height: 15),
-                ],
-              );
-            } else {
-              return BlocBuilder<PotListBloc, PotListState>(
-                builder: (context, state) {
-                  if (state.isLoading) {
-                    return const Padding(
-                      padding: EdgeInsets.all(16.0),
-                      child: Center(
-                        child: CircularProgressIndicator.adaptive(),
-                      ),
-                    );
-                  }
-                  if (state.endReached) {
-                    return Padding(
-                      padding: const EdgeInsets.only(top: 8, bottom: 32),
-                      child: Text(
-                        context.t.list.reached_all,
-                        style: TextStyles.description.copyWith(
-                          color: Palette.grey,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    );
-                  }
-                  return const SizedBox.shrink();
-                },
-              );
-            }
-          },
+        );
+
+        await potListBloc.stream
+            .firstWhere((state) => !state.isLoading)
+            .timeout(const Duration(seconds: 10));
+      },
+      child: ListView.builder(
+        controller: _scrollController,
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: EdgeInsets.fromLTRB(
+          16,
+          20,
+          16,
+          MediaQuery.of(context).size.height * 0.4,
         ),
+        itemCount: widget.pots.length + 1, // +1 for loading indicator
+        itemBuilder: (context, index) {
+          if (index < widget.pots.length) {
+            return Column(
+              children: [
+                PotListItem(pot: widget.pots[index]),
+                const SizedBox(height: 15),
+              ],
+            );
+          } else {
+            return BlocBuilder<PotListBloc, PotListState>(
+              builder: (context, state) {
+                if (state.isLoading) {
+                  return const Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Center(child: CircularProgressIndicator.adaptive()),
+                  );
+                }
+                if (state.endReached) {
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 8, bottom: 32),
+                    child: Text(
+                      context.t.list.reached_all,
+                      style: TextStyles.description.copyWith(
+                        color: Palette.grey,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  );
+                }
+                return const SizedBox.shrink();
+              },
+            );
+          }
+        },
       ),
     );
   }

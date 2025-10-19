@@ -44,7 +44,7 @@ class PotListBloc extends Bloc<PotListEvent, PotListState> {
         state.copyWith(
           pots: [...state.pots, ...pots],
           isLoading: false,
-          endReached: pots.isEmpty,
+          endReached: pots.length < 100,
         ),
       );
     } catch (e, stackTrace) {
