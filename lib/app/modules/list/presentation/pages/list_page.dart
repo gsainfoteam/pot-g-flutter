@@ -104,6 +104,7 @@ class _ListView extends StatelessWidget {
             .timeout(const Duration(seconds: 10));
       },
       child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
         padding: EdgeInsets.fromLTRB(
           16,
           20,
