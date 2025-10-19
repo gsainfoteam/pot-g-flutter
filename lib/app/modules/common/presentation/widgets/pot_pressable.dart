@@ -8,6 +8,7 @@ class PotPressable extends StatefulWidget {
     this.child,
     this.builder,
     this.hitTestBehavior,
+    this.opacity = 0.5,
   }) : assert(
          child != null || builder != null,
          'Either child or builder must be provided',
@@ -21,6 +22,7 @@ class PotPressable extends StatefulWidget {
   final Widget? child;
   final Widget Function(bool pressed)? builder;
   final HitTestBehavior? hitTestBehavior;
+  final double opacity;
 
   @override
   State<PotPressable> createState() => _PotPressableState();
@@ -56,7 +58,7 @@ class _PotPressableState extends State<PotPressable> {
       child:
           widget.builder?.call(pressed) ??
           AnimatedOpacity(
-            opacity: pressed ? 0.5 : 1.0,
+            opacity: pressed ? widget.opacity : 1.0,
             duration: _animationDuration,
             child: widget.child!,
           ),

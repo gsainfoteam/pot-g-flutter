@@ -19,6 +19,15 @@ abstract class TermStorage {
     ),
   ];
 
+  static Iterable<TermEntity> get requiredTerms =>
+      terms.where((element) => element.required);
+
   static TermEntity getTermBySlug(String slug) =>
       terms.firstWhere((element) => element.slug == slug);
+}
+
+extension TermEntityListX on List<TermEntity> {
+  Iterable<String> get _slugs => map((e) => e.slug);
+  bool get allRequired =>
+      TermStorage.requiredTerms.every((e) => _slugs.contains(e.slug));
 }
