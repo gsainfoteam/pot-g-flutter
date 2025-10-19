@@ -10,7 +10,7 @@ class L {
     _currentPage = page;
   }
 
-  static void _log(String eventName, Map<String, dynamic> properties) =>
+  static void _log(String eventName, Map<String, Object> properties) =>
       sl<LogRepository>().logEvent(eventName, {
         ...properties,
         if (_currentPage.isNotEmpty && !properties.containsKey('from'))
@@ -21,18 +21,18 @@ class L {
   static void c(
     String eventName, {
     String? from,
-    Map<String, dynamic> properties = const {},
+    Map<String, Object> properties = const {},
   }) => _log('click_$eventName', {
     ...properties,
-    if (from?.isNotEmpty ?? false) 'from': from,
+    if (from?.isNotEmpty ?? false) 'from': from!,
   });
   static void v(
     String eventName, {
     String? from,
-    Map<String, dynamic> properties = const {},
+    Map<String, Object> properties = const {},
   }) => _log('view_$eventName', {
     ...properties,
-    if (from?.isNotEmpty ?? false) 'from': from,
+    if (from?.isNotEmpty ?? false) 'from': from!,
   });
 
   static void setUserId(String? userId) =>
