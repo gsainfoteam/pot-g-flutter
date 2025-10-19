@@ -19,7 +19,10 @@ class ChatPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Palette.lightGrey,
-      appBar: PotAppBar(title: Text(context.t.chat.title)),
+      appBar: PotAppBar(
+        title: Text(context.t.chat.title),
+        automaticallyImplyLeading: false,
+      ),
       body: BlocBuilder<PotDetailBloc, PotDetailState>(
         builder: (context, state) {
           if (state.isLoading) {

@@ -54,7 +54,10 @@ class _Layout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PotAppBar(actions: [ChangeApiChannelButton()]),
+      appBar: PotAppBar(
+        actions: [ChangeApiChannelButton()],
+        automaticallyImplyLeading: false,
+      ),
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) => Stack(
