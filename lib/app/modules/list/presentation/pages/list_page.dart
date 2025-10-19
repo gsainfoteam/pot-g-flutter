@@ -64,7 +64,11 @@ class _Layout extends StatelessWidget {
                   color: Palette.lightGrey,
                   child: BlocBuilder<PotListBloc, PotListState>(
                     builder: (context, state) => state.pots.isEmpty
-                        ? _EmptyScreen()
+                        ? state.isLoading
+                              ? const Center(
+                                  child: CircularProgressIndicator.adaptive(),
+                                )
+                              : _EmptyScreen()
                         : _ListView(pots: state.pots),
                   ),
                 ),
