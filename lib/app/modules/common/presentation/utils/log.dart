@@ -1,3 +1,4 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:pot_g/app/di/locator.dart';
 import 'package:pot_g/app/modules/common/domain/repositories/log_repository.dart';
 
@@ -39,4 +40,7 @@ class L {
 
   static void setUserProperties(Map<String, String?> properties) =>
       sl<LogRepository>().setUserProperties(properties);
+
+  static void e(Object error, StackTrace stackTrace, {bool fatal = false}) =>
+      FirebaseCrashlytics.instance.recordError(error, stackTrace, fatal: fatal);
 }
