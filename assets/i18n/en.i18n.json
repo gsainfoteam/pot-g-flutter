@@ -76,7 +76,8 @@
     "filters": {
       "date": {
         "all": "All Dates",
-        "select": "Select"
+        "select": "Select",
+        "unselect": "Unselect"
       },
       "route": {
         "all": "All Routes"

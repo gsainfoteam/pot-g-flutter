@@ -76,7 +76,8 @@
     "filters": {
       "date": {
         "all": "전체 날짜",
-        "select": "선택"
+        "select": "선택",
+        "unselect": "선택 해제"
       },
       "route": {
         "all": "전체 노선"
