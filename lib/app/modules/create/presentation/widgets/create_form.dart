@@ -236,7 +236,9 @@ class _TimeInterval extends StatelessWidget {
         Builder(
           builder: (context) {
             final cubit = context.watch<CreateCubit>();
-            final minStartTime = cubit.state.date?.minTimeForDate;
+            final minStartTime = cubit.state.date?.minTimeForDate?.add(
+              const Duration(minutes: 10),
+            );
 
             return TimeIntervalSelector(
               disabled: !preFilled,
