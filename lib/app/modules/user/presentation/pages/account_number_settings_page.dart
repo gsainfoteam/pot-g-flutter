@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
@@ -182,6 +183,26 @@ class _SelectBankDialog extends StatefulWidget {
 
 class _SelectBankDialogState extends State<_SelectBankDialog> {
   BankEntity? selectedBank;
+  final _controller = ScrollController();
+  double _pixels = 0;
+
+  @override
+  initState() {
+    super.initState();
+    _controller.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    setState(() {
+      _pixels = _controller.position.pixels;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -212,9 +233,10 @@ class _SelectBankDialogState extends State<_SelectBankDialog> {
         ),
         const SizedBox(height: 20),
         SizedBox(
-          height: 300,
+          height: lerpDouble(300, 500, clampDouble(_pixels / 100, 0, 1)),
           child: BlocBuilder<BankListBloc, BankListState>(
             builder: (context, state) => SingleChildScrollView(
+              controller: _controller,
               child: Column(
                 children: [
                   ...state.banks
@@ -234,6 +256,8 @@ class _SelectBankDialogState extends State<_SelectBankDialog> {
                       .chunked(3)
                       .map(_buildBankRow)
                       .intersperse(const SizedBox(height: 20)),
+                  const SizedBox(height: 20),
+                  SizedBox(height: MediaQuery.of(context).viewInsets.bottom),
                 ],
               ),
             ),
