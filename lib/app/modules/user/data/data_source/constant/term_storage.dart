@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:pot_g/app/modules/user/domain/entities/term_entity.dart';
 import 'package:pot_g/app/modules/user/domain/enums/term_type.dart';
 
@@ -22,8 +23,8 @@ abstract class TermStorage {
   static Iterable<TermEntity> get requiredTerms =>
       terms.where((element) => element.required);
 
-  static TermEntity getTermBySlug(String slug) =>
-      terms.firstWhere((element) => element.slug == slug);
+  static TermEntity? getTermBySlug(String slug) =>
+      terms.firstWhereOrNull((element) => element.slug == slug);
 }
 
 extension TermEntityListX on List<TermEntity> {

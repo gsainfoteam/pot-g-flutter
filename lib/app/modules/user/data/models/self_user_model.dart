@@ -25,5 +25,5 @@ sealed class SelfUserModel with _$SelfUserModel implements SelfUserEntity {
 
   @override
   List<TermEntity> get agreedTerms =>
-      terms.map(TermStorage.getTermBySlug).toList();
+      terms.map(TermStorage.getTermBySlug).nonNulls.toList();
 }
