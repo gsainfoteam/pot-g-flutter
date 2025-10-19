@@ -212,32 +212,35 @@ class _SelectBankDialogState extends State<_SelectBankDialog> {
           height: 300,
           child: BlocBuilder<BankListBloc, BankListState>(
             builder: (context, state) => ListView.separated(
-              itemBuilder: (_, index) => PotPressable(
-                hitTestBehavior: HitTestBehavior.opaque,
-                onTap: () {
-                  L.c(
-                    'bank',
-                    from: 'selectBank',
-                    properties: {'bank': state.banks[index].name},
-                  );
-                  L.v('bankAccountNumber', from: 'selectBank');
-                  setState(() => selectedBank = state.banks[index]);
-                },
-                child: SizedBox(
-                  height: 48,
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        width: 24,
-                        height: 24,
-                        child: Image.network('https://placehold.co/40.png'),
-                      ),
-                      const SizedBox(width: 12),
-                      Text(state.banks[index].name, style: TextStyles.title3),
-                    ],
+              itemBuilder: (_, index) {
+                final bank = state.banks[index];
+                return PotPressable(
+                  hitTestBehavior: HitTestBehavior.opaque,
+                  onTap: () {
+                    L.c(
+                      'bank',
+                      from: 'selectBank',
+                      properties: {'bank': bank.name},
+                    );
+                    L.v('bankAccountNumber', from: 'selectBank');
+                    setState(() => selectedBank = bank);
+                  },
+                  child: SizedBox(
+                    height: 48,
+                    child: Row(
+                      children: [
+                        SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: Image.network(bank.logoUrl),
+                        ),
+                        const SizedBox(width: 12),
+                        Text(bank.name, style: TextStyles.title3),
+                      ],
+                    ),
                   ),
-                ),
-              ),
+                );
+              },
               separatorBuilder: (_, _) => const SizedBox(height: 8),
               itemCount: state.banks.length,
             ),
