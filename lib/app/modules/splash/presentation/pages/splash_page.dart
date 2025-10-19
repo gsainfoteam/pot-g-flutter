@@ -18,17 +18,23 @@ class _SplashPageState extends State<SplashPage> {
     super.initState();
     Future.delayed(const Duration(seconds: 1), () async {
       if (!mounted) return;
+      FlutterNativeSplash.remove();
       setState(() {
         _isReady = true;
-      });
-      Future.delayed(const Duration(milliseconds: 200), () {
-        FlutterNativeSplash.remove();
       });
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return _isReady ? widget.child : const Scaffold();
+    return Stack(
+      children: [
+        widget.child,
+        AnimatedSwitcher(
+          duration: const Duration(milliseconds: 200),
+          child: _isReady ? const SizedBox.shrink() : const Scaffold(),
+        ),
+      ],
+    );
   }
 }
