@@ -15,18 +15,17 @@ class RestPotListRepository implements PotListRepository {
   Future<List<PotSummaryEntity>> getPotList({
     DateTime? date,
     RouteEntity? route,
+    int offset = 0,
   }) async {
     final query = GetPotListQueryModel(
       routeId: route?.id,
-      startsAt:
-          date != null
-              ? DateTime(date.year, date.month, date.day, 0, 0, 0, 0)
-              : null,
-      endsAt:
-          date != null
-              ? DateTime(date.year, date.month, date.day, 23, 59, 59, 999)
-              : null,
-      offset: 0,
+      startsAt: date != null
+          ? DateTime(date.year, date.month, date.day, 0, 0, 0, 0)
+          : null,
+      endsAt: date != null
+          ? DateTime(date.year, date.month, date.day, 23, 59, 59, 999)
+          : null,
+      offset: offset,
       limit: 100,
     );
 

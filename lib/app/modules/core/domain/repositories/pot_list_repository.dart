@@ -5,5 +5,6 @@ abstract class PotListRepository {
   Future<List<PotSummaryEntity>> getPotList({
     DateTime? date,
     RouteEntity? route,
+    int offset = 0,
   });
 }

@@ -13,7 +13,4 @@ sealed class GetPotListQueryModel with _$GetPotListQueryModel {
     @DateTimeConverter() @JsonKey(includeIfNull: false) DateTime? startsAt,
     @DateTimeConverter() @JsonKey(includeIfNull: false) DateTime? endsAt,
   }) = _GetPotListQueryModel;
-
-  factory GetPotListQueryModel.fromJson(Map<String, dynamic> json) =>
-      _$GetPotListQueryModelFromJson(json);
 }
