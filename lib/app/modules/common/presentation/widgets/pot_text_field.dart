@@ -14,6 +14,7 @@ class PotTextField extends StatelessWidget {
     this.keyboardType,
     this.inputFormatters,
     this.onChanged,
+    this.autoFocus = false,
   });
   final Widget? suffixIcon;
   final String? hintText;
@@ -23,20 +24,21 @@ class PotTextField extends StatelessWidget {
   final TextInputType? keyboardType;
   final List<TextInputFormatter>? inputFormatters;
   final void Function(String)? onChanged;
+  final bool autoFocus;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      autofocus: autoFocus,
       readOnly: readOnly,
       style: TextStyles.body.copyWith(color: Palette.dark),
       keyboardType: keyboardType,
       inputFormatters: inputFormatters,
       onChanged: onChanged,
       decoration: InputDecoration(
-        suffixIcon:
-            suffixIcon != null
-                ? Padding(padding: const EdgeInsets.all(12), child: suffixIcon)
-                : null,
+        suffixIcon: suffixIcon != null
+            ? Padding(padding: const EdgeInsets.all(12), child: suffixIcon)
+            : null,
         contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 14),
         filled: filled,
         fillColor: Color(0xfff5f5f5),
@@ -44,18 +46,21 @@ class PotTextField extends StatelessWidget {
         hintStyle: TextStyle(color: Palette.grey),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide:
-              filled ? BorderSide.none : BorderSide(color: Palette.borderGrey),
+          borderSide: filled
+              ? BorderSide.none
+              : BorderSide(color: Palette.borderGrey),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide:
-              filled ? BorderSide.none : BorderSide(color: Palette.borderGrey),
+          borderSide: filled
+              ? BorderSide.none
+              : BorderSide(color: Palette.borderGrey),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide:
-              filled ? BorderSide.none : BorderSide(color: Palette.primary),
+          borderSide: filled
+              ? BorderSide.none
+              : BorderSide(color: Palette.primary),
         ),
       ),
       controller: controller,
