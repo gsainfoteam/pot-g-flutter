@@ -261,6 +261,9 @@
       },
       "already_set": {
         "description": "The departure time has already been set."
+      },
+      "you_only": {
+        "description": "You cannot confirm the departure time alone."
       }
     },
     "accounting": {

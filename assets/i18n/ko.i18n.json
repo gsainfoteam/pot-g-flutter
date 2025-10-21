@@ -258,6 +258,9 @@
       },
       "already_set": {
         "description": "출발 시간이 이미 확정되었습니다."
+      },
+      "you_only": {
+        "description": "혼자서는 팟을 확정할 수 없습니다."
       }
     },
     "accounting": {
