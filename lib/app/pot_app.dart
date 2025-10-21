@@ -89,6 +89,7 @@ class _Providers extends StatelessWidget {
       child: MultiBlocListener(
         listeners: [
           BlocListener<AuthBloc, AuthState>(
+            listenWhen: (previous, current) => previous.user != current.user,
             listener: (context, state) {
               L.setUserId(state.user?.id);
               if (state.user != null) {
