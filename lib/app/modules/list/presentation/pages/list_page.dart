@@ -5,6 +5,7 @@ import 'package:pot_g/app/di/locator.dart';
 import 'package:pot_g/app/modules/common/presentation/extensions/toast.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_app_bar.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_button.dart';
+import 'package:pot_g/app/modules/common/presentation/widgets/pot_logo.dart';
 import 'package:pot_g/app/modules/core/domain/entities/pot_summary_entity.dart';
 import 'package:pot_g/app/modules/core/presentation/widgets/change_api_channel_button.dart';
 import 'package:pot_g/app/modules/list/presentation/bloc/list_cubit.dart';
@@ -56,7 +57,7 @@ class _Layout extends StatelessWidget {
     return Scaffold(
       appBar: PotAppBar(
         actions: [ChangeApiChannelButton()],
-        automaticallyImplyLeading: false,
+        leading: PotLogo(),
       ),
       body: SafeArea(
         child: LayoutBuilder(

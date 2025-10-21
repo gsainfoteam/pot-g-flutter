@@ -9,9 +9,9 @@ import 'package:pot_g/app/modules/common/presentation/utils/log_page.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_button.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_pressable.dart';
 import 'package:pot_g/app/modules/user/data/data_source/constant/term_storage.dart';
+import 'package:pot_g/app/modules/user/domain/entities/self_user_entity.dart';
 import 'package:pot_g/app/modules/user/domain/entities/term_entity.dart';
 import 'package:pot_g/app/modules/user/presentation/blocs/consent_bloc.dart';
-import 'package:pot_g/app/router.gr.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
 import 'package:pot_g/gen/assets.gen.dart';
@@ -24,6 +24,16 @@ class ConsentPage extends StatelessWidget with LogPage {
 
   final VoidCallback? onDone;
 
+  bool _redirect(BuildContext context, SelfUserEntity user) {
+    if (!user.agreedTerms.allRequired) return false;
+    if (onDone != null) {
+      onDone!();
+    } else {
+      context.router.popUntilRoot();
+    }
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -34,7 +44,12 @@ class ConsentPage extends StatelessWidget with LogPage {
             listener: (context, state) {
               state.mapOrNull(
                 error: (e) => context.showToast(e.message),
-                loaded: (_) => context.read<AuthBloc>().add(AuthEvent.update()),
+                loaded: (_) {
+                  final user = context.read<AuthBloc>().state.user;
+                  if (user == null) return;
+                  if (_redirect(context, user)) return;
+                  context.read<AuthBloc>().add(AuthEvent.update());
+                },
               );
             },
           ),
@@ -42,13 +57,7 @@ class ConsentPage extends StatelessWidget with LogPage {
             listener: (context, state) {
               state.mapOrNull(
                 authenticated: (user) {
-                  if (user.user.agreedTerms.allRequired) {
-                    if (onDone != null) {
-                      onDone!();
-                    } else {
-                      context.router.replaceAll([ListRoute()]);
-                    }
-                  }
+                  _redirect(context, user.user);
                 },
               );
             },

@@ -9,7 +9,7 @@ import 'package:pot_g/app/modules/user/domain/entities/self_user_entity.dart';
 
 part 'auth_bloc.freezed.dart';
 
-@injectable
+@singleton
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository _repository;
 

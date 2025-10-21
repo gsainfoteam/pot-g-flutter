@@ -35,7 +35,18 @@ class PotListItem extends StatelessWidget {
         children: [
           Text(label, style: TextStyles.title4.copyWith(color: Palette.dark)),
           const SizedBox(width: 8, height: 8),
-          Text(value, style: TextStyles.body.copyWith(color: Palette.dark)),
+          Expanded(
+            flex: column ? 0 : 1,
+            child: FittedBox(
+              alignment: Alignment.centerLeft,
+              fit: BoxFit.scaleDown,
+              child: Text(
+                value,
+                style: TextStyles.body.copyWith(color: Palette.dark),
+                textAlign: TextAlign.start,
+              ),
+            ),
+          ),
         ],
       );
     }
