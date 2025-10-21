@@ -16,5 +16,6 @@ abstract class Module {
   MessagingRepository getMessagingRepository(FcmMessagingRepository repo) =>
       repo;
 
+  @singleton
   AppRouter get appRouter => AppRouter();
 }
