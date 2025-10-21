@@ -39,10 +39,7 @@ class PotApp extends StatelessWidget {
             navigatorObservers: () => [AutoRouteObserver(), LogObserver()],
             reevaluateListenable: ReevaluateListenable.stream(
               MergeStream([
-                sl<AuthBloc>().stream
-                    .map((state) => state.user)
-                    // this is explicit delay to wait another router navigation
-                    .delay(const Duration(milliseconds: 100)),
+                sl<AuthBloc>().stream.map((state) => state.user).distinct(),
               ]),
             ),
           ),
