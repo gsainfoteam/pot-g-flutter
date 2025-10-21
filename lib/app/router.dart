@@ -42,6 +42,7 @@ class AppRouter extends RootStackRouter {
       await resolver.redirectUntil(
         LoginRoute(
           onDone: () => resolver.next(true),
+          onConsent: () => resolver.next(true),
           onCancel: () => resolver.next(false),
         ),
       );
