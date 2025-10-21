@@ -34,7 +34,7 @@ class _LoginPageState extends State<LoginPage> {
       if (!mounted) return;
       final user = context.read<AuthBloc>().state.user;
       if (user == null) return widget.onCancel();
-      if (!user.agreedTerms.allRequired) return widget.onDone();
+      if (user.agreedTerms.allRequired) return widget.onDone();
       return widget.onConsent();
     });
   }
