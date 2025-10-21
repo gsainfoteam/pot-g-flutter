@@ -1,7 +1,7 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pot_g/app/modules/auth/presentation/bloc/auth_bloc.dart';
-import 'package:pot_g/app/modules/auth/presentation/functions/try_login.dart';
 import 'package:pot_g/app/modules/user/data/data_source/constant/term_storage.dart';
 import 'package:pot_g/app/router.gr.dart';
 
@@ -10,6 +10,14 @@ class AppRouter extends RootStackRouter {
   @override
   List<AutoRouteGuard> get guards => [
     AutoRouteGuard.simple((resolver, router) async {
+      // splash -> 항상 표시
+      // 인증 확인
+      // - 인증 됨
+      //   - 약관 동의 안 됨 -> 동의 페이지 -> 이후 리다이렉트
+      // - 인증 안됨
+      //   - list page, login page -> 통과
+      //   - 이외 페이지 -> 로그인 페이지로 리다이렉트 -> 이후 리다이렉트
+      print('resolver.route.name: ${resolver.route.name}');
       if (resolver.route.name == SplashRoute.name) {
         return resolver.next(true);
       }
@@ -27,13 +35,16 @@ class AppRouter extends RootStackRouter {
         return;
       }
       if (resolver.route.name == MainBottomNavigationRoute.name ||
-          resolver.route.name == ListRoute.name) {
+          resolver.route.name == ListRoute.name ||
+          resolver.route.name == LoginRoute.name) {
         return resolver.next(true);
       }
-      if (await tryLogin(context)) {
-        return resolver.next(true);
-      }
-      return resolver.next(false);
+      await resolver.redirectUntil(
+        LoginRoute(
+          onDone: () => resolver.next(true),
+          onCancel: () => resolver.next(false),
+        ),
+      );
     }),
   ];
 
@@ -82,5 +93,15 @@ class AppRouter extends RootStackRouter {
 
     // user
     AutoRoute(path: '/user/consent', page: ConsentRoute.page),
+    CustomRoute(
+      path: '/user/login',
+      page: LoginRoute.page,
+      customRouteBuilder: <T>(context, child, page) => DialogRoute<T>(
+        context: context,
+        settings: page,
+        barrierColor: Colors.transparent,
+        builder: (_) => child,
+      ),
+    ),
   ];
 }

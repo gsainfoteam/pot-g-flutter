@@ -1,9 +1,10 @@
+import 'dart:async';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pot_g/app/modules/auth/presentation/bloc/auth_bloc.dart';
-import 'package:pot_g/app/modules/auth/presentation/functions/try_login.dart';
 import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
 import 'package:pot_g/app/router.gr.dart';
 import 'package:pot_g/app/values/palette.dart';
@@ -68,13 +69,12 @@ class _MainBottomNavigationPageState extends State<MainBottomNavigationPage>
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Row(
-                      children:
-                          items
-                              .mapIndexed(
-                                (index, item) =>
-                                    _buildItem(context, index - 1, item),
-                              )
-                              .toList(),
+                      children: items
+                          .mapIndexed(
+                            (index, item) =>
+                                _buildItem(context, index - 1, item),
+                          )
+                          .toList(),
                     ),
                   ),
                 ],
@@ -102,7 +102,17 @@ class _MainBottomNavigationPageState extends State<MainBottomNavigationPage>
             return;
           }
           if (index != 0 && context.read<AuthBloc>().state.user == null) {
-            if (!await tryLogin(context)) return;
+            final completer = Completer<bool>();
+            context.router.push(
+              LoginRoute(
+                onDone: () => completer.complete(true),
+                onCancel: () => completer.complete(false),
+              ),
+            );
+            final result = await completer.future;
+            if (!context.mounted) return;
+            context.router.pop();
+            if (!result) return;
           }
           if (context.mounted) {
             AutoTabsRouter.of(context).setActiveIndex(index);
