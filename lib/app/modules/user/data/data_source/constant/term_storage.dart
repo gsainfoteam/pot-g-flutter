@@ -7,15 +7,13 @@ abstract class TermStorage {
     TermEntity(
       slug: 'privacy-policy-v1',
       type: TermType.privacyPolicy,
-      url:
-          'https://infoteam-rulrudino.notion.site/1c5365ea27df800f8143f31218070a87',
+      url: 'https://terms.gistory.me/pot-g/privacy/251022/',
       required: true,
     ),
     TermEntity(
       slug: 'terms-of-service-v1',
       type: TermType.termsOfService,
-      url:
-          'https://infoteam-rulrudino.notion.site/1c5365ea27df80aeac2cc6e1d8729a11',
+      url: 'https://terms.gistory.me/pot-g/tos/251022/',
       required: true,
     ),
   ];
