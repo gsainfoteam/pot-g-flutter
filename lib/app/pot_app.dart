@@ -37,6 +37,14 @@ class PotApp extends StatelessWidget {
           theme: PotTheme.theme,
           routerConfig: _router.config(
             navigatorObservers: () => [AutoRouteObserver(), LogObserver()],
+            reevaluateListenable: ReevaluateListenable.stream(
+              MergeStream([
+                sl<AuthBloc>().stream
+                    .map((state) => state.user)
+                    // this is explicit delay to wait another router navigation
+                    .delay(const Duration(milliseconds: 100)),
+              ]),
+            ),
           ),
           locale: TranslationProvider.of(context).flutterLocale,
           supportedLocales: AppLocaleUtils.supportedLocales,
