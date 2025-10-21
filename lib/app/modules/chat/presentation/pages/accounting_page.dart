@@ -8,6 +8,7 @@ import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_user_entity.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/accounting_cubit.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/pot_accounting_bloc.dart';
+import 'package:pot_g/app/modules/chat/presentation/extensions/pot_user_extension.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/pot_profile_image.dart';
 import 'package:pot_g/app/modules/common/presentation/extensions/toast.dart';
 import 'package:pot_g/app/modules/common/presentation/formatters/thousand_won_formatter.dart';
@@ -32,12 +33,9 @@ class AccountingPage extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => sl<AccountingCubit>()
-            ..loadTargets(
-              pot.usersInfo.users.where(
-                (u) => u.isInPot && u.id != AuthBloc.userOf(context)?.id,
-              ),
-            ),
+          create: (context) =>
+              sl<AccountingCubit>()
+                ..loadTargets(pot.getPassengersExceptMe(context)),
         ),
         BlocProvider(create: (context) => sl<PotAccountingBloc>()),
       ],
@@ -239,9 +237,7 @@ class _SettlementTargets extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final users = pot.usersInfo.users
-        .where((u) => u.isInPot && u.id != AuthBloc.userOf(context)?.id)
-        .toList();
+    final users = pot.getPassengersExceptMe(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [

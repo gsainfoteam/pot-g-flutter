@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:pot_g/app/di/locator.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/pot_detail_bloc.dart';
+import 'package:pot_g/app/modules/chat/presentation/extensions/pot_user_extension.dart';
 import 'package:pot_g/app/modules/common/presentation/extensions/toast.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/error_cover.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_app_bar.dart';
@@ -132,10 +133,7 @@ class _InvitedPageContent extends StatelessWidget {
                   const SizedBox(height: 12),
                   _Field(
                     label: context.t.list.enter.passengers,
-                    value: pot.usersInfo.users
-                        .where((u) => u.isInPot)
-                        .map((u) => u.name)
-                        .join(', '),
+                    value: pot.passengers.map((u) => u.name).join(', '),
                   ),
                 ],
               ),
@@ -150,9 +148,7 @@ class _InvitedPageContent extends StatelessWidget {
                   success: (_) => false,
                   error: (_) => false,
                 );
-                final canJoin =
-                    pot.usersInfo.users.where((u) => u.isInPot).length <
-                    pot.usersInfo.total;
+                final canJoin = pot.passengers.length < pot.usersInfo.total;
 
                 return PotPressable(
                   onTap: isLoading || !canJoin
