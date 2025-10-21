@@ -12,7 +12,6 @@ import 'package:pot_g/app/modules/user/data/data_source/constant/term_storage.da
 import 'package:pot_g/app/modules/user/domain/entities/self_user_entity.dart';
 import 'package:pot_g/app/modules/user/domain/entities/term_entity.dart';
 import 'package:pot_g/app/modules/user/presentation/blocs/consent_bloc.dart';
-import 'package:pot_g/app/router.gr.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
 import 'package:pot_g/gen/assets.gen.dart';
@@ -30,7 +29,7 @@ class ConsentPage extends StatelessWidget with LogPage {
     if (onDone != null) {
       onDone!();
     } else {
-      context.router.replaceAll([ListRoute()]);
+      context.router.popUntilRoot();
     }
     return true;
   }
