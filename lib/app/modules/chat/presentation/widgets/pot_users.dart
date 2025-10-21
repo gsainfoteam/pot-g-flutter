@@ -25,9 +25,7 @@ class PotUsers extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final me = pot.getMe(context);
-    final passengers = pot.usersInfo.users.where(
-      (u) => u.isInPot && u.id != me?.id,
-    );
+    final passengers = pot.getPassengersExceptMe(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -72,8 +70,7 @@ class PotUsers extends StatelessWidget {
               );
               return;
             }
-            if (pot.usersInfo.users.where((u) => u.isInPot).length ==
-                pot.usersInfo.total) {
+            if (pot.passengers.length == pot.usersInfo.total) {
               showOkAlertDialog(
                 context: context,
                 title: inviteText.fulled.title,
