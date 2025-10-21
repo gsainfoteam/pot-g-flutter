@@ -106,6 +106,9 @@ class _MainBottomNavigationPageState extends State<MainBottomNavigationPage>
             context.router.push(
               LoginRoute(
                 onDone: () => completer.complete(true),
+                onConsent: () => context.router.popAndPush(
+                  ConsentRoute(onDone: () => completer.complete(true)),
+                ),
                 onCancel: () => completer.complete(false),
               ),
             );

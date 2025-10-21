@@ -4,13 +4,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pot_g/app/modules/auth/presentation/bloc/auth_bloc.dart';
 import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
+import 'package:pot_g/app/modules/user/data/data_source/constant/term_storage.dart';
 import 'package:pot_g/gen/strings.g.dart';
 
 @RoutePage()
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key, required this.onDone, required this.onCancel});
+  const LoginPage({
+    super.key,
+    required this.onDone,
+    required this.onConsent,
+    required this.onCancel,
+  });
 
   final VoidCallback onDone;
+  final VoidCallback onConsent;
   final VoidCallback onCancel;
 
   @override
@@ -23,8 +30,12 @@ class _LoginPageState extends State<LoginPage> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (!(await _showLoginDialog())) return widget.onCancel();
-      if (await _login()) return widget.onDone();
-      return widget.onCancel();
+      if (!(await _login())) return widget.onCancel();
+      if (!mounted) return;
+      final user = context.read<AuthBloc>().state.user;
+      if (user == null) return widget.onCancel();
+      if (!user.agreedTerms.allRequired) return widget.onDone();
+      return widget.onConsent();
     });
   }
 
