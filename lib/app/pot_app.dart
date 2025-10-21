@@ -20,9 +20,9 @@ import 'package:pot_g/app/router.gr.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/theme.dart';
 import 'package:pot_g/gen/strings.g.dart';
+import 'package:rxdart/rxdart.dart';
 
-final _appRouter = AppRouter();
-AppRouter getAppRouter() => _appRouter;
+final _router = sl<AppRouter>();
 
 class PotApp extends StatelessWidget {
   const PotApp({super.key});
@@ -35,7 +35,7 @@ class PotApp extends StatelessWidget {
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
         child: MaterialApp.router(
           theme: PotTheme.theme,
-          routerConfig: _appRouter.config(
+          routerConfig: _router.config(
             navigatorObservers: () => [AutoRouteObserver(), LogObserver()],
           ),
           locale: TranslationProvider.of(context).flutterLocale,
@@ -116,7 +116,7 @@ class _Providers extends StatelessWidget {
           BlocListener<LinkBloc, LinkState>(
             listener: (context, state) => state.mapOrNull(
               loaded: (s) => WidgetsBinding.instance.addPostFrameCallback((_) {
-                _appRouter.pushPath(s.link);
+                _router.pushPath(s.link);
               }),
             ),
           ),
@@ -128,7 +128,7 @@ class _Providers extends StatelessWidget {
             listener: (context, state) {
               context.read<AuthBloc>().add(AuthEvent.logout());
               context.read<RouteListBloc>().add(const RouteListEvent.search());
-              _appRouter.replaceAll([ListRoute()]);
+              _router.replaceAll([ListRoute()]);
             },
           ),
         ],
