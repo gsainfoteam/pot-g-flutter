@@ -17,7 +17,6 @@ class AppRouter extends RootStackRouter {
       // - 인증 안됨
       //   - list page, login page -> 통과
       //   - 이외 페이지 -> 로그인 페이지로 리다이렉트 -> 이후 리다이렉트
-      print('resolver.route.name: ${resolver.route.name}');
       if (resolver.route.name == SplashRoute.name) {
         return resolver.next(true);
       }
