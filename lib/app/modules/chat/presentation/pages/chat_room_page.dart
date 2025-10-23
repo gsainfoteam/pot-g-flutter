@@ -14,22 +14,20 @@ import 'package:pot_g/app/modules/chat/presentation/bloc/chat_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/pot_accounting_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/pot_action_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/pot_info_bloc.dart';
-import 'package:pot_g/app/modules/chat/presentation/extensions/pot_user_extension.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/bubble.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/chat_bubble.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/chat_room_drawer.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/fofo_bubble.dart';
+import 'package:pot_g/app/modules/chat/presentation/widgets/set_departure_time_button.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/status_banner.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/system_message.dart';
 import 'package:pot_g/app/modules/common/presentation/extensions/toast.dart';
 import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
 import 'package:pot_g/app/modules/common/presentation/utils/log_page.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/error_cover.dart';
-import 'package:pot_g/app/modules/common/presentation/widgets/general_dialog.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_app_bar.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_icon_button.dart';
 import 'package:pot_g/app/modules/core/domain/entities/pot_id_entity.dart';
-import 'package:pot_g/app/modules/core/domain/entities/route_entity.dart';
 import 'package:pot_g/app/modules/socket/presentation/bloc/socket_auth_bloc.dart';
 import 'package:pot_g/app/router.gr.dart';
 import 'package:pot_g/app/values/palette.dart';
@@ -78,10 +76,6 @@ class ChatRoomPage extends StatelessWidget with LogPage {
             listener: (context, state) => context.showToast(state.error!),
           ),
           BlocListener<PotActionBloc, PotActionState>(
-            listenWhen: (prev, curr) => curr.error != null,
-            listener: (context, state) => context.showToast(state.error!),
-          ),
-          BlocListener<PotAccountingBloc, PotAccountingState>(
             listenWhen: (prev, curr) => curr.error != null,
             listener: (context, state) => context.showToast(state.error!),
           ),
@@ -141,7 +135,7 @@ class _Layout extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 6),
               child: Row(
                 children: [
-                  _SetDepartureTimeButton(pot: pot),
+                  SetDepartureTimeButton(pot: pot),
                   _AccountingButton(pot: pot),
                   Expanded(child: _ChatInput()),
                 ],
@@ -207,81 +201,6 @@ class _AccountingButton extends StatelessWidget {
       ),
       onPressed: () async {
         await setAccounting(context, pot);
-      },
-    );
-  }
-}
-
-class _SetDepartureTimeButton extends StatelessWidget {
-  const _SetDepartureTimeButton({required this.pot});
-
-  final PotInfoEntity pot;
-
-  static Future<void> setDepartureTime(
-    BuildContext context,
-    PotInfoEntity pot,
-  ) async {
-    if (!pot.meIsHost(context)) {
-      context.showToast(
-        context.t.chat_room.set_departure_time.host_only.description,
-      );
-      return;
-    }
-    if (pot.departureTime != null) {
-      context.showToast(
-        context.t.chat_room.set_departure_time.already_set.description,
-      );
-      return;
-    }
-    if (pot.passengers.length == 1) {
-      context.showToast(
-        context.t.chat_room.set_departure_time.you_only.description,
-      );
-      return;
-    }
-    L.v('setDepartureTime');
-    DateTime date = DateTime.now();
-    final result = await showGeneralOkCancelAdaptiveDialog(
-      context: context,
-      title: context.t.chat_room.set_departure_time.clock.title,
-      child: SizedBox(
-        height: 180,
-        child: CupertinoDatePicker(
-          initialDateTime: date,
-          onDateTimeChanged: (value) => date = value,
-          mode: CupertinoDatePickerMode.time,
-        ),
-      ),
-      okLabel: context.t.common.confirm,
-    );
-    if (result != OkCancelResult.ok) return;
-    if (!context.mounted) return;
-    L.v('departureTimeConfirm', from: 'setDepartureTime');
-    final result2 = await showOkCancelAlertDialog(
-      context: context,
-      title: context.t.chat_room.set_departure_time.confirm.title,
-      message: context.t.chat_room.set_departure_time.confirm.description(
-        route: pot.route.name,
-        time: DateFormat.jm().format(date),
-      ),
-    );
-    if (result2 != OkCancelResult.ok) return;
-    L.c('confirmDepartureTime', from: 'departureTimeConfirm');
-    if (!context.mounted) return;
-    context.read<PotActionBloc>().add(
-      PotActionEvent.setDepartureTime(pot, date),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return PotIconButton(
-      icon: Assets.icons.clock.svg(
-        colorFilter: ColorFilter.mode(Palette.grey, BlendMode.srcIn),
-      ),
-      onPressed: () async {
-        L.c('setDepartureTime');
-        await setDepartureTime(context, pot);
       },
     );
   }
@@ -401,7 +320,7 @@ class _ChatListState extends State<_ChatList> {
   void _onAction(BuildContext context, FofoActionButtonType type) async {
     switch (type) {
       case FofoActionButtonType.departureConfirm:
-        _SetDepartureTimeButton.setDepartureTime(context, widget.pot);
+        SetDepartureTimeButton.setDepartureTime(context, widget.pot);
         break;
       case FofoActionButtonType.accountingRequest:
         _AccountingButton.setAccounting(context, widget.pot);
