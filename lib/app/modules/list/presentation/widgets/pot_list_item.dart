@@ -1,145 +1,24 @@
 import 'dart:math';
 
-import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:pot_g/app/di/locator.dart';
-import 'package:pot_g/app/modules/chat/presentation/bloc/pot_detail_bloc.dart';
 import 'package:pot_g/app/modules/common/presentation/extensions/date_time.dart';
-import 'package:pot_g/app/modules/common/presentation/extensions/toast.dart';
-import 'package:pot_g/app/modules/common/presentation/widgets/general_dialog.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_pressable.dart';
 import 'package:pot_g/app/modules/core/domain/entities/pot_summary_entity.dart';
-import 'package:pot_g/app/modules/core/domain/entities/route_entity.dart';
-import 'package:pot_g/app/modules/list/presentation/bloc/join_pot_bloc.dart';
-import 'package:pot_g/app/modules/list/presentation/bloc/pot_list_bloc.dart';
-import 'package:pot_g/app/modules/list/presentation/bloc/pot_overview_bloc.dart';
 import 'package:pot_g/app/router.gr.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
-import 'package:pot_g/gen/strings.g.dart';
 
 class PotListItem extends StatelessWidget {
   const PotListItem({super.key, required this.pot});
 
   final PotSummaryEntity pot;
 
-  Future<void> _onTap(BuildContext context) async {
-    Widget field(String label, String value, {bool column = false}) {
-      return Flex(
-        direction: column ? Axis.vertical : Axis.horizontal,
-        crossAxisAlignment: column
-            ? CrossAxisAlignment.start
-            : CrossAxisAlignment.center,
-        children: [
-          Text(label, style: TextStyles.title4.copyWith(color: Palette.dark)),
-          const SizedBox(width: 8, height: 8),
-          Expanded(
-            flex: column ? 0 : 1,
-            child: FittedBox(
-              alignment: Alignment.centerLeft,
-              fit: BoxFit.scaleDown,
-              child: Text(
-                value,
-                style: TextStyles.body.copyWith(color: Palette.dark),
-                textAlign: TextAlign.start,
-              ),
-            ),
-          ),
-        ],
-      );
-    }
-
-    final result = await showGeneralOkCancelAdaptiveDialog(
-      context: context,
-      title: context.t.list.enter.title,
-      child: BlocProvider(
-        create: (context) =>
-            sl<PotOverviewBloc>()..add(PotOverviewEvent.init(pot.id)),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 20),
-            field(context.t.list.enter.route, pot.route.name),
-            const SizedBox(height: 12),
-            field(
-              context.t.list.enter.date,
-              DateFormat.yMd().add_E().format(pot.startsAt),
-            ),
-            const SizedBox(height: 12),
-            field(
-              context.t.list.enter.departure_time,
-              '${DateFormat.Hm().format(pot.startsAt)}~${DateFormat.Hm().format(pot.endsAt)}',
-            ),
-            const SizedBox(height: 20),
-            BlocBuilder<PotOverviewBloc, PotOverviewState>(
-              builder: (context, state) {
-                if (state.overview == null) return const SizedBox.shrink();
-                return field(
-                  context.t.list.enter.passengers,
-                  state.overview!.usersInfo.users.map((e) => e.name).join(', '),
-                  column: true,
-                );
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-    if (result != OkCancelResult.ok) return;
-    if (!context.mounted) return;
-
-    await _joinPot(context);
-  }
-
-  Future<void> _joinPot(BuildContext context) async {
-    final potListBloc = context.read<PotListBloc>();
-    final potDetailBloc = context.read<PotDetailBloc>();
-
-    return showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => BlocProvider(
-        create: (context) => sl<JoinPotBloc>()..add(JoinPotEvent.join(pot.id)),
-        child: BlocListener<JoinPotBloc, JoinPotState>(
-          listener: (context, state) {
-            state.map(
-              initial: (_) {},
-              loading: (_) {},
-              success: (successState) {
-                potListBloc.add(PotListEvent.search());
-                potDetailBloc.add(const PotDetailEvent.loadMyPots());
-                Navigator.of(context).pop();
-                ChatRoomRoute(id: successState.potId).push(context);
-              },
-              error: (errorState) {
-                Navigator.of(context).pop();
-                context.showToast(errorState.message);
-              },
-            );
-          },
-          child: BlocBuilder<JoinPotBloc, JoinPotState>(
-            builder: (context, state) {
-              return state.map(
-                initial: (_) => const SizedBox.shrink(),
-                loading: (_) =>
-                    const Center(child: CircularProgressIndicator()),
-                success: (_) => const SizedBox.shrink(),
-                error: (_) => const SizedBox.shrink(),
-              );
-            },
-          ),
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final disabled = pot.current == pot.total;
     return PotPressable(
-      onTap: disabled ? null : () => _onTap(context),
+      onTap: disabled ? null : () => InvitedRoute(id: pot.id).push(context),
       child: Container(
         height: 88,
         decoration: BoxDecoration(
