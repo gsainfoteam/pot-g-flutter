@@ -202,6 +202,14 @@
           "not_requested": "미요청"
         },
         "edit_payer_only": "정산 현황은 결제자만 수정할 수 있어요",
+        "errors": {
+          "not_yet_requested": "정산 요청이 아직 없습니다",
+          "not_accounting_requester": "정산 요청자가 아닙니다",
+          "pot_not_exist": "팟이 존재하지 않습니다",
+          "pot_already_closed": "팟이 이미 해산되었습니다",
+          "network_error": "네트워크 오류가 발생했습니다",
+          "unknown": "알 수 없는 오류가 발생했습니다"
+        },
         "save": "저장"
       },
       "members": {
@@ -286,7 +294,19 @@
             "label": "정산 대상"
           }
         },
-        "action": "정산 요청"
+        "action": "정산 요청",
+        "errors": {
+          "already_requested": "정산 요청이 이미 되었습니다",
+          "account_info_not_set": "계좌 정보가 설정되지 않았습니다",
+          "cost_cannot_be_negative": "정산 금액은 0원 이상이어야 합니다",
+          "cost_per_user_mismatch": "정산 금액이 동승자 수와 일치하지 않습니다",
+          "before_departure": "출발 시간을 확정한 이후에는 정산을 요청할 수 없습니다",
+          "not_a_participant": "동승자가 아닙니다",
+          "pot_not_exist": "팟이 존재하지 않습니다",
+          "pot_already_closed": "팟이 이미 해산되었습니다",
+          "network_error": "네트워크 오류가 발생했습니다",
+          "unknown": "알 수 없는 오류가 발생했습니다"
+        }
       }
     },
     "taxi_call": {

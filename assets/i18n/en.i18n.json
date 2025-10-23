@@ -205,7 +205,15 @@
           "not_requested": "Not Requested"
         },
         "edit_payer_only": "Accounting status can only be edited by the payer",
-        "save": "Save"
+        "save": "Save",
+        "errors": {
+          "not_yet_requested": "Accounting request has not been made yet",
+          "not_accounting_requester": "You are not the accounting requester",
+          "pot_not_exist": "Pot does not exist",
+          "pot_already_closed": "Pot has already been closed",
+          "network_error": "Network error occurred",
+          "unknown": "Unknown error occurred"
+        }
       },
       "members": {
         "my": "my",
@@ -289,7 +297,19 @@
             "label": "Settlement Target"
           }
         },
-        "action": "Request Dutch Pay"
+        "action": "Request Dutch Pay",
+        "errors": {
+          "already_requested": "Accounting request has already been made",
+          "account_info_not_set": "Account information is not set",
+          "cost_cannot_be_negative": "Cost cannot be negative",
+          "cost_per_user_mismatch": "Cost per user mismatch",
+          "before_departure": "You cannot request accounting before confirming the departure time",
+          "not_a_participant": "You are not a participant",
+          "pot_not_exist": "Pot does not exist",
+          "pot_already_closed": "Pot has already been closed",
+          "network_error": "Network error occurred",
+          "unknown": "Unknown error occurred"
+        }
       }
     },
     "taxi_call": {

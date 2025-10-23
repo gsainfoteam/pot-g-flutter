@@ -6,6 +6,7 @@ import 'package:pot_g/app/di/locator.dart';
 import 'package:pot_g/app/modules/auth/presentation/bloc/auth_bloc.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_user_entity.dart';
+import 'package:pot_g/app/modules/chat/domain/exceptions/accounting_request_exception.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/accounting_cubit.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/pot_accounting_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/extensions/pot_user_extension.dart';
@@ -43,7 +44,23 @@ class AccountingPage extends StatelessWidget {
         listener: (context, state) {
           state.mapOrNull(
             requestSuccess: (_) => context.router.pop(),
-            error: (e) => context.showToast(e.message),
+            requestError: (e) {
+              final errors = context.t.chat_room.accounting.dutch.errors;
+              context.showToast(switch (e.err) {
+                AlreadyRequestedException() => errors.already_requested,
+                AccountInfoNotSetException() => errors.account_info_not_set,
+                CostCannotBeNegativeException() =>
+                  errors.cost_cannot_be_negative,
+                CostPerUserMismatchException() => errors.cost_per_user_mismatch,
+                BeforeDepartureException() => errors.before_departure,
+                NotAParticipantException() => errors.not_a_participant,
+                PotNotExistException() => errors.pot_not_exist,
+                PotAlreadyClosedException() => errors.pot_already_closed,
+                NetworkErrorException(:final error) =>
+                  '${errors.network_error}: $error',
+                UnknownException(:final error) => '${errors.unknown}: $error',
+              });
+            },
           );
         },
         child: _Layout(pot: pot),

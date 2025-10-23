@@ -4,6 +4,8 @@ import 'package:injectable/injectable.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/accounting_result_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_user_entity.dart';
+import 'package:pot_g/app/modules/chat/domain/exceptions/accounting_confirm_exception.dart';
+import 'package:pot_g/app/modules/chat/domain/exceptions/accounting_request_exception.dart';
 import 'package:pot_g/app/modules/chat/domain/repositories/pot_accounting_repository.dart';
 import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
 
@@ -27,9 +29,14 @@ class PotAccountingBloc extends Bloc<PotAccountingEvent, PotAccountingState> {
     try {
       await _repository.accounting(event.pot, event.amount, event.targets);
       emit(const PotAccountingState.requestSuccess());
+    } on AccountingRequestException catch (e, stackTrace) {
+      L.e(e, stackTrace);
+      emit(PotAccountingState.requestError(e));
     } catch (e, stackTrace) {
       L.e(e, stackTrace);
-      emit(PotAccountingState.error(e.toString()));
+      emit(
+        PotAccountingState.requestError(AccountingRequestException.unknown(e)),
+      );
     }
   }
 
@@ -41,9 +48,9 @@ class PotAccountingBloc extends Bloc<PotAccountingEvent, PotAccountingState> {
     try {
       await _repository.confirmAccounting(event.pot, event.accountingResults);
       emit(const PotAccountingState.confirmSuccess());
-    } catch (e, stackTrace) {
+    } on AccountingConfirmException catch (e, stackTrace) {
       L.e(e, stackTrace);
-      emit(PotAccountingState.error(e.toString()));
+      emit(PotAccountingState.confirmError(e));
     }
   }
 }
@@ -68,14 +75,15 @@ sealed class PotAccountingState with _$PotAccountingState {
   const factory PotAccountingState.loading() = _Loading;
   const factory PotAccountingState.requestSuccess() = _RequestSuccess;
   const factory PotAccountingState.confirmSuccess() = _ConfirmSuccess;
-  const factory PotAccountingState.error(String message) = _Error;
+  const factory PotAccountingState.requestError(
+    AccountingRequestException err,
+  ) = _RequestError;
+  const factory PotAccountingState.confirmError(
+    AccountingConfirmException err,
+  ) = _ConfirmError;
 
   bool get isLoading => switch (this) {
     _Loading() => true,
     _ => false,
-  };
-  String? get error => switch (this) {
-    _Error(:final message) => message,
-    _ => null,
   };
 }
