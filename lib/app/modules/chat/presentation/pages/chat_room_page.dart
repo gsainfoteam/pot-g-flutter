@@ -7,6 +7,7 @@ import 'package:pot_g/app/modules/chat/presentation/bloc/pot_accounting_bloc.dar
 import 'package:pot_g/app/modules/chat/presentation/bloc/pot_action_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/pot_info_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/accounting_button.dart';
+import 'package:pot_g/app/modules/chat/presentation/widgets/chat_input.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/chat_list.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/chat_room_drawer.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/set_departure_time_button.dart';
@@ -16,12 +17,9 @@ import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
 import 'package:pot_g/app/modules/common/presentation/utils/log_page.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/error_cover.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_app_bar.dart';
-import 'package:pot_g/app/modules/common/presentation/widgets/pot_icon_button.dart';
 import 'package:pot_g/app/modules/core/domain/entities/pot_id_entity.dart';
 import 'package:pot_g/app/modules/socket/presentation/bloc/socket_auth_bloc.dart';
 import 'package:pot_g/app/values/palette.dart';
-import 'package:pot_g/app/values/text_styles.dart';
-import 'package:pot_g/gen/assets.gen.dart';
 import 'package:pot_g/gen/strings.g.dart';
 
 class _PotId implements PotIdEntity {
@@ -126,7 +124,7 @@ class _Layout extends StatelessWidget {
                 children: [
                   SetDepartureTimeButton(pot: pot),
                   AccountingButton(pot: pot),
-                  Expanded(child: _ChatInput()),
+                  Expanded(child: ChatInput()),
                 ],
               ),
             ),
@@ -163,84 +161,5 @@ class _Layout extends StatelessWidget {
           ),
         ) ??
         const SizedBox.shrink();
-  }
-}
-
-class _ChatInput extends StatefulWidget {
-  const _ChatInput();
-
-  @override
-  State<_ChatInput> createState() => _ChatInputState();
-}
-
-class _ChatInputState extends State<_ChatInput> {
-  final _controller = TextEditingController();
-  bool _filled = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller.addListener(() {
-      setState(() => _filled = _controller.text.isNotEmpty);
-    });
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final disabled = context.select<PotInfoBloc, bool>(
-      (bloc) => bloc.state.isArchived,
-    );
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 8),
-      child: Row(
-        children: [
-          Expanded(
-            child: TextField(
-              enabled: !disabled,
-              controller: _controller,
-              style: TextStyles.description.copyWith(
-                height: 19 / 16,
-                color: Palette.textGrey,
-              ),
-              minLines: 1,
-              maxLines: 3,
-              decoration: InputDecoration(
-                filled: true,
-                isDense: true,
-                fillColor: Palette.lightGrey,
-                contentPadding: EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 12,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide.none,
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(width: 6),
-          PotIconButton(
-            icon: Assets.icons.sendDiagonal.svg(
-              colorFilter: ColorFilter.mode(
-                _filled ? Palette.primary : Palette.grey,
-                BlendMode.srcIn,
-              ),
-            ),
-            onPressed: () {
-              L.c('sendMessage');
-              context.read<ChatBloc>().add(ChatSendChat(_controller.text));
-              _controller.clear();
-            },
-          ),
-        ],
-      ),
-    );
   }
 }
