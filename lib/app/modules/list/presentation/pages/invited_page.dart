@@ -11,6 +11,7 @@ import 'package:pot_g/app/modules/core/domain/entities/route_entity.dart';
 import 'package:pot_g/app/modules/list/presentation/bloc/join_pot_bloc.dart';
 import 'package:pot_g/app/modules/list/presentation/bloc/pot_list_bloc.dart';
 import 'package:pot_g/app/modules/list/presentation/bloc/pot_overview_bloc.dart';
+import 'package:pot_g/app/modules/list/presentation/extensions/join_pot_exception.dart';
 import 'package:pot_g/app/router.gr.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
@@ -37,25 +38,7 @@ class _InvitedPageState extends State<InvitedPage> {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [BlocProvider(create: (context) => sl<JoinPotBloc>())],
-      child: BlocListener<JoinPotBloc, JoinPotState>(
-        listener: (context, state) {
-          state.map(
-            initial: (_) {},
-            loading: (_) {},
-            success: (successState) {
-              context.router.popAndPush(ChatRoomRoute(id: successState.potId));
-              context.read<PotDetailBloc>().add(PotDetailEvent.loadMyPots());
-            },
-            error: (errorState) {
-              context.showToast(errorState.message);
-            },
-          );
-        },
-        child: SizedBox(),
-      ),
-    );
+    return SizedBox();
   }
 
   Future<void> _showAlert(BuildContext context) async {
@@ -157,7 +140,7 @@ class _InvitedPageState extends State<InvitedPage> {
               },
               error: (errorState) {
                 Navigator.of(context).pop();
-                context.showToast(errorState.message);
+                context.showToast(errorState.err.getErrorMessage(context));
               },
             );
           },

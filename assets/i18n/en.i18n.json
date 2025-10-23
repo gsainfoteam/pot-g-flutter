@@ -89,7 +89,15 @@
       "route": "Route",
       "date": "Date",
       "departure_time": "Time",
-      "passengers": "Passengers List"
+      "passengers": "Passengers List",
+      "errors": {
+        "after_departure_confirmed": "After the departure time is confirmed, you cannot join.",
+        "pot_not_exist": "Pot does not exist.",
+        "pot_already_closed": "Pot has already been closed.",
+        "pot_full": "Pot is full.",
+        "network_error": "Network error occurred.",
+        "unknown": "Unknown error occurred."
+      }
     }
   },
   "create": {
@@ -361,13 +369,6 @@
         "clipboard": "Copy to Clipboard"
       }
     }
-  },
-  "invited": {
-    "title": "Invited",
-    "button": "Join Pot",
-    "loading": "Joining...",
-    "fulled": "Fulled (Maximum Capacity)",
-    "error": "Failed to join"
   },
   "update": {
     "available": {

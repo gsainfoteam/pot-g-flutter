@@ -1,31 +1,50 @@
 sealed class JoinPotException implements Exception {
   const JoinPotException();
 
-  factory JoinPotException.afterDepartureConfirmed() =
+  const factory JoinPotException.afterDepartureConfirmed() =
       AfterDepartureConfirmedException;
-  factory JoinPotException.potNotExist() = PotNotExistException;
-  factory JoinPotException.potAlreadyClosed() = PotAlreadyClosedException;
-  factory JoinPotException.potFull() = PotFullException;
-  factory JoinPotException.networkError(String error) = NetworkErrorException;
+  const factory JoinPotException.potNotExist() = PotNotExistException;
+  const factory JoinPotException.potAlreadyClosed() = PotAlreadyClosedException;
+  const factory JoinPotException.potFull() = PotFullException;
+  const factory JoinPotException.networkError(String error) =
+      NetworkErrorException;
+  const factory JoinPotException.unknown(Object error) = UnknownException;
 }
 
 class AfterDepartureConfirmedException extends JoinPotException {
   const AfterDepartureConfirmedException();
+  @override
+  String toString() => 'JoinPotException.AfterDepartureConfirmedException';
 }
 
 class PotNotExistException extends JoinPotException {
   const PotNotExistException();
+  @override
+  String toString() => 'JoinPotException.PotNotExistException';
 }
 
 class PotAlreadyClosedException extends JoinPotException {
   const PotAlreadyClosedException();
+  @override
+  String toString() => 'JoinPotException.PotAlreadyClosedException';
 }
 
 class PotFullException extends JoinPotException {
   const PotFullException();
+  @override
+  String toString() => 'JoinPotException.PotFullException';
 }
 
 class NetworkErrorException extends JoinPotException {
   final String error;
   const NetworkErrorException(this.error);
+  @override
+  String toString() => 'JoinPotException.NetworkErrorException(error: $error)';
+}
+
+class UnknownException extends JoinPotException {
+  final Object error;
+  const UnknownException(this.error);
+  @override
+  String toString() => 'JoinPotException.UnknownException(error: $error)';
 }
