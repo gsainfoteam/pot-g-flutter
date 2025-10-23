@@ -14,6 +14,7 @@ import 'package:pot_g/app/modules/chat/presentation/bloc/chat_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/pot_accounting_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/pot_action_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/pot_info_bloc.dart';
+import 'package:pot_g/app/modules/chat/presentation/widgets/accounting_button.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/bubble.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/chat_bubble.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/chat_room_drawer.dart';
@@ -29,7 +30,6 @@ import 'package:pot_g/app/modules/common/presentation/widgets/pot_app_bar.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_icon_button.dart';
 import 'package:pot_g/app/modules/core/domain/entities/pot_id_entity.dart';
 import 'package:pot_g/app/modules/socket/presentation/bloc/socket_auth_bloc.dart';
-import 'package:pot_g/app/router.gr.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
 import 'package:pot_g/gen/assets.gen.dart';
@@ -136,7 +136,7 @@ class _Layout extends StatelessWidget {
               child: Row(
                 children: [
                   SetDepartureTimeButton(pot: pot),
-                  _AccountingButton(pot: pot),
+                  AccountingButton(pot: pot),
                   Expanded(child: _ChatInput()),
                 ],
               ),
@@ -174,35 +174,6 @@ class _Layout extends StatelessWidget {
           ),
         ) ??
         const SizedBox.shrink();
-  }
-}
-
-class _AccountingButton extends StatelessWidget {
-  const _AccountingButton({required this.pot});
-
-  final PotInfoEntity pot;
-
-  static Future<void> setAccounting(
-    BuildContext context,
-    PotInfoEntity pot,
-  ) async {
-    if (pot.departureTime == null) {
-      context.showToast(context.t.chat_room.accounting.before_confirm);
-      return;
-    }
-    await AccountingRoute(pot: pot).push(context);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return PotIconButton(
-      icon: Assets.icons.dollar.svg(
-        colorFilter: ColorFilter.mode(Palette.grey, BlendMode.srcIn),
-      ),
-      onPressed: () async {
-        await setAccounting(context, pot);
-      },
-    );
   }
 }
 
@@ -323,7 +294,7 @@ class _ChatListState extends State<_ChatList> {
         SetDepartureTimeButton.setDepartureTime(context, widget.pot);
         break;
       case FofoActionButtonType.accountingRequest:
-        _AccountingButton.setAccounting(context, widget.pot);
+        AccountingButton.setAccounting(context, widget.pot);
         break;
       case FofoActionButtonType.accountingInfoCheck:
         Scaffold.of(context).openEndDrawer();
