@@ -3,6 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
 import 'package:pot_g/app/modules/core/domain/repositories/create_pot_repository.dart';
+import 'package:pot_g/app/modules/create/domain/exceptions/create_pot_exception.dart';
 
 part 'create_pot_bloc.freezed.dart';
 
@@ -25,9 +26,14 @@ class CreatePotBloc extends Bloc<CreatePotEvent, CreatePotState> {
       );
 
       emit(state.copyWith(isLoading: false, createdPotId: potId));
+    } on CreatePotException catch (e, stackTrace) {
+      L.e(e, stackTrace);
+      emit(state.copyWith(isLoading: false, error: e));
     } catch (e, stackTrace) {
       L.e(e, stackTrace);
-      emit(state.copyWith(isLoading: false, error: e.toString()));
+      emit(
+        state.copyWith(isLoading: false, error: CreatePotException.unknown(e)),
+      );
     }
   }
 }
@@ -46,7 +52,7 @@ sealed class CreatePotEvent with _$CreatePotEvent {
 sealed class CreatePotState with _$CreatePotState {
   const factory CreatePotState({
     @Default(false) bool isLoading,
-    String? error,
+    CreatePotException? error,
     String? createdPotId,
   }) = _State;
 }

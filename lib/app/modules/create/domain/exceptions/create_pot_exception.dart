@@ -1,14 +1,16 @@
 sealed class CreatePotException implements Exception {
   const CreatePotException();
 
-  factory CreatePotException.invalidCapacity() = InvalidCapacityException;
-  factory CreatePotException.departureAvailableBeforeNow() =
+  const factory CreatePotException.invalidCapacity() = InvalidCapacityException;
+  const factory CreatePotException.departureAvailableBeforeNow() =
       DepartureAvailableBeforeNowException;
-  factory CreatePotException.invalidDepartureAvailableTime() =
+  const factory CreatePotException.invalidDepartureAvailableTime() =
       InvalidDepartureAvailableTimeException;
-  factory CreatePotException.tooFarDepartureAvailableTime() =
+  const factory CreatePotException.tooFarDepartureAvailableTime() =
       TooFarDepartureAvailableTimeException;
-  factory CreatePotException.networkError(String error) = NetworkErrorException;
+  const factory CreatePotException.networkError(String error) =
+      NetworkErrorException;
+  const factory CreatePotException.unknown(Object error) = UnknownException;
 }
 
 class InvalidCapacityException extends CreatePotException {
@@ -33,4 +35,11 @@ class NetworkErrorException extends CreatePotException {
 
   @override
   String toString() => error;
+}
+
+class UnknownException extends CreatePotException {
+  final Object error;
+  const UnknownException(this.error);
+  @override
+  String toString() => 'CreatePotException.UnknownException(error: $error)';
 }
