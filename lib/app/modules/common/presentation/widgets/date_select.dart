@@ -17,6 +17,7 @@ class DateSelect extends StatefulWidget {
     required this.isOpen,
     required this.onOpenChanged,
     this.minDate,
+    this.maxDate,
   });
 
   final DateTime? selectedDate;
@@ -25,6 +26,7 @@ class DateSelect extends StatefulWidget {
   final bool isOpen;
   final void Function(bool) onOpenChanged;
   final DateTime? minDate;
+  final DateTime? maxDate;
 
   @override
   State<DateSelect> createState() => _DateSelectState();
@@ -66,6 +68,7 @@ class _DateSelectState extends State<DateSelect> {
               _Calendar(
                 selectedDate: _selectedDate,
                 minDate: widget.minDate,
+                maxDate: widget.maxDate,
                 onSelected: (date) => setState(() => _selectedDate = date),
               ),
               SizedBox(height: 8),
@@ -141,11 +144,17 @@ class _DateSelectState extends State<DateSelect> {
 }
 
 class _Calendar extends StatefulWidget {
-  const _Calendar({this.selectedDate, required this.onSelected, this.minDate});
+  const _Calendar({
+    this.selectedDate,
+    required this.onSelected,
+    this.minDate,
+    this.maxDate,
+  });
 
   final DateTime? selectedDate;
   final void Function(DateTime) onSelected;
   final DateTime? minDate;
+  final DateTime? maxDate;
 
   @override
   State<_Calendar> createState() => __CalendarState();
@@ -253,7 +262,9 @@ class __CalendarState extends State<_Calendar> {
                     .addWeeks(i)
                     .addDays(j);
                 final isDisabled =
-                    widget.minDate != null && date.isBefore(widget.minDate!);
+                    (widget.minDate != null &&
+                        date.isBefore(widget.minDate!)) ||
+                    (widget.maxDate != null && date.isAfter(widget.maxDate!));
                 return Expanded(
                   child: GestureDetector(
                     onTap: isDisabled
