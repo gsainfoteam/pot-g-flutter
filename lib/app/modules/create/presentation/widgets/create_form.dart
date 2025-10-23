@@ -147,6 +147,7 @@ class _DateInput extends StatelessWidget {
     return DateSelect(
       selectedDate: selected,
       minDate: DateTime.now().startOfDay(),
+      maxDate: DateTime.now().add(const Duration(days: 13)).endOfDay(),
       onSelected: (date) {
         L.c(
           'dateSelectorItem',
