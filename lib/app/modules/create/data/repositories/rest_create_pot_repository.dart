@@ -30,7 +30,11 @@ class RestCreatePotRepository implements CreatePotRepository {
       final result = await _api.createPot(createPotModel);
       switch (result.result) {
         case CreatePotResult.ok:
-          return result.id!;
+          final id = result.id;
+          if (id == null || id.isEmpty) {
+            throw CreatePotException.networkError('Invalid id');
+          }
+          return id;
         case CreatePotResult.invalidCapacity:
           throw CreatePotException.invalidCapacity();
         case CreatePotResult.departureAvailableBeforeNow:
