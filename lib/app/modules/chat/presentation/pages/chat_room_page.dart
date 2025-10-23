@@ -6,6 +6,7 @@ import 'package:pot_g/app/modules/chat/presentation/bloc/chat_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/pot_accounting_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/pot_action_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/pot_info_bloc.dart';
+import 'package:pot_g/app/modules/chat/presentation/extensions/pot_action_exception.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/accounting_button.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/chat_input.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/chat_list.dart';
@@ -63,8 +64,16 @@ class ChatRoomPage extends StatelessWidget with LogPage {
             listener: (context, state) => context.showToast(state.error!),
           ),
           BlocListener<PotActionBloc, PotActionState>(
-            listenWhen: (prev, curr) => curr.error != null,
-            listener: (context, state) => context.showToast(state.error!),
+            listener: (context, state) {
+              state.mapOrNull(
+                departureTimeError: (e) =>
+                    context.showToast(e.err.getErrorMessage(context)),
+                leavePotError: (e) =>
+                    context.showToast(e.err.getErrorMessage(context)),
+                kickUserError: (e) =>
+                    context.showToast(e.err.getErrorMessage(context)),
+              );
+            },
           ),
           BlocListener<SocketAuthBloc, SocketAuthState>(
             listenWhen: (prev, curr) =>

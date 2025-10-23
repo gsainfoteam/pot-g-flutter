@@ -6,6 +6,7 @@ import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/enums/pot_status.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/pot_action_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/pot_detail_bloc.dart';
+import 'package:pot_g/app/modules/chat/presentation/extensions/pot_action_exception.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/pot_accounting.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/pot_info.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/pot_users.dart';
@@ -80,14 +81,13 @@ class ChatRoomDrawer extends StatelessWidget {
     if (result != OkCancelResult.ok) return;
     if (!context.mounted) return;
     final bloc = context.read<PotActionBloc>();
-    final blocker = bloc.stream.firstWhere(
-      (s) => !s.isLoading || s.error != null,
-    );
+    final blocker = bloc.stream.firstWhere((s) => !s.isLoading);
     bloc.add(PotActionEvent.leavePot(pot));
     final state = await blocker;
     if (!context.mounted) return;
-    if (state.error != null) {
-      context.showToast(state.error!);
+    final error = state.leavePotError;
+    if (error != null) {
+      context.showToast(error.getErrorMessage(context));
       return;
     }
     context.router

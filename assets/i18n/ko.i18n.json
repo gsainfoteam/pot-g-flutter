@@ -222,7 +222,18 @@
             "title": "동승자를 강퇴할까요?",
             "description(rich)": "$user를 강퇴할까요?\n불합리한 강퇴일 경우\n신고를 당할 수 있습니다"
           },
-          "departure_confirmed": "출발 시간을 확정한 이후에는 강퇴가 불가능합니다"
+          "departure_confirmed": "출발 시간을 확정한 이후에는 강퇴가 불가능합니다",
+          "error": {
+            "not_a_host": "방장이 아닙니다",
+            "not_a_participant": "동승자가 아닙니다",
+            "user_not_in_pot": "동승자가 아닙니다",
+            "after_departure_confirmed": "출발 시간을 확정한 이후에는 강퇴가 불가능합니다",
+            "not_yet_payment_confirmed": "결제 확인이 완료되지 않았습니다",
+            "not_yet_payment_completed": "결제 완료가 완료되지 않았습니다",
+            "pot_not_exist": "팟이 존재하지 않습니다",
+            "pot_already_closed": "팟이 이미 해산되었습니다",
+            "network_error": "네트워크 오류가 발생했습니다"
+          }
         },
         "invite": {
           "action": "초대하기",
@@ -248,7 +259,16 @@
             "title": "퇴장하시겠습니까?",
             "description": "출발 시간 확정 이전에는\n자유로운 퇴장이 가능합니다\n퇴장하시겠습니까?"
           },
-          "departure_confirmed": "출발 시간을 확정한 이후에는 퇴장이 불가능합니다"
+          "departure_confirmed": "출발 시간을 확정한 이후에는 퇴장이 불가능합니다",
+          "error": {
+            "after_departure_confirmed": "출발 시간을 확정한 이후에는 퇴장이 불가능합니다",
+            "not_yet_payment_confirmed": "결제 확인이 완료되지 않았습니다",
+            "not_yet_payment_completed": "결제 완료가 완료되지 않았습니다",
+            "pot_not_exist": "팟이 존재하지 않스립니다",
+            "pot_already_closed": "팟이 이미 해산되었습니다",
+            "network_error": "네트워크 오류가 발생했습니다",
+            "unknown": "알 수 없는 오류가 발생했슈니다"
+          }
         },
         "report": "신고하기"
       }
@@ -269,6 +289,16 @@
       },
       "you_only": {
         "description": "혼자서는 팟을 확정할 수 없습니다."
+      },
+      "error": {
+        "not_a_host": "방장이 아닙니다",
+        "after_departure": "출발 시간을 확정한 이후에는 확정할 수 없습니다",
+        "before_now": "출발 시간을 확정할 수 없습니다",
+        "pot_not_exist": "팟이 존재하지 않습니다",
+        "pot_already_closed": "팟이 이미 해산되었습니다",
+        "not_in_available_time_range": "출발 시간을 확정할 수 없습니다",
+        "network_error": "네트워크 오류가 발생했습니다",
+        "unknown": "알 수 없는 오류가 발생했습니다"
       }
     },
     "accounting": {

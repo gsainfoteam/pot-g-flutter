@@ -1,35 +1,48 @@
-class LeavePotException implements Exception {
+sealed class LeavePotException implements Exception {
   const LeavePotException();
 
-  factory LeavePotException.afterDepartureConfirmed() =
+  const factory LeavePotException.afterDepartureConfirmed() =
       AfterDepartureConfirmedException;
-  factory LeavePotException.notYetPaymentConfirmed() =
+  const factory LeavePotException.notYetPaymentConfirmed() =
       NotYetPaymentConfirmedException;
-  factory LeavePotException.notYetPaymentCompleted() =
+  const factory LeavePotException.notYetPaymentCompleted() =
       NotYetPaymentCompletedException;
-  factory LeavePotException.potNotExist() = PotNotExistException;
-  factory LeavePotException.potAlreadyClosed() = PotAlreadyClosedException;
-  factory LeavePotException.networkError(String error) = NetworkErrorException;
+  const factory LeavePotException.potNotExist() = PotNotExistException;
+  const factory LeavePotException.potAlreadyClosed() =
+      PotAlreadyClosedException;
+  const factory LeavePotException.networkError(String error) =
+      NetworkErrorException;
+  const factory LeavePotException.unknown(Object error) = UnknownException;
 }
 
 class AfterDepartureConfirmedException extends LeavePotException {
   const AfterDepartureConfirmedException();
+  @override
+  String toString() => 'LeavePotException.AfterDepartureConfirmedException';
 }
 
 class NotYetPaymentConfirmedException extends LeavePotException {
   const NotYetPaymentConfirmedException();
+  @override
+  String toString() => 'LeavePotException.NotYetPaymentConfirmedException';
 }
 
 class NotYetPaymentCompletedException extends LeavePotException {
   const NotYetPaymentCompletedException();
+  @override
+  String toString() => 'LeavePotException.NotYetPaymentCompletedException';
 }
 
 class PotNotExistException extends LeavePotException {
   const PotNotExistException();
+  @override
+  String toString() => 'LeavePotException.PotNotExistException';
 }
 
 class PotAlreadyClosedException extends LeavePotException {
   const PotAlreadyClosedException();
+  @override
+  String toString() => 'LeavePotException.PotAlreadyClosedException';
 }
 
 class NetworkErrorException extends LeavePotException {
@@ -37,5 +50,12 @@ class NetworkErrorException extends LeavePotException {
   const NetworkErrorException(this.error);
 
   @override
-  String toString() => error;
+  String toString() => 'LeavePotException.NetworkErrorException(error: $error)';
+}
+
+class UnknownException extends LeavePotException {
+  final Object error;
+  const UnknownException(this.error);
+  @override
+  String toString() => 'LeavePotException.UnknownException(error: $error)';
 }
