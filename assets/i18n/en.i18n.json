@@ -146,7 +146,7 @@
     "errors": {
       "invalid_capacity": "Invalid capacity.",
       "departure_available_before_now": "You cannot set the departure time before now.",
-      "invalid_departure_available_time": "You cannot set the departure time in the available time range.",
+      "invalid_departure_available_time": "You cannot set the departure time outside the available time range.",
       "too_far_departure_available_time": "You cannot set the departure time too far in the future.",
       "network_error": "Network error occurred.",
       "unknown": "Unknown error occurred."
