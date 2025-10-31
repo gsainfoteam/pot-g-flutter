@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 sealed class JoinPotException implements Exception {
   const JoinPotException();
 
@@ -39,12 +41,16 @@ class NetworkErrorException extends JoinPotException {
   final String error;
   const NetworkErrorException(this.error);
   @override
-  String toString() => 'JoinPotException.NetworkErrorException(error: $error)';
+  String toString() => kDebugMode
+      ? 'JoinPotException.NetworkErrorException(error: $error)'
+      : 'JoinPotException.NetworkErrorException';
 }
 
 class UnknownException extends JoinPotException {
   final Object error;
   const UnknownException(this.error);
   @override
-  String toString() => 'JoinPotException.UnknownException(error: $error)';
+  String toString() => kDebugMode
+      ? 'JoinPotException.UnknownException(error: $error)'
+      : 'JoinPotException.UnknownException';
 }

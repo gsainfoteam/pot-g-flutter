@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 sealed class KickUserException implements Exception {
   const KickUserException();
 
@@ -63,12 +65,16 @@ class NetworkErrorException extends KickUserException {
   const NetworkErrorException(this.error);
 
   @override
-  String toString() => 'KickUserException.NetworkErrorException(error: $error)';
+  String toString() => kDebugMode
+      ? 'KickUserException.NetworkErrorException(error: $error)'
+      : 'KickUserException.NetworkErrorException';
 }
 
 class UnknownException extends KickUserException {
   final Object error;
   const UnknownException(this.error);
   @override
-  String toString() => 'KickUserException.UnknownException(error: $error)';
+  String toString() => kDebugMode
+      ? 'KickUserException.UnknownException(error: $error)'
+      : 'KickUserException.UnknownException';
 }
