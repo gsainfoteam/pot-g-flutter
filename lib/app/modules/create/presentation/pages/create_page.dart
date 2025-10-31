@@ -42,17 +42,15 @@ class CreatePage extends StatelessWidget with LogPage {
         ],
         child: BlocListener<CreatePotBloc, CreatePotState>(
           listener: (context, state) {
-            final error = state.error;
-            if (error != null) {
-              context.showToast(error.getErrorMessage(context));
-              return;
-            }
-            if (state.createdPotId == null) {
-              context.showToast(context.t.create.errors.unknown);
-              return;
-            }
-            context.read<PotDetailBloc>().add(PotDetailEvent.loadMyPots());
-            context.router.popAndPush(ChatRoomRoute(id: state.createdPotId!));
+            state.mapOrNull(
+              error: (e) => context.showToast(
+                '${e.error.getErrorMessage(context)} (${e.errorId})',
+              ),
+              success: (e) {
+                context.read<PotDetailBloc>().add(PotDetailEvent.loadMyPots());
+                context.router.popAndPush(ChatRoomRoute(id: e.potId));
+              },
+            );
           },
           child: const CreateForm(),
         ),
