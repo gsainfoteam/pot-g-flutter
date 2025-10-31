@@ -14,10 +14,10 @@ extension CreateErrorX on CreatePotException {
         return errors.invalid_departure_available_time;
       case TooFarDepartureAvailableTimeException():
         return errors.too_far_departure_available_time;
-      case NetworkErrorException(:final error):
-        return '${errors.network_error}: $error';
-      case UnknownException(:final error):
-        return '${errors.unknown}: $error';
+      case NetworkErrorException():
+        return errors.network_error;
+      case UnknownException():
+        return errors.unknown;
     }
   }
 }
