@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
+import 'package:pot_g/app/modules/auth/domain/exceptions/authorization_exception.dart';
 import 'package:pot_g/app/modules/auth/domain/repositories/auth_repository.dart';
 import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
 import 'package:pot_g/app/modules/user/domain/entities/self_user_entity.dart';
@@ -39,9 +40,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     try {
       final user = await _repository.signIn();
       emit(AuthState.authenticated(user));
+    } on AuthorizationException catch (e, stackTrace) {
+      final errorId = L.e(e, stackTrace);
+      emit(AuthState.error(e, errorId));
+      emit(const AuthState.unauthenticated());
     } catch (e, stackTrace) {
-      L.e(e, stackTrace);
-      emit(AuthState.error(e.toString()));
+      final errorId = L.e(e, stackTrace);
+      emit(AuthState.error(UnknownException(e), errorId));
       emit(const AuthState.unauthenticated());
     }
   }
@@ -77,7 +82,8 @@ sealed class AuthState with _$AuthState {
   const factory AuthState.loading() = AuthLoading;
   const factory AuthState.unauthenticated() = Unauthenticated;
   const factory AuthState.authenticated(SelfUserEntity user) = Authenticated;
-  const factory AuthState.error(String message) = AuthError;
+  const factory AuthState.error(AuthorizationException error, String errorId) =
+      AuthError;
 
   SelfUserEntity? get user => switch (this) {
     Authenticated(:final user) => user,

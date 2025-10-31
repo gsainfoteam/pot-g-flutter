@@ -9,6 +9,7 @@ import 'package:pot_g/app/modules/common/presentation/widgets/pot_app_bar.dart';
 import 'package:pot_g/app/modules/core/domain/entities/route_entity.dart';
 import 'package:pot_g/app/modules/create/presentation/bloc/create_cubit.dart';
 import 'package:pot_g/app/modules/create/presentation/bloc/create_pot_bloc.dart';
+import 'package:pot_g/app/modules/create/presentation/extensions/create_error.dart';
 import 'package:pot_g/app/modules/create/presentation/widgets/create_form.dart';
 import 'package:pot_g/app/router.gr.dart';
 import 'package:pot_g/gen/strings.g.dart';
@@ -41,13 +42,15 @@ class CreatePage extends StatelessWidget with LogPage {
         ],
         child: BlocListener<CreatePotBloc, CreatePotState>(
           listener: (context, state) {
-            if (state.error != null) {
-              context.showToast(state.error!);
-              return;
-            }
-            if (state.createdPotId == null) return;
-            context.read<PotDetailBloc>().add(PotDetailEvent.loadMyPots());
-            context.router.popAndPush(ChatRoomRoute(id: state.createdPotId!));
+            state.mapOrNull(
+              error: (e) => context.showToast(
+                '${e.error.getErrorMessage(context)} (${e.errorId})',
+              ),
+              success: (e) {
+                context.read<PotDetailBloc>().add(PotDetailEvent.loadMyPots());
+                context.router.popAndPush(ChatRoomRoute(id: e.potId));
+              },
+            );
           },
           child: const CreateForm(),
         ),

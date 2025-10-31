@@ -3,6 +3,9 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_user_entity.dart';
+import 'package:pot_g/app/modules/chat/domain/exceptions/departure_time_exception.dart';
+import 'package:pot_g/app/modules/chat/domain/exceptions/kick_user_exception.dart';
+import 'package:pot_g/app/modules/chat/domain/exceptions/leave_pot_exception.dart';
 import 'package:pot_g/app/modules/chat/domain/repositories/pot_action_repository.dart';
 import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
 
@@ -37,9 +40,17 @@ class PotActionBloc extends Bloc<PotActionEvent, PotActionState> {
             : adjustedDate,
       );
       emit(const PotActionState.success());
+    } on DepartureTimeException catch (e, stackTrace) {
+      final errorId = L.e(e, stackTrace);
+      emit(PotActionState.departureTimeError(e, errorId));
     } catch (e, stackTrace) {
-      L.e(e, stackTrace);
-      emit(PotActionState.error(e.toString()));
+      final errorId = L.e(e, stackTrace);
+      emit(
+        PotActionState.departureTimeError(
+          DepartureTimeException.unknown(e),
+          errorId,
+        ),
+      );
     }
   }
 
@@ -51,9 +62,12 @@ class PotActionBloc extends Bloc<PotActionEvent, PotActionState> {
     try {
       await _repository.leavePot(event.pot);
       emit(const PotActionState.success());
+    } on LeavePotException catch (e, stackTrace) {
+      final errorId = L.e(e, stackTrace);
+      emit(PotActionState.leavePotError(e, errorId));
     } catch (e, stackTrace) {
-      L.e(e, stackTrace);
-      emit(PotActionState.error(e.toString()));
+      final errorId = L.e(e, stackTrace);
+      emit(PotActionState.leavePotError(LeavePotException.unknown(e), errorId));
     }
   }
 
@@ -65,9 +79,12 @@ class PotActionBloc extends Bloc<PotActionEvent, PotActionState> {
     try {
       await _repository.kickUser(event.pot, event.user);
       emit(const PotActionState.success());
+    } on KickUserException catch (e, stackTrace) {
+      final errorId = L.e(e, stackTrace);
+      emit(PotActionState.kickUserError(e, errorId));
     } catch (e, stackTrace) {
-      L.e(e, stackTrace);
-      emit(PotActionState.error(e.toString()));
+      final errorId = L.e(e, stackTrace);
+      emit(PotActionState.kickUserError(KickUserException.unknown(e), errorId));
     }
   }
 }
@@ -89,14 +106,33 @@ sealed class PotActionState with _$PotActionState {
   const factory PotActionState.initial() = _Initial;
   const factory PotActionState.loading() = _Loading;
   const factory PotActionState.success() = _Success;
-  const factory PotActionState.error(String message) = _Error;
+  const factory PotActionState.departureTimeError(
+    DepartureTimeException err,
+    String errorId,
+  ) = _DepartureTimeError;
+  const factory PotActionState.leavePotError(
+    LeavePotException err,
+    String errorId,
+  ) = _LeavePotError;
+  const factory PotActionState.kickUserError(
+    KickUserException err,
+    String errorId,
+  ) = _KickUserError;
 
   bool get isLoading => switch (this) {
     _Loading() => true,
     _ => false,
   };
-  String? get error => switch (this) {
-    _Error(:final message) => message,
+  DepartureTimeException? get departureTimeError => switch (this) {
+    _DepartureTimeError(:final err) => err,
+    _ => null,
+  };
+  LeavePotException? get leavePotError => switch (this) {
+    _LeavePotError(:final err) => err,
+    _ => null,
+  };
+  KickUserException? get kickUserError => switch (this) {
+    _KickUserError(:final err) => err,
     _ => null,
   };
 }

@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
+import 'package:pot_g/app/modules/list/domain/exceptions/join_pot_exception.dart';
 import 'package:pot_g/app/modules/list/domain/repositories/join_pot_repository.dart';
 
 part 'join_pot_bloc.freezed.dart';
@@ -19,9 +20,12 @@ class JoinPotBloc extends Bloc<JoinPotEvent, JoinPotState> {
     try {
       await _repository.joinPot(event.potId);
       emit(JoinPotState.success(event.potId));
+    } on JoinPotException catch (e, stackTrace) {
+      final errorId = L.e(e, stackTrace);
+      emit(JoinPotState.error(e, errorId));
     } catch (e, stackTrace) {
-      L.e(e, stackTrace);
-      emit(JoinPotState.error(e.toString()));
+      final errorId = L.e(e, stackTrace);
+      emit(JoinPotState.error(JoinPotException.unknown(e), errorId));
     }
   }
 }
@@ -36,5 +40,6 @@ sealed class JoinPotState with _$JoinPotState {
   const factory JoinPotState.initial() = _Initial;
   const factory JoinPotState.loading() = _Loading;
   const factory JoinPotState.success(String potId) = _Success;
-  const factory JoinPotState.error(String message) = _Error;
+  const factory JoinPotState.error(JoinPotException err, String errorId) =
+      _Error;
 }

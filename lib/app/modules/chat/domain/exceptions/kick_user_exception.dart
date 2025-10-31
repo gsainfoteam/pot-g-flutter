@@ -1,44 +1,63 @@
+import 'package:flutter/foundation.dart';
+
 sealed class KickUserException implements Exception {
   const KickUserException();
 
-  factory KickUserException.notAHost() = NotAHostException;
-  factory KickUserException.notAParticipant() = NotAParticipantException;
-  factory KickUserException.userNotInPot() = UserNotInPotException;
-  factory KickUserException.afterDepartureConfirmed() =
+  const factory KickUserException.notAHost() = NotAHostException;
+  const factory KickUserException.notAParticipant() = NotAParticipantException;
+  const factory KickUserException.userNotInPot() = UserNotInPotException;
+  const factory KickUserException.afterDepartureConfirmed() =
       AfterDepartureConfirmedException;
-  factory KickUserException.notYetPaymentConfirmed() =
+  const factory KickUserException.notYetPaymentConfirmed() =
       NotYetPaymentConfirmedException;
-  factory KickUserException.potNotExist() = PotNotExistException;
-  factory KickUserException.potAlreadyClosed() = PotAlreadyClosedException;
-  factory KickUserException.networkError(String error) = NetworkErrorException;
+  const factory KickUserException.potNotExist() = PotNotExistException;
+  const factory KickUserException.potAlreadyClosed() =
+      PotAlreadyClosedException;
+  const factory KickUserException.networkError(String error) =
+      NetworkErrorException;
+  const factory KickUserException.unknown(Object error) = UnknownException;
 }
 
 class NotAHostException extends KickUserException {
   const NotAHostException();
+  @override
+  String toString() => 'KickUserException.NotAHostException';
 }
 
 class NotAParticipantException extends KickUserException {
   const NotAParticipantException();
+  @override
+  String toString() => 'KickUserException.NotAParticipantException';
 }
 
 class UserNotInPotException extends KickUserException {
   const UserNotInPotException();
+  @override
+  String toString() => 'KickUserException.UserNotInPotException';
 }
 
 class AfterDepartureConfirmedException extends KickUserException {
   const AfterDepartureConfirmedException();
+  @override
+  String toString() => 'KickUserException.AfterDepartureConfirmedException';
 }
 
 class NotYetPaymentConfirmedException extends KickUserException {
   const NotYetPaymentConfirmedException();
+  @override
+  String toString() => 'KickUserException.NotYetPaymentConfirmedException';
 }
 
 class PotNotExistException extends KickUserException {
   const PotNotExistException();
+  @override
+  String toString() => 'KickUserException.PotNotExistException';
 }
 
 class PotAlreadyClosedException extends KickUserException {
   const PotAlreadyClosedException();
+  @override
+  String toString() => 'KickUserException.PotAlreadyClosedException';
 }
 
 class NetworkErrorException extends KickUserException {
@@ -46,5 +65,16 @@ class NetworkErrorException extends KickUserException {
   const NetworkErrorException(this.error);
 
   @override
-  String toString() => error;
+  String toString() => kDebugMode
+      ? 'KickUserException.NetworkErrorException(error: $error)'
+      : 'KickUserException.NetworkErrorException';
+}
+
+class UnknownException extends KickUserException {
+  final Object error;
+  const UnknownException(this.error);
+  @override
+  String toString() => kDebugMode
+      ? 'KickUserException.UnknownException(error: $error)'
+      : 'KickUserException.UnknownException';
 }

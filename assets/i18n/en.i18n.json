@@ -8,6 +8,14 @@
     "title": "Login to continue",
     "description": "To access your information, you need to login.\nWould you like to login?"
   },
+  "login": {
+    "errors": {
+      "invalid_authorization_state": "Invalid authorization state.",
+      "invalid_authorization_code": "Invalid authorization code.",
+      "network_error": "Network error occurred.",
+      "unknown": "Unknown error occurred."
+    }
+  },
   "profile": {
     "menu_title": "My Profile",
     "basic_info": {
@@ -89,7 +97,15 @@
       "route": "Route",
       "date": "Date",
       "departure_time": "Time",
-      "passengers": "Passengers List"
+      "passengers": "Passengers List",
+      "errors": {
+        "after_departure_confirmed": "After the departure time is confirmed, you cannot join.",
+        "pot_not_exist": "Pot does not exist.",
+        "pot_already_closed": "Pot has already been closed.",
+        "pot_full": "Pot is full.",
+        "network_error": "Network error occurred.",
+        "unknown": "Unknown error occurred."
+      }
     }
   },
   "create": {
@@ -134,6 +150,14 @@
           "input_first": "false"
         }
       }
+    },
+    "errors": {
+      "invalid_capacity": "Invalid capacity.",
+      "departure_available_before_now": "You cannot set the departure time before now.",
+      "invalid_departure_available_time": "You cannot set the departure time outside the available time range.",
+      "too_far_departure_available_time": "You cannot set the departure time too far in the future.",
+      "network_error": "Network error occurred.",
+      "unknown": "Unknown error occurred."
     }
   },
   "chat": {
@@ -205,7 +229,15 @@
           "not_requested": "Not Requested"
         },
         "edit_payer_only": "Accounting status can only be edited by the payer",
-        "save": "Save"
+        "save": "Save",
+        "errors": {
+          "not_yet_requested": "Accounting request has not been made yet",
+          "not_accounting_requester": "You are not the accounting requester",
+          "pot_not_exist": "Pot does not exist",
+          "pot_already_closed": "Pot has already been closed",
+          "network_error": "Network error occurred",
+          "unknown": "Unknown error occurred"
+        }
       },
       "members": {
         "my": "my",
@@ -217,7 +249,19 @@
             "title": "Kick Passenger?",
             "description(rich)": "Are you sure you want to kick $user?\nIf the kick is unreasonable, you may be reported."
           },
-          "departure_confirmed": "After the departure time is confirmed, you cannot kick."
+          "departure_confirmed": "After the departure time is confirmed, you cannot kick.",
+          "error": {
+            "not_a_host": "You are not the host.",
+            "not_a_participant": "You are not a participant.",
+            "user_not_in_pot": "The user is not in the pot.",
+            "after_departure_confirmed": "After the departure time is confirmed, you cannot kick.",
+            "not_yet_payment_confirmed": "Payment confirmation is not yet completed.",
+            "not_yet_payment_completed": "Payment completion is not yet completed.",
+            "pot_not_exist": "Pot does not exist.",
+            "pot_already_closed": "Pot has already been closed.",
+            "network_error": "Network error occurred.",
+            "unknown": "Unknown error occurred."
+          }
         },
         "invite": {
           "action": "Invite",
@@ -243,7 +287,16 @@
             "title": "Leave the pot?",
             "description": "You can leave freely before the departure time is confirmed. Do you want to leave?"
           },
-          "departure_confirmed": "After the departure time is confirmed, you cannot leave."
+          "departure_confirmed": "After the departure time is confirmed, you cannot leave.",
+          "error": {
+            "after_departure_confirmed": "After the departure time is confirmed, you cannot leave.",
+            "not_yet_payment_confirmed": "Payment confirmation is not yet completed.",
+            "not_yet_payment_completed": "Payment completion is not yet completed.",
+            "pot_not_exist": "Pot does not exist.",
+            "pot_already_closed": "Pot has already been closed.",
+            "network_error": "Network error occurred.",
+            "unknown": "Unknown error occurred."
+          }
         },
         "report": "Report"
       }
@@ -264,6 +317,16 @@
       },
       "you_only": {
         "description": "You cannot confirm the departure time alone."
+      },
+      "error": {
+        "not_a_host": "You are not the host.",
+        "after_departure": "After the departure time is confirmed, you cannot confirm the departure time.",
+        "before_now": "You cannot confirm the departure time before now.",
+        "pot_not_exist": "Pot does not exist.",
+        "pot_already_closed": "Pot has already been closed.",
+        "not_in_available_time_range": "You cannot confirm the departure time in the available time range.",
+        "network_error": "Network error occurred.",
+        "unknown": "Unknown error occurred."
       }
     },
     "accounting": {
@@ -289,7 +352,19 @@
             "label": "Settlement Target"
           }
         },
-        "action": "Request Dutch Pay"
+        "action": "Request Dutch Pay",
+        "errors": {
+          "already_requested": "Accounting request has already been made",
+          "account_info_not_set": "Account information is not set",
+          "cost_cannot_be_negative": "Cost cannot be negative",
+          "cost_per_user_mismatch": "Cost per user mismatch",
+          "before_departure": "You cannot request accounting before confirming the departure time",
+          "not_a_participant": "You are not a participant",
+          "pot_not_exist": "Pot does not exist",
+          "pot_already_closed": "Pot has already been closed",
+          "network_error": "Network error occurred",
+          "unknown": "Unknown error occurred"
+        }
       }
     },
     "taxi_call": {
@@ -310,13 +385,6 @@
         "clipboard": "Copy to Clipboard"
       }
     }
-  },
-  "invited": {
-    "title": "Invited",
-    "button": "Join Pot",
-    "loading": "Joining...",
-    "fulled": "Fulled (Maximum Capacity)",
-    "error": "Failed to join"
   },
   "update": {
     "available": {

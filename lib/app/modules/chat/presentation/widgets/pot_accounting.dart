@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:pot_g/app/di/locator.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
+import 'package:pot_g/app/modules/chat/domain/exceptions/accounting_confirm_exception.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/accounting_confirm_cubit.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/pot_accounting_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/extensions/pot_user_extension.dart';
@@ -41,7 +42,19 @@ class PotAccounting extends StatelessWidget {
         listener: (context, state) {
           state.mapOrNull(
             confirmSuccess: (_) => Scaffold.of(context).closeEndDrawer(),
-            error: (e) => context.showToast(e.message),
+            confirmError: (e) {
+              final errors = context.t.chat_room.drawer.accounting.errors;
+              final errorMessage = switch (e.err) {
+                NotYetRequestedException() => errors.not_yet_requested,
+                NotAccountingRequesterException() =>
+                  errors.not_accounting_requester,
+                PotNotExistException() => errors.pot_not_exist,
+                PotAlreadyClosedException() => errors.pot_already_closed,
+                NetworkErrorException() => errors.network_error,
+                UnknownException() => errors.unknown,
+              };
+              context.showToast('$errorMessage (${e.errorId})');
+            },
           );
         },
         child: Column(

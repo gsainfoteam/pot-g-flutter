@@ -75,7 +75,16 @@ class AppRouter extends RootStackRouter {
     AutoRoute(path: '/create', page: CreateRoute.page),
     AutoRoute(path: '/chat/:id', page: ChatRoomRoute.page),
     AutoRoute(path: '/chat/:id/accounting', page: AccountingRoute.page),
-    AutoRoute(path: '/invited/:id', page: InvitedRoute.page),
+    CustomRoute(
+      path: '/invited/:id',
+      page: InvitedRoute.page,
+      customRouteBuilder: <T>(context, child, page) => DialogRoute<T>(
+        context: context,
+        settings: page,
+        barrierColor: Colors.transparent,
+        builder: (_) => child,
+      ),
+    ),
 
     // settings
     AutoRoute(

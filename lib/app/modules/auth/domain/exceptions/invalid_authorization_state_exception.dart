@@ -1,1 +1,0 @@
-class InvalidAuthorizationStateException implements Exception {}

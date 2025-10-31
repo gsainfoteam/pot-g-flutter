@@ -8,6 +8,14 @@
     "title": "로그인 하러 가시겠습니까?",
     "description": "내 정보에 접근하려면 로그인이 필요합니다.\n로그인 하러 가시겠습니까?"
   },
+  "login": {
+    "errors": {
+      "invalid_authorization_state": "인증 상태가 올바르지 않습니다.",
+      "invalid_authorization_code": "인증 코드가 올바르지 않습니다.",
+      "network_error": "네트워크 오류가 발생했습니다.",
+      "unknown": "알 수 없는 오류가 발생했습니다."
+    }
+  },
   "profile": {
     "menu_title": "내 정보",
     "basic_info": {
@@ -89,7 +97,15 @@
       "route": "노선",
       "date": "날짜",
       "departure_time": "시간",
-      "passengers": "참여자 목록"
+      "passengers": "참여자 목록",
+      "errors": {
+        "after_departure_confirmed": "출발 시간을 확정한 이후에는 참여할 수 없습니다",
+        "pot_not_exist": "팟이 존재하지 않습니다",
+        "pot_already_closed": "팟이 이미 해산되었습니다",
+        "pot_full": "팟이 정원 초과되었습니다",
+        "network_error": "네트워크 오류가 발생했습니다",
+        "unknown": "알 수 없는 오류가 발생했습니다"
+      }
     }
   },
   "create": {
@@ -131,6 +147,14 @@
           "input_first": "true"
         }
       }
+    },
+    "errors": {
+      "invalid_capacity": "최대 인원 수가 올바르지 않습니다",
+      "departure_available_before_now": "출발 시간을 현재 시간 이전으로 설정할 수 없습니다",
+      "invalid_departure_available_time": "출발 시간을 가능한 시간 범위 밖으로 설정할 수 없습니다",
+      "too_far_departure_available_time": "출발 시간을 너무 먼 미래로 설정할 수 없습니다",
+      "network_error": "네트워크 오류가 발생했습니다",
+      "unknown": "알 수 없는 오류가 발생했습니다"
     }
   },
   "chat": {
@@ -202,6 +226,14 @@
           "not_requested": "미요청"
         },
         "edit_payer_only": "정산 현황은 결제자만 수정할 수 있어요",
+        "errors": {
+          "not_yet_requested": "정산 요청이 아직 없습니다",
+          "not_accounting_requester": "정산 요청자가 아닙니다",
+          "pot_not_exist": "팟이 존재하지 않습니다",
+          "pot_already_closed": "팟이 이미 해산되었습니다",
+          "network_error": "네트워크 오류가 발생했습니다",
+          "unknown": "알 수 없는 오류가 발생했습니다"
+        },
         "save": "저장"
       },
       "members": {
@@ -214,7 +246,19 @@
             "title": "동승자를 강퇴할까요?",
             "description(rich)": "$user를 강퇴할까요?\n불합리한 강퇴일 경우\n신고를 당할 수 있습니다"
           },
-          "departure_confirmed": "출발 시간을 확정한 이후에는 강퇴가 불가능합니다"
+          "departure_confirmed": "출발 시간을 확정한 이후에는 강퇴가 불가능합니다",
+          "error": {
+            "not_a_host": "방장이 아닙니다",
+            "not_a_participant": "동승자가 아닙니다",
+            "user_not_in_pot": "동승자가 아닙니다",
+            "after_departure_confirmed": "출발 시간을 확정한 이후에는 강퇴가 불가능합니다",
+            "not_yet_payment_confirmed": "결제 확인이 완료되지 않았습니다",
+            "not_yet_payment_completed": "결제가 완료되지 않았습니다",
+            "pot_not_exist": "팟이 존재하지 않습니다",
+            "pot_already_closed": "팟이 이미 해산되었습니다",
+            "network_error": "네트워크 오류가 발생했습니다",
+            "unknown": "알 수 없는 오류가 발생했습니다"
+          }
         },
         "invite": {
           "action": "초대하기",
@@ -240,7 +284,16 @@
             "title": "퇴장하시겠습니까?",
             "description": "출발 시간 확정 이전에는\n자유로운 퇴장이 가능합니다\n퇴장하시겠습니까?"
           },
-          "departure_confirmed": "출발 시간을 확정한 이후에는 퇴장이 불가능합니다"
+          "departure_confirmed": "출발 시간을 확정한 이후에는 퇴장이 불가능합니다",
+          "error": {
+            "after_departure_confirmed": "출발 시간을 확정한 이후에는 퇴장이 불가능합니다",
+            "not_yet_payment_confirmed": "결제 확인이 완료되지 않았습니다",
+            "not_yet_payment_completed": "결제가 완료되지 않았습니다",
+            "pot_not_exist": "팟이 존재하지 않습니다",
+            "pot_already_closed": "팟이 이미 해산되었습니다",
+            "network_error": "네트워크 오류가 발생했습니다",
+            "unknown": "알 수 없는 오류가 발생했습니다"
+          }
         },
         "report": "신고하기"
       }
@@ -261,6 +314,16 @@
       },
       "you_only": {
         "description": "혼자서는 팟을 확정할 수 없습니다."
+      },
+      "error": {
+        "not_a_host": "방장이 아닙니다",
+        "after_departure": "출발 시간을 확정한 이후에는 확정할 수 없습니다",
+        "before_now": "출발 시간을 확정할 수 없습니다",
+        "pot_not_exist": "팟이 존재하지 않습니다",
+        "pot_already_closed": "팟이 이미 해산되었습니다",
+        "not_in_available_time_range": "출발 시간을 확정할 수 없습니다",
+        "network_error": "네트워크 오류가 발생했습니다",
+        "unknown": "알 수 없는 오류가 발생했습니다"
       }
     },
     "accounting": {
@@ -286,7 +349,19 @@
             "label": "정산 대상"
           }
         },
-        "action": "정산 요청"
+        "action": "정산 요청",
+        "errors": {
+          "already_requested": "정산 요청이 이미 되었습니다",
+          "account_info_not_set": "계좌 정보가 설정되지 않았습니다",
+          "cost_cannot_be_negative": "정산 금액은 0원 이상이어야 합니다",
+          "cost_per_user_mismatch": "정산 금액이 동승자 수와 일치하지 않습니다",
+          "before_departure": "출발 시간을 확정하지 않아 정산을 요청할 수 없습니다",
+          "not_a_participant": "동승자가 아닙니다",
+          "pot_not_exist": "팟이 존재하지 않습니다",
+          "pot_already_closed": "팟이 이미 해산되었습니다",
+          "network_error": "네트워크 오류가 발생했습니다",
+          "unknown": "알 수 없는 오류가 발생했습니다"
+        }
       }
     },
     "taxi_call": {
@@ -307,13 +382,6 @@
         "clipboard": "계좌번호 복사하기"
       }
     }
-  },
-  "invited": {
-    "title": "초대 받기",
-    "button": "팟 참여하기",
-    "loading": "참여 중...",
-    "fulled": "참여 불가 (정원 초과)",
-    "error": "참여 실패"
   },
   "update": {
     "available": {

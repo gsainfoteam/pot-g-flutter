@@ -19,38 +19,57 @@ sealed class AccountingRequestException implements Exception {
 
   factory AccountingRequestException.networkError(String error) =
       NetworkErrorException;
+  factory AccountingRequestException.unknown(Object error) = UnknownException;
 }
 
 class AlreadyRequestedException extends AccountingRequestException {
   const AlreadyRequestedException();
+  @override
+  String toString() => 'AccountingRequestException.AlreadyRequestedException';
 }
 
 class AccountInfoNotSetException extends AccountingRequestException {
   const AccountInfoNotSetException();
+  @override
+  String toString() => 'AccountingRequestException.AccountInfoNotSetException';
 }
 
 class CostCannotBeNegativeException extends AccountingRequestException {
   const CostCannotBeNegativeException();
+  @override
+  String toString() =>
+      'AccountingRequestException.CostCannotBeNegativeException';
 }
 
 class CostPerUserMismatchException extends AccountingRequestException {
   const CostPerUserMismatchException();
+  @override
+  String toString() =>
+      'AccountingRequestException.CostPerUserMismatchException';
 }
 
 class BeforeDepartureException extends AccountingRequestException {
   const BeforeDepartureException();
+  @override
+  String toString() => 'AccountingRequestException.BeforeDepartureException';
 }
 
 class NotAParticipantException extends AccountingRequestException {
   const NotAParticipantException();
+  @override
+  String toString() => 'AccountingRequestException.NotAParticipantException';
 }
 
 class PotNotExistException extends AccountingRequestException {
   const PotNotExistException();
+  @override
+  String toString() => 'AccountingRequestException.PotNotExistException';
 }
 
 class PotAlreadyClosedException extends AccountingRequestException {
   const PotAlreadyClosedException();
+  @override
+  String toString() => 'AccountingRequestException.PotAlreadyClosedException';
 }
 
 class NetworkErrorException extends AccountingRequestException {
@@ -58,5 +77,13 @@ class NetworkErrorException extends AccountingRequestException {
   const NetworkErrorException(this.error);
 
   @override
-  String toString() => error;
+  String toString() =>
+      'AccountingRequestException.NetworkErrorException(error: $error)';
+}
+
+class UnknownException extends AccountingRequestException {
+  final Object error;
+  const UnknownException(this.error);
+  @override
+  String toString() => 'AccountingRequestException.UnknownException';
 }

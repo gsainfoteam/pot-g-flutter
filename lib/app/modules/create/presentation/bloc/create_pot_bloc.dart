@@ -3,6 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
 import 'package:pot_g/app/modules/core/domain/repositories/create_pot_repository.dart';
+import 'package:pot_g/app/modules/create/domain/exceptions/create_pot_exception.dart';
 
 part 'create_pot_bloc.freezed.dart';
 
@@ -10,12 +11,12 @@ part 'create_pot_bloc.freezed.dart';
 class CreatePotBloc extends Bloc<CreatePotEvent, CreatePotState> {
   final CreatePotRepository _repository;
 
-  CreatePotBloc(this._repository) : super(const CreatePotState()) {
+  CreatePotBloc(this._repository) : super(const CreatePotState.initial()) {
     on<_Create>(_onCreate);
   }
 
   Future<void> _onCreate(_Create event, Emitter<CreatePotState> emit) async {
-    emit(state.copyWith(isLoading: true, error: null));
+    emit(const CreatePotState.loading());
     try {
       final potId = await _repository.createPot(
         routeId: event.routeId,
@@ -24,10 +25,13 @@ class CreatePotBloc extends Bloc<CreatePotEvent, CreatePotState> {
         maxCount: event.maxCount,
       );
 
-      emit(state.copyWith(isLoading: false, createdPotId: potId));
+      emit(CreatePotState.success(potId));
+    } on CreatePotException catch (e, stackTrace) {
+      final errorId = L.e(e, stackTrace);
+      emit(CreatePotState.error(e, errorId));
     } catch (e, stackTrace) {
-      L.e(e, stackTrace);
-      emit(state.copyWith(isLoading: false, error: e.toString()));
+      final errorId = L.e(e, stackTrace);
+      emit(CreatePotState.error(CreatePotException.unknown(e), errorId));
     }
   }
 }
@@ -44,9 +48,16 @@ sealed class CreatePotEvent with _$CreatePotEvent {
 
 @freezed
 sealed class CreatePotState with _$CreatePotState {
-  const factory CreatePotState({
-    @Default(false) bool isLoading,
-    String? error,
-    String? createdPotId,
-  }) = _State;
+  const CreatePotState._();
+
+  const factory CreatePotState.initial() = _Initial;
+  const factory CreatePotState.loading() = _Loading;
+  const factory CreatePotState.success(String potId) = _Success;
+  const factory CreatePotState.error(CreatePotException error, String errorId) =
+      _Error;
+
+  bool get isLoading => switch (this) {
+    _Loading() => true,
+    _ => false,
+  };
 }

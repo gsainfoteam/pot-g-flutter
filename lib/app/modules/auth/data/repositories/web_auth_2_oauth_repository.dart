@@ -7,8 +7,7 @@ import 'package:nonce/nonce.dart';
 import 'package:pot_g/app/modules/auth/data/data_sources/remote/oauth_api.dart';
 import 'package:pot_g/app/modules/auth/data/models/token_request_with_code_model.dart';
 import 'package:pot_g/app/modules/auth/domain/entity/token_entity.dart';
-import 'package:pot_g/app/modules/auth/domain/exceptions/invalid_authorization_code_exception.dart';
-import 'package:pot_g/app/modules/auth/domain/exceptions/invalid_authorization_state_exception.dart';
+import 'package:pot_g/app/modules/auth/domain/exceptions/authorization_exception.dart';
 import 'package:pot_g/app/modules/auth/domain/repositories/oauth_repository.dart';
 import 'package:pot_g/app/values/config.dart';
 

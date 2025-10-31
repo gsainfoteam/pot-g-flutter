@@ -4,8 +4,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:pot_g/app/di/locator.dart';
+import 'package:pot_g/app/modules/auth/domain/exceptions/authorization_exception.dart'
+    as auth_exception;
 import 'package:pot_g/app/modules/auth/presentation/bloc/auth_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/pot_detail_bloc.dart';
+import 'package:pot_g/app/modules/common/presentation/extensions/toast.dart';
 import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
 import 'package:pot_g/app/modules/common/presentation/utils/log_observer.dart';
 import 'package:pot_g/app/modules/core/presentation/bloc/api_channel_bloc.dart';
@@ -117,6 +120,25 @@ class _Providers extends StatelessWidget {
                 false,
             listener: (context, state) => context.read<MessagingBloc>().add(
               const MessagingEvent.refresh(),
+            ),
+          ),
+          BlocListener<AuthBloc, AuthState>(
+            listenWhen: (previous, current) =>
+                current.mapOrNull(error: (_) => true) ?? false,
+            listener: (context, state) => state.mapOrNull(
+              error: (e) {
+                final errorMessage = switch (e.error) {
+                  auth_exception.NetworkErrorException() =>
+                    context.t.login.errors.network_error,
+                  auth_exception.InvalidAuthorizationStateException() =>
+                    context.t.login.errors.invalid_authorization_state,
+                  auth_exception.InvalidAuthorizationCodeException() =>
+                    context.t.login.errors.invalid_authorization_code,
+                  auth_exception.UnknownException() =>
+                    context.t.login.errors.unknown,
+                };
+                return context.showToast('$errorMessage (${e.errorId})');
+              },
             ),
           ),
           BlocListener<LinkBloc, LinkState>(
