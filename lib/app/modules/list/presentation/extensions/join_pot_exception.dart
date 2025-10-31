@@ -14,10 +14,10 @@ extension JoinPotExceptionX on JoinPotException {
         return errors.pot_already_closed;
       case PotFullException():
         return errors.pot_full;
-      case NetworkErrorException(:final error):
-        return '${errors.network_error}: $error';
-      case UnknownException(:final error):
-        return '${errors.unknown}: $error';
+      case NetworkErrorException():
+        return errors.network_error;
+      case UnknownException():
+        return errors.unknown;
     }
   }
 }

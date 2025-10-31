@@ -138,7 +138,9 @@ class _InvitedPageState extends State<InvitedPage> {
               },
               error: (errorState) {
                 Navigator.of(context).pop();
-                context.showToast(errorState.err.getErrorMessage(context));
+                context.showToast(
+                  '${errorState.err.getErrorMessage(context)} (${errorState.errorId})',
+                );
               },
             );
           },

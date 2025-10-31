@@ -21,11 +21,11 @@ class JoinPotBloc extends Bloc<JoinPotEvent, JoinPotState> {
       await _repository.joinPot(event.potId);
       emit(JoinPotState.success(event.potId));
     } on JoinPotException catch (e, stackTrace) {
-      L.e(e, stackTrace);
-      emit(JoinPotState.error(e));
+      final errorId = L.e(e, stackTrace);
+      emit(JoinPotState.error(e, errorId));
     } catch (e, stackTrace) {
-      L.e(e, stackTrace);
-      emit(JoinPotState.error(JoinPotException.unknown(e)));
+      final errorId = L.e(e, stackTrace);
+      emit(JoinPotState.error(JoinPotException.unknown(e), errorId));
     }
   }
 }
@@ -40,5 +40,6 @@ sealed class JoinPotState with _$JoinPotState {
   const factory JoinPotState.initial() = _Initial;
   const factory JoinPotState.loading() = _Loading;
   const factory JoinPotState.success(String potId) = _Success;
-  const factory JoinPotState.error(JoinPotException err) = _Error;
+  const factory JoinPotState.error(JoinPotException err, String errorId) =
+      _Error;
 }
