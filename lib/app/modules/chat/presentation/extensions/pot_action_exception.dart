@@ -21,10 +21,10 @@ extension LeavePotExceptionX on leave.LeavePotException {
         return errors.pot_not_exist;
       case leave.PotAlreadyClosedException():
         return errors.pot_already_closed;
-      case leave.NetworkErrorException(:final error):
-        return '${errors.network_error}: $error';
-      case leave.UnknownException(:final error):
-        return '${errors.unknown}: $error';
+      case leave.NetworkErrorException():
+        return errors.network_error;
+      case leave.UnknownException():
+        return errors.unknown;
     }
   }
 }
@@ -47,10 +47,10 @@ extension KickUserExceptionX on kick.KickUserException {
         return errors.pot_not_exist;
       case kick.PotAlreadyClosedException():
         return errors.pot_already_closed;
-      case kick.NetworkErrorException(:final error):
-        return '${errors.network_error}: $error';
-      case kick.UnknownException(:final error):
-        return '${errors.unknown}: $error';
+      case kick.NetworkErrorException():
+        return errors.network_error;
+      case kick.UnknownException():
+        return errors.unknown;
     }
   }
 }
@@ -71,10 +71,10 @@ extension DepartureTimeExceptionX on departure.DepartureTimeException {
         return errors.pot_already_closed;
       case departure.NotInAvailableTimeRangeException():
         return errors.not_in_available_time_range;
-      case departure.NetworkErrorException(:final error):
-        return '${errors.network_error}: $error';
-      case departure.UnknownException(:final error):
-        return '${errors.unknown}: $error';
+      case departure.NetworkErrorException():
+        return errors.network_error;
+      case departure.UnknownException():
+        return errors.unknown;
     }
   }
 }

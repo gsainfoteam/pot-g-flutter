@@ -41,12 +41,15 @@ class PotActionBloc extends Bloc<PotActionEvent, PotActionState> {
       );
       emit(const PotActionState.success());
     } on DepartureTimeException catch (e, stackTrace) {
-      L.e(e, stackTrace);
-      emit(PotActionState.departureTimeError(e));
+      final errorId = L.e(e, stackTrace);
+      emit(PotActionState.departureTimeError(e, errorId));
     } catch (e, stackTrace) {
-      L.e(e, stackTrace);
+      final errorId = L.e(e, stackTrace);
       emit(
-        PotActionState.departureTimeError(DepartureTimeException.unknown(e)),
+        PotActionState.departureTimeError(
+          DepartureTimeException.unknown(e),
+          errorId,
+        ),
       );
     }
   }
@@ -60,11 +63,11 @@ class PotActionBloc extends Bloc<PotActionEvent, PotActionState> {
       await _repository.leavePot(event.pot);
       emit(const PotActionState.success());
     } on LeavePotException catch (e, stackTrace) {
-      L.e(e, stackTrace);
-      emit(PotActionState.leavePotError(e));
+      final errorId = L.e(e, stackTrace);
+      emit(PotActionState.leavePotError(e, errorId));
     } catch (e, stackTrace) {
-      L.e(e, stackTrace);
-      emit(PotActionState.leavePotError(LeavePotException.unknown(e)));
+      final errorId = L.e(e, stackTrace);
+      emit(PotActionState.leavePotError(LeavePotException.unknown(e), errorId));
     }
   }
 
@@ -77,11 +80,11 @@ class PotActionBloc extends Bloc<PotActionEvent, PotActionState> {
       await _repository.kickUser(event.pot, event.user);
       emit(const PotActionState.success());
     } on KickUserException catch (e, stackTrace) {
-      L.e(e, stackTrace);
-      emit(PotActionState.kickUserError(e));
+      final errorId = L.e(e, stackTrace);
+      emit(PotActionState.kickUserError(e, errorId));
     } catch (e, stackTrace) {
-      L.e(e, stackTrace);
-      emit(PotActionState.kickUserError(KickUserException.unknown(e)));
+      final errorId = L.e(e, stackTrace);
+      emit(PotActionState.kickUserError(KickUserException.unknown(e), errorId));
     }
   }
 }
@@ -103,12 +106,18 @@ sealed class PotActionState with _$PotActionState {
   const factory PotActionState.initial() = _Initial;
   const factory PotActionState.loading() = _Loading;
   const factory PotActionState.success() = _Success;
-  const factory PotActionState.departureTimeError(DepartureTimeException err) =
-      _DepartureTimeError;
-  const factory PotActionState.leavePotError(LeavePotException err) =
-      _LeavePotError;
-  const factory PotActionState.kickUserError(KickUserException err) =
-      _KickUserError;
+  const factory PotActionState.departureTimeError(
+    DepartureTimeException err,
+    String errorId,
+  ) = _DepartureTimeError;
+  const factory PotActionState.leavePotError(
+    LeavePotException err,
+    String errorId,
+  ) = _LeavePotError;
+  const factory PotActionState.kickUserError(
+    KickUserException err,
+    String errorId,
+  ) = _KickUserError;
 
   bool get isLoading => switch (this) {
     _Loading() => true,

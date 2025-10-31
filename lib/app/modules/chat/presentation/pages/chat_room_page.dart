@@ -66,12 +66,15 @@ class ChatRoomPage extends StatelessWidget with LogPage {
           BlocListener<PotActionBloc, PotActionState>(
             listener: (context, state) {
               state.mapOrNull(
-                departureTimeError: (e) =>
-                    context.showToast(e.err.getErrorMessage(context)),
-                leavePotError: (e) =>
-                    context.showToast(e.err.getErrorMessage(context)),
-                kickUserError: (e) =>
-                    context.showToast(e.err.getErrorMessage(context)),
+                departureTimeError: (e) => context.showToast(
+                  '${e.err.getErrorMessage(context)} (${e.errorId})',
+                ),
+                leavePotError: (e) => context.showToast(
+                  '${e.err.getErrorMessage(context)} (${e.errorId})',
+                ),
+                kickUserError: (e) => context.showToast(
+                  '${e.err.getErrorMessage(context)} (${e.errorId})',
+                ),
               );
             },
           ),
