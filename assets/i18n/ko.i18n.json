@@ -288,7 +288,7 @@
           "error": {
             "after_departure_confirmed": "출발 시간을 확정한 이후에는 퇴장이 불가능합니다",
             "not_yet_payment_confirmed": "결제 확인이 완료되지 않았습니다",
-            "not_yet_payment_completed": "결제 완료가 완료되지 않았습니다",
+            "not_yet_payment_completed": "결제가 완료되지 않았습니다",
             "pot_not_exist": "팟이 존재하지 않습니다",
             "pot_already_closed": "팟이 이미 해산되었습니다",
             "network_error": "네트워크 오류가 발생했습니다",
