@@ -30,12 +30,15 @@ class PotAccountingBloc extends Bloc<PotAccountingEvent, PotAccountingState> {
       await _repository.accounting(event.pot, event.amount, event.targets);
       emit(const PotAccountingState.requestSuccess());
     } on AccountingRequestException catch (e, stackTrace) {
-      L.e(e, stackTrace);
-      emit(PotAccountingState.requestError(e));
+      final errorId = L.e(e, stackTrace);
+      emit(PotAccountingState.requestError(e, errorId));
     } catch (e, stackTrace) {
-      L.e(e, stackTrace);
+      final errorId = L.e(e, stackTrace);
       emit(
-        PotAccountingState.requestError(AccountingRequestException.unknown(e)),
+        PotAccountingState.requestError(
+          AccountingRequestException.unknown(e),
+          errorId,
+        ),
       );
     }
   }
@@ -49,8 +52,16 @@ class PotAccountingBloc extends Bloc<PotAccountingEvent, PotAccountingState> {
       await _repository.confirmAccounting(event.pot, event.accountingResults);
       emit(const PotAccountingState.confirmSuccess());
     } on AccountingConfirmException catch (e, stackTrace) {
-      L.e(e, stackTrace);
-      emit(PotAccountingState.confirmError(e));
+      final errorId = L.e(e, stackTrace);
+      emit(PotAccountingState.confirmError(e, errorId));
+    } catch (e, stackTrace) {
+      final errorId = L.e(e, stackTrace);
+      emit(
+        PotAccountingState.confirmError(
+          AccountingConfirmException.unknown(e),
+          errorId,
+        ),
+      );
     }
   }
 }
@@ -77,9 +88,11 @@ sealed class PotAccountingState with _$PotAccountingState {
   const factory PotAccountingState.confirmSuccess() = _ConfirmSuccess;
   const factory PotAccountingState.requestError(
     AccountingRequestException err,
+    String errorId,
   ) = _RequestError;
   const factory PotAccountingState.confirmError(
     AccountingConfirmException err,
+    String errorId,
   ) = _ConfirmError;
 
   bool get isLoading => switch (this) {

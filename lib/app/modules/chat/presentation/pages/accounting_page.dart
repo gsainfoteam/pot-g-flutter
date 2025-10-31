@@ -46,7 +46,7 @@ class AccountingPage extends StatelessWidget {
             requestSuccess: (_) => context.router.pop(),
             requestError: (e) {
               final errors = context.t.chat_room.accounting.dutch.errors;
-              context.showToast(switch (e.err) {
+              final errorMessage = switch (e.err) {
                 AlreadyRequestedException() => errors.already_requested,
                 AccountInfoNotSetException() => errors.account_info_not_set,
                 CostCannotBeNegativeException() =>
@@ -56,10 +56,10 @@ class AccountingPage extends StatelessWidget {
                 NotAParticipantException() => errors.not_a_participant,
                 PotNotExistException() => errors.pot_not_exist,
                 PotAlreadyClosedException() => errors.pot_already_closed,
-                NetworkErrorException(:final error) =>
-                  '${errors.network_error}: $error',
-                UnknownException(:final error) => '${errors.unknown}: $error',
-              });
+                NetworkErrorException() => errors.network_error,
+                UnknownException() => errors.unknown,
+              };
+              context.showToast('$errorMessage (${e.errorId})');
             },
           );
         },

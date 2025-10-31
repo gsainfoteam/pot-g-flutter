@@ -44,16 +44,16 @@ class PotAccounting extends StatelessWidget {
             confirmSuccess: (_) => Scaffold.of(context).closeEndDrawer(),
             confirmError: (e) {
               final errors = context.t.chat_room.drawer.accounting.errors;
-              context.showToast(switch (e.err) {
+              final errorMessage = switch (e.err) {
                 NotYetRequestedException() => errors.not_yet_requested,
                 NotAccountingRequesterException() =>
                   errors.not_accounting_requester,
                 PotNotExistException() => errors.pot_not_exist,
                 PotAlreadyClosedException() => errors.pot_already_closed,
-                NetworkErrorException(:final error) =>
-                  '${errors.network_error}: $error',
-                UnknownException(:final error) => '${errors.unknown}: $error',
-              });
+                NetworkErrorException() => errors.network_error,
+                UnknownException() => errors.unknown,
+              };
+              context.showToast('$errorMessage (${e.errorId})');
             },
           );
         },
