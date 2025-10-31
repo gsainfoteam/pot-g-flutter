@@ -126,16 +126,19 @@ class _Providers extends StatelessWidget {
             listenWhen: (previous, current) =>
                 current.mapOrNull(error: (_) => true) ?? false,
             listener: (context, state) => state.mapOrNull(
-              error: (e) => context.showToast(switch (e.error) {
-                auth_exception.NetworkErrorException(:final error) =>
-                  '${context.t.login.errors.network_error}: $error',
-                auth_exception.InvalidAuthorizationStateException() =>
-                  context.t.login.errors.invalid_authorization_state,
-                auth_exception.InvalidAuthorizationCodeException() =>
-                  context.t.login.errors.invalid_authorization_code,
-                auth_exception.UnknownException(:final error) =>
-                  '${context.t.login.errors.unknown}: $error',
-              }),
+              error: (e) {
+                final errorMessage = switch (e.error) {
+                  auth_exception.NetworkErrorException() =>
+                    context.t.login.errors.network_error,
+                  auth_exception.InvalidAuthorizationStateException() =>
+                    context.t.login.errors.invalid_authorization_state,
+                  auth_exception.InvalidAuthorizationCodeException() =>
+                    context.t.login.errors.invalid_authorization_code,
+                  auth_exception.UnknownException() =>
+                    context.t.login.errors.unknown,
+                };
+                return context.showToast('$errorMessage (${e.errorId})');
+              },
             ),
           ),
           BlocListener<LinkBloc, LinkState>(

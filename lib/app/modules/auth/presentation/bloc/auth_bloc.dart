@@ -41,12 +41,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final user = await _repository.signIn();
       emit(AuthState.authenticated(user));
     } on AuthorizationException catch (e, stackTrace) {
-      L.e(e, stackTrace);
-      emit(AuthState.error(e));
+      final errorId = L.e(e, stackTrace);
+      emit(AuthState.error(e, errorId));
       emit(const AuthState.unauthenticated());
     } catch (e, stackTrace) {
-      L.e(e, stackTrace);
-      emit(AuthState.error(UnknownException(e)));
+      final errorId = L.e(e, stackTrace);
+      emit(AuthState.error(UnknownException(e), errorId));
       emit(const AuthState.unauthenticated());
     }
   }
@@ -82,7 +82,8 @@ sealed class AuthState with _$AuthState {
   const factory AuthState.loading() = AuthLoading;
   const factory AuthState.unauthenticated() = Unauthenticated;
   const factory AuthState.authenticated(SelfUserEntity user) = Authenticated;
-  const factory AuthState.error(AuthorizationException error) = AuthError;
+  const factory AuthState.error(AuthorizationException error, String errorId) =
+      AuthError;
 
   SelfUserEntity? get user => switch (this) {
     Authenticated(:final user) => user,
