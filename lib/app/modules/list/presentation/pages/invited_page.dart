@@ -43,6 +43,15 @@ class _InvitedPageState extends State<InvitedPage> {
 
   Future<void> _showAlert(BuildContext context) async {
     Widget field(String label, String value, {bool column = false}) {
+      final box = FittedBox(
+        alignment: Alignment.centerLeft,
+        fit: BoxFit.scaleDown,
+        child: Text(
+          value,
+          style: TextStyles.body.copyWith(color: Palette.dark),
+          textAlign: TextAlign.start,
+        ),
+      );
       return Flex(
         direction: column ? Axis.vertical : Axis.horizontal,
         crossAxisAlignment: column
@@ -51,18 +60,7 @@ class _InvitedPageState extends State<InvitedPage> {
         children: [
           Text(label, style: TextStyles.title4.copyWith(color: Palette.dark)),
           const SizedBox(width: 8, height: 8),
-          Expanded(
-            flex: column ? 0 : 1,
-            child: FittedBox(
-              alignment: Alignment.centerLeft,
-              fit: BoxFit.scaleDown,
-              child: Text(
-                value,
-                style: TextStyles.body.copyWith(color: Palette.dark),
-                textAlign: TextAlign.start,
-              ),
-            ),
-          ),
+          if (column) box else Expanded(child: box),
         ],
       );
     }
