@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/chat_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/pot_info_bloc.dart';
 import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
@@ -36,7 +37,7 @@ class _ChatInputState extends State<ChatInput> {
   @override
   Widget build(BuildContext context) {
     final disabled = context.select<PotInfoBloc, bool>(
-      (bloc) => bloc.state.isArchived,
+      (bloc) => bloc.state.pot?.isArchived ?? false,
     );
     return Container(
       padding: EdgeInsets.symmetric(vertical: 8),
