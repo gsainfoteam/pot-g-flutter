@@ -30,8 +30,8 @@ class PotDetailBloc extends Bloc<PotDetailEvent, PotDetailState> {
         ),
       );
     } catch (e, stackTrace) {
-      L.e(e, stackTrace);
-      emit(state.copyWith(isLoading: false, error: e.toString()));
+      final errorId = L.e(e, stackTrace);
+      emit(state.copyWith(isLoading: false, error: '$e ($errorId)'));
     }
   }
 }
