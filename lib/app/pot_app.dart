@@ -11,6 +11,7 @@ import 'package:pot_g/app/modules/chat/presentation/bloc/pot_detail_bloc.dart';
 import 'package:pot_g/app/modules/common/presentation/extensions/toast.dart';
 import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
 import 'package:pot_g/app/modules/common/presentation/utils/log_observer.dart';
+import 'package:pot_g/app/modules/core/domain/enums/api_channel.dart';
 import 'package:pot_g/app/modules/core/presentation/bloc/api_channel_bloc.dart';
 import 'package:pot_g/app/modules/core/presentation/bloc/app_version_bloc.dart';
 import 'package:pot_g/app/modules/core/presentation/bloc/link_bloc.dart';
@@ -176,7 +177,19 @@ class _Listeners extends StatelessWidget {
           },
         ),
       ],
-      child: UpdateListener(child: child),
+      child: UpdateListener(
+        child: BlocBuilder<ApiChannelBloc, ApiChannelState>(
+          builder: (context, state) {
+            if (state.channel == ApiChannel.prod) return child;
+            return Banner(
+              color: Colors.orange,
+              message: state.channel?.name ?? '',
+              location: BannerLocation.topStart,
+              child: child,
+            );
+          },
+        ),
+      ),
     );
   }
 }
