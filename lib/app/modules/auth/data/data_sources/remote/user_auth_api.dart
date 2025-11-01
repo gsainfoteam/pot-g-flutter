@@ -26,4 +26,7 @@ abstract class UserAuthApi {
 
   @GET('info')
   Future<SelfUserModel> getUser();
+
+  @POST('logout')
+  Future<void> logout();
 }
