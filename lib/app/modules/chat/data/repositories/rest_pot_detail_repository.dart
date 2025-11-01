@@ -10,8 +10,8 @@ class RestPotDetailRepository implements PotDetailRepository {
   RestPotDetailRepository(this._api);
 
   @override
-  Future<MyPotsModel> getMyPotList() async {
+  Stream<MyPotsModel> getMyPotList() async* {
     final MyPotsModel pots = await _api.getMyPots();
-    return pots;
+    yield pots;
   }
 }

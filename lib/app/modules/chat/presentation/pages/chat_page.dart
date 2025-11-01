@@ -25,17 +25,13 @@ class ChatPage extends StatelessWidget {
       ),
       body: BlocBuilder<PotDetailBloc, PotDetailState>(
         builder: (context, state) {
-          if (state.isLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          if (state.error != null) {
-            return Center(child: Text('Error: ${state.error}'));
-          }
-
-          return _ChatListView(
-            activePots: state.activePotList,
-            closedPots: state.archivedPotList,
+          return state.maybeMap(
+            error: (e) => Center(child: Text('Error: ${e.error}')),
+            loaded: (s) => _ChatListView(
+              activePots: s.activePotList,
+              closedPots: s.archivedPotList,
+            ),
+            orElse: () => const Center(child: CircularProgressIndicator()),
           );
         },
       ),

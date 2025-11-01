@@ -1,3 +1,4 @@
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
@@ -11,28 +12,23 @@ part 'pot_detail_bloc.freezed.dart';
 class PotDetailBloc extends Bloc<PotDetailEvent, PotDetailState> {
   final PotDetailRepository _repository;
 
-  PotDetailBloc(this._repository) : super(const PotDetailState()) {
-    on<_LoadMyPots>(_onLoadMyPots);
+  PotDetailBloc(this._repository) : super(const PotDetailState.initial()) {
+    on<_LoadMyPots>(_onLoadMyPots, transformer: restartable());
   }
 
   Future<void> _onLoadMyPots(
     _LoadMyPots event,
     Emitter<PotDetailState> emit,
   ) async {
-    emit(state.copyWith(isLoading: true, error: null));
-    try {
-      final pots = await _repository.getMyPotList();
-      emit(
-        state.copyWith(
-          isLoading: false,
-          activePotList: pots.potList,
-          archivedPotList: pots.archivedPotList,
-        ),
-      );
-    } catch (e, stackTrace) {
-      final errorId = L.e(e, stackTrace);
-      emit(state.copyWith(isLoading: false, error: '$e ($errorId)'));
-    }
+    emit(const _Loading());
+    return emit.forEach(
+      _repository.getMyPotList(),
+      onData: (pots) => _Loaded(pots.potList, pots.archivedPotList),
+      onError: (error, stackTrace) {
+        final errorId = L.e(error, stackTrace);
+        return _Error(error, errorId);
+      },
+    );
   }
 }
 
@@ -43,10 +39,27 @@ sealed class PotDetailEvent with _$PotDetailEvent {
 
 @freezed
 sealed class PotDetailState with _$PotDetailState {
-  const factory PotDetailState({
-    @Default(false) bool isLoading,
-    String? error,
-    @Default([]) List<PotDetailModel> activePotList,
-    @Default([]) List<PotDetailModel> archivedPotList,
-  }) = _State;
+  const PotDetailState._();
+
+  const factory PotDetailState.initial() = _Initial;
+  const factory PotDetailState.loading() = _Loading;
+  const factory PotDetailState.error(Object error, String errorId) = _Error;
+  const factory PotDetailState.loaded(
+    List<PotDetailModel> activePotList,
+    List<PotDetailModel> archivedPotList,
+  ) = _Loaded;
+
+  List<PotDetailModel> get activePotList => switch (this) {
+    _Loaded(:final activePotList) => activePotList,
+    _ => [],
+  };
+  List<PotDetailModel> get archivedPotList => switch (this) {
+    _Loaded(:final archivedPotList) => archivedPotList,
+    _ => [],
+  };
+
+  bool get isLoading => switch (this) {
+    _Loading() => true,
+    _ => false,
+  };
 }
