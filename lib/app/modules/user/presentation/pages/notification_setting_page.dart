@@ -59,20 +59,17 @@ class _NotificationSettingPage extends StatelessWidget {
                           .notification_settings
                           .all
                           .description,
-                      value: pushSetting.anyPush,
+                      value: pushSetting.allEnabled,
                       onChanged: (value) {
                         L.c(
                           'allNotification',
                           from: 'notificationSetting',
                           properties: {'value': value ? 'on' : 'off'},
                         );
-                        final updated = PushSettingModel(
-                          anyPush: value,
-                          chatPush: pushSetting.chatPush,
-                          potInOutPush: pushSetting.potInOutPush,
-                          marketingPush: pushSetting.marketingPush,
+                        _updatePush(
+                          context,
+                          pushSetting.copyWith(anyPush: value),
                         );
-                        _updatePush(context, updated);
                       },
                     ),
                     const SizedBox(height: 16),
@@ -91,13 +88,10 @@ class _NotificationSettingPage extends StatelessWidget {
                           from: 'notificationSetting',
                           properties: {'value': value ? 'on' : 'off'},
                         );
-                        final updated = PushSettingModel(
-                          anyPush: pushSetting.anyPush,
-                          chatPush: value,
-                          potInOutPush: pushSetting.potInOutPush,
-                          marketingPush: pushSetting.marketingPush,
+                        _updatePush(
+                          context,
+                          pushSetting.copyWith(chatPush: value),
                         );
-                        _updatePush(context, updated);
                       },
                     ),
                     const SizedBox(height: 16),
@@ -116,13 +110,10 @@ class _NotificationSettingPage extends StatelessWidget {
                           from: 'notificationSetting',
                           properties: {'value': value ? 'on' : 'off'},
                         );
-                        final updated = PushSettingModel(
-                          anyPush: pushSetting.anyPush,
-                          chatPush: pushSetting.chatPush,
-                          potInOutPush: value,
-                          marketingPush: pushSetting.marketingPush,
+                        _updatePush(
+                          context,
+                          pushSetting.copyWith(potInOutPush: value),
                         );
-                        _updatePush(context, updated);
                       },
                     ),
                   ],
@@ -171,6 +162,31 @@ class _NotificationOption extends StatelessWidget {
         ),
         PotToggle(value: value, onChanged: onChanged),
       ],
+    );
+  }
+}
+
+extension on PushSettingEntity {
+  bool get allEnabled => chatPush && potInOutPush;
+  PushSettingEntity copyWith({
+    bool? anyPush,
+    bool? chatPush,
+    bool? potInOutPush,
+  }) {
+    if (anyPush == null) {
+      final model = PushSettingModel(
+        anyPush: this.anyPush,
+        chatPush: chatPush ?? this.chatPush,
+        potInOutPush: potInOutPush ?? this.potInOutPush,
+        marketingPush: marketingPush,
+      );
+      return model.copyWith(anyPush: model.allEnabled);
+    }
+    return PushSettingModel(
+      anyPush: anyPush,
+      chatPush: anyPush,
+      potInOutPush: anyPush,
+      marketingPush: marketingPush,
     );
   }
 }
