@@ -17,10 +17,7 @@ class PushSettingBloc extends Bloc<PushSettingEvent, PushSettingState> {
     on<_Update>(_onUpdate);
   }
 
-  Future<void> _onLoad(
-    PushSettingEvent event,
-    Emitter<PushSettingState> emit,
-  ) async {
+  Future<void> _onLoad(_Load event, Emitter<PushSettingState> emit) async {
     emit(const PushSettingState.loading());
     try {
       final user = await _pushSettingRepository.getUser();
@@ -31,13 +28,10 @@ class PushSettingBloc extends Bloc<PushSettingEvent, PushSettingState> {
     }
   }
 
-  Future<void> _onUpdate(
-    PushSettingEvent event,
-    Emitter<PushSettingState> emit,
-  ) async {
+  Future<void> _onUpdate(_Update event, Emitter<PushSettingState> emit) async {
     try {
       final updated = await _pushSettingRepository.updatePush(
-        (event as _Update).pushSetting,
+        event.pushSetting,
       );
       emit(PushSettingState.loaded(updated));
     } catch (e, stackTrace) {
