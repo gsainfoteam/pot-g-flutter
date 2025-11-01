@@ -24,7 +24,7 @@ class _ChatInputState extends State<ChatInput> {
   void initState() {
     super.initState();
     _controller.addListener(() {
-      setState(() => _filled = _controller.text.isNotEmpty);
+      setState(() => _filled = _controller.text.trim().isNotEmpty);
     });
   }
 
@@ -76,11 +76,15 @@ class _ChatInputState extends State<ChatInput> {
                 BlendMode.srcIn,
               ),
             ),
-            onPressed: () {
-              L.c('sendMessage');
-              context.read<ChatBloc>().add(ChatSendChat(_controller.text));
-              _controller.clear();
-            },
+            onPressed: _filled
+                ? () {
+                    L.c('sendMessage');
+                    context.read<ChatBloc>().add(
+                      ChatSendChat(_controller.text.trim()),
+                    );
+                    _controller.clear();
+                  }
+                : null,
           ),
         ],
       ),
