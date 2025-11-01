@@ -23,10 +23,30 @@ class _ChatRoomBannerState extends State<ChatRoomBanner> {
 
   @override
   Widget build(BuildContext context) {
+    if (_collapsed) {
+      return PotPressable(
+        onTap: () => setState(() => _collapsed = false),
+        child: Align(
+          alignment: Alignment.centerRight,
+          child: Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Palette.white,
+              borderRadius: BorderRadius.circular(24),
+              border: Border.all(color: Palette.borderGrey),
+            ),
+            child: Assets.icons.bell.svg(
+              colorFilter: ColorFilter.mode(
+                widget.important ? Palette.warning : Palette.primary,
+                BlendMode.srcIn,
+              ),
+            ),
+          ),
+        ),
+      );
+    }
     return PotPressable(
-      onTap: widget.important
-          ? null
-          : () => setState(() => _collapsed = !_collapsed),
+      onTap: widget.important ? null : () => setState(() => _collapsed = true),
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
