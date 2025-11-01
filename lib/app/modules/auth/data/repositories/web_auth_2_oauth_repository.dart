@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
 import 'package:injectable/injectable.dart';
 import 'package:nonce/nonce.dart';
@@ -19,10 +20,7 @@ class WebAuth2OauthRepository implements OAuthRepository {
 
   WebAuth2OauthRepository(this._api);
 
-  @override
-  Future<TokenEntity> getToken() async {
-    final state = Nonce.secure().toString();
-    final codeVerifier = Nonce.secure().toString();
+  Future<String> _getResult(String state, String codeVerifier) async {
     final codeChallenge = base64Url
         .encode(sha256.convert(utf8.encode(codeVerifier)).bytes)
         .replaceAll('=', '');
@@ -42,10 +40,25 @@ class WebAuth2OauthRepository implements OAuthRepository {
       },
     );
 
-    final result = await FlutterWebAuth2.authenticate(
-      url: authorizeUri.toString(),
-      callbackUrlScheme: Config.idpRedirectScheme,
-    );
+    try {
+      final result = await FlutterWebAuth2.authenticate(
+        url: authorizeUri.toString(),
+        callbackUrlScheme: Config.idpRedirectScheme,
+      );
+      return result;
+    } on PlatformException catch (e) {
+      if (e.code == 'CANCELED') {
+        throw CancelledByUserException();
+      }
+      throw UnknownException(e);
+    }
+  }
+
+  @override
+  Future<TokenEntity> getToken() async {
+    final state = Nonce.secure().toString();
+    final codeVerifier = Nonce.secure().toString();
+    final result = await _getResult(state, codeVerifier);
     final uri = Uri.parse(result);
 
     final receivedState = uri.queryParameters['state'];

@@ -13,6 +13,7 @@
     "errors": {
       "invalid_authorization_state": "인증 상태가 올바르지 않습니다.",
       "invalid_authorization_code": "인증 코드가 올바르지 않습니다.",
+      "cancelled_by_user": "로그인이 취소되었습니다.",
       "network_error": "네트워크 오류가 발생했습니다.",
       "unknown": "알 수 없는 오류가 발생했습니다."
     }

@@ -141,6 +141,8 @@ class _Listeners extends StatelessWidget {
           listener: (context, state) => state.mapOrNull(
             error: (e) {
               final errorMessage = switch (e.error) {
+                auth_exception.CancelledByUserException() =>
+                  context.t.login.errors.cancelled_by_user,
                 auth_exception.NetworkErrorException() =>
                   context.t.login.errors.network_error,
                 auth_exception.InvalidAuthorizationStateException() =>

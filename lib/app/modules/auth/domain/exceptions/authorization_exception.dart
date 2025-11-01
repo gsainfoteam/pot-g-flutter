@@ -16,6 +16,12 @@ class InvalidAuthorizationCodeException extends AuthorizationException {
   String toString() => 'InvalidAuthorizationCodeException';
 }
 
+class CancelledByUserException extends AuthorizationException {
+  const CancelledByUserException();
+  @override
+  String toString() => 'CancelledByUserException';
+}
+
 class NetworkErrorException extends AuthorizationException {
   final String error;
   const NetworkErrorException(this.error);
