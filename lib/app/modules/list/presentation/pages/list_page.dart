@@ -26,12 +26,7 @@ class ListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (_) => sl<ListCubit>()),
-        BlocProvider(
-          create: (_) => sl<PotListBloc>()..add(PotListEvent.search()),
-        ),
-      ],
+      providers: [BlocProvider(create: (_) => sl<ListCubit>())],
       child: BlocListener<PotListBloc, PotListState>(
         listenWhen: (prev, curr) =>
             prev.error != curr.error && curr.error != null,

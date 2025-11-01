@@ -84,9 +84,11 @@ class ChatListItem extends StatelessWidget {
                 ),
                 field(
                   label: '시간',
-                  value: pot.status == PotStatus.beforeConfirmed
+                  value:
+                      pot.status == PotStatus.beforeConfirmed ||
+                          pot.departureTime == null
                       ? '${DateFormat.Hm().format(pot.startsAt)}~${DateFormat.Hm().format(pot.endsAt)}'
-                      : DateFormat.Hm().format(pot.startsAt),
+                      : DateFormat.Hm().format(pot.departureTime!),
                 ),
                 if (pot.status == PotStatus.waitAccounting)
                   field(
