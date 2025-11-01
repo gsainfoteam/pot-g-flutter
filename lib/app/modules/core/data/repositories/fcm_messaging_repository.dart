@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:injectable/injectable.dart';
@@ -54,7 +55,7 @@ class FcmMessagingRepository implements MessagingRepository, LinkRepository {
   }
 
   Future<void> _waitForIosToken() async {
-    if (!Platform.isIOS) return;
+    if (!Platform.isIOS || kDebugMode) return;
     for (var i = 0; i < 10; i++) {
       final token = await FirebaseMessaging.instance.getAPNSToken();
       if (token != null) return;
