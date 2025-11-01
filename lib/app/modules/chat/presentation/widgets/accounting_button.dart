@@ -22,9 +22,10 @@ class AccountingButton extends StatelessWidget {
       context.showToast(context.t.chat_room.accounting.before_confirm);
       return;
     }
-    if (departureTime.isBefore(
-      DateTime.now().subtract(const Duration(minutes: 10)),
-    )) {
+    final tenMinutesAfterDeparture = departureTime.add(
+      const Duration(minutes: 10),
+    );
+    if (DateTime.now().isBefore(tenMinutesAfterDeparture)) {
       context.showToast(
         context.t.chat_room.accounting.dutch.errors.before_departure,
       );
