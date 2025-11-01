@@ -5,6 +5,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:injectable/injectable.dart';
+import 'package:pot_g/app/modules/auth/domain/repositories/auth_repository.dart';
 import 'package:pot_g/app/modules/core/data/data_sources/fcm_api.dart';
 import 'package:pot_g/app/modules/core/data/models/fcm_request_model.dart';
 import 'package:pot_g/app/modules/core/domain/repositories/app_version_repository.dart';
@@ -26,8 +27,13 @@ class FcmMessagingRepository implements MessagingRepository, LinkRepository {
     importance: Importance.max,
   );
   final AppVersionRepository _appVersionRepository;
+  final AuthRepository _authRepository;
 
-  FcmMessagingRepository(this._api, this._appVersionRepository);
+  FcmMessagingRepository(
+    this._api,
+    this._appVersionRepository,
+    this._authRepository,
+  );
 
   @override
   Future<void> init() async {
@@ -141,6 +147,8 @@ class FcmMessagingRepository implements MessagingRepository, LinkRepository {
 
   @override
   Future<void> refresh([String? token]) async {
+    final signedIn = await _authRepository.isSignedIn.first;
+    if (!signedIn) return;
     final fcmToken = token ?? _tokenSubject.value;
     if (fcmToken == null) return;
 
