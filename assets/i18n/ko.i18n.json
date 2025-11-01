@@ -2,7 +2,8 @@
   "name": "팟쥐",
   "common": {
     "confirm": "확인",
-    "cancel": "취소"
+    "cancel": "취소",
+    "refresh": "새로고침"
   },
   "unauthorized": {
     "title": "로그인 하러 가시겠습니까?",

@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_app_bar.dart';
 import 'package:pot_g/app/values/palette.dart';
+import 'package:pot_g/gen/strings.g.dart';
 
 class ErrorCover extends StatelessWidget {
-  const ErrorCover({super.key, required this.message});
+  const ErrorCover({super.key, required this.message, this.onRefresh});
 
   final String message;
+  final VoidCallback? onRefresh;
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +40,18 @@ class ErrorCover extends StatelessWidget {
                 ),
                 textAlign: TextAlign.center,
               ),
+              if (onRefresh != null) ...[
+                const SizedBox(height: 24),
+                OutlinedButton.icon(
+                  onPressed: onRefresh,
+                  icon: const Icon(Icons.refresh),
+                  label: Text(context.t.common.refresh),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: Palette.warning,
+                    side: BorderSide(color: Palette.warning.withAlpha(100)),
+                  ),
+                ),
+              ],
             ],
           ),
         ),
