@@ -357,7 +357,7 @@
           "account_info_not_set": "계좌 정보가 설정되지 않았습니다",
           "cost_cannot_be_negative": "정산 금액은 0원 이상이어야 합니다",
           "cost_per_user_mismatch": "정산 금액이 동승자 수와 일치하지 않습니다",
-          "before_departure": "출발 시간 전에는 정산을 요청할 수 없습니다",
+          "before_departure": "출발 시각 10분 후부터 정산이 가능합니다",
           "not_a_participant": "동승자가 아닙니다",
           "pot_not_exist": "팟이 존재하지 않습니다",
           "pot_already_closed": "팟이 이미 해산되었습니다",

@@ -360,7 +360,7 @@
           "account_info_not_set": "Account information is not set",
           "cost_cannot_be_negative": "Cost cannot be negative",
           "cost_per_user_mismatch": "Cost per user mismatch",
-          "before_departure": "You cannot request accounting before the departure time",
+          "before_departure": "You can request accounting 10 minutes after the departure time",
           "not_a_participant": "You are not a participant",
           "pot_not_exist": "Pot does not exist",
           "pot_already_closed": "Pot has already been closed",
