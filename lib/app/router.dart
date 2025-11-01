@@ -24,6 +24,9 @@ class AppRouter extends RootStackRouter {
       if (context == null) return resolver.next(false);
       final user = context.read<AuthBloc>().state.user;
       if (user != null) {
+        if (resolver.route.name == LoginRoute.name) {
+          return resolver.next(false);
+        }
         if (resolver.route.name == ConsentRoute.name ||
             user.agreedTerms.allRequired) {
           return resolver.next(true);
@@ -40,7 +43,7 @@ class AppRouter extends RootStackRouter {
       }
       await resolver.redirectUntil(
         LoginRoute(
-          onDone: () => resolver.next(true),
+          onDone: () => resolver.resolveNext(true, reevaluateNext: false),
           onConsent: () => resolver.next(true),
           onCancel: () => resolver.next(false),
         ),
