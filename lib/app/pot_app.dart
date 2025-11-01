@@ -131,11 +131,7 @@ class _Listeners extends StatelessWidget {
         ),
         BlocListener<AuthBloc, AuthState>(
           listenWhen: (previous, current) =>
-              current.mapOrNull(
-                authenticated: (_) => true,
-                unauthenticated: (_) => true,
-              ) ??
-              false,
+              current.mapOrNull(authenticated: (_) => true) ?? false,
           listener: (context, state) =>
               context.read<MessagingBloc>().add(const MessagingEvent.refresh()),
         ),
