@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pot_g/app/di/locator.dart';
+import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/chat_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/pot_accounting_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/pot_action_bloc.dart';
@@ -96,9 +97,19 @@ class ChatRoomPage extends StatelessWidget with LogPage {
         child: BlocBuilder<PotInfoBloc, PotInfoState>(
           builder: (context, state) {
             if (state.error != null) {
-              return ErrorCover(message: state.error!);
+              return ErrorCover(
+                message: state.error!,
+                onRefresh: () {
+                  context.read<PotInfoBloc>().add(
+                    PotInfoEvent.init(_PotId(id: id)),
+                  );
+                },
+              );
             }
-            return _Layout();
+            if (state.pot == null) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            return _Layout(pot: state.pot!);
           },
         ),
       ),
@@ -107,15 +118,13 @@ class ChatRoomPage extends StatelessWidget with LogPage {
 }
 
 class _Layout extends StatelessWidget {
-  const _Layout();
+  const _Layout({required this.pot});
+
+  final PotInfoEntity pot;
 
   @override
   Widget build(BuildContext context) {
-    final state = context.watch<PotInfoBloc>().state;
-    if (state.error != null) return ErrorCover(message: state.error!);
-    if (state.pot == null) return Scaffold();
-    final pot = state.pot!;
-    final disabled = state.isArchived;
+    final disabled = pot.isArchived;
     return Scaffold(
       backgroundColor: disabled ? const Color(0xfff0f0f0) : null,
       appBar: PotAppBar(title: Text(pot.name)),

@@ -7,3 +7,7 @@ abstract class PotInfoEntity implements PotOverviewEntity {
   PotStatus get status;
   PotAccountingInfoEntity get accountingInfo;
 }
+
+extension PotInfoEntityX on PotInfoEntity {
+  bool get isArchived => status == PotStatus.archived;
+}
