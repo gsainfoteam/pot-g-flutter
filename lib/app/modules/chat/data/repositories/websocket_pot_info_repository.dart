@@ -25,6 +25,7 @@ class WebsocketPotInfoRepository implements PotInfoRepository {
     yield await _api.getPotInfo(pot.id);
     yield* _socket
         .createStreamFor<PotEventModel>()
+        .map((e) => e.body)
         .where(
           (p) =>
               p is PotEventModel<UserInV1Event> ||
@@ -35,7 +36,6 @@ class WebsocketPotInfoRepository implements PotInfoRepository {
               p is PotEventModel<AccountingConfirmV1Event> ||
               p is PotEventModel<ArchiveV1Event>,
         )
-        .map((e) => e.body)
         .where((e) => e.potPk == pot.id)
         .asyncMap((e) => _api.getPotInfo(pot.id));
   }
