@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
-import 'package:pot_g/app/modules/chat/domain/enums/pot_status.dart';
 import 'package:pot_g/app/modules/chat/domain/repositories/pot_info_repository.dart';
 import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
 import 'package:pot_g/app/modules/core/domain/entities/pot_id_entity.dart';
@@ -49,9 +48,5 @@ sealed class PotInfoState with _$PotInfoState {
   String? get error => switch (this) {
     _Error(:final message) => message,
     _ => null,
-  };
-  bool get isArchived => switch (this) {
-    _Loaded(:final pot) => pot.status == PotStatus.archived,
-    _ => false,
   };
 }

@@ -176,6 +176,13 @@ class _Listeners extends StatelessWidget {
             _router.replaceAll([ListRoute()]);
           },
         ),
+        BlocListener<PotDetailBloc, PotDetailState>(
+          listener: (context, state) {
+            state.mapOrNull(
+              error: (e) => context.showToast('${e.error} (${e.errorId})'),
+            );
+          },
+        ),
       ],
       child: UpdateListener(
         child: BlocBuilder<ApiChannelBloc, ApiChannelState>(

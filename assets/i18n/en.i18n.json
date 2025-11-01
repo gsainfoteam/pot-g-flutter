@@ -2,7 +2,8 @@
   "name": "PotG",
   "common": {
     "confirm": "Confirm",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "refresh": "Refresh"
   },
   "unauthorized": {
     "title": "Login to continue",
