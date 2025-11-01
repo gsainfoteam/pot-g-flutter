@@ -425,7 +425,8 @@ class _BankNumberState extends State<_BankNumber> {
             Keypad(controller: controller),
             const SizedBox(height: 20),
             PotButton(
-              onPressed: controller.text.length > 5
+              onPressed:
+                  controller.text.length >= 7 && controller.text.length <= 14
                   ? () {
                       L.c('registerBankAccount', from: 'bankAccountNumber');
                       bloc.add(
