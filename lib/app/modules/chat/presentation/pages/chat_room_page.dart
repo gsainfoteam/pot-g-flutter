@@ -5,6 +5,7 @@ import 'package:pot_g/app/di/locator.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/chat_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/pot_accounting_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/pot_action_bloc.dart';
+import 'package:pot_g/app/modules/chat/presentation/bloc/pot_detail_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/pot_info_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/extensions/pot_action_exception.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/accounting_button.dart';
@@ -66,6 +67,9 @@ class ChatRoomPage extends StatelessWidget with LogPage {
           BlocListener<PotActionBloc, PotActionState>(
             listener: (context, state) {
               state.mapOrNull(
+                success: (_) => context.read<PotDetailBloc>().add(
+                  const PotDetailEvent.loadMyPots(),
+                ),
                 departureTimeError: (e) => context.showToast(
                   '${e.err.getErrorMessage(context)} (${e.errorId})',
                 ),
