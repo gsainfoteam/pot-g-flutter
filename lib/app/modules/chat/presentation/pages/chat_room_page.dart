@@ -107,7 +107,9 @@ class ChatRoomPage extends StatelessWidget with LogPage {
               );
             }
             if (state.pot == null) {
-              return const Center(child: CircularProgressIndicator());
+              return Scaffold(
+                body: const Center(child: CircularProgressIndicator()),
+              );
             }
             return _Layout(pot: state.pot!);
           },
