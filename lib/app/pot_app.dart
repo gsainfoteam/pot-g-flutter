@@ -179,12 +179,7 @@ class _Listeners extends StatelessWidget {
         BlocListener<PotDetailBloc, PotDetailState>(
           listener: (context, state) {
             state.mapOrNull(
-              error: (e) {
-                context.showToast('${e.error} (${e.errorId})');
-                context.read<PotDetailBloc>().add(
-                  const PotDetailEvent.loadMyPots(),
-                );
-              },
+              error: (e) => context.showToast('${e.error} (${e.errorId})'),
             );
           },
         ),
