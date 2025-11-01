@@ -17,8 +17,15 @@ class AccountingButton extends StatelessWidget {
     BuildContext context,
     PotInfoEntity pot,
   ) async {
-    if (pot.departureTime == null) {
+    final departureTime = pot.departureTime;
+    if (departureTime == null) {
       context.showToast(context.t.chat_room.accounting.before_confirm);
+      return;
+    }
+    if (departureTime.isBefore(DateTime.now())) {
+      context.showToast(
+        context.t.chat_room.accounting.dutch.errors.before_departure,
+      );
       return;
     }
     await AccountingRoute(pot: pot).push(context);
