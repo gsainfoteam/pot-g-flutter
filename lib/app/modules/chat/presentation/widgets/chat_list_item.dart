@@ -88,8 +88,7 @@ class ChatListItem extends StatelessWidget {
                       ? '${DateFormat.Hm().format(pot.startsAt)}~${DateFormat.Hm().format(pot.endsAt)}'
                       : DateFormat.Hm().format(pot.startsAt),
                 ),
-                if (pot.status == PotStatus.waitAccounting ||
-                    pot.status == PotStatus.archived)
+                if (pot.status == PotStatus.waitAccounting)
                   field(
                     label: '정산',
                     value:
