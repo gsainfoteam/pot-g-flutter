@@ -31,11 +31,17 @@
       </intent-filter>
       <intent-filter android:autoVerify="true">
         <action android:name="android.intent.action.VIEW" />
-        <category android:name="android.intent.category.DEFAULT" />
-        <category android:name="android.intent.category.BROWSABLE" />
-        <data android:scheme="https" android:host="pot-g.gistory.me" />
-        <data android:scheme="https" android:host="qa.pot-g.gistory.me" />
-        <data android:scheme="https" android:host="dev.pot-g.gistory.me" />
+        <category
+          android:name="android.intent.category.DEFAULT" />
+        <category
+          android:name="android.intent.category.BROWSABLE" />
+        <data android:scheme="https"
+          android:host="pot-g.gistory.me" />
+        <data android:scheme="https"
+          android:host="qa.pot-g.gistory.me" />
+        <data android:scheme="https"
+          android:host="dev.pot-g.gistory.me" />
+        <data android:scheme="pot-g" android:host="pot-g.gistory.me" />
       </intent-filter>
     </activity>
 
