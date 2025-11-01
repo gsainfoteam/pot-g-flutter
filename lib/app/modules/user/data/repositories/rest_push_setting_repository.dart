@@ -19,7 +19,6 @@ class RestPushSettingRepository implements PushSettingRepository {
   Future<PushSettingEntity> updatePush(PushSettingEntity pushSetting) {
     return _userApi.updatePush(
       PushSettingModel(
-        anyPush: pushSetting.anyPush,
         chatPush: pushSetting.chatPush,
         potInOutPush: pushSetting.potInOutPush,
         marketingPush: pushSetting.marketingPush,
