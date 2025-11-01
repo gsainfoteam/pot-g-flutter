@@ -168,6 +168,9 @@ class _NotificationOption extends StatelessWidget {
 
 extension on PushSettingEntity {
   bool get allEnabled => chatPush && potInOutPush;
+
+  /// when anyPush is changed, the other push settings will be changed to the same value
+  /// or, anyPush will be updated along with the value of the other push settings
   PushSettingEntity copyWith({
     bool? anyPush,
     bool? chatPush,
