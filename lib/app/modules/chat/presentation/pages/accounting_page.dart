@@ -218,22 +218,24 @@ class _BankAccount extends StatelessWidget {
         const SizedBox(height: 8),
         Row(
           children: [
-            Text.rich(
-              TextSpan(
-                children: [
-                  TextSpan(
-                    text: bank?.bankShortName ?? '',
-                    style: TextStyles.title4.copyWith(color: Palette.dark),
-                  ),
-                  TextSpan(text: ' '),
-                  TextSpan(
-                    text: bank?.account ?? '',
-                    style: TextStyles.body.copyWith(color: Palette.dark),
-                  ),
-                ],
+            Expanded(
+              child: Text.rich(
+                TextSpan(
+                  children: [
+                    TextSpan(
+                      text: bank?.bankShortName ?? '',
+                      style: TextStyles.title4.copyWith(color: Palette.dark),
+                    ),
+                    TextSpan(text: ' '),
+                    TextSpan(
+                      text: bank?.account ?? '',
+                      style: TextStyles.body.copyWith(color: Palette.dark),
+                    ),
+                  ],
+                ),
               ),
             ),
-            Spacer(),
+            const SizedBox(width: 8),
             PotButton(
               onPressed: () =>
                   AccountNumberSettingsPage.showAccountNumberSetting(context),
