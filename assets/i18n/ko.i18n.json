@@ -383,6 +383,11 @@
         "kakao": "카카오페이로 송금하기",
         "clipboard": "계좌번호 복사하기"
       }
+    },
+    "banner": {
+      "confirmed": "출발 시간이 $time로 확정되었습니다",
+      "notAccountingStarted": "정산이 시작되지 않았습니다",
+      "notAccountingDone": "정산이 완료되지 않았습니다"
     }
   },
   "update": {

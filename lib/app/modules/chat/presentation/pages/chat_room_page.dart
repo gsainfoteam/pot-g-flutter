@@ -1,8 +1,10 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:pot_g/app/di/locator.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
+import 'package:pot_g/app/modules/chat/domain/enums/pot_status.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/chat_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/pot_accounting_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/pot_action_bloc.dart';
@@ -12,6 +14,7 @@ import 'package:pot_g/app/modules/chat/presentation/extensions/pot_action_except
 import 'package:pot_g/app/modules/chat/presentation/widgets/accounting_button.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/chat_input.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/chat_list.dart';
+import 'package:pot_g/app/modules/chat/presentation/widgets/chat_room_banner.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/chat_room_drawer.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/set_departure_time_button.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/status_banner.dart';
@@ -127,6 +130,7 @@ class _Layout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final disabled = pot.isArchived;
+    final banner = _buildBanner(context, pot);
     return Scaffold(
       backgroundColor: disabled ? const Color(0xfff0f0f0) : null,
       appBar: PotAppBar(title: Text(pot.name)),
@@ -143,7 +147,15 @@ class _Layout extends StatelessWidget {
               return _buildConnectionBanner(context, socketState);
             },
           ),
-          Expanded(child: ChatList(pot: pot)),
+          Expanded(
+            child: Stack(
+              children: [
+                ChatList(pot: pot),
+                if (banner != null)
+                  Positioned(top: 20, left: 20, right: 20, child: banner),
+              ],
+            ),
+          ),
           SafeArea(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 6),
@@ -188,5 +200,27 @@ class _Layout extends StatelessWidget {
           ),
         ) ??
         const SizedBox.shrink();
+  }
+
+  Widget? _buildBanner(BuildContext context, PotInfoEntity pot) {
+    if (pot.status == PotStatus.waitAccounting) {
+      return ChatRoomBanner(
+        important: true,
+        message: context.t.chat_room.banner.notAccountingDone,
+      );
+    }
+    final departureTime = pot.departureTime;
+    if (departureTime == null) return null;
+    if (departureTime.isBefore(DateTime.now())) {
+      return ChatRoomBanner(
+        important: true,
+        message: context.t.chat_room.banner.notAccountingStarted,
+      );
+    }
+    return ChatRoomBanner(
+      message: context.t.chat_room.banner.confirmed(
+        time: DateFormat.jm().format(departureTime),
+      ),
+    );
   }
 }
