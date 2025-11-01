@@ -12,6 +12,7 @@ import 'package:pot_g/app/modules/chat/presentation/extensions/pot_action_except
 import 'package:pot_g/app/modules/chat/presentation/widgets/accounting_button.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/chat_input.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/chat_list.dart';
+import 'package:pot_g/app/modules/chat/presentation/widgets/chat_room_banner.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/chat_room_drawer.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/set_departure_time_button.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/status_banner.dart';
@@ -143,7 +144,19 @@ class _Layout extends StatelessWidget {
               return _buildConnectionBanner(context, socketState);
             },
           ),
-          Expanded(child: ChatList(pot: pot)),
+          Expanded(
+            child: Stack(
+              children: [
+                ChatList(pot: pot),
+                Positioned(
+                  top: 20,
+                  left: 20,
+                  right: 20,
+                  child: ChatRoomBanner(),
+                ),
+              ],
+            ),
+          ),
           SafeArea(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 6),
