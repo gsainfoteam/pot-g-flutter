@@ -9,7 +9,6 @@ sealed class PushSettingModel
     with _$PushSettingModel
     implements PushSettingEntity {
   const factory PushSettingModel({
-    required bool anyPush,
     required bool chatPush,
     required bool potInOutPush,
     required bool marketingPush,

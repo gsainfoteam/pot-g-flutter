@@ -177,16 +177,13 @@ extension on PushSettingEntity {
     bool? potInOutPush,
   }) {
     if (anyPush == null) {
-      final model = PushSettingModel(
-        anyPush: this.anyPush,
+      return PushSettingModel(
         chatPush: chatPush ?? this.chatPush,
         potInOutPush: potInOutPush ?? this.potInOutPush,
         marketingPush: marketingPush,
       );
-      return model.copyWith(anyPush: model.allEnabled);
     }
     return PushSettingModel(
-      anyPush: anyPush,
       chatPush: anyPush,
       potInOutPush: anyPush,
       marketingPush: marketingPush,
