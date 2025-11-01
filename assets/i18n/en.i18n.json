@@ -13,6 +13,7 @@
     "errors": {
       "invalid_authorization_state": "Invalid authorization state.",
       "invalid_authorization_code": "Invalid authorization code.",
+      "cancelled_by_user": "Login cancelled by user.",
       "network_error": "Network error occurred.",
       "unknown": "Unknown error occurred."
     }
