@@ -180,10 +180,11 @@ class _Listeners extends StatelessWidget {
       child: UpdateListener(
         child: BlocBuilder<ApiChannelBloc, ApiChannelState>(
           builder: (context, state) {
-            if (state.channel == ApiChannel.prod) return child;
+            final channel = state.channel;
+            if (channel == null || channel == ApiChannel.prod) return child;
             return Banner(
               color: Colors.orange,
-              message: state.channel?.name ?? '',
+              message: channel.name,
               location: BannerLocation.topStart,
               child: child,
             );
