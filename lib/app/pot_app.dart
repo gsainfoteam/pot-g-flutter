@@ -17,6 +17,7 @@ import 'package:pot_g/app/modules/core/presentation/bloc/link_bloc.dart';
 import 'package:pot_g/app/modules/core/presentation/bloc/messaging_bloc.dart';
 import 'package:pot_g/app/modules/core/presentation/bloc/route_list_bloc.dart';
 import 'package:pot_g/app/modules/core/presentation/widgets/update_listener.dart';
+import 'package:pot_g/app/modules/list/presentation/bloc/pot_list_bloc.dart';
 import 'package:pot_g/app/modules/socket/presentation/bloc/socket_auth_bloc.dart';
 import 'package:pot_g/app/router.dart';
 import 'package:pot_g/app/router.gr.dart';
@@ -32,25 +33,27 @@ class PotApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AnnotatedRegion(
-      value: SystemUiOverlayStyle(systemNavigationBarColor: Palette.white),
-      child: GestureDetector(
-        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-        child: MaterialApp.router(
-          theme: PotTheme.theme,
-          routerConfig: _router.config(
-            navigatorObservers: () => [AutoRouteObserver(), LogObserver()],
-            reevaluateListenable: ReevaluateListenable.stream(
-              MergeStream([
-                sl<AuthBloc>().stream.map((state) => state.user).distinct(),
-              ]),
+    return _Providers(
+      child: AnnotatedRegion(
+        value: SystemUiOverlayStyle(systemNavigationBarColor: Palette.white),
+        child: GestureDetector(
+          onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+          child: MaterialApp.router(
+            theme: PotTheme.theme,
+            routerConfig: _router.config(
+              navigatorObservers: () => [AutoRouteObserver(), LogObserver()],
+              reevaluateListenable: ReevaluateListenable.stream(
+                MergeStream([
+                  sl<AuthBloc>().stream.map((state) => state.user).distinct(),
+                ]),
+              ),
             ),
+            locale: TranslationProvider.of(context).flutterLocale,
+            supportedLocales: AppLocaleUtils.supportedLocales,
+            localizationsDelegates: GlobalMaterialLocalizations.delegates,
+            builder: (_, child) =>
+                _Listeners(child: child ?? const SizedBox.shrink()),
           ),
-          locale: TranslationProvider.of(context).flutterLocale,
-          supportedLocales: AppLocaleUtils.supportedLocales,
-          localizationsDelegates: GlobalMaterialLocalizations.delegates,
-          builder: (_, child) =>
-              _Providers(child: child ?? const SizedBox.shrink()),
         ),
       ),
     );
@@ -59,7 +62,6 @@ class PotApp extends StatelessWidget {
 
 class _Providers extends StatelessWidget {
   const _Providers({required this.child});
-
   final Widget child;
 
   @override
@@ -85,83 +87,96 @@ class _Providers extends StatelessWidget {
               sl<ApiChannelBloc>()..add(const ApiChannelEvent.init()),
         ),
         BlocProvider(create: (_) => sl<AppVersionBloc>()),
+        BlocProvider(
+          create: (_) => sl<PotListBloc>()..add(PotListEvent.search()),
+        ),
       ],
-      child: MultiBlocListener(
-        listeners: [
-          BlocListener<AuthBloc, AuthState>(
-            listenWhen: (previous, current) => previous.user != current.user,
-            listener: (context, state) {
-              L.setUserId(state.user?.id);
-              if (state.user != null) {
-                L.setUserProperties({
-                  'email': state.user!.email,
-                  'name': state.user!.name,
-                });
-                context.read<PotDetailBloc>().add(
-                  const PotDetailEvent.loadMyPots(),
-                );
-              }
-              final event = switch (state) {
-                Authenticated() => SocketAuthEvent.connect(),
-                Unauthenticated() => SocketAuthEvent.disconnect(),
-                _ => null,
+      child: child,
+    );
+  }
+}
+
+class _Listeners extends StatelessWidget {
+  const _Listeners({required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<AuthBloc, AuthState>(
+          listenWhen: (previous, current) => previous.user != current.user,
+          listener: (context, state) {
+            L.setUserId(state.user?.id);
+            if (state.user != null) {
+              L.setUserProperties({
+                'email': state.user!.email,
+                'name': state.user!.name,
+              });
+              context.read<PotDetailBloc>().add(
+                const PotDetailEvent.loadMyPots(),
+              );
+            }
+            final event = switch (state) {
+              Authenticated() => SocketAuthEvent.connect(),
+              Unauthenticated() => SocketAuthEvent.disconnect(),
+              _ => null,
+            };
+            if (event != null) {
+              context.read<SocketAuthBloc>().add(event);
+            }
+          },
+        ),
+        BlocListener<AuthBloc, AuthState>(
+          listenWhen: (previous, current) =>
+              current.mapOrNull(
+                authenticated: (_) => true,
+                unauthenticated: (_) => true,
+              ) ??
+              false,
+          listener: (context, state) =>
+              context.read<MessagingBloc>().add(const MessagingEvent.refresh()),
+        ),
+        BlocListener<AuthBloc, AuthState>(
+          listenWhen: (previous, current) =>
+              current.mapOrNull(error: (_) => true) ?? false,
+          listener: (context, state) => state.mapOrNull(
+            error: (e) {
+              final errorMessage = switch (e.error) {
+                auth_exception.NetworkErrorException() =>
+                  context.t.login.errors.network_error,
+                auth_exception.InvalidAuthorizationStateException() =>
+                  context.t.login.errors.invalid_authorization_state,
+                auth_exception.InvalidAuthorizationCodeException() =>
+                  context.t.login.errors.invalid_authorization_code,
+                auth_exception.UnknownException() =>
+                  context.t.login.errors.unknown,
               };
-              if (event != null) {
-                context.read<SocketAuthBloc>().add(event);
-              }
+              return context.showToast('$errorMessage (${e.errorId})');
             },
           ),
-          BlocListener<AuthBloc, AuthState>(
-            listenWhen: (previous, current) =>
-                current.mapOrNull(
-                  authenticated: (_) => true,
-                  unauthenticated: (_) => true,
-                ) ??
-                false,
-            listener: (context, state) => context.read<MessagingBloc>().add(
-              const MessagingEvent.refresh(),
-            ),
+        ),
+        BlocListener<LinkBloc, LinkState>(
+          listener: (context, state) => state.mapOrNull(
+            loaded: (s) => WidgetsBinding.instance.addPostFrameCallback((_) {
+              _router.pushPath(s.link);
+            }),
           ),
-          BlocListener<AuthBloc, AuthState>(
-            listenWhen: (previous, current) =>
-                current.mapOrNull(error: (_) => true) ?? false,
-            listener: (context, state) => state.mapOrNull(
-              error: (e) {
-                final errorMessage = switch (e.error) {
-                  auth_exception.NetworkErrorException() =>
-                    context.t.login.errors.network_error,
-                  auth_exception.InvalidAuthorizationStateException() =>
-                    context.t.login.errors.invalid_authorization_state,
-                  auth_exception.InvalidAuthorizationCodeException() =>
-                    context.t.login.errors.invalid_authorization_code,
-                  auth_exception.UnknownException() =>
-                    context.t.login.errors.unknown,
-                };
-                return context.showToast('$errorMessage (${e.errorId})');
-              },
-            ),
-          ),
-          BlocListener<LinkBloc, LinkState>(
-            listener: (context, state) => state.mapOrNull(
-              loaded: (s) => WidgetsBinding.instance.addPostFrameCallback((_) {
-                _router.pushPath(s.link);
-              }),
-            ),
-          ),
-          BlocListener<ApiChannelBloc, ApiChannelState>(
-            listenWhen: (prev, curr) =>
-                prev.channel != null &&
-                curr.channel != null &&
-                prev.channel != curr.channel,
-            listener: (context, state) {
-              context.read<AuthBloc>().add(AuthEvent.logout());
-              context.read<RouteListBloc>().add(const RouteListEvent.search());
-              _router.replaceAll([ListRoute()]);
-            },
-          ),
-        ],
-        child: UpdateListener(child: child),
-      ),
+        ),
+        BlocListener<ApiChannelBloc, ApiChannelState>(
+          listenWhen: (prev, curr) =>
+              prev.channel != null &&
+              curr.channel != null &&
+              prev.channel != curr.channel,
+          listener: (context, state) {
+            context.read<AuthBloc>().add(AuthEvent.logout());
+            context.read<RouteListBloc>().add(const RouteListEvent.search());
+            _router.replaceAll([ListRoute()]);
+          },
+        ),
+      ],
+      child: UpdateListener(child: child),
     );
   }
 }
