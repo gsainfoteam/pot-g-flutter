@@ -22,6 +22,14 @@ class _ChatRoomBannerState extends State<ChatRoomBanner> {
   bool _collapsed = false;
 
   @override
+  void didUpdateWidget(ChatRoomBanner oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.important && _collapsed) {
+      _collapsed = false;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     if (_collapsed) {
       return PotPressable(
