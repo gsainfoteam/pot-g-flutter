@@ -185,6 +185,7 @@ class PotGSocket {
       if (kDebugMode) {
         log('Max retry attempts reached', name: 'websocket');
       }
+      L.e(Exception('Max retry attempts reached'), StackTrace.current);
       _connectionStateController.add(SocketConnectionState.failed);
       return;
     }
@@ -209,6 +210,7 @@ class PotGSocket {
         if (kDebugMode) {
           log('Reconnection failed: $error', name: 'websocket');
         }
+        L.e(error, StackTrace.current);
       });
     });
   }
