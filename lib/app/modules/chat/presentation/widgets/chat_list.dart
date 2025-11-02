@@ -171,7 +171,7 @@ class _ChatListState extends State<ChatList> {
         //     break;
         // }
         // TODO: implement this action
-        context.showToast('service is not available yet');
+        context.showToast(context.t.common.unavailable);
         break;
       case FofoActionButtonType.accountingProcess:
         final accountingInfo = widget.pot.accountingInfo;

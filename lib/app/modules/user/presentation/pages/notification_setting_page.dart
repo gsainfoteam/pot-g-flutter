@@ -5,6 +5,7 @@ import 'package:pot_g/app/di/locator.dart';
 import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
 import 'package:pot_g/app/modules/common/presentation/utils/log_page.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_app_bar.dart';
+import 'package:pot_g/app/modules/common/presentation/widgets/pot_button.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_toggle.dart';
 import 'package:pot_g/app/modules/user/data/models/push_setting_model.dart';
 import 'package:pot_g/app/modules/user/domain/entities/push_setting_entity.dart';
@@ -28,13 +29,39 @@ class NotificationSettingPage extends StatelessWidget with LogPage {
   }
 }
 
-class _NotificationSettingPage extends StatelessWidget {
+class _NotificationSettingPage extends StatefulWidget {
   const _NotificationSettingPage();
 
   @override
-  Widget build(BuildContext context) {
-    context.read<PushSettingBloc>().add(const PushSettingEvent.load());
+  State<_NotificationSettingPage> createState() =>
+      _NotificationSettingPageState();
+}
 
+class _NotificationSettingPageState extends State<_NotificationSettingPage>
+    with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      context.read<PushSettingBloc>().add(
+        const PushSettingEvent.checkOsPermission(),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: PotAppBar(
         title: Text(context.t.profile.notification_settings.title),
@@ -48,9 +75,20 @@ class _NotificationSettingPage extends StatelessWidget {
               loading: (_) => const Center(child: CircularProgressIndicator()),
               loaded: (s) {
                 final pushSetting = s.pushSetting;
+                final isOsNotificationEnabled = s.isOsNotificationEnabled;
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
+                    if (!isOsNotificationEnabled) ...[
+                      _OsNotificationWarningBanner(
+                        onTap: () {
+                          context.read<PushSettingBloc>().add(
+                            const PushSettingEvent.openAppSettings(),
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                    ],
                     _NotificationOption(
                       title: context.t.profile.notification_settings.all.title,
                       description: context
@@ -129,6 +167,64 @@ class _NotificationSettingPage extends StatelessWidget {
 
   void _updatePush(BuildContext context, PushSettingEntity updated) {
     context.read<PushSettingBloc>().add(PushSettingEvent.update(updated));
+  }
+}
+
+class _OsNotificationWarningBanner extends StatelessWidget {
+  const _OsNotificationWarningBanner({required this.onTap});
+
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.orange.shade50,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.orange.shade200),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                Icons.warning_amber_rounded,
+                color: Colors.orange.shade700,
+                size: 20,
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  context.t.profile.notification_settings.os_permission.warning,
+                  style: TextStyles.caption.copyWith(
+                    color: Colors.orange.shade900,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          SizedBox(
+            width: double.infinity,
+            child: PotButton(
+              onPressed: onTap,
+              variant: PotButtonVariant.outlined,
+              size: PotButtonSize.medium,
+              child: Text(
+                context
+                    .t
+                    .profile
+                    .notification_settings
+                    .os_permission
+                    .open_settings,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 
