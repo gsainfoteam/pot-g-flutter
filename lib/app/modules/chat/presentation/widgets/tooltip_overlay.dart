@@ -8,11 +8,13 @@ class TooltipOverlay extends StatelessWidget {
     required this.controller,
     required this.child,
     required this.content,
+    this.onClose,
   });
 
   final OverlayPortalController controller;
   final Widget child;
   final Widget content;
+  final VoidCallback? onClose;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +28,10 @@ class TooltipOverlay extends StatelessWidget {
           children: [
             Positioned.fill(
               child: GestureDetector(
-                onTap: () => controller.hide(),
+                onTap: () {
+                  controller.hide();
+                  onClose?.call();
+                },
                 child: CustomPaint(
                   painter: CirclePainter(
                     holeRect: Rect.fromLTWH(
