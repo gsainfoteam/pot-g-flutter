@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:injectable/injectable.dart';
 import 'package:pot_g/app/modules/chat/data/repositories/deep_link_repository.dart';
@@ -68,11 +67,5 @@ class DeepLinkTaxiAppRepository
       default:
         return null;
     }
-  }
-
-  @override
-  Uri getStoreUrl(TaxiAppType type) {
-    if (Platform.isAndroid) return Uri.parse(type.androidStoreUrl);
-    return Uri.parse(type.iOSStoreUrl);
   }
 }

@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:injectable/injectable.dart';
 import 'package:pot_g/app/modules/chat/data/repositories/deep_link_repository.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_accounting_info_entity.dart';
@@ -24,11 +22,5 @@ class DeepLinkBankAppRepository
           },
         );
     }
-  }
-
-  @override
-  Uri getStoreUrl(BankAppType type) {
-    if (Platform.isAndroid) return Uri.parse(type.androidStoreUrl);
-    return Uri.parse(type.iOSStoreUrl);
   }
 }
