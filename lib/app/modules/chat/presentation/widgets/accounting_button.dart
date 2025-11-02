@@ -76,7 +76,10 @@ class _AccountingButtonState extends State<AccountingButton> {
     // Check condition: now > departureTime
     final departureTime = pot.departureTime;
     if (departureTime == null) return false;
-    if (!(DateTime.now().isAfter(departureTime))) return false;
+    final tenMinutesAfterDeparture = departureTime.add(
+      const Duration(minutes: 10),
+    );
+    if (DateTime.now().isBefore(tenMinutesAfterDeparture)) return false;
     return await context.read<TooltipCubit>().shouldShowTooltip(
       TooltipType.accounting,
     );
