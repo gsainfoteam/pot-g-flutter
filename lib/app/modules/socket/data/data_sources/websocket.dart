@@ -56,10 +56,8 @@ class PotGSocket {
     _reconnectTimer = null;
 
     if (isConnected) {
-      print('retry1');
       await disconnect();
     }
-    print('retry');
 
     _connectionStateController.add(SocketConnectionState.connecting);
 
