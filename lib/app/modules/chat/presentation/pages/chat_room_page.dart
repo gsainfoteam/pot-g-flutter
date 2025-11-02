@@ -102,6 +102,24 @@ class ChatRoomPage extends StatelessWidget with LogPage {
               context.read<ChatBloc>().add(ChatEvent.init(pot));
             },
           ),
+          BlocListener<BankAppCubit, BankAppState>(
+            listener: (context, state) {
+              state.mapOrNull(
+                error: (e) => context.showToast(
+                  '${t.common.unknown_error} (${e.errorId})',
+                ),
+              );
+            },
+          ),
+          BlocListener<TaxiAppCubit, TaxiAppState>(
+            listener: (context, state) {
+              state.mapOrNull(
+                error: (e) => context.showToast(
+                  '${t.common.unknown_error} (${e.errorId})',
+                ),
+              );
+            },
+          ),
         ],
         child: BlocBuilder<PotInfoBloc, PotInfoState>(
           builder: (context, state) {

@@ -4,7 +4,8 @@
     "confirm": "Confirm",
     "cancel": "Cancel",
     "refresh": "Refresh",
-    "unavailable": "Coming soon!"
+    "unavailable": "Coming soon!",
+    "unknown_error": "Unknown error occurred"
   },
   "unauthorized": {
     "title": "Login to continue",
