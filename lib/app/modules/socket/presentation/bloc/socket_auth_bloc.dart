@@ -76,11 +76,11 @@ sealed class SocketAuthEvent with _$SocketAuthEvent {
 @freezed
 sealed class SocketAuthState with _$SocketAuthState {
   const factory SocketAuthState.initial() = _Initial;
-  const factory SocketAuthState.connecting() = _Connecting;
-  const factory SocketAuthState.connected() = _Connected;
-  const factory SocketAuthState.reconnecting() = _Reconnecting;
-  const factory SocketAuthState.disconnected() = _Disconnected;
-  const factory SocketAuthState.failed() = _Failed;
+  const factory SocketAuthState.connecting() = SocketConnecting;
+  const factory SocketAuthState.connected() = SocketConnected;
+  const factory SocketAuthState.reconnecting() = SocketReconnecting;
+  const factory SocketAuthState.disconnected() = SocketDisconnected;
+  const factory SocketAuthState.failed() = SocketFailed;
   const factory SocketAuthState.authorized() = _Authorized;
-  const factory SocketAuthState.error(String message) = _Error;
+  const factory SocketAuthState.error(String message) = SocketError;
 }
