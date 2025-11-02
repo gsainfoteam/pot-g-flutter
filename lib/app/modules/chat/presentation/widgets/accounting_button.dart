@@ -8,6 +8,7 @@ import 'package:pot_g/app/modules/chat/presentation/widgets/tooltip_overlay.dart
 import 'package:pot_g/app/modules/common/domain/enums/tooltip_type.dart';
 import 'package:pot_g/app/modules/common/presentation/bloc/tooltip_cubit.dart';
 import 'package:pot_g/app/modules/common/presentation/extensions/toast.dart';
+import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_icon_button.dart';
 import 'package:pot_g/app/router.gr.dart';
 import 'package:pot_g/app/values/palette.dart';
@@ -101,7 +102,12 @@ class _AccountingButtonState extends State<AccountingButton> {
   }
 
   Future<void> _onButtonPressed() async {
-    _controller.hide();
+    if (_controller.isShowing) {
+      _controller.hide();
+      await _handleTooltipClose();
+    }
+    if (!mounted) return;
+    L.c('accounting');
     await AccountingButton.setAccounting(context, widget.pot);
   }
 

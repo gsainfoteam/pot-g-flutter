@@ -142,7 +142,11 @@ class _SetDepartureTimeButtonState extends State<SetDepartureTimeButton> {
   }
 
   Future<void> _onButtonPressed() async {
-    _controller.hide();
+    if (_controller.isShowing) {
+      _controller.hide();
+      await _handleTooltipClose();
+    }
+    if (!mounted) return;
     L.c('setDepartureTime');
     await SetDepartureTimeButton.setDepartureTime(context, widget.pot);
   }
