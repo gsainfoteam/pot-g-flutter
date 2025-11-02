@@ -25,13 +25,16 @@ class TooltipOverlay extends StatelessWidget {
         return Stack(
           children: [
             Positioned.fill(
-              child: CustomPaint(
-                painter: CirclePainter(
-                  holeRect: Rect.fromLTWH(
-                    left,
-                    top,
-                    info.childSize.width,
-                    info.childSize.height,
+              child: GestureDetector(
+                onTap: () => controller.hide(),
+                child: CustomPaint(
+                  painter: CirclePainter(
+                    holeRect: Rect.fromLTWH(
+                      left,
+                      top,
+                      info.childSize.width,
+                      info.childSize.height,
+                    ),
                   ),
                 ),
               ),
