@@ -9,6 +9,7 @@ import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/enums/bank_app_type.dart';
 import 'package:pot_g/app/modules/chat/domain/enums/fofo_action_button_type.dart';
 import 'package:pot_g/app/modules/chat/domain/enums/taxi_app_type.dart';
+import 'package:pot_g/app/modules/chat/presentation/bloc/bank_app_cubit.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/chat_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/taxi_app_cubit.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/accounting_button.dart';
@@ -197,7 +198,7 @@ class _ChatListState extends State<ChatList> {
             Clipboard.setData(ClipboardData(text: bank));
             break;
           default:
-            break;
+            context.read<BankAppCubit>().sendMoney(result, accountingInfo);
         }
         break;
     }

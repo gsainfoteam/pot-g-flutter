@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:pot_g/app/di/locator.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/enums/pot_status.dart';
+import 'package:pot_g/app/modules/chat/presentation/bloc/bank_app_cubit.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/chat_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/pot_accounting_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/pot_action_bloc.dart';
@@ -56,6 +57,7 @@ class ChatRoomPage extends StatelessWidget with LogPage {
         BlocProvider(create: (context) => sl<PotActionBloc>()),
         BlocProvider(create: (context) => sl<PotAccountingBloc>()),
         BlocProvider(create: (context) => sl<TaxiAppCubit>()),
+        BlocProvider(create: (context) => sl<BankAppCubit>()),
       ],
       child: MultiBlocListener(
         listeners: [
