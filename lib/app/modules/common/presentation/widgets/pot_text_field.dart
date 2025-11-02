@@ -16,6 +16,7 @@ class PotTextField extends StatelessWidget {
     this.onChanged,
     this.autoFocus = false,
     this.maxLength,
+    this.automaticCounter = true,
   });
   final Widget? suffixIcon;
   final String? hintText;
@@ -27,6 +28,7 @@ class PotTextField extends StatelessWidget {
   final void Function(String)? onChanged;
   final bool autoFocus;
   final int? maxLength;
+  final bool automaticCounter;
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +41,7 @@ class PotTextField extends StatelessWidget {
       inputFormatters: inputFormatters,
       onChanged: onChanged,
       decoration: InputDecoration(
+        counter: automaticCounter ? null : const SizedBox(),
         suffixIcon: suffixIcon != null
             ? Padding(padding: const EdgeInsets.all(12), child: suffixIcon)
             : null,

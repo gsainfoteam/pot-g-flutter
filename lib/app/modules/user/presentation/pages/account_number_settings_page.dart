@@ -411,6 +411,7 @@ class _BankNumberState extends State<_BankNumber> {
             const SizedBox(height: 20),
             PotTextField(
               maxLength: 20,
+              automaticCounter: false,
               autoFocus: true,
               filled: true,
               controller: controller,
