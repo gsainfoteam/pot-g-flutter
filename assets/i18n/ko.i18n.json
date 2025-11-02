@@ -379,7 +379,7 @@
     "send_money": {
       "title": "송금하러 가기",
       "description": "$account\n결제자 계좌로 택시비 $n원을 송금하세요",
-      "actions": {
+      "actions(context=BankAppType)": {
         "toss": "토스로 송금하기",
         "kakao": "카카오페이로 송금하기",
         "clipboard": "계좌번호 복사하기"

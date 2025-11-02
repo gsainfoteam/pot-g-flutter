@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:pot_g/app/modules/auth/presentation/bloc/auth_bloc.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/chat_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
+import 'package:pot_g/app/modules/chat/domain/enums/bank_app_type.dart';
 import 'package:pot_g/app/modules/chat/domain/enums/fofo_action_button_type.dart';
 import 'package:pot_g/app/modules/chat/domain/enums/taxi_app_type.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/chat_bloc.dart';
@@ -149,7 +150,7 @@ class _ChatListState extends State<ChatList> {
             route: widget.pot.route.name,
           ),
           actions: [
-            for (var type in TaxiAppType.values)
+            for (final type in TaxiAppType.values)
               AlertDialogAction(
                 key: type,
                 label: context.t.chat_room.taxi_call.actions(context: type),
@@ -183,27 +184,19 @@ class _ChatListState extends State<ChatList> {
             account: bank,
           ),
           actions: [
-            // AlertDialogAction(
-            //   key: 'toss',
-            //   label: context.t.chat_room.send_money.actions.toss,
-            // ),
-            // AlertDialogAction(
-            //   key: 'kakao',
-            //   label: context.t.chat_room.send_money.actions.kakao,
-            // ),
-            AlertDialogAction(
-              key: 'clipboard',
-              label: context.t.chat_room.send_money.actions.clipboard,
-            ),
+            for (final type in BankAppType.values)
+              AlertDialogAction(
+                key: type,
+                label: context.t.chat_room.send_money.actions(context: type),
+              ),
           ],
         );
         if (result == null) return;
         switch (result) {
-          case 'toss':
-          case 'kakao':
-            break;
-          case 'clipboard':
+          case BankAppType.clipboard:
             Clipboard.setData(ClipboardData(text: bank));
+            break;
+          default:
             break;
         }
         break;
