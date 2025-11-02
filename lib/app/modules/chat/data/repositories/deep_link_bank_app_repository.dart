@@ -33,8 +33,6 @@ class DeepLinkBankAppRepository implements BankAppRepository {
             'bank': info.bankName,
           },
         );
-      case BankAppType.clipboard:
-        throw StateError('Clipboard is not supported');
     }
   }
 

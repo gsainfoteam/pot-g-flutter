@@ -1,6 +1,5 @@
 enum BankAppType {
-  toss(iOS: 'id839333328', android: 'viva.republica.toss'),
-  clipboard(iOS: '', android: '');
+  toss(iOS: 'id839333328', android: 'viva.republica.toss');
 
   final String iOS;
   final String android;

@@ -190,15 +190,19 @@ class _ChatListState extends State<ChatList> {
                 key: type,
                 label: context.t.chat_room.send_money.actions(context: type),
               ),
+            AlertDialogAction(
+              key: 'clipboard',
+              label: context.t.chat_room.send_money.clipboard,
+            ),
           ],
         );
-        if (result == null) return;
+        if (result == null || !context.mounted) return;
         switch (result) {
-          case BankAppType.clipboard:
+          case 'clipboard':
             Clipboard.setData(ClipboardData(text: bank));
             break;
-          default:
-            context.read<BankAppCubit>().sendMoney(result, accountingInfo);
+          case BankAppType type:
+            context.read<BankAppCubit>().sendMoney(type, accountingInfo);
         }
         break;
     }

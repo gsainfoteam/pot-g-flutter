@@ -389,9 +389,9 @@
       "title": "Send Money",
       "description": "send $n won to payment account $account",
       "actions(context=BankAppType)": {
-        "toss": "Send with Toss",
-        "clipboard": "Copy to Clipboard"
-      }
+        "toss": "Send with Toss"
+      },
+      "clipboard": "Copy to Clipboard"
     },
     "banner": {
       "confirmed": "The departure time has been confirmed at $time",
