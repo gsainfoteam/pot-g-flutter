@@ -94,8 +94,9 @@ class _AccountingButtonState extends State<AccountingButton> {
     // Show tooltip after widget is built
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      _tooltipTimer = Timer(const Duration(milliseconds: 500), () {
-        if (!mounted) return;
+      _tooltipTimer = Timer(const Duration(milliseconds: 500), () async {
+        final shouldShow = await _shouldShowTooltip();
+        if (!mounted || !shouldShow) return;
         _controller.show();
       });
     });
