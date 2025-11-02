@@ -27,11 +27,11 @@ class DeepLinkTaxiAppRepository implements TaxiAppRepository {
           host: 'taxi',
           path: '/set',
           queryParameters: {
-            'origin_lat': route.from.latitude,
-            'origin_lng': route.from.longitude,
+            'origin_lat': route.from.latitude.toString(),
+            'origin_lng': route.from.longitude.toString(),
             'origin_name': route.from.name,
-            'destination_lat': route.to.latitude,
-            'destination_lng': route.to.longitude,
+            'destination_lat': route.to.latitude.toString(),
+            'destination_lng': route.to.longitude.toString(),
             'destination_name': route.to.name,
           },
         );
