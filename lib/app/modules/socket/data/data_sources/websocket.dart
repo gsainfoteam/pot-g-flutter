@@ -209,7 +209,6 @@ class PotGSocket {
         if (kDebugMode) {
           log('Reconnection failed: $error', name: 'websocket');
         }
-        _connectionStateController.add(SocketConnectionState.failed);
       });
     });
   }
