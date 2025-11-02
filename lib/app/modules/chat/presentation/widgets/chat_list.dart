@@ -1,5 +1,4 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -96,7 +95,7 @@ class _ChatListState extends State<ChatList> {
     }
 
     if (index == state.chats.length) {
-      return const Center(child: CupertinoActivityIndicator());
+      return const Center(child: CircularProgressIndicator.adaptive());
     }
     final chat = state.chats[index];
     if (chat is! ChatEntity) {
