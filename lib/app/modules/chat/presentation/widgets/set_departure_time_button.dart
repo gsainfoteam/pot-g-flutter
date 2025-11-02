@@ -87,6 +87,7 @@ class SetDepartureTimeButton extends StatefulWidget {
 
 class _SetDepartureTimeButtonState extends State<SetDepartureTimeButton> {
   final _controller = OverlayPortalController();
+  Timer? _tooltipTimer;
 
   @override
   void didChangeDependencies() {
@@ -102,26 +103,35 @@ class _SetDepartureTimeButtonState extends State<SetDepartureTimeButton> {
     }
   }
 
-  Future<void> _checkAndShowTooltip() async {
+  Future<bool> _shouldShowTooltip() async {
     final pot = widget.pot;
-    if (!mounted) return;
 
     // Check conditions: departureTime == null && host && length > 1
-    if (pot.departureTime != null) return;
-    if (!pot.meIsHost(context)) return;
-    if (pot.passengers.length <= 1) return;
+    if (pot.departureTime != null) return false;
+    if (!pot.meIsHost(context)) return false;
+    if (pot.passengers.length <= 1) return false;
 
-    // Check if tooltip should be shown
-    final shouldShow = await context.read<TooltipCubit>().shouldShowTooltip(
+    return await context.read<TooltipCubit>().shouldShowTooltip(
       TooltipType.departureTime,
     );
-    if (!shouldShow) return;
+  }
+
+  Future<void> _checkAndShowTooltip() async {
+    final shouldShow = await _shouldShowTooltip();
+    if (!shouldShow) {
+      _tooltipTimer?.cancel();
+      _tooltipTimer = null;
+      return;
+    }
     if (!mounted) return;
 
     // Show tooltip after widget is built
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      _controller.show();
+      _tooltipTimer = Timer(const Duration(milliseconds: 500), () {
+        if (!mounted) return;
+        _controller.show();
+      });
     });
   }
 

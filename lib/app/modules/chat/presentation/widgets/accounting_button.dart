@@ -47,6 +47,7 @@ class AccountingButton extends StatefulWidget {
 
 class _AccountingButtonState extends State<AccountingButton> {
   final _controller = OverlayPortalController();
+  Timer? _tooltipTimer;
 
   @override
   void didChangeDependencies() {
@@ -62,26 +63,35 @@ class _AccountingButtonState extends State<AccountingButton> {
     }
   }
 
-  Future<void> _checkAndShowTooltip() async {
+  Future<bool> _shouldShowTooltip() async {
     final pot = widget.pot;
-    if (!mounted) return;
+    if (!mounted) return false;
 
     // Check condition: now > departureTime
     final departureTime = pot.departureTime;
-    if (departureTime == null) return;
-    if (!(DateTime.now().isAfter(departureTime))) return;
-
-    // Check if tooltip should be shown
-    final shouldShow = await context.read<TooltipCubit>().shouldShowTooltip(
+    if (departureTime == null) return false;
+    if (!(DateTime.now().isAfter(departureTime))) return false;
+    return await context.read<TooltipCubit>().shouldShowTooltip(
       TooltipType.accounting,
     );
-    if (!shouldShow) return;
+  }
+
+  Future<void> _checkAndShowTooltip() async {
+    final shouldShow = await _shouldShowTooltip();
+    if (!shouldShow) {
+      _tooltipTimer?.cancel();
+      _tooltipTimer = null;
+      return;
+    }
     if (!mounted) return;
 
     // Show tooltip after widget is built
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      _controller.show();
+      _tooltipTimer = Timer(const Duration(milliseconds: 500), () {
+        if (!mounted) return;
+        _controller.show();
+      });
     });
   }
 
