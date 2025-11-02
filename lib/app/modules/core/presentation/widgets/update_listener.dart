@@ -35,7 +35,7 @@ class UpdateListener extends StatelessWidget {
         if (navigatorContext == null) return;
         switch (state) {
           case AppVersionStateData(:final versionInfo):
-            if (versionInfo.updateRequired) {
+            if (!versionInfo.updateRequired) {
               try {
                 await showOkAlertDialog(
                   context: navigatorContext,
@@ -50,10 +50,12 @@ class UpdateListener extends StatelessWidget {
                 await FlutterExitApp.exitApp();
               } catch (e, stackTrace) {
                 L.e(e, stackTrace);
-                if (!context.mounted) return;
-                context.read<AppVersionBloc>().add(
-                  const AppVersionEvent.init(),
-                );
+              } finally {
+                if (context.mounted) {
+                  context.read<AppVersionBloc>().add(
+                    const AppVersionEvent.init(),
+                  );
+                }
               }
             }
             if (versionInfo.updateAvailable) {
