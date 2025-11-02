@@ -43,7 +43,6 @@ class _NotificationSettingPageState extends State<_NotificationSettingPage>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    context.read<PushSettingBloc>().add(const PushSettingEvent.load());
   }
 
   @override
