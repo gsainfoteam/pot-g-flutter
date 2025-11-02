@@ -3,8 +3,14 @@ import 'dart:io';
 import 'package:url_launcher/url_launcher.dart';
 
 abstract class AppType {
-  String get iOSStoreUrl;
-  String get androidStoreUrl;
+  String get iOS;
+  String get android;
+}
+
+extension on AppType {
+  String get iOSStoreUrl => 'https://apps.apple.com/app/$iOS';
+  String get androidStoreUrl =>
+      'https://play.google.com/store/apps/details?id=$android';
 }
 
 abstract class DeepLinkRepository<App extends AppType, Entity> {

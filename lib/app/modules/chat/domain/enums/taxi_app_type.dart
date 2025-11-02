@@ -4,12 +4,9 @@ enum TaxiAppType implements AppType {
   kakaoT(iOS: 'id981110422', android: 'com.kakao.taxi'),
   uber(iOS: 'id368677368', android: 'com.ubercab');
 
+  @override
   final String iOS;
+  @override
   final String android;
-  @override
-  String get iOSStoreUrl => 'https://apps.apple.com/app/$iOS';
-  @override
-  String get androidStoreUrl =>
-      'https://play.google.com/store/apps/details?id=$android';
   const TaxiAppType({required this.iOS, required this.android});
 }
