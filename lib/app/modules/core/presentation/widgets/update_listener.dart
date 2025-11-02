@@ -3,16 +3,18 @@ import 'dart:io';
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_exit_app/flutter_exit_app.dart';
 import 'package:pot_g/app/di/locator.dart';
+import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
 import 'package:pot_g/app/modules/core/presentation/bloc/app_version_bloc.dart';
 import 'package:pot_g/app/router.dart';
 import 'package:pot_g/app/values/config.dart';
 import 'package:pot_g/gen/strings.g.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-void _launchStore() {
+Future<void> _launchStore() async {
   try {
-    launchUrl(
+    await launchUrl(
       Platform.isAndroid
           ? Uri.parse(Config.playStoreUrl)
           : Uri.parse(Config.appStoreUrl),
@@ -34,17 +36,27 @@ class UpdateListener extends StatelessWidget {
         switch (state) {
           case AppVersionStateData(:final versionInfo):
             if (versionInfo.updateRequired) {
-              await showOkAlertDialog(
-                context: navigatorContext,
-                title: context.t.update.required.title,
-                message: context.t.update.required.message(
-                  currentVersion: versionInfo.currentVersion,
-                  latestVersion: versionInfo.latestVersion,
-                ),
-                okLabel: context.t.update.required.button,
-              );
-              _launchStore();
-              return;
+              try {
+                await showOkAlertDialog(
+                  context: navigatorContext,
+                  title: context.t.update.required.title,
+                  message: context.t.update.required.message(
+                    currentVersion: versionInfo.currentVersion,
+                    latestVersion: versionInfo.latestVersion,
+                  ),
+                  okLabel: context.t.update.required.button,
+                );
+                await _launchStore();
+                await FlutterExitApp.exitApp();
+              } catch (e, stackTrace) {
+                L.e(e, stackTrace);
+              } finally {
+                if (context.mounted) {
+                  context.read<AppVersionBloc>().add(
+                    const AppVersionEvent.init(),
+                  );
+                }
+              }
             }
             if (versionInfo.updateAvailable) {
               final result = await showOkCancelAlertDialog(
