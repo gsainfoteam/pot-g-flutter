@@ -18,6 +18,7 @@ import 'package:pot_g/app/modules/chat/presentation/widgets/chat_room_banner.dar
 import 'package:pot_g/app/modules/chat/presentation/widgets/chat_room_drawer.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/set_departure_time_button.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/status_banner.dart';
+import 'package:pot_g/app/modules/common/presentation/bloc/tooltip_cubit.dart';
 import 'package:pot_g/app/modules/common/presentation/extensions/toast.dart';
 import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
 import 'package:pot_g/app/modules/common/presentation/utils/log_page.dart';
@@ -54,6 +55,7 @@ class ChatRoomPage extends StatelessWidget with LogPage {
         ),
         BlocProvider(create: (context) => sl<PotActionBloc>()),
         BlocProvider(create: (context) => sl<PotAccountingBloc>()),
+        BlocProvider(create: (context) => sl<TooltipCubit>()),
       ],
       child: MultiBlocListener(
         listeners: [

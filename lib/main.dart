@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:pot_g/app/di/locator.dart';
 import 'package:pot_g/app/pot_app.dart';
 import 'package:pot_g/app_bloc_observer.dart';
@@ -23,6 +24,7 @@ Future<void> main() async {
       return true;
     };
   }
+  await Hive.initFlutter();
   await configureDependencies();
   runApp(TranslationProvider(child: const PotApp()));
 }

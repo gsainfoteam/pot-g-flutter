@@ -1,14 +1,21 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
+import 'package:pot_g/app/modules/chat/presentation/widgets/tooltip_overlay.dart';
+import 'package:pot_g/app/modules/common/domain/enums/tooltip_type.dart';
+import 'package:pot_g/app/modules/common/presentation/bloc/tooltip_cubit.dart';
 import 'package:pot_g/app/modules/common/presentation/extensions/toast.dart';
+import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_icon_button.dart';
 import 'package:pot_g/app/router.gr.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/gen/assets.gen.dart';
 import 'package:pot_g/gen/strings.g.dart';
 
-class AccountingButton extends StatelessWidget {
+class AccountingButton extends StatefulWidget {
   const AccountingButton({super.key, required this.pot});
 
   final PotInfoEntity pot;
@@ -35,14 +42,97 @@ class AccountingButton extends StatelessWidget {
   }
 
   @override
+  State<AccountingButton> createState() => _AccountingButtonState();
+}
+
+class _AccountingButtonState extends State<AccountingButton> {
+  final _controller = OverlayPortalController();
+  Timer? _tooltipTimer;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _checkAndShowTooltip();
+  }
+
+  @override
+  void didUpdateWidget(AccountingButton oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.pot != widget.pot) {
+      _checkAndShowTooltip();
+    }
+  }
+
+  @override
+  void dispose() {
+    _tooltipTimer?.cancel();
+    super.dispose();
+  }
+
+  Future<bool> _shouldShowTooltip() async {
+    final pot = widget.pot;
+    if (!mounted) return false;
+
+    // Check condition: now > departureTime
+    final departureTime = pot.departureTime;
+    if (departureTime == null) return false;
+    final tenMinutesAfterDeparture = departureTime.add(
+      const Duration(minutes: 10),
+    );
+    if (DateTime.now().isBefore(tenMinutesAfterDeparture)) return false;
+    return await context.read<TooltipCubit>().shouldShowTooltip(
+      TooltipType.accounting,
+    );
+  }
+
+  Future<void> _checkAndShowTooltip() async {
+    final shouldShow = await _shouldShowTooltip();
+    if (!shouldShow) {
+      _tooltipTimer?.cancel();
+      _tooltipTimer = null;
+      return;
+    }
+    if (!mounted) return;
+
+    // Show tooltip after widget is built
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      _tooltipTimer = Timer(const Duration(milliseconds: 500), () async {
+        final shouldShow = await _shouldShowTooltip();
+        if (!mounted || !shouldShow) return;
+        _controller.show();
+      });
+    });
+  }
+
+  Future<void> _handleTooltipClose() async {
+    await context.read<TooltipCubit>().markTooltipAsShown(
+      TooltipType.accounting,
+    );
+  }
+
+  Future<void> _onButtonPressed() async {
+    if (_controller.isShowing) {
+      _controller.hide();
+      await _handleTooltipClose();
+    }
+    if (!mounted) return;
+    L.c('accounting');
+    await AccountingButton.setAccounting(context, widget.pot);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return PotIconButton(
-      icon: Assets.icons.dollar.svg(
-        colorFilter: ColorFilter.mode(Palette.grey, BlendMode.srcIn),
+    return TooltipOverlay(
+      controller: _controller,
+      content: Text(context.t.chat_room.accounting.tooltip),
+      onClose: _handleTooltipClose,
+      child: PotIconButton(
+        icon: Assets.icons.dollar.svg(
+          colorFilter: ColorFilter.mode(Palette.grey, BlendMode.srcIn),
+        ),
+        onPressed: _onButtonPressed,
       ),
-      onPressed: () async {
-        await setAccounting(context, pot);
-      },
     );
   }
 }
