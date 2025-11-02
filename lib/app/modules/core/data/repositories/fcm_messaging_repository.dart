@@ -13,7 +13,6 @@ import 'package:pot_g/app/modules/core/domain/repositories/app_version_repositor
 import 'package:pot_g/app/modules/core/domain/repositories/link_repository.dart';
 import 'package:pot_g/app/modules/core/domain/repositories/messaging_repository.dart';
 import 'package:rxdart/rxdart.dart';
-//import 'package:package_info_plus/package_info_plus.dart';
 
 // TODO: https://firebase.google.com/docs/cloud-messaging/flutter/receive?hl=en#apple_platforms_and_android
 
