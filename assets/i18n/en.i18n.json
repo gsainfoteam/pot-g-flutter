@@ -375,8 +375,7 @@
       "description": "Call Taxi for $route speedily",
       "actions(context=TaxiAppType)": {
         "kakaoT": "Call with KakaoT",
-        "uber": "Call with Uber Taxi",
-        "tMoney": "Call with Tmoney Onda"
+        "uber": "Call with Uber Taxi"
       }
     },
     "send_money": {
@@ -384,7 +383,6 @@
       "description": "send $n won to payment account $account",
       "actions(context=BankAppType)": {
         "toss": "Send with Toss",
-        "kakaoPay": "Send with KakaoPay",
         "clipboard": "Copy to Clipboard"
       }
     },
