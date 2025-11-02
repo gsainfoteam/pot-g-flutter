@@ -53,8 +53,6 @@ class DeepLinkTaxiAppRepository implements TaxiAppRepository {
             'dropoff[nickname]': route.to.name,
           },
         );
-      case TaxiAppType.tMoney:
-        return Uri(scheme: 'tmoneytia');
     }
   }
 

@@ -1,7 +1,6 @@
 enum TaxiAppType {
   kakaoT(iOS: 'id981110422', android: 'com.kakao.taxi'),
-  uber(iOS: 'id368677368', android: 'com.ubercab'),
-  tMoney(iOS: 'id1483433931', android: 'kr.co.tmoney.tia');
+  uber(iOS: 'id368677368', android: 'com.ubercab');
 
   final String iOS;
   final String android;

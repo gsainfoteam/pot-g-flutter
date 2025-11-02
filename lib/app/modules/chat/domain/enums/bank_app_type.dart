@@ -1,6 +1,5 @@
 enum BankAppType {
   toss(iOS: 'id839333328', android: 'viva.republica.toss'),
-  kakaoPay(iOS: 'id1464496236', android: 'com.kakaopay.app'),
   clipboard(iOS: '', android: '');
 
   final String iOS;

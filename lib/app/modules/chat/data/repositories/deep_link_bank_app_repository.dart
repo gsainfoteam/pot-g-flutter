@@ -33,8 +33,6 @@ class DeepLinkBankAppRepository implements BankAppRepository {
             'bank': info.bankName,
           },
         );
-      case BankAppType.kakao:
-        return Uri(scheme: 'kakao');
       case BankAppType.clipboard:
         throw StateError('Clipboard is not supported');
     }
