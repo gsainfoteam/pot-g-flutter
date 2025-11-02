@@ -47,7 +47,6 @@ class AccountingButton extends StatefulWidget {
 
 class _AccountingButtonState extends State<AccountingButton> {
   final _controller = OverlayPortalController();
-  Timer? _tooltipTimer;
 
   @override
   void didChangeDependencies() {
@@ -61,12 +60,6 @@ class _AccountingButtonState extends State<AccountingButton> {
     if (oldWidget.pot != widget.pot) {
       _checkAndShowTooltip();
     }
-  }
-
-  @override
-  void dispose() {
-    _tooltipTimer?.cancel();
-    super.dispose();
   }
 
   Future<void> _checkAndShowTooltip() async {
@@ -88,10 +81,7 @@ class _AccountingButtonState extends State<AccountingButton> {
     // Show tooltip after widget is built
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      _tooltipTimer = Timer(const Duration(milliseconds: 500), () {
-        if (!mounted) return;
-        _controller.show();
-      });
+      _controller.show();
     });
   }
 
