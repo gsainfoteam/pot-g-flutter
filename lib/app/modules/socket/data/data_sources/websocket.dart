@@ -4,6 +4,7 @@ import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
+import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
 import 'package:pot_g/app/modules/core/domain/repositories/api_channel_repository.dart';
 import 'package:pot_g/app/modules/socket/data/models/base/base_server_message_model.dart';
 import 'package:pot_g/app/modules/socket/data/models/base/base_socket_request_model.dart';
@@ -126,7 +127,11 @@ class PotGSocket {
     _channelSubscription = null;
 
     if (_channel != null) {
-      _channel!.sink.close().ignore();
+      unawaited(
+        _channel!.sink.close().catchError((error) {
+          L.e(error, StackTrace.current);
+        }),
+      );
       _channel = null;
     }
 
