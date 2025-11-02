@@ -169,6 +169,7 @@
   "chat_room": {
     "connection": {
       "reconnecting": "Connection lost. Reconnecting...",
+      "disconnected": "Connection lost.",
       "failed": "Connection failed.",
       "retry": "Retry"
     },

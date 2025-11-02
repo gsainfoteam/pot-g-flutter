@@ -174,32 +174,34 @@ class _Layout extends StatelessWidget {
   }
 
   Widget _buildConnectionBanner(BuildContext context, SocketAuthState state) {
-    return state.mapOrNull(
-          reconnecting: (_) => StatusBanner(
-            color: Colors.orange,
-            child: Text(t.chat_room.connection.reconnecting),
+    return switch (state) {
+      SocketDisconnected() || SocketFailed() => StatusBanner(
+        icon: const Icon(Icons.wifi_off, color: Colors.white, size: 16),
+        color: Palette.warning,
+        action: TextButton(
+          onPressed: () {
+            context.read<SocketAuthBloc>().add(const SocketAuthEvent.retry());
+          },
+          style: TextButton.styleFrom(
+            foregroundColor: Colors.white,
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            minimumSize: Size.zero,
+            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
           ),
-          failed: (_) => StatusBanner(
-            icon: const Icon(Icons.wifi_off, color: Colors.white, size: 16),
-            color: Palette.warning,
-            action: TextButton(
-              onPressed: () {
-                context.read<SocketAuthBloc>().add(
-                  const SocketAuthEvent.retry(),
-                );
-              },
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                minimumSize: Size.zero,
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              ),
-              child: Text(t.chat_room.connection.retry),
-            ),
-            child: Text(t.chat_room.connection.failed),
-          ),
-        ) ??
-        const SizedBox.shrink();
+          child: Text(t.chat_room.connection.retry),
+        ),
+        child: Text(
+          state is SocketFailed
+              ? t.chat_room.connection.failed
+              : t.chat_room.connection.disconnected,
+        ),
+      ),
+      SocketReconnecting() => StatusBanner(
+        color: Colors.orange,
+        child: Text(t.chat_room.connection.reconnecting),
+      ),
+      _ => const SizedBox.shrink(),
+    };
   }
 
   Widget? _buildBanner(BuildContext context, PotInfoEntity pot) {

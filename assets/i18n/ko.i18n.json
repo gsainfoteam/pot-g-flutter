@@ -166,6 +166,7 @@
   "chat_room": {
     "connection": {
       "reconnecting": "연결이 끊어졌습니다. 재연결 중...",
+      "disconnected": "연결이 끊어졌습니다.",
       "failed": "연결에 실패했습니다.",
       "retry": "재시도"
     },
