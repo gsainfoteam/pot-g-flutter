@@ -128,8 +128,8 @@ class PotGSocket {
 
     if (_channel != null) {
       unawaited(
-        _channel!.sink.close().catchError((error) {
-          L.e(error, StackTrace.current);
+        _channel!.sink.close().catchError((error, stackTrace) {
+          L.e(error, stackTrace);
         }),
       );
       _channel = null;
@@ -206,11 +206,11 @@ class PotGSocket {
     _connectionStateController.add(SocketConnectionState.reconnecting);
 
     _reconnectTimer = Timer(Duration(seconds: backoffSeconds), () {
-      connect().catchError((error) {
+      connect().catchError((error, stackTrace) {
         if (kDebugMode) {
           log('Reconnection failed: $error', name: 'websocket');
         }
-        L.e(error, StackTrace.current);
+        L.e(error, stackTrace);
       });
     });
   }
