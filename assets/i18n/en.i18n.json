@@ -384,7 +384,7 @@
       "description": "send $n won to payment account $account",
       "actions(context=BankAppType)": {
         "toss": "Send with Toss",
-        "kakao": "Send with KakaoPay",
+        "kakaoPay": "Send with KakaoPay",
         "clipboard": "Copy to Clipboard"
       }
     },
