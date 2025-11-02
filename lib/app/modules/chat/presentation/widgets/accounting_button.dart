@@ -63,6 +63,12 @@ class _AccountingButtonState extends State<AccountingButton> {
     }
   }
 
+  @override
+  void dispose() {
+    _tooltipTimer?.cancel();
+    super.dispose();
+  }
+
   Future<bool> _shouldShowTooltip() async {
     final pot = widget.pot;
     if (!mounted) return false;

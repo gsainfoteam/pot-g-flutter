@@ -103,6 +103,12 @@ class _SetDepartureTimeButtonState extends State<SetDepartureTimeButton> {
     }
   }
 
+  @override
+  void dispose() {
+    _tooltipTimer?.cancel();
+    super.dispose();
+  }
+
   Future<bool> _shouldShowTooltip() async {
     final pot = widget.pot;
 
