@@ -1,4 +1,5 @@
 import 'package:injectable/injectable.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:pot_g/app/modules/user/data/data_source/remote/user_api.dart';
 import 'package:pot_g/app/modules/user/data/models/push_setting_model.dart';
 import 'package:pot_g/app/modules/user/domain/entities/push_setting_entity.dart';
@@ -24,5 +25,15 @@ class RestPushSettingRepository implements PushSettingRepository {
         marketingPush: pushSetting.marketingPush,
       ),
     );
+  }
+
+  @override
+  Future<bool> checkOsNotificationPermission() {
+    return Permission.notification.status.then((status) => status.isGranted);
+  }
+
+  @override
+  Future<void> openAppSettings() {
+    return openAppSettings();
   }
 }
