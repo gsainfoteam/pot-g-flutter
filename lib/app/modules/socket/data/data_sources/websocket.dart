@@ -56,8 +56,10 @@ class PotGSocket {
     _reconnectTimer = null;
 
     if (isConnected) {
+      print('retry1');
       await disconnect();
     }
+    print('retry');
 
     _connectionStateController.add(SocketConnectionState.connecting);
 
@@ -126,7 +128,7 @@ class PotGSocket {
     _channelSubscription = null;
 
     if (_channel != null) {
-      await _channel!.sink.close();
+      _channel!.sink.close().ignore();
       _channel = null;
     }
 
