@@ -1,0 +1,1 @@
+enum TooltipType { departureTime, accounting }
