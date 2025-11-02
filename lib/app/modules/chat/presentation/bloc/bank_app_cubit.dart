@@ -15,7 +15,7 @@ class BankAppCubit extends Cubit<void> {
     PotAccountingInfoEntity account,
   ) async {
     try {
-      await _repository.sendMoney(type, account);
+      await _repository.action(type, account);
     } catch (e, stackTrace) {
       L.e(e, stackTrace);
     }

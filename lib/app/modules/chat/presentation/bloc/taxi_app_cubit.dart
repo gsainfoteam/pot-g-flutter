@@ -12,7 +12,7 @@ class TaxiAppCubit extends Cubit<void> {
 
   Future<void> callTaxi(TaxiAppType type, RouteEntity route) async {
     try {
-      await _repository.callTaxi(type, route);
+      await _repository.action(type, route);
     } catch (e, stackTrace) {
       L.e(e, stackTrace);
     }
