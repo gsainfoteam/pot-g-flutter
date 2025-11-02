@@ -1,11 +1,13 @@
 import 'dart:io';
 
+import 'package:injectable/injectable.dart';
 import 'package:pot_g/app/modules/chat/domain/enums/taxi_app_type.dart';
 import 'package:pot_g/app/modules/chat/domain/repositories/taxi_app_repository.dart';
 import 'package:pot_g/app/modules/core/domain/entities/route_entity.dart';
 import 'package:pot_g/app/modules/core/domain/entities/stop_entity.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+@Injectable(as: TaxiAppRepository)
 class DeepLinkTaxiAppRepository implements TaxiAppRepository {
   @override
   Future<void> callTaxi(TaxiAppType type, RouteEntity route) async {
