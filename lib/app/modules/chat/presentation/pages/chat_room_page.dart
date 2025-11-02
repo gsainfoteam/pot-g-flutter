@@ -10,6 +10,7 @@ import 'package:pot_g/app/modules/chat/presentation/bloc/pot_accounting_bloc.dar
 import 'package:pot_g/app/modules/chat/presentation/bloc/pot_action_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/pot_detail_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/pot_info_bloc.dart';
+import 'package:pot_g/app/modules/chat/presentation/bloc/taxi_app_cubit.dart';
 import 'package:pot_g/app/modules/chat/presentation/extensions/pot_action_exception.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/accounting_button.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/chat_input.dart';
@@ -54,6 +55,7 @@ class ChatRoomPage extends StatelessWidget with LogPage {
         ),
         BlocProvider(create: (context) => sl<PotActionBloc>()),
         BlocProvider(create: (context) => sl<PotAccountingBloc>()),
+        BlocProvider(create: (context) => sl<TaxiAppCubit>()),
       ],
       child: MultiBlocListener(
         listeners: [

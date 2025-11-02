@@ -370,10 +370,10 @@
     "taxi_call": {
       "title": "택시 호출하러 가기",
       "description": "$route\n택시를 빠르게 호출해보세요",
-      "actions": {
-        "kakao": "카카오택시로 호출하기",
+      "actions(context=TaxiAppType)": {
+        "kakaoT": "카카오택시로 호출하기",
         "uber": "우티로 호출하기",
-        "tmoney": "티머니온다로 호출하기"
+        "tMoney": "티머니온다로 호출하기"
       }
     },
     "send_money": {
