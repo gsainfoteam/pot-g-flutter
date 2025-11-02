@@ -3,7 +3,8 @@
   "common": {
     "confirm": "Confirm",
     "cancel": "Cancel",
-    "refresh": "Refresh"
+    "refresh": "Refresh",
+    "unavailable": "Coming soon!"
   },
   "unauthorized": {
     "title": "Login to continue",

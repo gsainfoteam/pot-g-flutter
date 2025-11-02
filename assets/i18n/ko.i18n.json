@@ -3,7 +3,8 @@
   "common": {
     "confirm": "확인",
     "cancel": "취소",
-    "refresh": "새로고침"
+    "refresh": "새로고침",
+    "unavailable": "곧 지원할 예정이에요!"
   },
   "unauthorized": {
     "title": "로그인 하러 가시겠습니까?",
