@@ -55,6 +55,7 @@ dependencies:
   firebase_analytics: ^11.6.0
   package_info_plus: ^9.0.0
   pub_semver: ^2.2.0
+  flutter_exit_app: ^2.0.0
 
 dev_dependencies:
   flutter_test:
