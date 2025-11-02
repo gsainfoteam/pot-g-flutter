@@ -7,9 +7,9 @@ import 'package:pot_g/app/modules/core/domain/entities/route_entity.dart';
 import 'package:pot_g/app/modules/core/domain/repositories/pot_list_repository.dart';
 
 class MockPotListRepository implements PotListRepository {
-  static final _uSquare = StopModel(id: '1', name: '유스퀘어');
-  static final _gist = StopModel(id: '2', name: '지스트');
-  static final _station = StopModel(id: '3', name: '송정역');
+  static final _uSquare = StopModel(id: '1', name: '유스퀘어', lat: 0, lng: 0);
+  static final _gist = StopModel(id: '2', name: '지스트', lat: 0, lng: 0);
+  static final _station = StopModel(id: '3', name: '송정역', lat: 0, lng: 0);
 
   static final _giToSong = RouteModel(id: '1', from: _gist, to: _uSquare);
   static final _ugi = RouteModel(id: '2', from: _uSquare, to: _gist);
