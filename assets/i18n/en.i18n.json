@@ -4,7 +4,8 @@
     "confirm": "Confirm",
     "cancel": "Cancel",
     "refresh": "Refresh",
-    "unavailable": "Coming soon!"
+    "unavailable": "Coming soon!",
+    "unknown_error": "Unknown error occurred"
   },
   "unauthorized": {
     "title": "Login to continue",
@@ -380,20 +381,18 @@
     "taxi_call": {
       "title": "Call Taxi",
       "description": "Call Taxi for $route speedily",
-      "actions": {
-        "kakao": "Call with KakaoT",
-        "uber": "Call with Uber Taxi",
-        "tmoney": "Call with Tmoney Onda"
+      "actions(context=TaxiAppType)": {
+        "kakaoT": "Call with KakaoT",
+        "uber": "Call with Uber Taxi"
       }
     },
     "send_money": {
       "title": "Send Money",
       "description": "send $n won to payment account $account",
-      "actions": {
-        "toss": "Send with Toss",
-        "kakao": "Send with KakaoPay",
-        "clipboard": "Copy to Clipboard"
-      }
+      "actions(context=BankAppType)": {
+        "toss": "Send with Toss"
+      },
+      "clipboard": "Copy to Clipboard"
     },
     "banner": {
       "confirmed": "The departure time has been confirmed at $time",

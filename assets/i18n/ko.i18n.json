@@ -4,7 +4,8 @@
     "confirm": "확인",
     "cancel": "취소",
     "refresh": "새로고침",
-    "unavailable": "곧 지원할 예정이에요!"
+    "unavailable": "곧 지원할 예정이에요!",
+    "unknown_error": "알 수 없는 오류가 발생했습니다"
   },
   "unauthorized": {
     "title": "로그인 하러 가시겠습니까?",
@@ -377,20 +378,18 @@
     "taxi_call": {
       "title": "택시 호출하러 가기",
       "description": "$route\n택시를 빠르게 호출해보세요",
-      "actions": {
-        "kakao": "카카오택시로 호출하기",
-        "uber": "우티로 호출하기",
-        "tmoney": "티머니온다로 호출하기"
+      "actions(context=TaxiAppType)": {
+        "kakaoT": "카카오택시로 호출하기",
+        "uber": "우티로 호출하기"
       }
     },
     "send_money": {
       "title": "송금하러 가기",
       "description": "$account\n결제자 계좌로 택시비 $n원을 송금하세요",
-      "actions": {
-        "toss": "토스로 송금하기",
-        "kakao": "카카오페이로 송금하기",
-        "clipboard": "계좌번호 복사하기"
-      }
+      "actions(context=BankAppType)": {
+        "toss": "토스로 송금하기"
+      },
+      "clipboard": "계좌번호 복사하기"
     },
     "banner": {
       "confirmed": "출발 시간이 $time로 확정되었습니다",

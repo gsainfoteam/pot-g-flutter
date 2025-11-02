@@ -1,6 +1,6 @@
 abstract class StopEntity {
-  const StopEntity({required this.id, required this.name});
-
-  final String id;
-  final String name;
+  String get id;
+  String get name;
+  double get lat;
+  double get lng;
 }

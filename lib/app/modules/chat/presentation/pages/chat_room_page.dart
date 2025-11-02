@@ -5,11 +5,13 @@ import 'package:intl/intl.dart';
 import 'package:pot_g/app/di/locator.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/enums/pot_status.dart';
+import 'package:pot_g/app/modules/chat/presentation/bloc/bank_app_cubit.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/chat_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/pot_accounting_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/pot_action_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/pot_detail_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/pot_info_bloc.dart';
+import 'package:pot_g/app/modules/chat/presentation/bloc/taxi_app_cubit.dart';
 import 'package:pot_g/app/modules/chat/presentation/extensions/pot_action_exception.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/accounting_button.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/chat_input.dart';
@@ -55,6 +57,8 @@ class ChatRoomPage extends StatelessWidget with LogPage {
         ),
         BlocProvider(create: (context) => sl<PotActionBloc>()),
         BlocProvider(create: (context) => sl<PotAccountingBloc>()),
+        BlocProvider(create: (context) => sl<TaxiAppCubit>()),
+        BlocProvider(create: (context) => sl<BankAppCubit>()),
         BlocProvider(create: (context) => sl<TooltipCubit>()),
       ],
       child: MultiBlocListener(
@@ -96,6 +100,24 @@ class ChatRoomPage extends StatelessWidget with LogPage {
               final pot = context.read<PotInfoBloc>().state.pot;
               if (pot == null) return;
               context.read<ChatBloc>().add(ChatEvent.init(pot));
+            },
+          ),
+          BlocListener<BankAppCubit, BankAppState>(
+            listener: (context, state) {
+              state.mapOrNull(
+                error: (e) => context.showToast(
+                  '${t.common.unknown_error} (${e.errorId})',
+                ),
+              );
+            },
+          ),
+          BlocListener<TaxiAppCubit, TaxiAppState>(
+            listener: (context, state) {
+              state.mapOrNull(
+                error: (e) => context.showToast(
+                  '${t.common.unknown_error} (${e.errorId})',
+                ),
+              );
             },
           ),
         ],

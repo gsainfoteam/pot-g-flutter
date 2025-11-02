@@ -6,15 +6,19 @@ import 'package:intl/intl.dart';
 import 'package:pot_g/app/modules/auth/presentation/bloc/auth_bloc.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/chat_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
+import 'package:pot_g/app/modules/chat/domain/enums/bank_app_type.dart';
 import 'package:pot_g/app/modules/chat/domain/enums/fofo_action_button_type.dart';
+import 'package:pot_g/app/modules/chat/domain/enums/taxi_app_type.dart';
+import 'package:pot_g/app/modules/chat/presentation/bloc/bank_app_cubit.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/chat_bloc.dart';
+import 'package:pot_g/app/modules/chat/presentation/bloc/taxi_app_cubit.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/accounting_button.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/bubble.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/chat_bubble.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/fofo_bubble.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/set_departure_time_button.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/system_message.dart';
-import 'package:pot_g/app/modules/common/presentation/extensions/toast.dart';
+import 'package:pot_g/app/modules/core/domain/entities/route_entity.dart';
 import 'package:pot_g/gen/strings.g.dart';
 
 class ChatList extends StatefulWidget {
@@ -140,38 +144,22 @@ class _ChatListState extends State<ChatList> {
         Scaffold.of(context).openEndDrawer();
         break;
       case FofoActionButtonType.taxiCall:
-        // final result = await showAlertDialog(
-        //   context: context,
-        //   title: context.t.chat_room.taxi_call.title,
-        //   message: context.t.chat_room.taxi_call.description(
-        //     route: widget.pot.route.name,
-        //   ),
-        //   actions: [
-        //     AlertDialogAction(
-        //       key: 'kakao',
-        //       label: context.t.chat_room.taxi_call.actions.kakao,
-        //     ),
-        //     AlertDialogAction(
-        //       key: 'uber',
-        //       label: context.t.chat_room.taxi_call.actions.uber,
-        //     ),
-        //     AlertDialogAction(
-        //       key: 'tmoney',
-        //       label: context.t.chat_room.taxi_call.actions.tmoney,
-        //     ),
-        //   ],
-        // );
-        // if (result == null) return;
-        // switch (result) {
-        //   case 'kakao':
-        //     break;
-        //   case 'uber':
-        //     break;
-        //   case 'tmoney':
-        //     break;
-        // }
-        // TODO: implement this action
-        context.showToast(context.t.common.unavailable);
+        final result = await showAlertDialog(
+          context: context,
+          title: context.t.chat_room.taxi_call.title,
+          message: context.t.chat_room.taxi_call.description(
+            route: widget.pot.route.name,
+          ),
+          actions: [
+            for (final type in TaxiAppType.values)
+              AlertDialogAction(
+                key: type,
+                label: context.t.chat_room.taxi_call.actions(context: type),
+              ),
+          ],
+        );
+        if (result == null || !context.mounted) return;
+        context.read<TaxiAppCubit>().callTaxi(result, widget.pot.route);
         break;
       case FofoActionButtonType.accountingProcess:
         final accountingInfo = widget.pot.accountingInfo;
@@ -197,28 +185,24 @@ class _ChatListState extends State<ChatList> {
             account: bank,
           ),
           actions: [
-            // AlertDialogAction(
-            //   key: 'toss',
-            //   label: context.t.chat_room.send_money.actions.toss,
-            // ),
-            // AlertDialogAction(
-            //   key: 'kakao',
-            //   label: context.t.chat_room.send_money.actions.kakao,
-            // ),
+            for (final type in BankAppType.values)
+              AlertDialogAction(
+                key: type,
+                label: context.t.chat_room.send_money.actions(context: type),
+              ),
             AlertDialogAction(
               key: 'clipboard',
-              label: context.t.chat_room.send_money.actions.clipboard,
+              label: context.t.chat_room.send_money.clipboard,
             ),
           ],
         );
-        if (result == null) return;
+        if (result == null || !context.mounted) return;
         switch (result) {
-          case 'toss':
-          case 'kakao':
-            break;
           case 'clipboard':
             Clipboard.setData(ClipboardData(text: bank));
             break;
+          case BankAppType type:
+            context.read<BankAppCubit>().sendMoney(type, accountingInfo);
         }
         break;
     }

@@ -4,6 +4,7 @@ import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
+import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
 import 'package:pot_g/app/modules/core/domain/repositories/api_channel_repository.dart';
 import 'package:pot_g/app/modules/socket/data/models/base/base_server_message_model.dart';
 import 'package:pot_g/app/modules/socket/data/models/base/base_socket_request_model.dart';
@@ -126,7 +127,11 @@ class PotGSocket {
     _channelSubscription = null;
 
     if (_channel != null) {
-      await _channel!.sink.close();
+      unawaited(
+        _channel!.sink.close().catchError((error, stackTrace) {
+          L.e(error, stackTrace);
+        }),
+      );
       _channel = null;
     }
 
@@ -180,6 +185,7 @@ class PotGSocket {
       if (kDebugMode) {
         log('Max retry attempts reached', name: 'websocket');
       }
+      L.e(Exception('Max retry attempts reached'), StackTrace.current);
       _connectionStateController.add(SocketConnectionState.failed);
       return;
     }
@@ -200,10 +206,11 @@ class PotGSocket {
     _connectionStateController.add(SocketConnectionState.reconnecting);
 
     _reconnectTimer = Timer(Duration(seconds: backoffSeconds), () {
-      connect().catchError((error) {
+      connect().catchError((error, stackTrace) {
         if (kDebugMode) {
           log('Reconnection failed: $error', name: 'websocket');
         }
+        L.e(error, stackTrace);
       });
     });
   }

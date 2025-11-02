@@ -6,8 +6,12 @@ part 'stop_model.g.dart';
 
 @freezed
 sealed class StopModel with _$StopModel implements StopEntity {
-  const factory StopModel({required String id, required String name}) =
-      _StopModel;
+  const factory StopModel({
+    required String id,
+    required String name,
+    required double lat,
+    required double lng,
+  }) = _StopModel;
 
   factory StopModel.fromJson(Map<String, dynamic> json) =>
       _$StopModelFromJson(json);
