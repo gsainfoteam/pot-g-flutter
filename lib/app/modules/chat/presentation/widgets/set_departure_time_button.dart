@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,6 +8,8 @@ import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/pot_action_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/extensions/pot_user_extension.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/tooltip_overlay.dart';
+import 'package:pot_g/app/modules/common/domain/enums/tooltip_type.dart';
+import 'package:pot_g/app/modules/common/presentation/bloc/tooltip_cubit.dart';
 import 'package:pot_g/app/modules/common/presentation/extensions/toast.dart';
 import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/general_dialog.dart';
@@ -83,6 +87,65 @@ class SetDepartureTimeButton extends StatefulWidget {
 
 class _SetDepartureTimeButtonState extends State<SetDepartureTimeButton> {
   final _controller = OverlayPortalController();
+  Timer? _tooltipTimer;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _checkAndShowTooltip();
+  }
+
+  @override
+  void didUpdateWidget(SetDepartureTimeButton oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.pot != widget.pot) {
+      _checkAndShowTooltip();
+    }
+  }
+
+  @override
+  void dispose() {
+    _tooltipTimer?.cancel();
+    super.dispose();
+  }
+
+  Future<void> _checkAndShowTooltip() async {
+    final pot = widget.pot;
+    if (!mounted) return;
+
+    // Check conditions: departureTime == null && host && length > 1
+    if (pot.departureTime != null) return;
+    if (!pot.meIsHost(context)) return;
+    if (pot.passengers.length <= 1) return;
+
+    // Check if tooltip should be shown
+    final shouldShow = await context.read<TooltipCubit>().shouldShowTooltip(
+      TooltipType.departureTime,
+    );
+    if (!shouldShow) return;
+    if (!mounted) return;
+
+    // Show tooltip after widget is built
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      _tooltipTimer = Timer(const Duration(milliseconds: 500), () {
+        if (!mounted) return;
+        _controller.show();
+      });
+    });
+  }
+
+  Future<void> _handleTooltipClose() async {
+    await context.read<TooltipCubit>().markTooltipAsShown(
+      TooltipType.departureTime,
+    );
+  }
+
+  Future<void> _onButtonPressed() async {
+    _controller.hide();
+    L.c('setDepartureTime');
+    await SetDepartureTimeButton.setDepartureTime(context, widget.pot);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -92,14 +155,12 @@ class _SetDepartureTimeButtonState extends State<SetDepartureTimeButton> {
         context.t.chat_room.set_departure_time.tooltip,
         style: TextStyles.description,
       ),
+      onClose: _handleTooltipClose,
       child: PotIconButton(
         icon: Assets.icons.clock.svg(
           colorFilter: ColorFilter.mode(Palette.grey, BlendMode.srcIn),
         ),
-        onPressed: () async {
-          L.c('setDepartureTime');
-          await SetDepartureTimeButton.setDepartureTime(context, widget.pot);
-        },
+        onPressed: _onButtonPressed,
       ),
     );
   }
