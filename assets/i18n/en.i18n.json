@@ -304,6 +304,7 @@
       }
     },
     "set_departure_time": {
+      "tooltip": "Have you discussed the departure time with the party members?\nClick this button to confirm the departure time.\nI'll remind you before departure.\n\nAfter the departure time is confirmed, you cannot change the departure time, party members, or other details.\n\nNew party members' entry and existing party members' exit are both disabled.",
       "clock": {
         "title": "Set Departure Time"
       },
