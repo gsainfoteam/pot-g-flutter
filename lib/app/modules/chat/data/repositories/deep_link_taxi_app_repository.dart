@@ -54,7 +54,7 @@ class DeepLinkTaxiAppRepository implements TaxiAppRepository {
           },
         );
       case TaxiAppType.tMoney:
-        return Uri.parse('tMoney://taxi?route=${route.id}');
+        return Uri(scheme: 'tmoneytia');
     }
   }
 
