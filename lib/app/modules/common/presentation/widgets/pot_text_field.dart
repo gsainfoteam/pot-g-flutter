@@ -15,6 +15,7 @@ class PotTextField extends StatelessWidget {
     this.inputFormatters,
     this.onChanged,
     this.autoFocus = false,
+    this.maxLength,
   });
   final Widget? suffixIcon;
   final String? hintText;
@@ -25,10 +26,12 @@ class PotTextField extends StatelessWidget {
   final List<TextInputFormatter>? inputFormatters;
   final void Function(String)? onChanged;
   final bool autoFocus;
+  final int? maxLength;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      maxLength: maxLength,
       autofocus: autoFocus,
       readOnly: readOnly,
       style: TextStyles.body.copyWith(color: Palette.dark),
