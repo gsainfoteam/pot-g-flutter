@@ -34,17 +34,18 @@ class UpdateListener extends StatelessWidget {
         switch (state) {
           case AppVersionStateData(:final versionInfo):
             if (versionInfo.updateRequired) {
-              await showOkAlertDialog(
-                context: navigatorContext,
-                title: context.t.update.required.title,
-                message: context.t.update.required.message(
-                  currentVersion: versionInfo.currentVersion,
-                  latestVersion: versionInfo.latestVersion,
-                ),
-                okLabel: context.t.update.required.button,
-              );
-              _launchStore();
-              return;
+              while (true) {
+                await showOkAlertDialog(
+                  context: navigatorContext,
+                  title: context.t.update.required.title,
+                  message: context.t.update.required.message(
+                    currentVersion: versionInfo.currentVersion,
+                    latestVersion: versionInfo.latestVersion,
+                  ),
+                  okLabel: context.t.update.required.button,
+                );
+                _launchStore();
+              }
             }
             if (versionInfo.updateAvailable) {
               final result = await showOkCancelAlertDialog(
