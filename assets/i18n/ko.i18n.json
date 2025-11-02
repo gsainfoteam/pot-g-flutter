@@ -3,7 +3,8 @@
   "common": {
     "confirm": "확인",
     "cancel": "취소",
-    "refresh": "새로고침"
+    "refresh": "새로고침",
+    "unavailable": "곧 지원할 예정이에요!"
   },
   "unauthorized": {
     "title": "로그인 하러 가시겠습니까?",
@@ -42,6 +43,10 @@
       "room": {
         "title": "입/퇴장 알림",
         "description": "참여중인 팟의 멤버 변동 알림"
+      },
+      "os_permission": {
+        "warning": "OS 알림 설정이 비활성화되어 있어 알림을 받을 수 없습니다.",
+        "open_settings": "OS 설정으로 이동"
       }
     },
     "account_number_settings": {

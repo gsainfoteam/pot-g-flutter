@@ -1,4 +1,6 @@
 import 'package:injectable/injectable.dart';
+import 'package:permission_handler/permission_handler.dart'
+    as permission_handler;
 import 'package:pot_g/app/modules/user/data/data_source/remote/user_api.dart';
 import 'package:pot_g/app/modules/user/data/models/push_setting_model.dart';
 import 'package:pot_g/app/modules/user/domain/entities/push_setting_entity.dart';
@@ -24,5 +26,16 @@ class RestPushSettingRepository implements PushSettingRepository {
         marketingPush: pushSetting.marketingPush,
       ),
     );
+  }
+
+  @override
+  Future<bool> checkOsNotificationPermission() async {
+    final status = await permission_handler.Permission.notification.status;
+    return status == permission_handler.PermissionStatus.granted;
+  }
+
+  @override
+  Future<void> openAppSettings() {
+    return permission_handler.openAppSettings();
   }
 }

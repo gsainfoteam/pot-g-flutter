@@ -3,7 +3,8 @@
   "common": {
     "confirm": "Confirm",
     "cancel": "Cancel",
-    "refresh": "Refresh"
+    "refresh": "Refresh",
+    "unavailable": "Coming soon!"
   },
   "unauthorized": {
     "title": "Login to continue",
@@ -42,6 +43,10 @@
       "room": {
         "title": "Join/Leave Notifications",
         "description": "Receive notifications for changing members"
+      },
+      "os_permission": {
+        "warning": "OS notification settings are disabled. You cannot receive notifications.",
+        "open_settings": "Open OS Settings"
       }
     },
     "account_number_settings": {
