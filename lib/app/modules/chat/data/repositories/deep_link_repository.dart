@@ -16,16 +16,10 @@ extension on AppType {
 abstract class DeepLinkRepository<App extends AppType, Entity> {
   Future<void> action(App type, Entity entity) async {
     final deepLink = getDeepLink(type, entity);
-    if (await canLaunchUrl(deepLink)) {
-      await launchUrl(deepLink);
-    } else {
-      final webUrl = getWebUrl(type, entity);
-      if (webUrl != null && await canLaunchUrl(webUrl)) {
-        await launchUrl(webUrl);
-      } else {
-        await launchUrl(getStoreUrl(type));
-      }
-    }
+    if (await launchUrl(deepLink)) return;
+    final webUrl = getWebUrl(type, entity);
+    if (webUrl != null && await launchUrl(webUrl)) return;
+    await launchUrl(getStoreUrl(type));
   }
 
   Uri getDeepLink(covariant AppType type, covariant Entity entity);
