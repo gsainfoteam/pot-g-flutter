@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:pot_g/app/modules/auth/data/data_sources/remote/user_auth_api.dart';
 import 'package:pot_g/app/modules/auth/data/models/login_request_model.dart';
+import 'package:pot_g/app/modules/auth/data/models/logout_request_model.dart';
 import 'package:pot_g/app/modules/auth/domain/repositories/auth_repository.dart';
 import 'package:pot_g/app/modules/auth/domain/repositories/oauth_repository.dart';
 import 'package:pot_g/app/modules/auth/domain/repositories/token_repository.dart';
@@ -62,7 +63,9 @@ class OauthRestAuthRepository implements AuthRepository {
   @override
   Future<void> signOut() async {
     try {
-      await _userAuthApi.logout();
+      final refreshToken = await _tokenRepository.refreshToken.first;
+      if (refreshToken == null) return;
+      await _userAuthApi.logout(LogoutRequestModel(refreshToken: refreshToken));
     } catch (e, stackTrace) {
       L.e(e, stackTrace);
     }

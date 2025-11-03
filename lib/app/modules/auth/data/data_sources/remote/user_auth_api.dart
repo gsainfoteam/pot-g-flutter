@@ -3,6 +3,7 @@ import 'package:injectable/injectable.dart';
 import 'package:pot_g/app/modules/auth/data/data_sources/remote/authorize_interceptor.dart';
 import 'package:pot_g/app/modules/auth/data/models/login_request_model.dart';
 import 'package:pot_g/app/modules/auth/data/models/login_response_model.dart';
+import 'package:pot_g/app/modules/auth/data/models/logout_request_model.dart';
 import 'package:pot_g/app/modules/auth/data/models/refresh_request_model.dart';
 import 'package:pot_g/app/modules/auth/data/models/refresh_response_model.dart';
 import 'package:pot_g/app/modules/core/data/dio/pot_dio.dart';
@@ -28,5 +29,5 @@ abstract class UserAuthApi {
   Future<SelfUserModel> getUser();
 
   @POST('logout')
-  Future<void> logout();
+  Future<void> logout(@Body() LogoutRequestModel request);
 }
