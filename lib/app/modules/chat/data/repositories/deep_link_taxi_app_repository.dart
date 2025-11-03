@@ -23,9 +23,9 @@ class DeepLinkTaxiAppRepository
             'origin_lat': route.from.lat.toString(),
             'origin_lng': route.from.lng.toString(),
             'origin_name': route.from.name,
-            'destination_lat': route.to.lat.toString(),
-            'destination_lng': route.to.lng.toString(),
-            'destination_name': route.to.name,
+            'dest_lat': route.to.lat.toString(),
+            'dest_lng': route.to.lng.toString(),
+            'dest_name': route.to.name,
           },
         );
       case TaxiAppType.uber:
