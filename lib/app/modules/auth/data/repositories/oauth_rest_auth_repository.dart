@@ -64,11 +64,10 @@ class OauthRestAuthRepository implements AuthRepository {
   Future<void> signOut() async {
     try {
       final refreshToken = await _tokenRepository.refreshToken.first;
-      if (refreshToken != null) {
-        await _userAuthApi.logout(
-          LogoutRequestModel(refreshToken: refreshToken),
-        );
-      }
+      // empty string is just for fallback
+      await _userAuthApi.logout(
+        LogoutRequestModel(refreshToken: refreshToken ?? ''),
+      );
     } catch (e, stackTrace) {
       L.e(e, stackTrace);
     }
