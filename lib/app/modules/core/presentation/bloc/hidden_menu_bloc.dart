@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
+import 'package:pot_g/app/modules/core/domain/enums/hidden_menu_level.dart';
 import 'package:pot_g/app/modules/core/domain/repositories/hidden_menu_repository.dart';
 
 part 'hidden_menu_bloc.freezed.dart';
@@ -16,20 +17,24 @@ class HiddenMenuBloc extends Bloc<HiddenMenuEvent, HiddenMenuState> {
   }
 
   Future<void> _onInit(_Init event, Emitter<HiddenMenuState> emit) async {
-    final enabled = await _repository.isHiddenMenuEnabled();
-    emit(
-      enabled
-          ? const HiddenMenuState.enabled()
-          : const HiddenMenuState.disabled(),
-    );
+    final level = await _repository.getLevel();
+    if (level == null) {
+      emit(const HiddenMenuState.disabled());
+      return;
+    }
+    emit(HiddenMenuState.enabled(level));
   }
 
   Future<void> _onTryEnable(
     _TryEnable event,
     Emitter<HiddenMenuState> emit,
   ) async {
-    await _repository.tryEnable(event.secret);
-    emit(const HiddenMenuState.enabled());
+    final level = await _repository.tryEnable(event.secret);
+    if (level == null) {
+      emit(const HiddenMenuState.disabled());
+      return;
+    }
+    emit(HiddenMenuState.enabled(level));
   }
 
   Future<void> _onDisable(_Disable event, Emitter<HiddenMenuState> emit) async {
@@ -48,6 +53,6 @@ sealed class HiddenMenuEvent with _$HiddenMenuEvent {
 @freezed
 sealed class HiddenMenuState with _$HiddenMenuState {
   const factory HiddenMenuState.initial() = _Initial;
-  const factory HiddenMenuState.enabled() = _Enabled;
+  const factory HiddenMenuState.enabled(HiddenMenuLevel level) = _Enabled;
   const factory HiddenMenuState.disabled() = _Disabled;
 }
