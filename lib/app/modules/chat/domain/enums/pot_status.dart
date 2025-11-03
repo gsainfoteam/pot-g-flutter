@@ -17,3 +17,10 @@ enum PotStatus {
   /// 해산
   archived,
 }
+
+extension PotStatusX on PotStatus {
+  bool operator >=(PotStatus other) => index >= other.index;
+  bool operator >(PotStatus other) => index > other.index;
+  bool operator <=(PotStatus other) => index <= other.index;
+  bool operator <(PotStatus other) => index < other.index;
+}

@@ -229,6 +229,7 @@ class _Layout extends StatelessWidget {
   }
 
   Widget? _buildBanner(BuildContext context, PotInfoEntity pot) {
+    if (pot.status > PotStatus.waitAccounting) return null;
     if (pot.status == PotStatus.waitAccounting) {
       return ChatRoomBanner(
         important: true,
