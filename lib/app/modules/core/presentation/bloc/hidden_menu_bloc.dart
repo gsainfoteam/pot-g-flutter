@@ -52,7 +52,13 @@ sealed class HiddenMenuEvent with _$HiddenMenuEvent {
 
 @freezed
 sealed class HiddenMenuState with _$HiddenMenuState {
+  const HiddenMenuState._();
   const factory HiddenMenuState.initial() = _Initial;
   const factory HiddenMenuState.enabled(HiddenMenuLevel level) = _Enabled;
   const factory HiddenMenuState.disabled() = _Disabled;
+
+  HiddenMenuLevel? get level => switch (this) {
+    _Enabled(:final level) => level,
+    _ => null,
+  };
 }
