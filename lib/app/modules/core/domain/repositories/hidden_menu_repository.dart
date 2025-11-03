@@ -1,4 +1,5 @@
 abstract class HiddenMenuRepository {
   Future<bool> isHiddenMenuEnabled();
-  Future<void> setHiddenMenuEnabled(bool enabled);
+  Future<void> tryEnable(String secret);
+  Future<void> disable();
 }

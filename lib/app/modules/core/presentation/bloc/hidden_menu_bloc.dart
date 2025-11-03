@@ -11,7 +11,7 @@ class HiddenMenuBloc extends Bloc<HiddenMenuEvent, HiddenMenuState> {
 
   HiddenMenuBloc(this._repository) : super(const HiddenMenuState.initial()) {
     on<_Init>(_onInit);
-    on<_Enable>(_onEnable);
+    on<_TryEnable>(_onTryEnable);
     on<_Disable>(_onDisable);
   }
 
@@ -24,13 +24,16 @@ class HiddenMenuBloc extends Bloc<HiddenMenuEvent, HiddenMenuState> {
     );
   }
 
-  Future<void> _onEnable(_Enable event, Emitter<HiddenMenuState> emit) async {
-    await _repository.setHiddenMenuEnabled(true);
+  Future<void> _onTryEnable(
+    _TryEnable event,
+    Emitter<HiddenMenuState> emit,
+  ) async {
+    await _repository.tryEnable(event.secret);
     emit(const HiddenMenuState.enabled());
   }
 
   Future<void> _onDisable(_Disable event, Emitter<HiddenMenuState> emit) async {
-    await _repository.setHiddenMenuEnabled(false);
+    await _repository.disable();
     emit(const HiddenMenuState.disabled());
   }
 }
@@ -38,7 +41,7 @@ class HiddenMenuBloc extends Bloc<HiddenMenuEvent, HiddenMenuState> {
 @freezed
 sealed class HiddenMenuEvent with _$HiddenMenuEvent {
   const factory HiddenMenuEvent.init() = _Init;
-  const factory HiddenMenuEvent.enable() = _Enable;
+  const factory HiddenMenuEvent.tryEnable(String secret) = _TryEnable;
   const factory HiddenMenuEvent.disable() = _Disable;
 }
 

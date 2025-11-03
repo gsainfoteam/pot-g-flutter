@@ -1,16 +1,11 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:adaptive_dialog/adaptive_dialog.dart';
-import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_bottom_sheet.dart';
 import 'package:pot_g/app/modules/core/presentation/bloc/hidden_menu_bloc.dart';
 import 'package:pot_g/app/modules/core/presentation/widgets/hidden_menu_sheet.dart';
-
-const hiddenHash =
-    'b692cc52e03b75b017525a59c148cd62fb7c7e52fd991dc436fa29c19b6ff1e6';
 
 class HiddenMenuButton extends StatelessWidget {
   const HiddenMenuButton({super.key});
@@ -53,10 +48,10 @@ class _ButtonState extends State<_Button> {
       context: context,
       textFields: [DialogTextField()],
     );
-    final hash = sha256.convert(utf8.encode(text?.first ?? '')).toString();
-    if (hash != hiddenHash) return;
     if (!mounted) return;
-    context.read<HiddenMenuBloc>().add(const HiddenMenuEvent.enable());
+    context.read<HiddenMenuBloc>().add(
+      HiddenMenuEvent.tryEnable(text?.first ?? ''),
+    );
   }
 
   @override
