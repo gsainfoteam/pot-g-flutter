@@ -13,20 +13,24 @@ class ChatBubble extends StatelessWidget {
     this.user,
     this.isFirst = false,
     required this.pot,
+    required this.sentAt,
   });
 
   final String message;
   final PotUserEntity? user;
   final bool isFirst;
   final PotInfoEntity pot;
+  final DateTime sentAt;
 
   @override
   Widget build(BuildContext context) {
     return Bubble(
+      sentAt: sentAt,
       isFirst: isFirst,
       isMe: user == null,
-      profileImage:
-          user == null ? null : PotProfileImage(user: user!, pot: pot),
+      profileImage: user == null
+          ? null
+          : PotProfileImage(user: user!, pot: pot),
       name: user?.name,
       child: Text(
         message,

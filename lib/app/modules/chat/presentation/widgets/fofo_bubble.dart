@@ -11,10 +11,16 @@ import 'package:pot_g/gen/assets.gen.dart';
 import 'package:pot_g/gen/strings.g.dart';
 
 class FofoBubble extends StatelessWidget {
-  const FofoBubble({super.key, required this.message, required this.onAction});
+  const FofoBubble({
+    super.key,
+    required this.message,
+    required this.onAction,
+    required this.sentAt,
+  });
 
   final FofoChatEntity message;
   final void Function(FofoActionButtonType type) onAction;
+  final DateTime sentAt;
 
   String action(BuildContext context, FofoActionButtonType? type) {
     final fofo = context.t.chat_room.fofo.actions;
@@ -31,6 +37,7 @@ class FofoBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Bubble(
+      sentAt: sentAt,
       isFirst: true,
       isMe: false,
       profileImage: Container(
