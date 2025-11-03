@@ -57,6 +57,7 @@ class UpdateListener extends StatelessWidget {
                   );
                 }
               }
+              return;
             }
             if (versionInfo.updateAvailable) {
               final result = await showOkCancelAlertDialog(
@@ -69,7 +70,7 @@ class UpdateListener extends StatelessWidget {
                 okLabel: context.t.update.available.button,
                 cancelLabel: context.t.update.available.next,
               );
-              if (result == OkCancelResult.ok) _launchStore();
+              if (result == OkCancelResult.ok) await _launchStore();
             }
             break;
           case AppVersionStateError(:final message):

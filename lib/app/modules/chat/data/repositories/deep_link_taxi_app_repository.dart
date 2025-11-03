@@ -1,3 +1,4 @@
+// spell-checker:words kakaoT taxi tmoney tmoneytia onda riderequest dropoff
 import 'dart:convert';
 
 import 'package:injectable/injectable.dart';
@@ -40,6 +41,8 @@ class DeepLinkTaxiAppRepository
             'dropoff[nickname]': route.to.name,
           },
         );
+      case TaxiAppType.tmoney:
+        return Uri(scheme: 'tmoneytia', host: 'onda', path: '/main');
     }
   }
 
