@@ -5,6 +5,7 @@ import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pot_g/app/modules/auth/presentation/bloc/auth_bloc.dart';
 import 'package:pot_g/app/modules/common/presentation/extensions/toast.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_pressable.dart';
 import 'package:pot_g/app/modules/core/domain/enums/api_channel.dart';
@@ -58,6 +59,15 @@ class _ChangeApiChannelButtonState extends State<ChangeApiChannelButton> {
                     .toList(),
               );
               if (channel == null || !context.mounted) return;
+              final user = AuthBloc.userOf(context);
+              if (user != null) {
+                return showAlertDialog(
+                  context: context,
+                  title: 'Warning',
+                  message:
+                      'You are already logged in. Please logout to change the API channel.',
+                );
+              }
               context.read<ApiChannelBloc>().add(
                 ApiChannelEvent.setChannel(channel),
               );
