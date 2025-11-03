@@ -109,11 +109,13 @@ class _ChatListState extends State<ChatList> {
       if (chat is FofoChatEntity) {
         return FofoBubble(
           message: chat,
+          sentAt: chat.createdAt,
           onAction: (type) => _onAction(context, type),
         );
       }
       if (chat is ChatEntityError) {
         return Bubble(
+          sentAt: chat.createdAt,
           isFirst: true,
           isMe: false,
           profileImage: SizedBox(),
@@ -125,6 +127,7 @@ class _ChatListState extends State<ChatList> {
     }
     final isMe = chat.user.id == AuthBloc.userOf(context)?.id;
     return ChatBubble(
+      sentAt: chat.createdAt,
       message: chat.message,
       isFirst: isFirst(index),
       user: isMe ? null : chat.user,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
 import 'package:pot_g/gen/assets.gen.dart';
@@ -11,6 +12,7 @@ class Bubble extends StatelessWidget {
     required this.isMe,
     required this.profileImage,
     required this.name,
+    required this.sentAt,
   }) : assert(
          isMe || profileImage != null && name != null,
          'profileImage and name must be provided if not me',
@@ -21,6 +23,7 @@ class Bubble extends StatelessWidget {
   final bool isMe;
   final Widget? profileImage;
   final String? name;
+  final DateTime sentAt;
 
   @override
   Widget build(BuildContext context) {
@@ -33,8 +36,9 @@ class Bubble extends StatelessWidget {
         ConstrainedBox(
           constraints: BoxConstraints(maxWidth: 240),
           child: Column(
-            crossAxisAlignment:
-                isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+            crossAxisAlignment: isMe
+                ? CrossAxisAlignment.end
+                : CrossAxisAlignment.start,
             children: [
               if (!isMe && isFirst) ...[
                 Padding(
@@ -76,7 +80,21 @@ class Bubble extends StatelessWidget {
                         color: isMe ? Palette.primary : Palette.borderGrey,
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: child,
+                      child: Column(
+                        crossAxisAlignment: isMe
+                            ? CrossAxisAlignment.end
+                            : CrossAxisAlignment.start,
+                        children: [
+                          child,
+                          const SizedBox(height: 4),
+                          Text(
+                            DateFormat.jm().format(sentAt),
+                            style: TextStyles.description.copyWith(
+                              color: Palette.grey,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],
