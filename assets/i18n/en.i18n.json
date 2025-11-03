@@ -170,7 +170,14 @@
   },
   "chat": {
     "title": "Chat",
-    "menu_title": "Chat Rooms"
+    "menu_title": "Chat Rooms",
+    "status(context=PotStatus)": {
+      "beforeConfirmed": "Before Confirmed",
+      "confirmed": "Confirmed",
+      "waitAccounting": "Wait Accounting",
+      "accountingDone": "Accounting Done",
+      "archived": "Archived"
+    }
   },
   "chat_room": {
     "connection": {

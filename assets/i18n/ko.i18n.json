@@ -167,7 +167,14 @@
   },
   "chat": {
     "title": "채팅",
-    "menu_title": "채팅방"
+    "menu_title": "채팅방",
+    "status(context=PotStatus)": {
+      "beforeConfirmed": "확정 전",
+      "confirmed": "확정",
+      "waitAccounting": "정산 중",
+      "accountingDone": "정산 완료",
+      "archived": "해산"
+    }
   },
   "chat_room": {
     "connection": {

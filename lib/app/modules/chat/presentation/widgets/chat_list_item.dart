@@ -9,6 +9,7 @@ import 'package:pot_g/app/modules/core/domain/entities/route_entity.dart';
 import 'package:pot_g/app/router.gr.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
+import 'package:pot_g/gen/strings.g.dart';
 
 // TODO: add last chat message
 // deleted in https://github.com/gsainfoteam/pot-g-flutter/commit/402e4d75e9d55f43f242d95e5a6fb4717bfd53fd
@@ -125,16 +126,6 @@ class _StatusChip extends StatelessWidget {
     };
   }
 
-  String get text {
-    return switch (status) {
-      PotStatus.confirmed => '확정',
-      PotStatus.beforeConfirmed => '확정 전',
-      PotStatus.waitAccounting => '정산 전',
-      PotStatus.archived => '해산',
-      PotStatus.accountingDone => '정산 완료',
-    };
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -151,7 +142,7 @@ class _StatusChip extends StatelessWidget {
             const SizedBox(width: 4),
           ],
           Text(
-            text,
+            context.t.chat.status(context: status),
             style: TextStyles.description.copyWith(color: Palette.white),
           ),
         ],

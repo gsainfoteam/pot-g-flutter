@@ -8,7 +8,10 @@ contexts:
     generate_enum: false
   BankAppType:
     generate_enum: false
+  PotStatus:
+    generate_enum: false
 imports:
   - 'package:pot_g/app/modules/user/domain/enums/term_type.dart'
   - 'package:pot_g/app/modules/chat/domain/enums/taxi_app_type.dart'
   - 'package:pot_g/app/modules/chat/domain/enums/bank_app_type.dart'
+  - 'package:pot_g/app/modules/chat/domain/enums/pot_status.dart'
