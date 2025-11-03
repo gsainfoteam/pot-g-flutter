@@ -10,6 +10,7 @@ import 'package:pot_g/app/pot_app.dart';
 import 'package:pot_g/app_bloc_observer.dart';
 import 'package:pot_g/firebase_options.dart';
 import 'package:pot_g/gen/strings.g.dart';
+import 'package:pot_g/hive/hive_adapters.dart';
 
 Future<void> main() async {
   final binding = WidgetsFlutterBinding.ensureInitialized();
@@ -25,6 +26,7 @@ Future<void> main() async {
     };
   }
   await Hive.initFlutter();
+  Hive.registerAdapter(HiddenMenuLevelAdapter());
   await configureDependencies();
   runApp(TranslationProvider(child: const PotApp()));
 }

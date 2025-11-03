@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,6 +15,7 @@ import 'package:pot_g/app/modules/common/presentation/utils/log_observer.dart';
 import 'package:pot_g/app/modules/core/domain/enums/api_channel.dart';
 import 'package:pot_g/app/modules/core/presentation/bloc/api_channel_bloc.dart';
 import 'package:pot_g/app/modules/core/presentation/bloc/app_version_bloc.dart';
+import 'package:pot_g/app/modules/core/presentation/bloc/hidden_menu_bloc.dart';
 import 'package:pot_g/app/modules/core/presentation/bloc/link_bloc.dart';
 import 'package:pot_g/app/modules/core/presentation/bloc/messaging_bloc.dart';
 import 'package:pot_g/app/modules/core/presentation/bloc/route_list_bloc.dart';
@@ -90,6 +92,10 @@ class _Providers extends StatelessWidget {
         BlocProvider(create: (_) => sl<AppVersionBloc>()),
         BlocProvider(
           create: (_) => sl<PotListBloc>()..add(PotListEvent.search()),
+        ),
+        BlocProvider(
+          create: (_) =>
+              sl<HiddenMenuBloc>()..add(const HiddenMenuEvent.init()),
         ),
       ],
       child: child,
@@ -180,14 +186,23 @@ class _Listeners extends StatelessWidget {
             );
           },
         ),
+        BlocListener<HiddenMenuBloc, HiddenMenuState>(
+          listener: (context, state) {
+            state.mapOrNull(
+              enabled: (_) => context.showToast('Hidden menu enabled'),
+              disabled: (_) => context.showToast('Hidden menu disabled'),
+            );
+          },
+        ),
       ],
       child: UpdateListener(
         child: BlocBuilder<ApiChannelBloc, ApiChannelState>(
           builder: (context, state) {
             final channel = state.channel;
-            if (channel == null || channel == ApiChannel.prod) return child;
+            if (channel == null) return child;
+            if (!kDebugMode && channel == ApiChannel.prod) return child;
             return Banner(
-              color: Colors.orange,
+              color: channel.color,
               message: channel.name,
               location: BannerLocation.topStart,
               child: child,
