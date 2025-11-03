@@ -229,6 +229,7 @@ class _Layout extends StatelessWidget {
   }
 
   Widget? _buildBanner(BuildContext context, PotInfoEntity pot) {
+    if (pot.status > PotStatus.waitAccounting) return null;
     if (pot.status == PotStatus.waitAccounting) {
       return ChatRoomBanner(
         important: true,
@@ -237,7 +238,10 @@ class _Layout extends StatelessWidget {
     }
     final departureTime = pot.departureTime;
     if (departureTime == null) return null;
-    if (departureTime.isBefore(DateTime.now())) {
+    final tenMinutesAfterDeparture = departureTime.add(
+      const Duration(minutes: 10),
+    );
+    if (DateTime.now().isAfter(tenMinutesAfterDeparture)) {
       return ChatRoomBanner(
         important: true,
         message: context.t.chat_room.banner.notAccountingStarted,

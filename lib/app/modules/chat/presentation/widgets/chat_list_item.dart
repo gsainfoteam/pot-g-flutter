@@ -9,6 +9,7 @@ import 'package:pot_g/app/modules/core/domain/entities/route_entity.dart';
 import 'package:pot_g/app/router.gr.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
+import 'package:pot_g/gen/strings.g.dart';
 
 // TODO: add last chat message
 // deleted in https://github.com/gsainfoteam/pot-g-flutter/commit/402e4d75e9d55f43f242d95e5a6fb4717bfd53fd
@@ -74,16 +75,16 @@ class ChatListItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '팟 정보',
+                  context.t.chat.info,
                   style: TextStyles.caption.copyWith(color: Palette.grey),
                 ),
-                field(label: '노선', value: pot.route.name),
+                field(label: context.t.chat.route, value: pot.route.name),
                 field(
-                  label: '날짜',
+                  label: context.t.chat.date,
                   value: DateFormat.yMd().add_E().format(pot.startsAt),
                 ),
                 field(
-                  label: '시간',
+                  label: context.t.chat.time,
                   value:
                       pot.status == PotStatus.beforeConfirmed ||
                           pot.departureTime == null
@@ -92,9 +93,10 @@ class ChatListItem extends StatelessWidget {
                 ),
                 if (pot.status == PotStatus.waitAccounting)
                   field(
-                    label: '정산',
-                    value:
-                        '${NumberFormat('#,###').format(pot.accountingRequested)}원',
+                    label: context.t.chat.accounting,
+                    value: context.t.common.won(
+                      n: NumberFormat('#,###').format(pot.accountingRequested),
+                    ),
                   ),
               ].intersperse(const SizedBox(height: 4)).toList(),
             ),
@@ -125,19 +127,10 @@ class _StatusChip extends StatelessWidget {
     };
   }
 
-  String get text {
-    return switch (status) {
-      PotStatus.confirmed => '확정',
-      PotStatus.beforeConfirmed => '확정 전',
-      PotStatus.waitAccounting => '정산 전',
-      PotStatus.archived => '해산',
-      PotStatus.accountingDone => '정산 완료',
-    };
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: 30,
       padding: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
       decoration: BoxDecoration(
         color: color,
@@ -151,7 +144,7 @@ class _StatusChip extends StatelessWidget {
             const SizedBox(width: 4),
           ],
           Text(
-            text,
+            context.t.chat.status(context: status),
             style: TextStyles.description.copyWith(color: Palette.white),
           ),
         ],

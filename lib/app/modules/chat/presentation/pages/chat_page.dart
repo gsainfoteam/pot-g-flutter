@@ -108,8 +108,8 @@ class _ChatListViewState extends State<_ChatListView> {
                           ),
                         ),
                         const SizedBox(height: 16),
-                        const Text(
-                          "참여 중인 팟이 없습니다",
+                        Text(
+                          context.t.chat.no_active_pots,
                           style: TextStyle(
                             fontSize: 16,
                             color: Palette.textGrey,
@@ -137,7 +137,9 @@ class _ChatListViewState extends State<_ChatListView> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      _showClosed ? "해산된 팟 접기" : "해산된 팟 보기",
+                      _showClosed
+                          ? context.t.chat.hide_archived_pots
+                          : context.t.chat.show_archived_pots,
                       style: const TextStyle(fontSize: 16, color: Palette.grey),
                     ),
                     const SizedBox(width: 8),

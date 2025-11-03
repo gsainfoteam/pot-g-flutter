@@ -5,7 +5,8 @@
     "cancel": "취소",
     "refresh": "새로고침",
     "unavailable": "곧 지원할 예정이에요!",
-    "unknown_error": "알 수 없는 오류가 발생했습니다"
+    "unknown_error": "알 수 없는 오류가 발생했습니다",
+    "won": "$n원"
   },
   "unauthorized": {
     "title": "로그인 하러 가시겠습니까?",
@@ -167,7 +168,22 @@
   },
   "chat": {
     "title": "채팅",
-    "menu_title": "채팅방"
+    "menu_title": "채팅방",
+    "no_active_pots": "참여 중인 팟이 없습니다",
+    "hide_archived_pots": "해산된 팟 접기",
+    "show_archived_pots": "해산된 팟 보기",
+    "info": "팟 정보",
+    "route": "노선",
+    "date": "날짜",
+    "time": "시간",
+    "accounting": "정산",
+    "status(context=PotStatus)": {
+      "beforeConfirmed": "확정 전",
+      "confirmed": "확정",
+      "waitAccounting": "정산 중",
+      "accountingDone": "정산 완료",
+      "archived": "해산"
+    }
   },
   "chat_room": {
     "connection": {

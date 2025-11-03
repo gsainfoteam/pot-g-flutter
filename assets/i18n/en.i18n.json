@@ -5,7 +5,8 @@
     "cancel": "Cancel",
     "refresh": "Refresh",
     "unavailable": "Coming soon!",
-    "unknown_error": "Unknown error occurred"
+    "unknown_error": "Unknown error occurred",
+    "won": "$n won"
   },
   "unauthorized": {
     "title": "Login to continue",
@@ -170,7 +171,22 @@
   },
   "chat": {
     "title": "Chat",
-    "menu_title": "Chat Rooms"
+    "menu_title": "Chat Rooms",
+    "no_active_pots": "No active pots",
+    "hide_archived_pots": "Hide Archived Pots",
+    "show_archived_pots": "Show Archived Pots",
+    "info": "Pot Info",
+    "route": "Route",
+    "date": "Date",
+    "time": "Time",
+    "accounting": "Accounting",
+    "status(context=PotStatus)": {
+      "beforeConfirmed": "Before Confirmed",
+      "confirmed": "Confirmed",
+      "waitAccounting": "Wait Accounting",
+      "accountingDone": "Accounting Done",
+      "archived": "Archived"
+    }
   },
   "chat_room": {
     "connection": {

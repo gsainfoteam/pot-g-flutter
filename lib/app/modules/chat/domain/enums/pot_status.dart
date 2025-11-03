@@ -8,7 +8,7 @@ enum PotStatus {
   /// 확정
   confirmed,
 
-  /// 정산 전
+  /// 정산 중
   waitAccounting,
 
   /// 정산 완료
@@ -16,4 +16,11 @@ enum PotStatus {
 
   /// 해산
   archived,
+}
+
+extension PotStatusX on PotStatus {
+  bool operator >=(PotStatus other) => index >= other.index;
+  bool operator >(PotStatus other) => index > other.index;
+  bool operator <=(PotStatus other) => index <= other.index;
+  bool operator <(PotStatus other) => index < other.index;
 }
