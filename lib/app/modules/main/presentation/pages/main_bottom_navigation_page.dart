@@ -102,22 +102,18 @@ class _MainBottomNavigationPageState extends State<MainBottomNavigationPage>
             return;
           }
           if (index != 0 && context.read<AuthBloc>().state.user == null) {
-            final completer = Completer<bool>();
+            final completer = Completer<void>();
             context.router.push(
               LoginRoute(
-                onDone: () => completer.complete(true),
-                onConsent: () => context.router.popAndPush(
-                  ConsentRoute(onDone: () => completer.complete(true)),
-                ),
-                onCancel: () => completer.complete(false),
+                onDone: () => completer.complete(),
+                onConsent: () => completer.complete(),
+                onCancel: () => completer.complete(),
               ),
             );
-            final result = await completer.future;
+            await completer.future;
             if (!context.mounted) return;
             context.router.pop();
-            if (!result) return;
-          }
-          if (context.mounted) {
+          } else if (context.mounted) {
             AutoTabsRouter.of(context).setActiveIndex(index);
           }
         },
