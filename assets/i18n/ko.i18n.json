@@ -380,7 +380,8 @@
       "description": "$route\n택시를 빠르게 호출해보세요",
       "actions(context=TaxiAppType)": {
         "kakaoT": "카카오택시로 호출하기",
-        "uber": "우티로 호출하기"
+        "uber": "우티로 호출하기",
+        "tmoney": "티머니onda로 호출하기"
       }
     },
     "send_money": {

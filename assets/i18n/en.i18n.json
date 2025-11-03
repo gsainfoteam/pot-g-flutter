@@ -383,7 +383,8 @@
       "description": "Call Taxi for $route speedily",
       "actions(context=TaxiAppType)": {
         "kakaoT": "Call with KakaoT",
-        "uber": "Call with Uber Taxi"
+        "uber": "Call with Uber Taxi",
+        "tmoney": "Call with Tmoney onda"
       }
     },
     "send_money": {
