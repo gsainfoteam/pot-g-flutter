@@ -129,6 +129,7 @@ class _StatusChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: 30,
       padding: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
       decoration: BoxDecoration(
         color: color,
