@@ -22,9 +22,17 @@ class HiddenMenuSheet extends StatelessWidget {
           _Logout(enabled: state.user != null),
           BlocBuilder<ApiChannelBloc, ApiChannelState>(
             builder: (context, channelState) {
-              return _ChangeChannel(
-                enabled: state.user == null,
-                channel: channelState.channel,
+              return Column(
+                children: [
+                  _ToggleQA(
+                    enabled: state.user == null,
+                    channel: channelState.channel,
+                  ),
+                  _ChangeChannel(
+                    enabled: state.user == null,
+                    channel: channelState.channel,
+                  ),
+                ],
               );
             },
           ),
@@ -91,6 +99,25 @@ class _Logout extends _Button {
         icon: Icon(Icons.logout),
         onTap: (context) {
           context.read<AuthBloc>().add(const AuthEvent.logout());
+        },
+      );
+}
+
+class _ToggleQA extends _Button {
+  final ApiChannel? channel;
+  _ToggleQA({super.enabled, this.channel})
+    : super(
+        requires: HiddenMenuType.accessQa,
+        title: 'Toggle QA (current: ${channel?.name ?? ''})',
+        icon: Icon(Icons.settings),
+        onTap: (context) {
+          final newChannel = channel == ApiChannel.prod
+              ? ApiChannel.qa
+              : ApiChannel.prod;
+          context.read<ApiChannelBloc>().add(
+            ApiChannelEvent.setChannel(newChannel),
+          );
+          context.showToast('api channel changed to ${newChannel.name}');
         },
       );
 }
