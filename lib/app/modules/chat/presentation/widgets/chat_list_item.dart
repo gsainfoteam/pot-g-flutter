@@ -75,16 +75,16 @@ class ChatListItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '팟 정보',
+                  context.t.chat.info,
                   style: TextStyles.caption.copyWith(color: Palette.grey),
                 ),
-                field(label: '노선', value: pot.route.name),
+                field(label: context.t.chat.route, value: pot.route.name),
                 field(
-                  label: '날짜',
+                  label: context.t.chat.date,
                   value: DateFormat.yMd().add_E().format(pot.startsAt),
                 ),
                 field(
-                  label: '시간',
+                  label: context.t.chat.time,
                   value:
                       pot.status == PotStatus.beforeConfirmed ||
                           pot.departureTime == null
@@ -93,9 +93,10 @@ class ChatListItem extends StatelessWidget {
                 ),
                 if (pot.status == PotStatus.waitAccounting)
                   field(
-                    label: '정산',
-                    value:
-                        '${NumberFormat('#,###').format(pot.accountingRequested)}원',
+                    label: context.t.chat.accounting,
+                    value: context.t.common.won(
+                      n: NumberFormat('#,###').format(pot.accountingRequested),
+                    ),
                   ),
               ].intersperse(const SizedBox(height: 4)).toList(),
             ),
