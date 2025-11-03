@@ -8,7 +8,7 @@ enum PotStatus {
   /// 확정
   confirmed,
 
-  /// 정산 전
+  /// 정산 중
   waitAccounting,
 
   /// 정산 완료
