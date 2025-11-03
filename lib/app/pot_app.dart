@@ -169,7 +169,6 @@ class _Listeners extends StatelessWidget {
               curr.channel != null &&
               prev.channel != curr.channel,
           listener: (context, state) {
-            context.read<AuthBloc>().add(AuthEvent.logout());
             context.read<RouteListBloc>().add(const RouteListEvent.search());
             _router.replaceAll([ListRoute()]);
           },
