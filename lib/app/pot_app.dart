@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -198,9 +199,10 @@ class _Listeners extends StatelessWidget {
         child: BlocBuilder<ApiChannelBloc, ApiChannelState>(
           builder: (context, state) {
             final channel = state.channel;
-            if (channel == null || channel == ApiChannel.prod) return child;
+            if (channel == null) return child;
+            if (!kDebugMode && channel == ApiChannel.prod) return child;
             return Banner(
-              color: channel == ApiChannel.dev ? Colors.orange : Colors.blue,
+              color: channel.color,
               message: channel.name,
               location: BannerLocation.topStart,
               child: child,
