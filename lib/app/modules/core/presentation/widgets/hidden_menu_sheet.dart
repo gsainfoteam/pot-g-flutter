@@ -1,4 +1,5 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pot_g/app/modules/auth/presentation/bloc/auth_bloc.dart';
@@ -6,6 +7,7 @@ import 'package:pot_g/app/modules/common/presentation/extensions/toast.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_pressable.dart';
 import 'package:pot_g/app/modules/core/domain/enums/api_channel.dart';
 import 'package:pot_g/app/modules/core/presentation/bloc/api_channel_bloc.dart';
+import 'package:pot_g/app/modules/core/presentation/bloc/hidden_menu_bloc.dart';
 
 class HiddenMenuSheet extends StatelessWidget {
   const HiddenMenuSheet({super.key});
@@ -25,6 +27,7 @@ class HiddenMenuSheet extends StatelessWidget {
               );
             },
           ),
+          _Disable(),
         ],
       ),
     );
@@ -117,6 +120,18 @@ class _ChangeChannel extends _Button {
           context.showToast(
             'api channel changed to ${newChannel.name}\n${newChannel.url}\n${newChannel.wsUrl}',
           );
+        },
+      );
+}
+
+class _Disable extends _Button {
+  _Disable()
+    : super(
+        title: 'Disable',
+        icon: Icon(Icons.disabled_by_default),
+        onTap: (context) {
+          context.read<HiddenMenuBloc>().add(const HiddenMenuEvent.disable());
+          context.pop();
         },
       );
 }
