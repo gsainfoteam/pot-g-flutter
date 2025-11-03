@@ -23,9 +23,9 @@ class DeepLinkTaxiAppRepository
             'origin_lat': route.from.lat.toString(),
             'origin_lng': route.from.lng.toString(),
             'origin_name': route.from.name,
-            'destination_lat': route.to.lat.toString(),
-            'destination_lng': route.to.lng.toString(),
-            'destination_name': route.to.name,
+            'dest_lat': route.to.lat.toString(),
+            'dest_lng': route.to.lng.toString(),
+            'dest_name': route.to.name,
           },
         );
       case TaxiAppType.uber:
@@ -42,7 +42,18 @@ class DeepLinkTaxiAppRepository
           },
         );
       case TaxiAppType.tmoney:
-        return Uri(scheme: 'tmoneytia', host: 'onda', path: '/main');
+        return Uri(
+          scheme: 'tmoneytia',
+          host: 'onda',
+          path: '/list',
+          queryParameters: {
+            'startLat': route.from.lat.toString(),
+            'startLng': route.from.lng.toString(),
+            'endLat': route.to.lat.toString(),
+            'endLng': route.to.lng.toString(),
+            'chn': 'prod',
+          },
+        );
     }
   }
 
