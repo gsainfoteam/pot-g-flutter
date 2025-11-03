@@ -29,7 +29,9 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     await _mutex.acquire();
     emit(const ChatState.loading());
     _pot = event.pot;
-    _completer.complete();
+    if (!_completer.isCompleted) {
+      _completer.complete();
+    }
     try {
       final stream = emit.forEach(
         _chatRepository.getChatsStream(_pot),

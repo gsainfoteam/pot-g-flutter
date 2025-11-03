@@ -146,24 +146,51 @@ class ChatRoomPage extends StatelessWidget with LogPage {
   }
 }
 
-class _Layout extends StatelessWidget {
+class _Layout extends StatefulWidget {
   const _Layout({required this.pot});
 
   final PotInfoEntity pot;
 
   @override
+  State<_Layout> createState() => _LayoutState();
+}
+
+class _LayoutState extends State<_Layout> with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      final chatState = context.read<ChatBloc>().state;
+      if (!chatState.isLoading) {
+        context.read<ChatBloc>().add(ChatEvent.init(widget.pot));
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final disabled = pot.isArchived;
-    final banner = _buildBanner(context, pot);
+    final disabled = widget.pot.isArchived;
+    final banner = _buildBanner(context, widget.pot);
     return Scaffold(
       backgroundColor: disabled ? const Color(0xfff0f0f0) : null,
-      appBar: PotAppBar(title: Text(pot.name)),
+      appBar: PotAppBar(title: Text(widget.pot.name)),
       onEndDrawerChanged: (value) {
         if (value) {
           L.c('sidebar');
         }
       },
-      endDrawer: ChatRoomDrawer(pot: pot),
+      endDrawer: ChatRoomDrawer(pot: widget.pot),
       body: Column(
         children: [
           BlocBuilder<SocketAuthBloc, SocketAuthState>(
@@ -174,7 +201,7 @@ class _Layout extends StatelessWidget {
           Expanded(
             child: Stack(
               children: [
-                ChatList(pot: pot),
+                ChatList(pot: widget.pot),
                 if (banner != null)
                   Positioned(top: 20, left: 20, right: 20, child: banner),
               ],
@@ -185,8 +212,8 @@ class _Layout extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 6),
               child: Row(
                 children: [
-                  SetDepartureTimeButton(pot: pot),
-                  AccountingButton(pot: pot),
+                  SetDepartureTimeButton(pot: widget.pot),
+                  AccountingButton(pot: widget.pot),
                   Expanded(child: ChatInput()),
                 ],
               ),
