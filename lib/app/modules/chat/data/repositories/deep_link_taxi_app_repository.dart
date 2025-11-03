@@ -42,7 +42,18 @@ class DeepLinkTaxiAppRepository
           },
         );
       case TaxiAppType.tmoney:
-        return Uri(scheme: 'tmoneytia', host: 'onda', path: '/main');
+        return Uri(
+          scheme: 'tmoneytia',
+          host: 'onda',
+          path: '/list',
+          queryParameters: {
+            'startLat': route.from.lat.toString(),
+            'startLng': route.from.lng.toString(),
+            'endLat': route.to.lat.toString(),
+            'endLng': route.to.lng.toString(),
+            'chn': 'prod',
+          },
+        );
     }
   }
 
