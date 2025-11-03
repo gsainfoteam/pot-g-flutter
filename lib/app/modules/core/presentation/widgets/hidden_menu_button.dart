@@ -6,7 +6,6 @@ import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_bottom_sheet.dart';
-import 'package:pot_g/app/modules/common/presentation/widgets/pot_pressable.dart';
 import 'package:pot_g/app/modules/core/presentation/bloc/hidden_menu_bloc.dart';
 import 'package:pot_g/app/modules/core/presentation/widgets/hidden_menu_sheet.dart';
 
@@ -64,7 +63,8 @@ class _ButtonState extends State<_Button> {
   Widget build(BuildContext context) {
     return AspectRatio(
       aspectRatio: 1,
-      child: PotPressable(
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
         onTap: () async {
           if (!widget.requireEnabled) {
             return PotBottomSheet.show(context, const HiddenMenuSheet());
