@@ -200,7 +200,7 @@ class _Listeners extends StatelessWidget {
             final channel = state.channel;
             if (channel == null || channel == ApiChannel.prod) return child;
             return Banner(
-              color: Colors.orange,
+              color: channel == ApiChannel.dev ? Colors.orange : Colors.blue,
               message: channel.name,
               location: BannerLocation.topStart,
               child: child,
