@@ -57,6 +57,7 @@ class UpdateListener extends StatelessWidget {
                   );
                 }
               }
+              return;
             }
             if (versionInfo.updateAvailable) {
               final result = await showOkCancelAlertDialog(
