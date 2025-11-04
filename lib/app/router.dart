@@ -31,9 +31,7 @@ class AppRouter extends RootStackRouter {
             user.agreedTerms.allRequired) {
           return resolver.next(true);
         }
-        await resolver.redirectUntil(
-          ConsentRoute(onDone: () => resolver.next(true)),
-        );
+        await resolver.redirectUntil(ConsentRoute(onDone: () {}));
         return;
       }
       if (resolver.route.name == MainBottomNavigationRoute.name ||

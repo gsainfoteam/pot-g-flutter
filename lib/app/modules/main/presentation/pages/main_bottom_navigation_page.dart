@@ -28,61 +28,88 @@ class _MainBottomNavigationPageState extends State<MainBottomNavigationPage>
     return AutoTabsRouter.tabBar(
       physics: NeverScrollableScrollPhysics(),
       routes: [ListRoute(), ChatRoute(), ProfileRoute()],
-      builder: (context, child, tabController) {
-        final items = [
-          _Item(
-            icon: Assets.icons.addPot.svg(),
-            label: context.t.create.menu_title,
-            onTap: () => L.c('create'),
-          ),
-          _Item(
-            icon: Assets.icons.search.svg(),
-            label: context.t.list.title,
-            onTap: () => L.c('search'),
-          ),
-          _Item(
-            icon: Assets.icons.chatBubble.svg(),
-            label: context.t.chat.menu_title,
-            onTap: () => L.c('chatList'),
-          ),
-          _Item(
-            icon: Assets.icons.userCircle.svg(),
-            label: context.t.profile.menu_title,
-            onTap: () => L.c('profile'),
-          ),
-        ];
-        return Scaffold(
-          body: child,
-          bottomNavigationBar: Container(
-            color: Palette.white,
-            child: SafeArea(
-              child: Stack(
-                children: [
-                  Container(
-                    height: 0,
-                    decoration: BoxDecoration(
-                      border: Border(
-                        top: BorderSide(color: Palette.borderGrey2, width: 1),
-                      ),
-                    ),
+      builder: (context, child, tabController) =>
+          _Layout(tabController: tabController, child: child),
+    );
+  }
+}
+
+class _Layout extends StatefulWidget {
+  const _Layout({required this.tabController, required this.child});
+  final TabController tabController;
+  final Widget child;
+
+  @override
+  State<_Layout> createState() => _LayoutState();
+}
+
+class _LayoutState extends State<_Layout> {
+  static int? _lastIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (_lastIndex != null) {
+        widget.tabController.animateTo(_lastIndex!);
+        _lastIndex = null;
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final items = [
+      _Item(
+        icon: Assets.icons.addPot.svg(),
+        label: context.t.create.menu_title,
+        onTap: () => L.c('create'),
+      ),
+      _Item(
+        icon: Assets.icons.search.svg(),
+        label: context.t.list.title,
+        onTap: () => L.c('search'),
+      ),
+      _Item(
+        icon: Assets.icons.chatBubble.svg(),
+        label: context.t.chat.menu_title,
+        onTap: () => L.c('chatList'),
+      ),
+      _Item(
+        icon: Assets.icons.userCircle.svg(),
+        label: context.t.profile.menu_title,
+        onTap: () => L.c('profile'),
+      ),
+    ];
+    return Scaffold(
+      body: widget.child,
+      bottomNavigationBar: Container(
+        color: Palette.white,
+        child: SafeArea(
+          child: Stack(
+            children: [
+              Container(
+                height: 0,
+                decoration: BoxDecoration(
+                  border: Border(
+                    top: BorderSide(color: Palette.borderGrey2, width: 1),
                   ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Row(
-                      children: items
-                          .mapIndexed(
-                            (index, item) =>
-                                _buildItem(context, index - 1, item),
-                          )
-                          .toList(),
-                    ),
-                  ),
-                ],
+                ),
               ),
-            ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Row(
+                  children: items
+                      .mapIndexed(
+                        (index, item) => _buildItem(context, index - 1, item),
+                      )
+                      .toList(),
+                ),
+              ),
+            ],
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 
@@ -113,6 +140,7 @@ class _MainBottomNavigationPageState extends State<MainBottomNavigationPage>
             await completer.future;
             if (!context.mounted) return;
             context.router.pop();
+            _lastIndex = index;
           } else if (context.mounted) {
             AutoTabsRouter.of(context).setActiveIndex(index);
           }
