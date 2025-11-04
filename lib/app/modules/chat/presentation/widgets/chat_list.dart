@@ -18,6 +18,7 @@ import 'package:pot_g/app/modules/chat/presentation/widgets/chat_bubble.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/fofo_bubble.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/set_departure_time_button.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/system_message.dart';
+import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
 import 'package:pot_g/app/modules/core/domain/entities/route_entity.dart';
 import 'package:pot_g/gen/strings.g.dart';
 
@@ -138,15 +139,19 @@ class _ChatListState extends State<ChatList> {
   void _onAction(BuildContext context, FofoActionButtonType type) async {
     switch (type) {
       case FofoActionButtonType.departureConfirm:
+        L.c('fofoSetDepartureTime');
         SetDepartureTimeButton.setDepartureTime(context, widget.pot);
         break;
       case FofoActionButtonType.accountingRequest:
+        L.c('fofoAccounting');
         AccountingButton.setAccounting(context, widget.pot);
         break;
       case FofoActionButtonType.accountingInfoCheck:
+        L.c('payInfo');
         Scaffold.of(context).openEndDrawer();
         break;
       case FofoActionButtonType.taxiCall:
+        L.c('callTaxi');
         final result = await showAlertDialog(
           context: context,
           title: context.t.chat_room.taxi_call.title,
@@ -162,9 +167,11 @@ class _ChatListState extends State<ChatList> {
           ],
         );
         if (result == null || !context.mounted) return;
+        L.c('callTaxiAction', properties: {'type': result.name});
         context.read<TaxiAppCubit>().callTaxi(result, widget.pot.route);
         break;
       case FofoActionButtonType.accountingProcess:
+        L.c('transfer');
         final accountingInfo = widget.pot.accountingInfo;
         if (!accountingInfo.accountingResults
             .map((e) => e.userPk)
@@ -202,9 +209,11 @@ class _ChatListState extends State<ChatList> {
         if (result == null || !context.mounted) return;
         switch (result) {
           case 'clipboard':
+            L.c('transferAction', properties: {'type': 'clipboard'});
             Clipboard.setData(ClipboardData(text: bank));
             break;
           case BankAppType type:
+            L.c('transferAction', properties: {'type': result.name});
             context.read<BankAppCubit>().sendMoney(type, accountingInfo);
         }
         break;

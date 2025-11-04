@@ -64,7 +64,7 @@ class ChatRoomDrawer extends StatelessWidget {
   }
 
   Future<void> _leave(BuildContext context) async {
-    L.c('leave', properties: {'roomId': pot.id});
+    L.c('leave', properties: {'potId': pot.id});
     if (pot.departureTime != null) {
       showOkAlertDialog(
         context: context,
