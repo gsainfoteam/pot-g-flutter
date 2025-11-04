@@ -57,6 +57,8 @@ sealed class HiddenMenuState with _$HiddenMenuState {
   const factory HiddenMenuState.enabled(HiddenMenuLevel level) = _Enabled;
   const factory HiddenMenuState.disabled() = _Disabled;
 
+  bool get isInitial => this is _Initial;
+
   HiddenMenuLevel? get level => switch (this) {
     _Enabled(:final level) => level,
     _ => null,

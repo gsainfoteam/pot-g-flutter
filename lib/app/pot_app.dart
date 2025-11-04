@@ -187,6 +187,7 @@ class _Listeners extends StatelessWidget {
           },
         ),
         BlocListener<HiddenMenuBloc, HiddenMenuState>(
+          listenWhen: (prev, curr) => !prev.isInitial,
           listener: (context, state) {
             state.mapOrNull(
               enabled: (_) => context.showToast('Hidden menu enabled'),
