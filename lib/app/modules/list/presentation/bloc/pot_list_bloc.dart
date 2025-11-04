@@ -1,4 +1,5 @@
 import 'package:bloc_concurrency/bloc_concurrency.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
@@ -44,7 +45,10 @@ class PotListBloc extends Bloc<PotListEvent, PotListState> {
       );
       emit(
         state.copyWith(
-          pots: [...state.pots, ...pots],
+          pots: [...state.pots, ...pots].sorted(
+            (a, b) =>
+                (a.total == a.current ? 1 : 0) - (b.total == b.current ? 1 : 0),
+          ),
           isLoading: false,
           endReached: pots.length < 100,
         ),
