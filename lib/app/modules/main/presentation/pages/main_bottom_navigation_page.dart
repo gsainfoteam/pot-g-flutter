@@ -141,7 +141,8 @@ class _LayoutState extends State<_Layout> {
             if (!context.mounted) return;
             context.router.pop();
             _lastIndex = index;
-          } else if (context.mounted) {
+          }
+          if (context.mounted) {
             AutoTabsRouter.of(context).setActiveIndex(index);
           }
         },

@@ -35,7 +35,8 @@ class ChatRoomDrawer extends StatelessWidget {
               const SizedBox(height: 20),
               Container(height: 1, color: Palette.borderGrey2),
               const SizedBox(height: 20),
-              if (pot.status == PotStatus.waitAccounting)
+              if (pot.status >= PotStatus.waitAccounting &&
+                  pot.accountingInfo.costPerUser != null)
                 PotAccounting(pot: pot)
               else
                 PotUsers(pot: pot),
