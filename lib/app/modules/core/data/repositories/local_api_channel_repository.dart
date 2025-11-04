@@ -2,18 +2,20 @@ import 'dart:async';
 
 import 'package:hive_ce/hive.dart';
 import 'package:injectable/injectable.dart';
+import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
 import 'package:pot_g/app/modules/core/data/models/api_channel_settings.dart';
 import 'package:pot_g/app/modules/core/domain/enums/api_channel.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../domain/repositories/api_channel_repository.dart';
 
-@Singleton(as: ApiChannelRepository)
+@Singleton(as: ApiChannelRepository, dispose: LocalApiChannelRepository.dispose)
 class LocalApiChannelRepository implements ApiChannelRepository {
   Box<ApiChannelSettings>? _box;
   final _subject = BehaviorSubject<ApiChannel>();
   static const String _boxName = 'api_channel_settings';
   static const String _key = 'settings';
+  late final Timer _expirationCheckTimer;
 
   @PostConstruct(preResolve: true)
   Future<void> init() async {
@@ -23,9 +25,18 @@ class LocalApiChannelRepository implements ApiChannelRepository {
     _startExpirationCheck();
   }
 
+  static FutureOr dispose(ApiChannelRepository repository) {
+    (repository as LocalApiChannelRepository)
+      .._expirationCheckTimer.cancel()
+      .._subject.close()
+      .._box?.close();
+  }
+
   void _startExpirationCheck() {
     // 1분마다 만료 시간 확인
-    Timer.periodic(const Duration(minutes: 1), (timer) async {
+    _expirationCheckTimer = Timer.periodic(const Duration(minutes: 1), (
+      timer,
+    ) async {
       final box = await _ensureBox();
       final settings = box.get(_key);
       if (settings != null &&
@@ -71,8 +82,11 @@ class LocalApiChannelRepository implements ApiChannelRepository {
     // Update stream immediately for responsive UI
     _subject.add(channel);
     // Save to storage asynchronously in background
-    setChannelWithExpiration(channel, expiredAt).catchError((error) {
-      // Log error but don't block - channel already updated in stream
+    setChannelWithExpiration(channel, expiredAt).catchError((
+      error,
+      stackTrace,
+    ) {
+      L.e(error, stackTrace);
     });
   }
 
