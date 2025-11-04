@@ -45,10 +45,10 @@ class PotListBloc extends Bloc<PotListEvent, PotListState> {
       );
       emit(
         state.copyWith(
-          pots: [
-            ...state.pots,
-            ...pots,
-          ].sorted((a, b) => a.total == a.current ? 1 : 0),
+          pots: [...state.pots, ...pots].sorted(
+            (a, b) =>
+                (a.total == a.current ? 1 : 0) - (b.total == b.current ? 1 : 0),
+          ),
           isLoading: false,
           endReached: pots.length < 100,
         ),
