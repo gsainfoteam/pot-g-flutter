@@ -25,7 +25,7 @@ class ApiChannelBloc extends Bloc<ApiChannelEvent, ApiChannelState> {
       );
     }, transformer: restartable());
     on<_SetChannel>((event, emit) {
-      _apiChannelRepository.setChannel(event.channel);
+      _apiChannelRepository.setChannel(event.channel, expiredAt: event.expiredAt);
     });
   }
 }
@@ -33,7 +33,10 @@ class ApiChannelBloc extends Bloc<ApiChannelEvent, ApiChannelState> {
 @freezed
 sealed class ApiChannelEvent with _$ApiChannelEvent {
   const factory ApiChannelEvent.init() = _Init;
-  const factory ApiChannelEvent.setChannel(ApiChannel channel) = _SetChannel;
+  const factory ApiChannelEvent.setChannel(
+    ApiChannel channel, {
+    DateTime? expiredAt,
+  }) = _SetChannel;
 }
 
 @freezed

@@ -50,6 +50,7 @@ gen/
 *.gr.dart
 *.freezed.dart
 locator.config.dart
+!hive_registrar.g.dart
 
 # Environment variables
 .env
