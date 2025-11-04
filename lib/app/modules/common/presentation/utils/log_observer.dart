@@ -13,7 +13,7 @@ class LogObserver extends AutoRouterObserver {
       final page = route.settings as AutoRoutePage;
       if (page.child is LogPage) {
         final logPage = page.child as LogPage;
-        L.setCurrentPage(logPage.pageName);
+        L.setCurrentPage(logPage.pageName, properties: logPage.pageProperties);
       }
     }
     super.didPush(route, previousRoute);

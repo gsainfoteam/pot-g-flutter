@@ -44,6 +44,9 @@ class ChatRoomPage extends StatelessWidget with LogPage {
   @override
   String get pageName => 'chatRoom';
 
+  @override
+  Map<String, Object> get pageProperties => {'potId': id};
+
   final String id;
 
   @override

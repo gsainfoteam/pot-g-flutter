@@ -6,8 +6,11 @@ import 'package:pot_g/app/modules/common/domain/repositories/log_repository.dart
 class L {
   static String _currentPage = '';
 
-  static void setCurrentPage(String page) {
-    _log('pageview_$page', {});
+  static void setCurrentPage(
+    String page, {
+    Map<String, Object> properties = const {},
+  }) {
+    _log('pageview_$page', properties);
     _currentPage = page;
   }
 
