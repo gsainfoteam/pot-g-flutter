@@ -37,12 +37,16 @@ class LocalApiChannelRepository implements ApiChannelRepository {
     _expirationCheckTimer = Timer.periodic(const Duration(minutes: 1), (
       timer,
     ) async {
-      final box = await _ensureBox();
-      final settings = box.get(_key);
-      if (settings != null &&
-          settings.expiredAt != null &&
-          DateTime.now().isAfter(settings.expiredAt!)) {
-        await _setChannelToProduction();
+      try {
+        final box = await _ensureBox();
+        final settings = box.get(_key);
+        if (settings != null &&
+            settings.expiredAt != null &&
+            DateTime.now().isAfter(settings.expiredAt!)) {
+          await _setChannelToProduction();
+        }
+      } catch (error, stackTrace) {
+        L.e(error, stackTrace);
       }
     });
   }
