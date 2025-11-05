@@ -117,7 +117,10 @@ class _AccountingButtonState extends State<AccountingButton> {
       await _handleTooltipClose();
     }
     if (!mounted) return;
-    L.c('accounting');
+    L.c(
+      'accounting',
+      properties: {'potId': widget.pot.id, 'name': widget.pot.name},
+    );
     await AccountingButton.setAccounting(context, widget.pot);
   }
 

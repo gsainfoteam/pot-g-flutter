@@ -29,6 +29,7 @@ class SetDepartureTimeButton extends StatefulWidget {
     BuildContext context,
     PotInfoEntity pot,
   ) async {
+    final l = LL({'potId': pot.id, 'name': pot.name});
     if (!pot.meIsHost(context)) {
       context.showToast(
         context.t.chat_room.set_departure_time.host_only.description,
@@ -47,7 +48,7 @@ class SetDepartureTimeButton extends StatefulWidget {
       );
       return;
     }
-    L.v('setDepartureTime');
+    l.v('setDepartureTime');
     DateTime date = DateTime.now();
     final result = await showGeneralOkCancelAdaptiveDialog(
       context: context,
@@ -64,7 +65,7 @@ class SetDepartureTimeButton extends StatefulWidget {
     );
     if (result != OkCancelResult.ok) return;
     if (!context.mounted) return;
-    L.v('departureTimeConfirm', from: 'setDepartureTime');
+    l.v('departureTimeConfirm', from: 'setDepartureTime');
     final result2 = await showOkCancelAlertDialog(
       context: context,
       title: context.t.chat_room.set_departure_time.confirm.title,
@@ -74,7 +75,7 @@ class SetDepartureTimeButton extends StatefulWidget {
       ),
     );
     if (result2 != OkCancelResult.ok) return;
-    L.c('confirmDepartureTime', from: 'departureTimeConfirm');
+    l.c('confirmDepartureTime', from: 'departureTimeConfirm');
     if (!context.mounted) return;
     context.read<PotActionBloc>().add(
       PotActionEvent.setDepartureTime(pot, date),
@@ -154,7 +155,10 @@ class _SetDepartureTimeButtonState extends State<SetDepartureTimeButton> {
       await _handleTooltipClose();
     }
     if (!mounted) return;
-    L.c('setDepartureTime');
+    L.c(
+      'setDepartureTime',
+      properties: {'potId': widget.pot.id, 'name': widget.pot.name},
+    );
     await SetDepartureTimeButton.setDepartureTime(context, widget.pot);
   }
 

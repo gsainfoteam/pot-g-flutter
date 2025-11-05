@@ -46,7 +46,7 @@ class ChatListItem extends StatelessWidget {
 
     return PotPressable(
       onTap: () {
-        L.c('chatRoom', properties: {'name': pot.name});
+        L.c('chatRoom', properties: {'potId': pot.id, 'name': pot.name});
         ChatRoomRoute(id: pot.id).push(context);
       },
       child: Container(

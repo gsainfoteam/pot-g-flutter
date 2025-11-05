@@ -190,7 +190,10 @@ class _LayoutState extends State<_Layout> with WidgetsBindingObserver {
       appBar: PotAppBar(title: Text(widget.pot.name)),
       onEndDrawerChanged: (value) {
         if (value) {
-          L.c('sidebar');
+          L.c(
+            'sidebar',
+            properties: {'potId': widget.pot.id, 'name': widget.pot.name},
+          );
         }
       },
       endDrawer: ChatRoomDrawer(pot: widget.pot),
