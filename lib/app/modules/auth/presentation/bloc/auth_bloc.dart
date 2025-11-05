@@ -85,6 +85,11 @@ sealed class AuthState with _$AuthState {
   const factory AuthState.error(AuthorizationException error, String errorId) =
       AuthError;
 
+  bool get isLoading => switch (this) {
+    AuthInitial() => true,
+    AuthLoading() => true,
+    _ => false,
+  };
   SelfUserEntity? get user => switch (this) {
     Authenticated(:final user) => user,
     _ => null,

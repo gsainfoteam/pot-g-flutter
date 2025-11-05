@@ -164,10 +164,22 @@ class _Listeners extends StatelessWidget {
         ),
         BlocListener<LinkBloc, LinkState>(
           listener: (context, state) => state.mapOrNull(
-            loaded: (s) => WidgetsBinding.instance.addPostFrameCallback((_) {
-              L.c('link', properties: {'link': s.link});
-              _router.pushPath(s.link);
-            }),
+            loaded: (s) async {
+              final authBloc = context.read<AuthBloc>();
+              final blocker = authBloc.stream.firstWhere(
+                (state) => !state.isLoading,
+              );
+
+              if (authBloc.state.isLoading) {
+                await blocker;
+              }
+
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                L.c('link', properties: {'link': s.link});
+                _router.pushPath(s.link);
+              });
+              return null;
+            },
           ),
         ),
         BlocListener<ApiChannelBloc, ApiChannelState>(
