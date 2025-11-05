@@ -129,18 +129,19 @@ class _LayoutState extends State<_Layout> {
             return;
           }
           if (index != 0 && context.read<AuthBloc>().state.user == null) {
-            final completer = Completer<void>();
+            final completer = Completer<int?>();
             context.router.push(
               LoginRoute(
-                onDone: () => completer.complete(),
-                onConsent: () => completer.complete(),
-                onCancel: () => completer.complete(),
+                onDone: () => completer.complete(index),
+                onConsent: () => completer.complete(index),
+                onCancel: () => completer.complete(null),
               ),
             );
-            await completer.future;
+            final result = await completer.future;
             if (!context.mounted) return;
             context.router.pop();
-            _lastIndex = index;
+            _lastIndex = result;
+            if (result == null) return;
           }
           if (context.mounted) {
             AutoTabsRouter.of(context).setActiveIndex(index);
