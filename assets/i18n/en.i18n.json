@@ -221,7 +221,7 @@
       "name": "Notification",
       "actions": {
         "departure_confirm": "Departure Confirm",
-        "taxi_call": "Taxi Call",
+        "taxi_call": "Call Taxi",
         "accounting_request": "Accounting Request",
         "accounting_info_check": "Accounting Info Check",
         "accounting_process": "Accounting Process",
