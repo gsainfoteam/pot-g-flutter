@@ -18,18 +18,24 @@ class AmplitudeLogRepository extends LogRepository {
   late final _firebaseAnalytics = FirebaseAnalytics.instance;
 
   @override
-  void logEvent(String eventName, Map<String, Object> properties) {
+  void logEvent(String eventName, Map<String, Object?> properties) {
     if (kDebugMode) {
       log('$eventName $properties', name: 'amplitude');
     } else {
       _instance.track(BaseEvent(eventName, eventProperties: properties));
+      final filteredProperties = Map.fromEntries(
+        properties.entries.where((e) => e.value != null),
+      ).cast<String, Object>();
       if (eventName.startsWith('pageview_')) {
         _firebaseAnalytics.logScreenView(
           screenName: eventName.substring(9),
-          parameters: properties,
+          parameters: filteredProperties,
         );
       } else {
-        _firebaseAnalytics.logEvent(name: eventName, parameters: properties);
+        _firebaseAnalytics.logEvent(
+          name: eventName,
+          parameters: filteredProperties,
+        );
       }
     }
   }

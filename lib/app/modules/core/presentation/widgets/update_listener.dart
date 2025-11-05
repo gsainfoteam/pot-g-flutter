@@ -35,6 +35,7 @@ class UpdateListener extends StatelessWidget {
         if (navigatorContext == null) return;
         switch (state) {
           case AppVersionStateData(:final versionInfo):
+            L.setUserProperties({'app_version': versionInfo.currentVersion});
             if (versionInfo.updateRequired) {
               try {
                 await showOkAlertDialog(

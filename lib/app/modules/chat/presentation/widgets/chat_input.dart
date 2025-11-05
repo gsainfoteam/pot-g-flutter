@@ -78,7 +78,11 @@ class _ChatInputState extends State<ChatInput> {
             ),
             onPressed: _filled
                 ? () {
-                    L.c('sendMessage');
+                    final pot = context.read<PotInfoBloc>().state.pot;
+                    L.c(
+                      'sendMessage',
+                      properties: {'potId': pot?.id, 'name': pot?.name},
+                    );
                     context.read<ChatBloc>().add(
                       ChatSendChat(_controller.text.trim()),
                     );

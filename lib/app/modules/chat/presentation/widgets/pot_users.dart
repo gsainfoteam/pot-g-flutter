@@ -50,7 +50,11 @@ class PotUsers extends StatelessWidget {
                   ? () {
                       L.c(
                         'kick',
-                        properties: {'userId': e.id, 'potId': pot.id},
+                        properties: {
+                          'userId': e.id,
+                          'potId': pot.id,
+                          'name': pot.name,
+                        },
                       );
                       _kickUser(context, e);
                     }
@@ -61,7 +65,7 @@ class PotUsers extends StatelessWidget {
         ),
         PotPressable(
           onTap: () {
-            L.c('copyLink', properties: {'potId': pot.id});
+            L.c('copyLink', properties: {'potId': pot.id, 'name': pot.name});
             final inviteText = context.t.chat_room.drawer.members.invite;
             if (pot.departureTime != null) {
               showOkAlertDialog(

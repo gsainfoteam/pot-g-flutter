@@ -14,7 +14,7 @@ class L {
     _currentPage = page;
   }
 
-  static void _log(String eventName, Map<String, Object> properties) =>
+  static void _log(String eventName, Map<String, Object?> properties) =>
       sl<LogRepository>().logEvent(eventName, {
         ...properties,
         if (_currentPage.isNotEmpty && !properties.containsKey('from'))
@@ -25,7 +25,7 @@ class L {
   static void c(
     String eventName, {
     String? from,
-    Map<String, Object> properties = const {},
+    Map<String, Object?> properties = const {},
   }) => _log('click_$eventName', {
     ...properties,
     if (from?.isNotEmpty ?? false) 'from': from!,
@@ -33,7 +33,7 @@ class L {
   static void v(
     String eventName, {
     String? from,
-    Map<String, Object> properties = const {},
+    Map<String, Object?> properties = const {},
   }) => _log('view_$eventName', {
     ...properties,
     if (from?.isNotEmpty ?? false) 'from': from!,
@@ -52,5 +52,26 @@ class L {
         .recordError(error, stackTrace, information: [nonce], fatal: fatal)
         .ignore();
     return nonce;
+  }
+}
+
+class LL {
+  final Map<String, Object?> _properties;
+  LL(this._properties);
+
+  void c(
+    String eventName, {
+    String? from,
+    Map<String, Object?> properties = const {},
+  }) {
+    L.c(eventName, from: from, properties: {..._properties, ...properties});
+  }
+
+  void v(
+    String eventName, {
+    String? from,
+    Map<String, Object?> properties = const {},
+  }) {
+    L.v(eventName, from: from, properties: {..._properties, ...properties});
   }
 }
