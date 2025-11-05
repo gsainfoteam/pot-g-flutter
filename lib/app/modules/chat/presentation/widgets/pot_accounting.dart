@@ -13,28 +13,48 @@ import 'package:pot_g/app/modules/common/presentation/extensions/toast.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_button.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
+import 'package:pot_g/gen/assets.gen.dart';
 import 'package:pot_g/gen/strings.g.dart';
 
-class PotAccounting extends StatelessWidget {
+class PotAccounting extends StatefulWidget {
   const PotAccounting({super.key, required this.pot});
 
   final PotInfoEntity pot;
 
   @override
+  State<PotAccounting> createState() => _PotAccountingState();
+}
+
+class _PotAccountingState extends State<PotAccounting> {
+  bool _onlyPayer = false;
+
+  void _showOnlyPayer() {
+    setState(() {
+      _onlyPayer = true;
+    });
+    Future.delayed(const Duration(milliseconds: 3000), () {
+      if (!mounted) return;
+      setState(() {
+        _onlyPayer = false;
+      });
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final me = pot.getMe(context);
-    final meRequesting = pot.accountingInfo.requestingUser == me?.id;
+    final me = widget.pot.getMe(context);
+    final meRequesting = widget.pot.accountingInfo.requestingUser == me?.id;
     final requestedUsers = [
-      ...pot.accountingInfo.accountingResults.map((u) => u.userPk),
-      if (!meRequesting) pot.accountingInfo.requestingUser,
-    ].map((id) => pot.usersInfo.users.firstWhere((u) => (u.id == id)));
+      ...widget.pot.accountingInfo.accountingResults.map((u) => u.userPk),
+      if (!meRequesting) widget.pot.accountingInfo.requestingUser,
+    ].map((id) => widget.pot.usersInfo.users.firstWhere((u) => (u.id == id)));
 
     return MultiBlocProvider(
       providers: [
         BlocProvider(
           create: (context) =>
               sl<AccountingConfirmCubit>()
-                ..loadInitialState(pot.accountingInfo.accountingResults),
+                ..loadInitialState(widget.pot.accountingInfo.accountingResults),
         ),
         BlocProvider(create: (context) => sl<PotAccountingBloc>()),
       ],
@@ -70,18 +90,18 @@ class PotAccounting extends StatelessWidget {
                 children: [
                   TextSpan(
                     text: NumberFormat.decimalPattern().format(
-                      pot.accountingInfo.totalCost!,
+                      widget.pot.accountingInfo.totalCost!,
                     ),
                   ),
                   TextSpan(text: ' '),
                   TextSpan(
                     text:
-                        '/ ${pot.accountingInfo.accountingResults.length + 1}',
+                        '/ ${widget.pot.accountingInfo.accountingResults.length + 1}',
                     style: TextStyles.title4.copyWith(color: Palette.grey),
                   ),
                   TextSpan(
                     text:
-                        ' = ${NumberFormat.decimalPattern().format(pot.accountingInfo.costPerUser!)}',
+                        ' = ${NumberFormat.decimalPattern().format(widget.pot.accountingInfo.costPerUser!)}',
                   ),
                 ],
               ),
@@ -94,7 +114,7 @@ class PotAccounting extends StatelessWidget {
                 style: TextStyles.caption.copyWith(color: Palette.textGrey),
               ),
               const SizedBox(height: 8),
-              PotUser(user: me!, pot: pot, payStatus: PayStatus.payer),
+              PotUser(user: me!, pot: widget.pot, payStatus: PayStatus.payer),
               const SizedBox(height: 20),
             ],
             Text(
@@ -110,45 +130,100 @@ class PotAccounting extends StatelessWidget {
                     final isDone = state.userStates[e.id] ?? false;
                     return PotUser(
                       user: e,
-                      pot: pot,
+                      pot: widget.pot,
                       payStatus: isDone ? PayStatus.done : PayStatus.notPaid,
-                      onPay: (value) => context
-                          .read<AccountingConfirmCubit>()
-                          .toggleUser(e.id),
+                      onPay: meRequesting
+                          ? (value) => context
+                                .read<AccountingConfirmCubit>()
+                                .toggleUser(e.id)
+                          : (_) => _showOnlyPayer(),
                     );
                   },
                 ),
               ],
             ),
             const SizedBox(height: 20),
-            BlocBuilder<AccountingConfirmCubit, AccountingConfirmState>(
-              builder: (context, state) {
-                final hasChanges = state.hasChanges(
-                  pot.accountingInfo.accountingResults,
-                );
-                if (!hasChanges) return const SizedBox.shrink();
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    PotButton(
-                      onPressed: () {
-                        final results = context
-                            .read<AccountingConfirmCubit>()
-                            .getAccountingResults();
-                        context.read<PotAccountingBloc>().add(
-                          PotAccountingEvent.confirmAccounting(pot, results),
-                        );
-                      },
-                      variant: PotButtonVariant.emphasized,
-                      size: PotButtonSize.medium,
-                      child: Text(context.t.chat_room.drawer.accounting.save),
-                    ),
-                  ],
-                );
-              },
-            ),
+            if (meRequesting) ...[
+              BlocBuilder<AccountingConfirmCubit, AccountingConfirmState>(
+                builder: (context, state) {
+                  final hasChanges = state.hasChanges(
+                    widget.pot.accountingInfo.accountingResults,
+                  );
+                  if (!hasChanges) {
+                    return _WarnBanner(
+                      text: context.t.chat_room.drawer.accounting.check_to_edit,
+                      color: Palette.primary,
+                    );
+                  }
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      PotButton(
+                        onPressed: () {
+                          final results = context
+                              .read<AccountingConfirmCubit>()
+                              .getAccountingResults();
+                          context.read<PotAccountingBloc>().add(
+                            PotAccountingEvent.confirmAccounting(
+                              widget.pot,
+                              results,
+                            ),
+                          );
+                        },
+                        variant: PotButtonVariant.emphasized,
+                        size: PotButtonSize.medium,
+                        child: Text(context.t.chat_room.drawer.accounting.save),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ] else
+              AnimatedOpacity(
+                opacity: _onlyPayer ? 1.0 : 0.0,
+                duration: const Duration(milliseconds: 100),
+                child: _WarnBanner(
+                  text: context.t.chat_room.drawer.accounting.edit_payer_only,
+                  color: Palette.warning,
+                ),
+              ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _WarnBanner extends StatelessWidget {
+  const _WarnBanner({required this.text, required this.color});
+
+  final String text;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: color),
+      ),
+      child: Row(
+        children: [
+          Assets.icons.warningTriangle.svg(
+            width: 16,
+            height: 16,
+            colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+          ),
+          const SizedBox(width: 6),
+          Expanded(
+            child: Text(
+              text,
+              style: TextStyles.caption.copyWith(color: color),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ],
       ),
     );
   }
