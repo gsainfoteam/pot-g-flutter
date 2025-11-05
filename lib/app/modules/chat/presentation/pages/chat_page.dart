@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/pot_detail_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/chat_list_item.dart';
 import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
+import 'package:pot_g/app/modules/common/presentation/utils/log_page.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/error_cover.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_app_bar.dart';
 import 'package:pot_g/app/modules/core/data/models/pot_detail_model.dart';
@@ -13,8 +14,11 @@ import 'package:pot_g/gen/assets.gen.dart';
 import 'package:pot_g/gen/strings.g.dart';
 
 @RoutePage()
-class ChatPage extends StatelessWidget {
+class ChatPage extends StatelessWidget with LogPage {
   const ChatPage({super.key});
+
+  @override
+  String get pageName => 'chatRoomList';
 
   @override
   Widget build(BuildContext context) {
