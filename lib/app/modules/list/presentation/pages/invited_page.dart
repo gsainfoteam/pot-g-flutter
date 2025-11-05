@@ -109,17 +109,18 @@ class _InvitedPageState extends State<InvitedPage> {
         ),
       ),
     );
-    if (result != OkCancelResult.ok) return;
     if (!context.mounted) return;
-
+    if (result != OkCancelResult.ok) return context.router.pop();
     await _joinPot(context);
+    if (!context.mounted) return;
+    context.router.pop();
   }
 
   Future<void> _joinPot(BuildContext context) async {
     final potListBloc = context.read<PotListBloc>();
     final potDetailBloc = context.read<PotDetailBloc>();
 
-    return showDialog(
+    await showDialog(
       context: context,
       barrierDismissible: false,
       builder: (context) => BlocProvider(
