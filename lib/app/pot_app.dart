@@ -183,6 +183,14 @@ class _Listeners extends StatelessWidget {
           ),
         ),
         BlocListener<ApiChannelBloc, ApiChannelState>(
+          listenWhen: (prev, curr) => prev.channel != curr.channel,
+          listener: (context, state) {
+            final channel = state.channel;
+            if (channel == null) return;
+            L.setUserProperties({'apiChannel': channel.name});
+          },
+        ),
+        BlocListener<ApiChannelBloc, ApiChannelState>(
           listenWhen: (prev, curr) =>
               prev.channel != null &&
               curr.channel != null &&
