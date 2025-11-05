@@ -254,6 +254,7 @@
           "not_requested": "Not Requested"
         },
         "edit_payer_only": "Accounting status can only be edited by the payer",
+        "check_to_edit": "Check the participants who have completed accounting to edit.",
         "save": "Save",
         "errors": {
           "not_yet_requested": "Accounting request has not been made yet",

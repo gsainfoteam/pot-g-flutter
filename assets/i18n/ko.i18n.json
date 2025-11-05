@@ -251,6 +251,7 @@
           "not_requested": "미요청"
         },
         "edit_payer_only": "정산 현황은 결제자만 수정할 수 있어요",
+        "check_to_edit": "정산이 완료된 참여자를 체크해주세요",
         "errors": {
           "not_yet_requested": "정산 요청이 아직 없습니다",
           "not_accounting_requester": "정산 요청자가 아닙니다",
