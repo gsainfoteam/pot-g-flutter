@@ -33,8 +33,18 @@ class LinkEvent with _$LinkEvent {
 
 @freezed
 class LinkState with _$LinkState {
+  const LinkState._();
   const factory LinkState.initial() = _Initial;
   const factory LinkState.loading() = _Loading;
   const factory LinkState.loaded(String link) = _Loaded;
   const factory LinkState.error() = _Error;
+
+  bool get hasLink => switch (this) {
+    _Loaded(:final link) => link.isNotEmpty,
+    _ => false,
+  };
+  String get link => switch (this) {
+    _Loaded(:final link) => link,
+    _ => '',
+  };
 }
