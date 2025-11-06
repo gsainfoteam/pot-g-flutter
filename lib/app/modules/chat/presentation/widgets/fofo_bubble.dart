@@ -53,12 +53,12 @@ class FofoBubble extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(
+          SelectableText(
             message.content.split('\n').first.replaceAll('**', '').trim(),
             style: TextStyles.title4.copyWith(color: Palette.textGrey),
           ),
           const SizedBox(height: 8),
-          Text(
+          SelectableText(
             message.content.split('\n').sublist(1).join('\n').trim(),
             style: TextStyles.description.copyWith(color: Palette.textGrey),
           ),

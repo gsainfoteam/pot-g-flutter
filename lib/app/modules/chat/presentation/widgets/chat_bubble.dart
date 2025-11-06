@@ -32,7 +32,7 @@ class ChatBubble extends StatelessWidget {
           ? null
           : PotProfileImage(user: user!, pot: pot),
       name: user?.name,
-      child: Text(
+      child: SelectableText(
         message,
         style: TextStyles.description.copyWith(
           color: user == null ? Palette.primaryLight : Palette.textGrey,
