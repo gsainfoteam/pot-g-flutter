@@ -20,6 +20,8 @@ import 'package:pot_g/app/modules/chat/presentation/widgets/set_departure_time_b
 import 'package:pot_g/app/modules/chat/presentation/widgets/system_message.dart';
 import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
 import 'package:pot_g/app/modules/core/domain/entities/route_entity.dart';
+import 'package:pot_g/app/values/palette.dart';
+import 'package:pot_g/app/values/text_styles.dart';
 import 'package:pot_g/gen/strings.g.dart';
 
 class ChatList extends StatefulWidget {
@@ -73,13 +75,43 @@ class _ChatListState extends State<ChatList> {
           return nextChat.user.id != chat.user.id;
         }
 
+        bool dateChanged(int index) {
+          final chat = state.chats[index];
+          final nextChat = index == state.chats.length - 1
+              ? null
+              : state.chats[index + 1];
+          return nextChat?.createdAt.day != chat.createdAt.day;
+        }
+
         return ListView.separated(
           physics: const AlwaysScrollableScrollPhysics(),
           controller: _controller,
           reverse: true,
           padding: const EdgeInsets.all(12) - EdgeInsets.only(right: 6),
-          separatorBuilder: (context, index) =>
-              SizedBox(height: isLast(index) ? 12 : 6),
+          separatorBuilder: (context, index) => dateChanged(index)
+              ? Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  child: Center(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 4,
+                        horizontal: 16,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Palette.lightGrey,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        DateFormat.yMd().add_E().format(
+                          state.chats[index].createdAt,
+                        ),
+                        textAlign: TextAlign.center,
+                        style: TextStyles.caption.copyWith(color: Palette.grey),
+                      ),
+                    ),
+                  ),
+                )
+              : SizedBox(height: isLast(index) ? 12 : 6),
           itemBuilder: (context, index) => _buildItem(context, index, state),
           itemCount: state.chats.length + (state.isLoading ? 1 : 0),
         );
