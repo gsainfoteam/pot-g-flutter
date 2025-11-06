@@ -16,7 +16,8 @@ class SkipAuthorize extends Extra {
 @injectable
 class AuthorizeInterceptor extends Interceptor {
   final TokenRepository repository;
-  static const _retriedKey = '_retried';
+  static const _authorizeRetriedKey = '_authorizeRetried';
+  static const _retriesKey = '_retries';
   static const _skipKey = '_skip';
   final mutex = ReadWriteMutex();
 
@@ -47,11 +48,20 @@ class AuthorizeInterceptor extends Interceptor {
   void onError(DioException err, ErrorInterceptorHandler handler) async {
     final dio = getDio();
     final statusCode = err.response?.statusCode;
+    if (statusCode == 502) {
+      if (err.requestOptions.retries >= 4) return handler.next(err);
+      await Future.delayed(
+        Duration(seconds: (1 << err.requestOptions.retries).clamp(1, 30)),
+      );
+      err.requestOptions.retries++;
+      final retriedResponse = await dio.fetch(err.requestOptions);
+      return handler.resolve(retriedResponse);
+    }
     if (statusCode != 401) return handler.next(err);
     final token = await repository.token.first;
     if (token == null) return handler.next(err);
-    if (err.requestOptions.retried) return handler.next(err);
-    err.requestOptions.retried = true;
+    if (err.requestOptions.authorizeRetried) return handler.next(err);
+    err.requestOptions.authorizeRetried = true;
 
     try {
       if (!(await refresh())) return handler.next(err);
@@ -91,8 +101,17 @@ class AuthorizeInterceptor extends Interceptor {
 }
 
 extension _RequestOptionsX on RequestOptions {
-  bool get retried => extra.containsKey(AuthorizeInterceptor._retriedKey);
-  set retried(bool value) => extra[AuthorizeInterceptor._retriedKey] = value;
+  int get retries => extra.containsKey(AuthorizeInterceptor._retriesKey)
+      ? extra[AuthorizeInterceptor._retriesKey] as int
+      : 0;
+  set retries(int value) => extra[AuthorizeInterceptor._retriesKey] = value;
+
+  bool get authorizeRetried =>
+      extra.containsKey(AuthorizeInterceptor._authorizeRetriedKey)
+      ? extra[AuthorizeInterceptor._authorizeRetriedKey] as bool
+      : false;
+  set authorizeRetried(bool value) =>
+      extra[AuthorizeInterceptor._authorizeRetriedKey] = value;
 
   bool get skip => extra.containsKey(AuthorizeInterceptor._skipKey);
 }
