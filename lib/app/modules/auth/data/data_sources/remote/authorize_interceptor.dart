@@ -16,6 +16,7 @@ class SkipAuthorize extends Extra {
 @injectable
 class AuthorizeInterceptor extends Interceptor {
   final TokenRepository repository;
+  static const _authorizeRetriedKey = '_authorizeRetried';
   static const _retriesKey = '_retries';
   static const _skipKey = '_skip';
   final mutex = ReadWriteMutex();
@@ -59,8 +60,8 @@ class AuthorizeInterceptor extends Interceptor {
     if (statusCode != 401) return handler.next(err);
     final token = await repository.token.first;
     if (token == null) return handler.next(err);
-    if (err.requestOptions.retries > 0) return handler.next(err);
-    err.requestOptions.retries = 1;
+    if (err.requestOptions.authorizeRetried) return handler.next(err);
+    err.requestOptions.authorizeRetried = true;
 
     try {
       if (!(await refresh())) return handler.next(err);
@@ -104,6 +105,13 @@ extension _RequestOptionsX on RequestOptions {
       ? extra[AuthorizeInterceptor._retriesKey] as int
       : 0;
   set retries(int value) => extra[AuthorizeInterceptor._retriesKey] = value;
+
+  bool get authorizeRetried =>
+      extra.containsKey(AuthorizeInterceptor._authorizeRetriedKey)
+      ? extra[AuthorizeInterceptor._authorizeRetriedKey] as bool
+      : false;
+  set authorizeRetried(bool value) =>
+      extra[AuthorizeInterceptor._authorizeRetriedKey] = value;
 
   bool get skip => extra.containsKey(AuthorizeInterceptor._skipKey);
 }
