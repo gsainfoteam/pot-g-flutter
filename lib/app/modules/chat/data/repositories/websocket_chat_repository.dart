@@ -112,10 +112,7 @@ class WebsocketChatRepository implements ChatRepository {
     final localPot = await _api.getPotInfo(pot.id);
     final events = await _api.getPotEvents(
       pot.id,
-      GetPotEventsQueryModel(
-        startsFrom: last?.createdAt ?? DateTime.now(),
-        except: last?.id,
-      ),
+      GetPotEventsQueryModel(startsFrom: last?.createdAt, except: last?.id),
     );
     return events.events
         .where((e) => e.potPk == pot.id)
