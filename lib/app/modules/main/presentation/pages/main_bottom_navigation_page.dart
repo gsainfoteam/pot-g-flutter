@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pot_g/app/modules/auth/presentation/bloc/auth_bloc.dart';
 import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
@@ -120,6 +121,7 @@ class _LayoutState extends State<_Layout> {
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: () async {
+          HapticFeedback.lightImpact();
           item.onTap?.call();
           // 검색 탭이 아닌 경우, 인증 확인이 필요합니다.
           // 다만 생성 탭은 이미 guard에서 인증 확인을 처리하고 있습니다.
