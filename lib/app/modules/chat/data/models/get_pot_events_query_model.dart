@@ -8,7 +8,7 @@ part 'get_pot_events_query_model.g.dart';
 sealed class GetPotEventsQueryModel with _$GetPotEventsQueryModel {
   const factory GetPotEventsQueryModel({
     @Default(20) int? limit,
-    @EpochDateTimeConverter() required DateTime startsFrom,
+    @EpochDateTimeConverter() DateTime? startsFrom,
     int? except,
   }) = _GetPotEventsQueryModel;
 }
