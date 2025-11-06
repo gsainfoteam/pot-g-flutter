@@ -18,7 +18,7 @@ class OauthRestAuthRepository implements AuthRepository {
   final OAuthRepository _oAuthRepository;
   final UserAuthApi _userAuthApi;
   final DeviceInfoRepository _deviceInfoRepository;
-  final _userSubject = BehaviorSubject<SelfUserEntity?>.seeded(null);
+  final _userSubject = BehaviorSubject<SelfUserEntity?>();
 
   OauthRestAuthRepository(
     this._tokenRepository,
@@ -77,7 +77,9 @@ class OauthRestAuthRepository implements AuthRepository {
 
   @override
   Stream<SelfUserEntity?> get user async* {
-    yield _userSubject.value;
+    if (_userSubject.hasValue) {
+      yield _userSubject.value;
+    }
     yield* _userSubject.stream;
   }
 
