@@ -207,7 +207,7 @@ class _LayoutState extends State<_Layout> with WidgetsBindingObserver {
           Expanded(
             child: Stack(
               children: [
-                ChatList(pot: widget.pot),
+                ChatList(pot: widget.pot, bannerShown: banner != null),
                 if (banner != null)
                   Positioned(top: 20, left: 20, right: 20, child: banner),
               ],

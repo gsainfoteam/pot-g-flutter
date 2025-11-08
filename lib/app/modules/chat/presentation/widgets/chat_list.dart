@@ -26,9 +26,10 @@ import 'package:pot_g/app/values/text_styles.dart';
 import 'package:pot_g/gen/strings.g.dart';
 
 class ChatList extends StatefulWidget {
-  const ChatList({super.key, required this.pot});
+  const ChatList({super.key, required this.pot, required this.bannerShown});
 
   final PotInfoEntity pot;
+  final bool bannerShown;
 
   @override
   State<ChatList> createState() => _ChatListState();
@@ -89,7 +90,10 @@ class _ChatListState extends State<ChatList> {
           physics: const AlwaysScrollableScrollPhysics(),
           controller: _controller,
           reverse: true,
-          padding: const EdgeInsets.all(12) - EdgeInsets.only(right: 6),
+          padding:
+              const EdgeInsets.all(12) -
+              EdgeInsets.only(right: 6) +
+              EdgeInsets.only(top: widget.bannerShown ? 72 : 0),
           separatorBuilder: (context, index) =>
               SizedBox(height: isLast(index) ? 12 : 6),
           itemBuilder: (context, index) => index == state.chats.length
