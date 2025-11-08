@@ -19,6 +19,7 @@ class PotListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final version = 2;
     return PotPressable(
       onTap: pot.disabled
           ? null
@@ -26,7 +27,7 @@ class PotListItem extends StatelessWidget {
               L.c('pot', properties: {'potId': pot.id, 'potName': pot.name});
               InvitedRoute(id: pot.id).push(context);
             },
-      child: 2 == 1 ? _ItemV1(pot: pot) : _ItemV2(pot: pot),
+      child: version == 1 ? _ItemV1(pot: pot) : _ItemV2(pot: pot),
     );
   }
 }
