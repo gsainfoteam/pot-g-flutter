@@ -6,9 +6,11 @@ import 'package:pot_g/app/modules/common/presentation/extensions/date_time.dart'
 import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_pressable.dart';
 import 'package:pot_g/app/modules/core/domain/entities/pot_summary_entity.dart';
+import 'package:pot_g/app/modules/core/domain/entities/route_entity.dart';
 import 'package:pot_g/app/router.gr.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
+import 'package:pot_g/gen/strings.g.dart';
 
 class PotListItem extends StatelessWidget {
   const PotListItem({super.key, required this.pot});
@@ -17,119 +19,224 @@ class PotListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final disabled = pot.current == pot.total;
     return PotPressable(
-      onTap: disabled
+      onTap: pot.disabled
           ? null
           : () {
               L.c('pot', properties: {'potId': pot.id, 'potName': pot.name});
               InvitedRoute(id: pot.id).push(context);
             },
-      child: Container(
-        height: 88,
-        decoration: BoxDecoration(
-          color: Palette.white,
-          borderRadius: BorderRadius.all(Radius.circular(10)),
-          boxShadow: [
-            BoxShadow(
-              offset: Offset(3, 1),
-              blurRadius: 8,
-              color: Color(0x14000000),
+      child: 2 == 1 ? _ItemV1(pot: pot) : _ItemV2(pot: pot),
+    );
+  }
+}
+
+class _ItemV1 extends StatelessWidget {
+  const _ItemV1({required this.pot});
+  final PotSummaryEntity pot;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 88,
+      decoration: BoxDecoration(
+        color: Palette.white,
+        borderRadius: BorderRadius.all(Radius.circular(10)),
+        boxShadow: [
+          BoxShadow(
+            offset: Offset(3, 1),
+            blurRadius: 8,
+            color: Color(0x14000000),
+          ),
+          BoxShadow(
+            offset: Offset(1, 3),
+            blurRadius: 8,
+            color: Color(0x14000000),
+          ),
+        ],
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            width: 64,
+            decoration: BoxDecoration(
+              color: pot.disabled ? Palette.white : Palette.lightGrey,
+              borderRadius: BorderRadius.horizontal(left: Radius.circular(10)),
             ),
-            BoxShadow(
-              offset: Offset(1, 3),
-              blurRadius: 8,
-              color: Color(0x14000000),
-            ),
-          ],
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              width: 64,
-              decoration: BoxDecoration(
-                color: disabled ? Palette.white : Palette.lightGrey,
-                borderRadius: BorderRadius.horizontal(
-                  left: Radius.circular(10),
-                ),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    pot.name.substring(0, 2),
-                    style: TextStyles.title3.copyWith(
-                      color: disabled ? Palette.grey : Palette.textGrey,
-                    ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  pot.name.substring(0, 2),
+                  style: TextStyles.title3.copyWith(
+                    color: pot.disabled ? Palette.grey : Palette.textGrey,
                   ),
-                  const SizedBox(height: 4),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  pot.name.substring(2),
+                  style: TextStyles.description.copyWith(
+                    color: pot.disabled ? Palette.grey : Palette.textGrey,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          CustomPaint(size: Size(1, 88), painter: _DashedLinePainter()),
+          Expanded(
+            child: Container(
+              padding: EdgeInsets.all(12),
+              child: Row(
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        DateFormat.Md().add_E().format(pot.startsAt),
+                        style: TextStyles.caption.copyWith(
+                          color: pot.disabled ? Palette.grey : Palette.textGrey,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      DefaultTextStyle.merge(
+                        style: TextStyles.title1.copyWith(
+                          color: pot.disabled ? Palette.grey : Palette.dark,
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(DateFormat.Hm().format(pot.startsAt)),
+                            Text('~'),
+                            Text(DateFormat.Hm().format(pot.endsAt)),
+                            if (!pot.startsAt.isSameDay(pot.endsAt))
+                              Text(
+                                'D+1',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                  height: 0.66,
+                                  letterSpacing: -0.025 * 12,
+                                  color: pot.disabled
+                                      ? Palette.grey
+                                      : Palette.textGrey,
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  Spacer(),
                   Text(
-                    pot.name.substring(2),
-                    style: TextStyles.description.copyWith(
-                      color: disabled ? Palette.grey : Palette.textGrey,
+                    '${pot.current}/${pot.total}',
+                    style: TextStyles.title1.copyWith(
+                      color: pot.disabled ? Palette.grey : Palette.primary,
                     ),
                   ),
                 ],
               ),
             ),
-            CustomPaint(size: Size(1, 88), painter: _DashedLinePainter()),
-            Expanded(
-              child: Container(
-                padding: EdgeInsets.all(12),
-                child: Row(
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ItemV2 extends StatelessWidget {
+  const _ItemV2({required this.pot});
+  final PotSummaryEntity pot;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(10)),
+        boxShadow: [
+          BoxShadow(
+            offset: Offset(3, 2),
+            blurRadius: 4,
+            color: Color(0x0D000000),
+          ),
+          BoxShadow(
+            offset: Offset(-1, -1),
+            blurRadius: 6,
+            color: Color(0x09000000),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.all(Radius.circular(10)),
+        child: IntrinsicHeight(
+          child: Row(
+            children: [
+              Expanded(
+                child: Container(
+                  padding: EdgeInsets.symmetric(vertical: 14, horizontal: 12),
+                  color: Palette.white,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        pot.route.name,
+                        style: TextStyles.description.copyWith(
+                          color: pot.disabled ? Palette.grey : Palette.textGrey,
+                        ),
+                      ),
+                      const SizedBox(height: 7),
+                      Text.rich(
+                        TextSpan(
+                          children: [
+                            TextSpan(
+                              text: DateFormat.Hm().format(pot.startsAt),
+                            ),
+                            TextSpan(text: '~'),
+                            TextSpan(text: DateFormat.Hm().format(pot.endsAt)),
+                            TextSpan(
+                              text: 'D+1',
+                              style: TextStyles.description.copyWith(
+                                fontSize: 12,
+
+                                color: pot.disabled
+                                    ? Palette.grey
+                                    : Palette.textGrey,
+                              ),
+                            ),
+                          ],
+                        ),
+                        style: TextStyles.title3.copyWith(
+                          color: pot.disabled ? Palette.grey : Palette.dark,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Container(
+                color: Palette.primaryLight,
+                padding: EdgeInsets.symmetric(horizontal: 12),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          DateFormat.Md().add_E().format(pot.startsAt),
-                          style: TextStyles.caption.copyWith(
-                            color: disabled ? Palette.grey : Palette.textGrey,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        DefaultTextStyle.merge(
-                          style: TextStyles.title1.copyWith(
-                            color: disabled ? Palette.grey : Palette.dark,
-                          ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Text(DateFormat.Hm().format(pot.startsAt)),
-                              Text('~'),
-                              Text(DateFormat.Hm().format(pot.endsAt)),
-                              if (!pot.startsAt.isSameDay(pot.endsAt))
-                                Text(
-                                  'D+1',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w500,
-                                    height: 0.66,
-                                    letterSpacing: -0.025 * 12,
-                                    color: disabled
-                                        ? Palette.grey
-                                        : Palette.textGrey,
-                                  ),
-                                ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    Spacer(),
                     Text(
-                      '${pot.current}/${pot.total}',
-                      style: TextStyles.title1.copyWith(
-                        color: disabled ? Palette.grey : Palette.primary,
+                      context.t.create.capacity.fields.max_capacity.item(
+                        n: pot.current,
+                      ),
+                      style: TextStyles.title3.copyWith(color: Palette.primary),
+                    ),
+                    Text(
+                      '/${context.t.create.capacity.fields.max_capacity.item(n: pot.total)}',
+                      style: TextStyles.caption.copyWith(
+                        color: Palette.textGrey,
                       ),
                     ),
                   ],
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -159,4 +266,8 @@ class _DashedLinePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) => false;
+}
+
+extension on PotSummaryEntity {
+  bool get disabled => current == total;
 }
