@@ -57,6 +57,7 @@ class AuthorizeInterceptor extends Interceptor {
       final retriedResponse = await dio.fetch(err.requestOptions);
       return handler.resolve(retriedResponse);
     }
+    if (err.requestOptions.skip) return handler.next(err);
     if (statusCode != 401) return handler.next(err);
     final token = await repository.token.first;
     if (token == null) return handler.next(err);
