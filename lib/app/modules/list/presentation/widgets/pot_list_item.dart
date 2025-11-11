@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pot_g/app/modules/common/presentation/extensions/date_time.dart';
+import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_pressable.dart';
 import 'package:pot_g/app/modules/core/domain/entities/pot_summary_entity.dart';
 import 'package:pot_g/app/router.gr.dart';
@@ -18,7 +19,12 @@ class PotListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final disabled = pot.current == pot.total;
     return PotPressable(
-      onTap: disabled ? null : () => InvitedRoute(id: pot.id).push(context),
+      onTap: disabled
+          ? null
+          : () {
+              L.c('pot', properties: {'potId': pot.id, 'potName': pot.name});
+              InvitedRoute(id: pot.id).push(context);
+            },
       child: Container(
         height: 88,
         decoration: BoxDecoration(
