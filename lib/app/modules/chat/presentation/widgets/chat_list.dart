@@ -170,7 +170,7 @@ class _ChatListState extends State<ChatList> {
   }
 
   void _onAction(BuildContext context, FofoActionButtonType type) async {
-    final l = LL({'potId': widget.pot.id, 'name': widget.pot.name});
+    final l = LL({'potId': widget.pot.id, 'potName': widget.pot.name});
     switch (type) {
       case FofoActionButtonType.departureConfirm:
         l.c('fofoSetDepartureTime');

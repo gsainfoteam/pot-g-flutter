@@ -119,7 +119,7 @@ class _AccountingButtonState extends State<AccountingButton> {
     if (!mounted) return;
     L.c(
       'accounting',
-      properties: {'potId': widget.pot.id, 'name': widget.pot.name},
+      properties: {'potId': widget.pot.id, 'potName': widget.pot.name},
     );
     await AccountingButton.setAccounting(context, widget.pot);
   }

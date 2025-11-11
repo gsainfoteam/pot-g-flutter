@@ -192,7 +192,7 @@ class _LayoutState extends State<_Layout> with WidgetsBindingObserver {
         if (value) {
           L.c(
             'sidebar',
-            properties: {'potId': widget.pot.id, 'name': widget.pot.name},
+            properties: {'potId': widget.pot.id, 'potName': widget.pot.name},
           );
         }
       },
