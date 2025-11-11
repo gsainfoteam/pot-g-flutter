@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pot_g/app/modules/auth/presentation/bloc/auth_bloc.dart';
@@ -68,7 +69,14 @@ class AppRouter extends RootStackRouter {
         AutoRoute(path: 'profile', page: ProfileRoute.page),
       ],
     ),
-    AutoRoute(path: '/create', page: CreateRoute.page),
+    CustomRoute(
+      path: '/create',
+      page: CreateRoute.page,
+      customRouteBuilder: <T>(context, child, page) =>
+          Theme.of(context).platform == TargetPlatform.iOS
+          ? CupertinoSheetRoute<T>(settings: page, builder: (_) => child)
+          : MaterialPageRoute<T>(settings: page, builder: (_) => child),
+    ),
     AutoRoute(path: '/chat/:id', page: ChatRoomRoute.page),
     AutoRoute(path: '/chat/:id/accounting', page: AccountingRoute.page),
     CustomRoute(
