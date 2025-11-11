@@ -19,7 +19,7 @@ jobs:
     name: Promote ${{ matrix.os }} App to Production
     runs-on: ${{ matrix.build-os }}
     concurrency:
-      group: ${{ matrix.os }}-production
+      group: upload-${{ matrix.os }}
       cancel-in-progress: true
     steps:
       - uses: actions/checkout@v4

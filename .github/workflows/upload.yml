@@ -19,7 +19,7 @@ jobs:
     name: Build ${{ matrix.os }} App and Upload
     runs-on: ${{ matrix.build-os }}
     concurrency:
-      group: ${{ matrix.os }}-staging
+      group: upload-${{ matrix.os }}
       cancel-in-progress: true
     steps:
       - uses: actions/checkout@v4
