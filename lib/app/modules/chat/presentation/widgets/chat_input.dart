@@ -81,7 +81,7 @@ class _ChatInputState extends State<ChatInput> {
                     final pot = context.read<PotInfoBloc>().state.pot;
                     L.c(
                       'sendMessage',
-                      properties: {'potId': pot?.id, 'name': pot?.name},
+                      properties: {'potId': pot?.id, 'potName': pot?.name},
                     );
                     context.read<ChatBloc>().add(
                       ChatSendChat(_controller.text.trim()),

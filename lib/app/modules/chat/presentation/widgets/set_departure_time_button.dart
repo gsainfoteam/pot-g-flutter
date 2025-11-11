@@ -29,7 +29,7 @@ class SetDepartureTimeButton extends StatefulWidget {
     BuildContext context,
     PotInfoEntity pot,
   ) async {
-    final l = LL({'potId': pot.id, 'name': pot.name});
+    final l = LL({'potId': pot.id, 'potName': pot.name});
     if (!pot.meIsHost(context)) {
       context.showToast(
         context.t.chat_room.set_departure_time.host_only.description,
@@ -157,7 +157,7 @@ class _SetDepartureTimeButtonState extends State<SetDepartureTimeButton> {
     if (!mounted) return;
     L.c(
       'setDepartureTime',
-      properties: {'potId': widget.pot.id, 'name': widget.pot.name},
+      properties: {'potId': widget.pot.id, 'potName': widget.pot.name},
     );
     await SetDepartureTimeButton.setDepartureTime(context, widget.pot);
   }
