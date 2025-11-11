@@ -20,7 +20,7 @@ jobs:
     runs-on: ${{ matrix.build-os }}
     concurrency:
       group: upload-${{ matrix.os }}
-      cancel-in-progress: true
+      cancel-in-progress: false
     steps:
       - uses: actions/checkout@v4
       - name: setup env
