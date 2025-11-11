@@ -6,6 +6,8 @@ import 'package:intl/intl.dart';
 import 'package:pot_g/app/di/locator.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/pot_detail_bloc.dart';
 import 'package:pot_g/app/modules/common/presentation/extensions/toast.dart';
+import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
+import 'package:pot_g/app/modules/common/presentation/utils/log_page.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/general_dialog.dart';
 import 'package:pot_g/app/modules/core/domain/entities/route_entity.dart';
 import 'package:pot_g/app/modules/list/presentation/bloc/join_pot_bloc.dart';
@@ -18,13 +20,19 @@ import 'package:pot_g/app/values/text_styles.dart';
 import 'package:pot_g/gen/strings.g.dart';
 
 @RoutePage()
-class InvitedPage extends StatefulWidget {
+class InvitedPage extends StatefulWidget with LogPageState {
   const InvitedPage({super.key, @PathParam() required this.id});
 
   final String id;
 
   @override
   State<InvitedPage> createState() => _InvitedPageState();
+
+  @override
+  String get pageName => 'potEntranceDialog';
+
+  @override
+  Map<String, Object> get pageProperties => {'potId': id};
 }
 
 class _InvitedPageState extends State<InvitedPage> {
@@ -110,7 +118,11 @@ class _InvitedPageState extends State<InvitedPage> {
       ),
     );
     if (!context.mounted) return;
-    if (result != OkCancelResult.ok) return context.router.pop();
+    if (result != OkCancelResult.ok) {
+      L.c('cancelJoinPot', properties: {'potId': widget.id});
+      return context.router.pop();
+    }
+    L.c('joinPot', properties: {'potId': widget.id});
     await _joinPot(context);
     if (!context.mounted) return;
     context.router.pop();
