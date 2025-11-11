@@ -1,7 +1,7 @@
 name: pot_g
 description: "A new Flutter project."
 publish_to: 'none'
-version: 1.0.16
+version: 1.0.17
 
 environment:
   sdk: ^3.9.0
@@ -36,7 +36,7 @@ dependencies:
   sheet: ^1.0.0
   nonce: ^1.2.0
   crypto: ^3.0.6
-  flutter_web_auth_2: ^5.0.0-alpha.7
+  flutter_web_auth_2: ^4.1.0
   adaptive_dialog: ^2.4.1
   collection: ^1.19.1
   device_info_plus: ^11.5.0
