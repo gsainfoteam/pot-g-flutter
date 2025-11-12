@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intersperse/intersperse.dart';
 import 'package:pot_g/app/di/locator.dart';
@@ -416,6 +417,7 @@ class _BankNumberState extends State<_BankNumber> {
               filled: true,
               controller: controller,
               keyboardType: TextInputType.none,
+              inputFormatters: const [DigitsOnlyFormatter(maxLength: 20)],
               hintText: context
                   .t
                   .profile
@@ -458,5 +460,35 @@ extension on List<BankEntity> {
       result.add(sublist(i, min(i + size, length)));
     }
     return result;
+  }
+}
+
+class DigitsOnlyFormatter extends TextInputFormatter {
+  const DigitsOnlyFormatter({this.maxLength});
+  final int? maxLength;
+
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    final normalized = newValue.text.replaceAllMapped(RegExp(r'[０-９]'), (m) {
+      return String.fromCharCode(m[0]!.codeUnitAt(0) - 0xFEE0);
+    });
+
+    // 숫자만 남기기
+    var digits = normalized.replaceAll(RegExp(r'[^0-9]'), '');
+
+    // 길이 제한(옵션)
+    if (maxLength != null && digits.length > maxLength!) {
+      digits = digits.substring(0, maxLength);
+    }
+
+    // 커서는 끝으로 이동(단순 접근)
+    return TextEditingValue(
+      text: digits,
+      selection: TextSelection.collapsed(offset: digits.length),
+      composing: TextRange.empty,
+    );
   }
 }
