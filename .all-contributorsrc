@@ -63,6 +63,15 @@
       "contributions": [
         "translation"
       ]
+    },
+    {
+      "login": "akrnwl",
+      "name": "akrnwl",
+      "avatar_url": "https://avatars.githubusercontent.com/u/117907042?v=4",
+      "profile": "https://github.com/akrnwl",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
