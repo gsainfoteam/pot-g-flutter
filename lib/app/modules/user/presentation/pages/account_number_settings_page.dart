@@ -476,15 +476,12 @@ class DigitsOnlyFormatter extends TextInputFormatter {
       return String.fromCharCode(m[0]!.codeUnitAt(0) - 0xFEE0);
     });
 
-    // 숫자만 남기기
     var digits = normalized.replaceAll(RegExp(r'[^0-9]'), '');
 
-    // 길이 제한(옵션)
     if (maxLength != null && digits.length > maxLength!) {
       digits = digits.substring(0, maxLength);
     }
 
-    // 커서는 끝으로 이동(단순 접근)
     return TextEditingValue(
       text: digits,
       selection: TextSelection.collapsed(offset: digits.length),
