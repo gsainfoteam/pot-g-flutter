@@ -1,4 +1,4 @@
-abstract class BankEntity {
+abstract interface class BankEntity {
   String get id;
   String get name;
   String get logoUrl;

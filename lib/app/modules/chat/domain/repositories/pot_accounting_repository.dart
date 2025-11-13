@@ -2,7 +2,7 @@ import 'package:pot_g/app/modules/chat/domain/entities/accounting_result_entity.
 import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_user_entity.dart';
 
-abstract class PotAccountingRepository {
+abstract interface class PotAccountingRepository {
   Future<void> accounting(
     PotInfoEntity pot,
     int amount,

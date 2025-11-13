@@ -11,7 +11,7 @@ import 'package:pot_g/app/modules/common/domain/repositories/log_repository.dart
 import 'package:pot_g/app/values/config.dart';
 
 @Singleton(as: LogRepository)
-class AmplitudeLogRepository extends LogRepository {
+class AmplitudeLogRepository implements LogRepository {
   late final _instance = Amplitude(
     Configuration(apiKey: Config.amplitudeApiKey),
   );

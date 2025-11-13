@@ -1,4 +1,4 @@
-abstract class AccountingEntity {
+abstract interface class AccountingEntity {
   const AccountingEntity({
     required this.isSet,
     this.bankShortName,

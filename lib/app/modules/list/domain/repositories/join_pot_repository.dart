@@ -1,3 +1,3 @@
-abstract class JoinPotRepository {
+abstract interface class JoinPotRepository {
   Future<void> joinPot(String potId);
 }
