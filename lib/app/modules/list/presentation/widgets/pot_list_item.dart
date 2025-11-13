@@ -291,7 +291,7 @@ class _DashedLinePainter extends CustomPainter {
       Paint()..color = Palette.primaryLight,
     );
     final paint = Paint()
-      ..color = Colors.grey
+      ..color = Palette.borderGrey
       ..strokeWidth = 1
       ..strokeCap = StrokeCap.round;
     canvas.save();
