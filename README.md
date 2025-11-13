@@ -7,6 +7,48 @@
 
 ## Architecture
 
+This project is built on **Clean Architecture** and **BLoC pattern**.
+
+### Architecture Patterns
+
+- **Clean Architecture**: Each module is separated into `data`, `domain`, and `presentation` layers
+- **BLoC**: State management using BLoC pattern
+- **Dependency Injection**: Dependency injection using `get_it` and `injectable`
+- **Module-based Structure**: Independent modules organized by feature
+
+### Directory Structure
+
+```text
+lib/
+├── app/
+│   ├── di/               # Dependency Injection configuration
+│   ├── modules/          # Feature modules
+│   │   ├── auth/         # Authentication
+│   │   ├── chat/         # Chat and accounting
+│   │   ├── common/       # Common UI/utilities
+│   │   ├── core/         # Core infrastructure (network, storage)
+│   │   ├── create/       # Pot creation
+│   │   ├── device/       # Device information
+│   │   ├── list/         # Pot list
+│   │   ├── main/         # Main navigation
+│   │   ├── socket/       # WebSocket communication
+│   │   ├── splash/       # Splash screen
+│   │   └── user/         # User profile/settings
+│   ├── router.dart       # Routing configuration (auto_route)
+│   ├── pot_app.dart      # App entry point
+│   └── values/           # Theme, colors, fonts, etc.
+└── main.dart             # App starting point
+```
+
+### Tech Stack
+
+- **State Management**: `flutter_bloc`, `bloc_concurrency`
+- **Routing**: `auto_route`
+- **Networking**: `dio`, `retrofit`
+- **Local Storage**: `hive_ce`, `flutter_secure_storage`
+- **Code Generation**: `freezed`, `json_serializable`, `injectable`
+- **Internationalization**: `slang`
+
 ## Download
 
 [![Play Store](https://img.shields.io/badge/Google%20Play-Visit-green?logo=google-play&logoColor=white)](https://play.google.com/store/apps/details?id=me.gistory.pot_g)
