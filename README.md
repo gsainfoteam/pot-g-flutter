@@ -77,6 +77,7 @@ Thanks goes to these wonderful people
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Yejin-02"><img src="https://avatars.githubusercontent.com/u/110380670?v=4?s=100" width="100px;" alt="Yejin-02"/><br /><sub><b>Yejin-02</b></sub></a><br /><a href="#design-Yejin-02" title="Design">🎨</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/BranKein"><img src="https://avatars.githubusercontent.com/u/32633156?v=4?s=100" width="100px;" alt="YeonhyukKim"/><br /><sub><b>YeonhyukKim</b></sub></a><br /><a href="https://github.com/gsainfoteam/pot-g-flutter/commits?author=BranKein" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/enc2586"><img src="https://avatars.githubusercontent.com/u/85762538?v=4?s=100" width="100px;" alt="Hongje Choi"/><br /><sub><b>Hongje Choi</b></sub></a><br /><a href="#translation-enc2586" title="Translation">🌍</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/akrnwl"><img src="https://avatars.githubusercontent.com/u/117907042?v=4?s=100" width="100px;" alt="akrnwl"/><br /><sub><b>akrnwl</b></sub></a><br /><a href="https://github.com/gsainfoteam/pot-g-flutter/commits?author=akrnwl" title="Code">💻</a></td>
     </tr>
   </tbody>
   <tfoot>
