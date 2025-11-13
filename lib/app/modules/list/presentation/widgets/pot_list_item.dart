@@ -254,20 +254,24 @@ class _ItemV2 extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 4),
-                      Text.rich(
-                        TextSpan(
-                          children: [
-                            TextSpan(
-                              text: pot.current.toString(),
-                              style: TextStyles.title4.copyWith(
-                                color: Palette.primary,
+                      SizedBox(
+                        width: 50,
+                        child: Text.rich(
+                          textAlign: TextAlign.center,
+                          TextSpan(
+                            children: [
+                              TextSpan(
+                                text: pot.current.toString(),
+                                style: TextStyles.title4.copyWith(
+                                  color: Palette.primary,
+                                ),
                               ),
-                            ),
-                            TextSpan(text: '/${pot.total}'),
-                          ],
-                        ),
-                        style: TextStyles.body.copyWith(
-                          color: Palette.textGrey,
+                              TextSpan(text: '/${pot.total}'),
+                            ],
+                          ),
+                          style: TextStyles.body.copyWith(
+                            color: Palette.textGrey,
+                          ),
                         ),
                       ),
                     ],
