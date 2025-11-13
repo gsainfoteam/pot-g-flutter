@@ -178,6 +178,7 @@ class _ItemV2 extends StatelessWidget {
             children: [
               Expanded(
                 child: ClipPath(
+                  clipper: _HoleClipper(isLeft: false),
                   child: Container(
                     padding: EdgeInsets.symmetric(vertical: 14, horizontal: 12),
                     color: Palette.white,
@@ -224,33 +225,41 @@ class _ItemV2 extends StatelessWidget {
                   ),
                 ),
               ),
-              CustomPaint(
-                foregroundPainter: _DashedLinePainter(
-                  dashWidth: 4,
-                  dashSpace: 4,
-                  startY: 0,
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 5),
+                child: CustomPaint(
+                  foregroundPainter: _DashedLinePainter(
+                    dashWidth: 4,
+                    dashSpace: 4,
+                    startY: 0,
+                  ),
+                  child: Container(width: 1),
                 ),
-                child: Container(width: 8),
               ),
-              Container(
-                color: Palette.primaryLight,
-                padding: EdgeInsets.symmetric(horizontal: 12),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      context.t.create.capacity.fields.max_capacity.item(
-                        n: pot.current,
+              ClipPath(
+                clipper: _HoleClipper(isLeft: true),
+                child: Container(
+                  color: Palette.primaryLight,
+                  padding: EdgeInsets.symmetric(horizontal: 12),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        context.t.create.capacity.fields.max_capacity.item(
+                          n: pot.current,
+                        ),
+                        style: TextStyles.title3.copyWith(
+                          color: Palette.primary,
+                        ),
                       ),
-                      style: TextStyles.title3.copyWith(color: Palette.primary),
-                    ),
-                    Text(
-                      '/${context.t.create.capacity.fields.max_capacity.item(n: pot.total)}',
-                      style: TextStyles.caption.copyWith(
-                        color: Palette.textGrey,
+                      Text(
+                        '/${context.t.create.capacity.fields.max_capacity.item(n: pot.total)}',
+                        style: TextStyles.caption.copyWith(
+                          color: Palette.textGrey,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -299,6 +308,40 @@ class _DashedLinePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_DashedLinePainter oldDelegate) => false;
+}
+
+class _HoleClipper extends CustomClipper<Path> {
+  final bool isLeft;
+  final double radius = 5;
+  final double gap = 1;
+  _HoleClipper({required this.isLeft});
+  @override
+  Path getClip(Size size) {
+    return Path()
+      ..fillType = PathFillType.evenOdd
+      ..addRect(Offset.zero & size)
+      ..addOval(
+        Rect.fromCenter(
+          center: isLeft
+              ? size.topLeft(Offset(-gap / 2, 0))
+              : size.topRight(Offset(gap / 2, 0)),
+          width: radius * 2,
+          height: radius * 2,
+        ),
+      )
+      ..addOval(
+        Rect.fromCenter(
+          center: isLeft
+              ? size.bottomLeft(Offset(-gap / 2, 0))
+              : size.bottomRight(Offset(gap / 2, 0)),
+          width: radius * 2,
+          height: radius * 2,
+        ),
+      );
+  }
+
+  @override
+  bool shouldReclip(_HoleClipper oldClipper) => true;
 }
 
 extension on PotSummaryEntity {
