@@ -1,5 +1,7 @@
 # PotG
 
+[English](README.md) | [한국어](README.ko.md)
+
 [![Flutter Version](https://img.shields.io/badge/Flutter-3.35.5-02569B?logo=flutter&logoColor=white)](https://flutter.dev)
 [![build and publish (android, iOS)](https://github.com/gsainfoteam/pot-g-flutter/actions/workflows/upload.yml/badge.svg)](https://github.com/gsainfoteam/pot-g-flutter/actions/workflows/upload.yml)
 [![All Contributors](https://img.shields.io/github/all-contributors/gsainfoteam/pot-g-flutter?color=orange)](#기여자-)
