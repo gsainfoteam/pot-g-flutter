@@ -215,6 +215,10 @@ class _ItemV2 extends StatelessWidget {
                   ),
                 ),
               ),
+              CustomPaint(
+                foregroundPainter: _DashedLinePainter(),
+                child: Container(width: 8),
+              ),
               Container(
                 color: Palette.primaryLight,
                 padding: EdgeInsets.symmetric(horizontal: 12),
@@ -247,17 +251,24 @@ class _ItemV2 extends StatelessWidget {
 class _DashedLinePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    double dashWidth = 8, dashSpace = 8, startY = 0;
+    double dashWidth = 4, dashSpace = 4, startY = 0;
+    canvas.drawRect(
+      Offset.zero & Size(size.width / 2, size.height),
+      Paint()..color = Palette.white,
+    );
+    canvas.drawRect(
+      Offset(size.width / 2, 0) & Size(size.width / 2, size.height),
+      Paint()..color = Palette.primaryLight,
+    );
     final paint = Paint()
       ..color = Colors.grey
       ..strokeWidth = 1
       ..strokeCap = StrokeCap.round;
-    canvas.clipRect(Offset.zero & size);
     canvas.save();
     while (startY < size.height) {
       canvas.drawLine(
-        Offset(0, startY),
-        Offset(0, min(startY + dashWidth, size.height)),
+        Offset(size.width / 2, startY),
+        Offset(size.width / 2, min(startY + dashWidth, size.height)),
         paint,
       );
       startY += dashWidth + dashSpace;
