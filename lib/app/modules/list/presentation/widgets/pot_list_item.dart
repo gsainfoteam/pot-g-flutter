@@ -208,16 +208,17 @@ class _ItemV2 extends StatelessWidget {
                               TextSpan(
                                 text: DateFormat.Hm().format(pot.endsAt),
                               ),
-                              TextSpan(
-                                text: 'D+1',
-                                style: TextStyles.description.copyWith(
-                                  fontSize: 12,
+                              if (!pot.startsAt.isSameDay(pot.endsAt))
+                                TextSpan(
+                                  text: 'D+1',
+                                  style: TextStyles.description.copyWith(
+                                    fontSize: 12,
 
-                                  color: pot.disabled
-                                      ? Palette.grey
-                                      : Palette.textGrey,
+                                    color: pot.disabled
+                                        ? Palette.grey
+                                        : Palette.textGrey,
+                                  ),
                                 ),
-                              ),
                             ],
                           ),
                           style: TextStyles.title3.copyWith(
