@@ -84,7 +84,10 @@ class _ItemV1 extends StatelessWidget {
               ],
             ),
           ),
-          CustomPaint(size: Size(1, 88), painter: _DashedLinePainter()),
+          CustomPaint(
+            size: Size(1, 88),
+            painter: _DashedLinePainter(dashWidth: 4, dashSpace: 4, startY: 0),
+          ),
           Expanded(
             child: Container(
               padding: EdgeInsets.all(12),
@@ -174,49 +177,59 @@ class _ItemV2 extends StatelessWidget {
           child: Row(
             children: [
               Expanded(
-                child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 14, horizontal: 12),
-                  color: Palette.white,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        pot.route.name,
-                        style: TextStyles.description.copyWith(
-                          color: pot.disabled ? Palette.grey : Palette.textGrey,
+                child: ClipPath(
+                  child: Container(
+                    padding: EdgeInsets.symmetric(vertical: 14, horizontal: 12),
+                    color: Palette.white,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          pot.route.name,
+                          style: TextStyles.description.copyWith(
+                            color: pot.disabled
+                                ? Palette.grey
+                                : Palette.textGrey,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 7),
-                      Text.rich(
-                        TextSpan(
-                          children: [
-                            TextSpan(
-                              text: DateFormat.Hm().format(pot.startsAt),
-                            ),
-                            TextSpan(text: '~'),
-                            TextSpan(text: DateFormat.Hm().format(pot.endsAt)),
-                            TextSpan(
-                              text: 'D+1',
-                              style: TextStyles.description.copyWith(
-                                fontSize: 12,
-
-                                color: pot.disabled
-                                    ? Palette.grey
-                                    : Palette.textGrey,
+                        const SizedBox(height: 7),
+                        Text.rich(
+                          TextSpan(
+                            children: [
+                              TextSpan(
+                                text: DateFormat.Hm().format(pot.startsAt),
                               ),
-                            ),
-                          ],
+                              TextSpan(text: '~'),
+                              TextSpan(
+                                text: DateFormat.Hm().format(pot.endsAt),
+                              ),
+                              TextSpan(
+                                text: 'D+1',
+                                style: TextStyles.description.copyWith(
+                                  fontSize: 12,
+
+                                  color: pot.disabled
+                                      ? Palette.grey
+                                      : Palette.textGrey,
+                                ),
+                              ),
+                            ],
+                          ),
+                          style: TextStyles.title3.copyWith(
+                            color: pot.disabled ? Palette.grey : Palette.dark,
+                          ),
                         ),
-                        style: TextStyles.title3.copyWith(
-                          color: pot.disabled ? Palette.grey : Palette.dark,
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
               CustomPaint(
-                foregroundPainter: _DashedLinePainter(),
+                foregroundPainter: _DashedLinePainter(
+                  dashWidth: 4,
+                  dashSpace: 4,
+                  startY: 0,
+                ),
                 child: Container(width: 8),
               ),
               Container(
@@ -249,9 +262,17 @@ class _ItemV2 extends StatelessWidget {
 }
 
 class _DashedLinePainter extends CustomPainter {
+  final double dashWidth;
+  final double dashSpace;
+  final double startY;
+  _DashedLinePainter({
+    required this.dashWidth,
+    required this.dashSpace,
+    required this.startY,
+  });
   @override
   void paint(Canvas canvas, Size size) {
-    double dashWidth = 4, dashSpace = 4, startY = 0;
+    double startY = this.startY;
     canvas.drawRect(
       Offset.zero & Size(size.width / 2, size.height),
       Paint()..color = Palette.white,
@@ -277,7 +298,7 @@ class _DashedLinePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(CustomPainter oldDelegate) => false;
+  bool shouldRepaint(_DashedLinePainter oldDelegate) => false;
 }
 
 extension on PotSummaryEntity {
