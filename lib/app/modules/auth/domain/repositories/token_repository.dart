@@ -1,4 +1,4 @@
-abstract class TokenRepository {
+abstract interface class TokenRepository {
   Stream<String?> get token;
   Stream<String?> get refreshToken;
   DateTime? get tokenExpiration;

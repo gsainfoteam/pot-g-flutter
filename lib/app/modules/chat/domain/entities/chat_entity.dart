@@ -7,25 +7,25 @@ sealed class Sendable {
   int get id;
 }
 
-abstract class ChatEntity implements Sendable {
+abstract interface class ChatEntity implements Sendable {
   String get message;
   PotUserEntity get user;
 }
 
 enum SystemMessageType { userIn, userLeave, userKicked, created, archived }
 
-abstract class SystemMessageEntity implements Sendable {
+abstract interface class SystemMessageEntity implements Sendable {
   SystemMessageType get type;
   PotUserEntity? get relatedUser;
   PotUserEntity? get auxRelatedUser;
 }
 
-abstract class FofoChatEntity implements Sendable {
+abstract interface class FofoChatEntity implements Sendable {
   FofoChatType? get type;
   String get content;
   List<FofoActionButtonType?> get actionButtons;
 }
 
-abstract class ChatEntityError implements Sendable {
+abstract interface class ChatEntityError implements Sendable {
   String get message;
 }

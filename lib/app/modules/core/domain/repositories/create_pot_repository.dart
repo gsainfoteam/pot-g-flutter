@@ -1,4 +1,4 @@
-abstract class CreatePotRepository {
+abstract interface class CreatePotRepository {
   Future<String> createPot({
     required String routeId,
     required DateTime startsAt,

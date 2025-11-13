@@ -1,3 +1,3 @@
-abstract class LinkRepository {
+abstract interface class LinkRepository {
   Stream<String> getLinkStream();
 }

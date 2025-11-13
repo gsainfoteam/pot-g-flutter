@@ -1,3 +1,3 @@
-abstract class PotIdEntity {
+abstract interface class PotIdEntity {
   String get id;
 }

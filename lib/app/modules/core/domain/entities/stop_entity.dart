@@ -1,4 +1,4 @@
-abstract class StopEntity {
+abstract interface class StopEntity {
   String get id;
   String get name;
   double get lat;

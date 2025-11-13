@@ -1,25 +1,26 @@
 sealed class AccountingRequestException implements Exception {
   const AccountingRequestException();
 
-  factory AccountingRequestException.alreadyRequested() =
+  const factory AccountingRequestException.alreadyRequested() =
       AlreadyRequestedException;
-  factory AccountingRequestException.accountInfoNotSet() =
+  const factory AccountingRequestException.accountInfoNotSet() =
       AccountInfoNotSetException;
-  factory AccountingRequestException.costCannotBeNegative() =
+  const factory AccountingRequestException.costCannotBeNegative() =
       CostCannotBeNegativeException;
-  factory AccountingRequestException.costPerUserMismatch() =
+  const factory AccountingRequestException.costPerUserMismatch() =
       CostPerUserMismatchException;
-  factory AccountingRequestException.beforeDeparture() =
+  const factory AccountingRequestException.beforeDeparture() =
       BeforeDepartureException;
-  factory AccountingRequestException.notAParticipant() =
+  const factory AccountingRequestException.notAParticipant() =
       NotAParticipantException;
-  factory AccountingRequestException.potNotExist() = PotNotExistException;
-  factory AccountingRequestException.potAlreadyClosed() =
+  const factory AccountingRequestException.potNotExist() = PotNotExistException;
+  const factory AccountingRequestException.potAlreadyClosed() =
       PotAlreadyClosedException;
 
-  factory AccountingRequestException.networkError(String error) =
+  const factory AccountingRequestException.networkError(String error) =
       NetworkErrorException;
-  factory AccountingRequestException.unknown(Object error) = UnknownException;
+  const factory AccountingRequestException.unknown(Object error) =
+      UnknownException;
 }
 
 class AlreadyRequestedException extends AccountingRequestException {

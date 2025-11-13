@@ -1,6 +1,6 @@
 import 'package:pot_g/app/modules/common/domain/enums/tooltip_type.dart';
 
-abstract class TooltipRepository {
+abstract interface class TooltipRepository {
   /// Checks whether the tooltip should be shown.
   /// [type] is the tooltip type.
   /// Returns true if should show, false if already shown.
