@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pot_g/app/modules/common/presentation/extensions/date_time.dart';
@@ -22,7 +23,7 @@ class PotListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final version = 2;
+    final version = kDebugMode ? 2 : 1;
     return PotPressable(
       onTap: pot.disabled
           ? null

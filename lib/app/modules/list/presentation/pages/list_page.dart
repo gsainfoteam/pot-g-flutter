@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -152,7 +153,7 @@ class _ListViewState extends State<_ListView> {
             final isSameDay = previousPot == null
                 ? false
                 : pot.startsAt.isSameDay(previousPot.startsAt);
-            final version = 2;
+            final version = kDebugMode ? 2 : 1;
             return Column(
               children: [
                 if (!isSameDay && version >= 2) ...[
