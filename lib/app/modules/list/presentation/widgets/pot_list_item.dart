@@ -248,16 +248,25 @@ class _ItemV2 extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        context.t.create.capacity.fields.max_capacity.item(
-                          n: pot.current,
-                        ),
-                        style: TextStyles.title3.copyWith(
-                          color: Palette.primary,
+                        context.t.create.capacity.fields.max_capacity.label,
+                        style: TextStyles.caption2.copyWith(
+                          color: Palette.textGrey,
                         ),
                       ),
-                      Text(
-                        '/${context.t.create.capacity.fields.max_capacity.item(n: pot.total)}',
-                        style: TextStyles.caption.copyWith(
+                      const SizedBox(height: 4),
+                      Text.rich(
+                        TextSpan(
+                          children: [
+                            TextSpan(
+                              text: pot.current.toString(),
+                              style: TextStyles.title4.copyWith(
+                                color: Palette.primary,
+                              ),
+                            ),
+                            TextSpan(text: '/${pot.total}'),
+                          ],
+                        ),
+                        style: TextStyles.body.copyWith(
                           color: Palette.textGrey,
                         ),
                       ),
