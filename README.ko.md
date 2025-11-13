@@ -4,66 +4,66 @@
 
 [![Flutter Version](https://img.shields.io/badge/Flutter-3.35.5-02569B?logo=flutter&logoColor=white)](https://flutter.dev)
 [![build and publish (android, iOS)](https://github.com/gsainfoteam/pot-g-flutter/actions/workflows/upload.yml/badge.svg)](https://github.com/gsainfoteam/pot-g-flutter/actions/workflows/upload.yml)
-[![All Contributors](https://img.shields.io/github/all-contributors/gsainfoteam/pot-g-flutter?color=orange)](#contributors-)
+[![All Contributors](https://img.shields.io/github/all-contributors/gsainfoteam/pot-g-flutter?color=orange)](#기여자-)
 [![Star on GitHub](https://img.shields.io/github/stars/gsainfoteam/pot-g-flutter?style=social)](https://github.com/gsainfoteam/pot-g-flutter/stargazers)
 
-## Architecture
+## 아키텍처
 
-This project is built on **Clean Architecture** and **BLoC pattern**.
+이 프로젝트는 **Clean Architecture**와 **BLoC 패턴**을 기반으로 구축되었습니다.
 
-### Architecture Patterns
+### 아키텍처 패턴
 
-- **Clean Architecture**: Each module is separated into `data`, `domain`, and `presentation` layers
-- **BLoC**: State management using BLoC pattern
-- **Dependency Injection**: Dependency injection using `get_it` and `injectable`
-- **Module-based Structure**: Independent modules organized by feature
+- **Clean Architecture**: 각 모듈은 `data`, `domain`, `presentation` 레이어로 분리되어 있습니다
+- **BLoC**: BLoC 패턴을 사용한 상태 관리
+- **의존성 주입**: `get_it`과 `injectable`을 사용한 의존성 주입
+- **모듈 기반 구조**: 기능별로 독립적인 모듈로 구성
 
-### Directory Structure
+### 디렉토리 구조
 
 ```text
 lib/
 ├── app/
-│   ├── di/               # Dependency Injection configuration
-│   ├── modules/          # Feature modules
-│   │   ├── auth/         # Authentication
-│   │   ├── chat/         # Chat and accounting
-│   │   ├── common/       # Common UI/utilities
-│   │   ├── core/         # Core infrastructure (network, storage)
-│   │   ├── create/       # Pot creation
-│   │   ├── device/       # Device information
-│   │   ├── list/         # Pot list
-│   │   ├── main/         # Main navigation
-│   │   ├── socket/       # WebSocket communication
-│   │   ├── splash/       # Splash screen
-│   │   └── user/         # User profile/settings
-│   ├── router.dart       # Routing configuration (auto_route)
-│   ├── pot_app.dart      # App entry point
-│   └── values/           # Theme, colors, fonts, etc.
-└── main.dart             # App starting point
+│   ├── di/               # 의존성 주입 설정
+│   ├── modules/          # 기능 모듈
+│   │   ├── auth/         # 인증
+│   │   ├── chat/         # 채팅 및 정산
+│   │   ├── common/       # 공통 UI/유틸리티
+│   │   ├── core/         # 핵심 인프라 (네트워크, 스토리지)
+│   │   ├── create/       # 팟 생성
+│   │   ├── device/       # 디바이스 정보
+│   │   ├── list/         # 팟 목록
+│   │   ├── main/         # 메인 네비게이션
+│   │   ├── socket/       # WebSocket 통신
+│   │   ├── splash/       # 스플래시 화면
+│   │   └── user/         # 사용자 프로필/설정
+│   ├── router.dart       # 라우팅 설정 (auto_route)
+│   ├── pot_app.dart      # 앱 진입점
+│   └── values/           # 테마, 색상, 폰트 등
+└── main.dart             # 앱 시작점
 ```
 
-### Tech Stack
+### 기술 스택
 
-- **State Management**: `flutter_bloc`, `bloc_concurrency`
-- **Routing**: `auto_route`
-- **Networking**: `dio`, `retrofit`
-- **Local Storage**: `hive_ce`, `flutter_secure_storage`
-- **Code Generation**: `freezed`, `json_serializable`, `injectable`
-- **Internationalization**: `slang`
+- **상태 관리**: `flutter_bloc`, `bloc_concurrency`
+- **라우팅**: `auto_route`
+- **네트워킹**: `dio`, `retrofit`
+- **로컬 스토리지**: `hive_ce`, `flutter_secure_storage`
+- **코드 생성**: `freezed`, `json_serializable`, `injectable`
+- **국제화**: `slang`
 
-## Download
+## 다운로드
 
 [![Play Store](https://img.shields.io/badge/Google%20Play-Download-green?logo=google-play&logoColor=white)](https://play.google.com/store/apps/details?id=me.gistory.pot_g)
 [![App Store](https://img.shields.io/badge/App%20Store-Download-blue?logo=app-store&logoColor=white)](https://apps.apple.com/app/id6744280856)
 
-## Contribution
+## 기여하기
 
-Check [Contributing](.github/CONTRIBUTING.md)
+[기여 가이드](.github/CONTRIBUTING.md)를 확인해주세요
 
-## Contributors ✨
+## 기여자 ✨
 
-Thanks goes to these wonderful people
-([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+이 프로젝트에 기여해주신 멋진 분들께 감사드립니다
+([이모지 키](https://allcontributors.org/docs/en/emoji-key)):
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
@@ -95,6 +95,6 @@ Thanks goes to these wonderful people
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
-This project follows the
+이 프로젝트는
 [all-contributors](https://github.com/all-contributors/all-contributors)
-specification. Contributions of any kind are welcome!
+스펙을 따릅니다. 모든 종류의 기여를 환영합니다!
