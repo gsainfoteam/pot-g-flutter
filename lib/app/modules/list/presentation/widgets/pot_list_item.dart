@@ -12,6 +12,9 @@ import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
 import 'package:pot_g/gen/strings.g.dart';
 
+const _lineWidth = 1.0;
+const _radius = 5.0;
+
 class PotListItem extends StatelessWidget {
   const PotListItem({super.key, required this.pot});
 
@@ -226,14 +229,14 @@ class _ItemV2 extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.symmetric(vertical: 5),
+                padding: EdgeInsets.symmetric(vertical: _radius),
                 child: CustomPaint(
                   foregroundPainter: _DashedLinePainter(
                     dashWidth: 4,
                     dashSpace: 4,
                     startY: 0,
                   ),
-                  child: Container(width: 1),
+                  child: Container(width: _lineWidth),
                 ),
               ),
               ClipPath(
@@ -312,8 +315,8 @@ class _DashedLinePainter extends CustomPainter {
 
 class _HoleClipper extends CustomClipper<Path> {
   final bool isLeft;
-  final double radius = 5;
-  final double gap = 1;
+  final double radius = _radius;
+  final double gap = _lineWidth;
   _HoleClipper({required this.isLeft});
   @override
   Path getClip(Size size) {
