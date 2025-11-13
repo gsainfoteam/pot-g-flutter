@@ -325,7 +325,10 @@ class _DashedLinePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_DashedLinePainter oldDelegate) => false;
+  bool shouldRepaint(_DashedLinePainter oldDelegate) =>
+      oldDelegate.dashWidth != dashWidth ||
+      oldDelegate.dashSpace != dashSpace ||
+      oldDelegate.startY != startY;
 }
 
 class _HoleClipper extends CustomClipper<Path> {
@@ -359,7 +362,10 @@ class _HoleClipper extends CustomClipper<Path> {
   }
 
   @override
-  bool shouldReclip(_HoleClipper oldClipper) => true;
+  bool shouldReclip(_HoleClipper oldClipper) =>
+      oldClipper.isLeft != isLeft ||
+      oldClipper.radius != radius ||
+      oldClipper.gap != gap;
 }
 
 extension on PotSummaryEntity {
