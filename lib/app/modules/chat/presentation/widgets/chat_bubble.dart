@@ -14,6 +14,9 @@ class ChatBubble extends StatelessWidget {
     this.isFirst = false,
     required this.pot,
     required this.sentAt,
+    this.isPending = false,
+    this.error,
+    this.onResend,
   });
 
   final String message;
@@ -21,6 +24,9 @@ class ChatBubble extends StatelessWidget {
   final bool isFirst;
   final PotInfoEntity pot;
   final DateTime sentAt;
+  final bool isPending;
+  final String? error;
+  final VoidCallback? onResend;
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +38,9 @@ class ChatBubble extends StatelessWidget {
           ? null
           : PotProfileImage(user: user!, pot: pot),
       name: user?.name,
+      error: error,
+      isPending: isPending,
+      onResend: onResend,
       child: SelectableText(
         message,
         style: TextStyles.description.copyWith(

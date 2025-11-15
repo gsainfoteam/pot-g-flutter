@@ -176,6 +176,9 @@ class _ChatListState extends State<ChatList> {
           user: null,
           message: chat.message,
           pot: widget.pot,
+          isPending: true,
+          error: chat.error,
+          onResend: () => context.read<ChatBloc>().add(ChatResendChat(chat.id)),
         );
       }
       throw StateError('Unknown chat type');
