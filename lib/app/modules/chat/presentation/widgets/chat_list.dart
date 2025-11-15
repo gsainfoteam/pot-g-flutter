@@ -134,12 +134,12 @@ class _ChatListState extends State<ChatList> {
   bool _isFirst(Sendable chat, Sendable? previousChat) {
     final previousChatUserId = previousChat is ChatEntity
         ? previousChat.user.id
-        : previousChat is WaitingChatEntity
+        : previousChat is PendingChatEntity
         ? AuthBloc.userOf(context)?.id
         : null;
     final chatUserId = chat is ChatEntity
         ? chat.user.id
-        : chat is WaitingChatEntity
+        : chat is PendingChatEntity
         ? AuthBloc.userOf(context)?.id
         : null;
     if (previousChatUserId == null || chatUserId == null) return true;
@@ -169,7 +169,7 @@ class _ChatListState extends State<ChatList> {
           child: Text('${chat.message}\n${context.t.chat_room.error.update}'),
         );
       }
-      if (chat is WaitingChatEntity) {
+      if (chat is PendingChatEntity) {
         return ChatBubble(
           sentAt: chat.createdAt,
           isFirst: _isFirst(chat, state.chats.elementAtOrNull(index + 1)),

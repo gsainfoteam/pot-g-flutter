@@ -65,7 +65,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     Emitter<ChatState> emit,
   ) async {
     await _completer.future;
-    final chat = WaitingChatEntity.create(event.message);
+    final chat = PendingChatEntity.create(event.message);
     try {
       emit(state.copyWith(chats: [chat, ...state.chats]));
       await _chatRepository.sendChat(event.message, _pot);

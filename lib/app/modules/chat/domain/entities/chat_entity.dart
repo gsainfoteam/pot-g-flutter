@@ -12,7 +12,7 @@ abstract interface class ChatEntity implements Sendable {
   PotUserEntity get user;
 }
 
-class WaitingChatEntity implements Sendable {
+class PendingChatEntity implements Sendable {
   final String message;
   @override
   final DateTime createdAt;
@@ -22,23 +22,23 @@ class WaitingChatEntity implements Sendable {
 
   static int _id = 0;
 
-  const WaitingChatEntity._({
+  const PendingChatEntity._({
     required this.message,
     required this.createdAt,
     required this.id,
     this.error,
   });
 
-  factory WaitingChatEntity.create(String message) {
-    return WaitingChatEntity._(
+  factory PendingChatEntity.create(String message) {
+    return PendingChatEntity._(
       message: message,
       createdAt: DateTime.now(),
       id: _id++,
     );
   }
 
-  WaitingChatEntity withError(String error) {
-    return WaitingChatEntity._(
+  PendingChatEntity withError(String error) {
+    return PendingChatEntity._(
       message: message,
       createdAt: createdAt,
       id: id,
