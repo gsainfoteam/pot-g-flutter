@@ -57,7 +57,7 @@ class PotGSocket {
     if (_connectingMutex.isWriteLocked) {
       await _connectingMutex.acquireRead();
       _connectingMutex.release();
-      if (isConnected) return;
+      return;
     }
     try {
       await _connectingMutex.acquireWrite();
