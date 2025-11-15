@@ -163,6 +163,9 @@ class _LayoutState extends State<_Layout> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    if (!context.read<SocketAuthBloc>().state.isConnected) {
+      context.read<SocketAuthBloc>().add(const SocketAuthEvent.connect());
+    }
   }
 
   @override
