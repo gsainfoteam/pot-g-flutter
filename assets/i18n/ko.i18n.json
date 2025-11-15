@@ -139,6 +139,7 @@
       "description": "택시팟의 최대 인원 수를 설정하세요",
       "fields": {
         "max_capacity": {
+          "label": "정원",
           "item": "$n명"
         }
       }

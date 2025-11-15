@@ -106,7 +106,7 @@ PODS:
     - Flutter
   - flutter_secure_storage (6.0.0):
     - Flutter
-  - flutter_web_auth_2 (3.0.0):
+  - flutter_web_auth_2 (5.0.0-alpha.2):
     - Flutter
   - GoogleAdsOnDeviceConversion (2.1.0):
     - GoogleUtilities/Logger (~> 8.1)
@@ -289,7 +289,7 @@ SPEC CHECKSUMS:
   flutter_local_notifications: a5a732f069baa862e728d839dd2ebb904737effb
   flutter_native_splash: c32d145d68aeda5502d5f543ee38c192065986cf
   flutter_secure_storage: 1ed9476fba7e7a782b22888f956cce43e2c62f13
-  flutter_web_auth_2: 5c8d9dcd7848b5a9efb086d24e7a9adcae979c80
+  flutter_web_auth_2: c35a99b4799ad94b0dc140880f406cf59a4af866
   GoogleAdsOnDeviceConversion: 2be6297a4f048459e0ae17fad9bfd2844e10cf64
   GoogleAppMeasurement: 700dce7541804bec33db590a5c496b663fbe2539
   GoogleDataTransport: aae35b7ea0c09004c3797d53c8c41f66f219d6a7

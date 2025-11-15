@@ -26,9 +26,10 @@ import 'package:pot_g/app/values/text_styles.dart';
 import 'package:pot_g/gen/strings.g.dart';
 
 class ChatList extends StatefulWidget {
-  const ChatList({super.key, required this.pot});
+  const ChatList({super.key, required this.pot, required this.bannerShown});
 
   final PotInfoEntity pot;
+  final bool bannerShown;
 
   @override
   State<ChatList> createState() => _ChatListState();
@@ -81,39 +82,52 @@ class _ChatListState extends State<ChatList> {
           final nextChat = index == state.chats.length - 1
               ? null
               : state.chats[index + 1];
-          return nextChat?.createdAt.isSameDay(chat.createdAt) == false;
+          if (nextChat == null) return true;
+          return !nextChat.createdAt.isSameDay(chat.createdAt);
         }
 
         return ListView.separated(
           physics: const AlwaysScrollableScrollPhysics(),
           controller: _controller,
           reverse: true,
-          padding: const EdgeInsets.all(12) - EdgeInsets.only(right: 6),
-          separatorBuilder: (context, index) => dateChanged(index)
-              ? Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  child: Center(
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 4,
-                        horizontal: 16,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Palette.lightGrey,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Text(
-                        DateFormat.yMd().add_E().format(
-                          state.chats[index].createdAt,
+          padding:
+              const EdgeInsets.all(12) -
+              EdgeInsets.only(right: 6) +
+              EdgeInsets.only(top: widget.bannerShown ? 72 : 0),
+          separatorBuilder: (context, index) =>
+              SizedBox(height: isLast(index) ? 12 : 6),
+          itemBuilder: (context, index) => index == state.chats.length
+              ? const Center(child: CircularProgressIndicator.adaptive())
+              : Column(
+                  children: [
+                    if (dateChanged(index))
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        child: Center(
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 4,
+                              horizontal: 16,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Palette.lightGrey,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Text(
+                              DateFormat.yMd().add_E().format(
+                                state.chats[index].createdAt,
+                              ),
+                              textAlign: TextAlign.center,
+                              style: TextStyles.caption.copyWith(
+                                color: Palette.grey,
+                              ),
+                            ),
+                          ),
                         ),
-                        textAlign: TextAlign.center,
-                        style: TextStyles.caption.copyWith(color: Palette.grey),
                       ),
-                    ),
-                  ),
-                )
-              : SizedBox(height: isLast(index) ? 12 : 6),
-          itemBuilder: (context, index) => _buildItem(context, index, state),
+                    _buildItem(context, index, state),
+                  ],
+                ),
           itemCount: state.chats.length + (state.isLoading ? 1 : 0),
         );
       },
@@ -132,9 +146,6 @@ class _ChatListState extends State<ChatList> {
       return nextChat.user.id != chat.user.id;
     }
 
-    if (index == state.chats.length) {
-      return const Center(child: CircularProgressIndicator.adaptive());
-    }
     final chat = state.chats[index];
     if (chat is! ChatEntity) {
       if (chat is SystemMessageEntity) {

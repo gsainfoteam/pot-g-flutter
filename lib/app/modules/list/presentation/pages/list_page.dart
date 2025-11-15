@@ -1,7 +1,10 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:pot_g/app/di/locator.dart';
+import 'package:pot_g/app/modules/common/presentation/extensions/date_time.dart';
 import 'package:pot_g/app/modules/common/presentation/extensions/toast.dart';
 import 'package:pot_g/app/modules/common/presentation/utils/log_page.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_app_bar.dart';
@@ -145,9 +148,32 @@ class _ListViewState extends State<_ListView> {
         itemCount: widget.pots.length + 1, // +1 for loading indicator
         itemBuilder: (context, index) {
           if (index < widget.pots.length) {
+            final pot = widget.pots[index];
+            final previousPot = index > 0 ? widget.pots[index - 1] : null;
+            final isSameDay = previousPot == null
+                ? false
+                : pot.startsAt.isSameDay(previousPot.startsAt);
+            final version = kDebugMode ? 2 : 1;
             return Column(
               children: [
-                PotListItem(pot: widget.pots[index]),
+                if (!isSameDay && version >= 2) ...[
+                  Row(
+                    children: [
+                      Text(
+                        DateFormat.yMd().add_E().format(pot.startsAt),
+                        style: TextStyles.caption.copyWith(
+                          color: Palette.textGrey,
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      Expanded(
+                        child: Container(height: 1, color: Palette.textGrey),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                ],
+                PotListItem(pot: pot),
                 const SizedBox(height: 15),
               ],
             );
