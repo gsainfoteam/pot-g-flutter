@@ -161,13 +161,12 @@ class WebsocketChatRepository implements ChatRepository {
   @override
   Future<void> sendChat(String message, PotInfoEntity pot) async {
     final requestId = Uuid().v4();
-    final blocker = _socket.getNextMessage<SendChatResponseModel>(
-      requestId: requestId,
-    );
-    await _socket.sendRequest(
-      SendChatModel(message: message, potPk: pot.id),
-      requestId: requestId,
-    );
-    await blocker;
+    await Future.wait([
+      _socket.getNextMessage<SendChatResponseModel>(requestId: requestId),
+      _socket.sendRequest(
+        SendChatModel(message: message, potPk: pot.id),
+        requestId: requestId,
+      ),
+    ]);
   }
 }
