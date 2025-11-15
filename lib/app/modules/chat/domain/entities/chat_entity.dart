@@ -12,6 +12,41 @@ abstract interface class ChatEntity implements Sendable {
   PotUserEntity get user;
 }
 
+class WaitingChatEntity implements Sendable {
+  final String message;
+  @override
+  final DateTime createdAt;
+  @override
+  final int id;
+  final String? error;
+
+  static int _id = 0;
+
+  const WaitingChatEntity._({
+    required this.message,
+    required this.createdAt,
+    required this.id,
+    this.error,
+  });
+
+  factory WaitingChatEntity.create(String message) {
+    return WaitingChatEntity._(
+      message: message,
+      createdAt: DateTime.now(),
+      id: _id++,
+    );
+  }
+
+  WaitingChatEntity withError(String error) {
+    return WaitingChatEntity._(
+      message: message,
+      createdAt: createdAt,
+      id: id,
+      error: error,
+    );
+  }
+}
+
 enum SystemMessageType { userIn, userLeave, userKicked, created, archived }
 
 abstract interface class SystemMessageEntity implements Sendable {

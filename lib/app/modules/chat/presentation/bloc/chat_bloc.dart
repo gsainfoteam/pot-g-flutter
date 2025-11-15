@@ -65,12 +65,25 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     Emitter<ChatState> emit,
   ) async {
     await _completer.future;
+    final chat = WaitingChatEntity.create(event.message);
     try {
+      emit(state.copyWith(chats: [chat, ...state.chats]));
       await _chatRepository.sendChat(event.message, _pot);
-      // TODO: optimistic UI
+      emit(
+        state.copyWith(
+          chats: state.chats.where((c) => c.id != chat.id).toList(),
+        ),
+      );
     } catch (e, stackTrace) {
       L.e(e, stackTrace);
       emit(state.copyWith(isLoading: false, error: e.toString()));
+      emit(
+        state.copyWith(
+          chats: state.chats
+              .map((c) => c.id == chat.id ? chat.withError(e.toString()) : c)
+              .toList(),
+        ),
+      );
     }
   }
 
@@ -110,7 +123,6 @@ sealed class ChatEvent with _$ChatEvent {
 sealed class ChatState with _$ChatState {
   const factory ChatState({
     @Default([]) List<Sendable> chats,
-    @Default([]) List<Sendable> waitingChats,
     @Default(false) bool endReached,
     @Default(false) bool isLoading,
     String? error,
