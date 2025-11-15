@@ -66,11 +66,10 @@ class _ChatListState extends State<ChatList> {
         }
       },
       builder: (context, state) {
+        final chats = [...state.pendingChats, ...state.chats];
         bool dateChanged(int index) {
-          final chat = state.chats[index];
-          final nextChat = index == state.chats.length - 1
-              ? null
-              : state.chats[index + 1];
+          final chat = chats[index];
+          final nextChat = index == chats.length - 1 ? null : chats[index + 1];
           if (nextChat == null) return true;
           return !nextChat.createdAt.isSameDay(chat.createdAt);
         }
@@ -84,28 +83,28 @@ class _ChatListState extends State<ChatList> {
               EdgeInsets.only(right: 6) +
               EdgeInsets.only(top: widget.bannerShown ? 72 : 0),
           separatorBuilder: (context, index) => SizedBox(
-            height:
-                _isFirst(
-                  state.chats[index],
-                  state.chats.elementAtOrNull(index + 1),
-                )
+            height: _isFirst(chats[index], chats.elementAtOrNull(index + 1))
                 ? 12
                 : 6,
           ),
           itemBuilder: (context, index) {
-            if (index == state.chats.length) {
+            if (index == chats.length) {
               return const Center(child: CircularProgressIndicator.adaptive());
             }
 
             return Column(
               children: [
                 if (dateChanged(index))
-                  _buildDateIndicator(state.chats[index].createdAt),
-                _buildItem(context, index, state),
+                  _buildDateIndicator(chats[index].createdAt),
+                _buildItem(
+                  context,
+                  chats[index],
+                  _isFirst(chats[index], chats.elementAtOrNull(index + 1)),
+                ),
               ],
             );
           },
-          itemCount: state.chats.length + (state.isLoading ? 1 : 0),
+          itemCount: chats.length + (state.isLoading ? 1 : 0),
         );
       },
     );
@@ -146,8 +145,7 @@ class _ChatListState extends State<ChatList> {
     return previousChatUserId != chatUserId;
   }
 
-  Widget _buildItem(BuildContext context, int index, ChatState state) {
-    final chat = state.chats[index];
+  Widget _buildItem(BuildContext context, Sendable chat, bool isFirst) {
     if (chat is! ChatEntity) {
       if (chat is SystemMessageEntity) {
         return SystemMessage(message: chat);
@@ -172,7 +170,7 @@ class _ChatListState extends State<ChatList> {
       if (chat is PendingChatEntity) {
         return ChatBubble(
           sentAt: chat.createdAt,
-          isFirst: _isFirst(chat, state.chats.elementAtOrNull(index + 1)),
+          isFirst: isFirst,
           user: null,
           message: chat.message,
           pot: widget.pot,
@@ -187,7 +185,7 @@ class _ChatListState extends State<ChatList> {
     return ChatBubble(
       sentAt: chat.createdAt,
       message: chat.message,
-      isFirst: _isFirst(chat, state.chats.elementAtOrNull(index + 1)),
+      isFirst: isFirst,
       user: isMe ? null : chat.user,
       pot: widget.pot,
     );

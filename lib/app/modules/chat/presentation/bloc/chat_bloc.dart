@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc_concurrency/bloc_concurrency.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
@@ -23,6 +24,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     on<ChatInit>(_onChatInit, transformer: restartable());
     on<ChatLoadMore>(_onChatLoadMore, transformer: droppable());
     on<ChatSendChat>(_onChatSendChat);
+    on<ChatResendChat>(_onChatResendChat);
   }
 
   Future<void> _onChatInit(ChatInit event, Emitter<ChatState> emit) async {
@@ -67,19 +69,52 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     await _completer.future;
     final chat = PendingChatEntity.create(event.message);
     try {
-      emit(state.copyWith(chats: [chat, ...state.chats]));
+      emit(state.copyWith(pendingChats: [chat, ...state.pendingChats]));
       await _chatRepository.sendChat(event.message, _pot);
       emit(
         state.copyWith(
-          chats: state.chats.where((c) => c.id != chat.id).toList(),
+          pendingChats: state.pendingChats
+              .where((c) => c.id != chat.id)
+              .toList(),
         ),
       );
     } catch (e, stackTrace) {
       L.e(e, stackTrace);
-      emit(state.copyWith(isLoading: false, error: e.toString()));
       emit(
         state.copyWith(
-          chats: state.chats
+          isLoading: false,
+          error: e.toString(),
+          pendingChats: state.pendingChats
+              .map((c) => c.id == chat.id ? chat.withError(e.toString()) : c)
+              .toList(),
+        ),
+      );
+    }
+  }
+
+  Future<void> _onChatResendChat(
+    ChatResendChat event,
+    Emitter<ChatState> emit,
+  ) async {
+    await _completer.future;
+    final chat = state.pendingChats.firstWhereOrNull((c) => c.id == event.id);
+    if (chat == null) return;
+    try {
+      await _chatRepository.sendChat(chat.message, _pot);
+
+      emit(
+        state.copyWith(
+          pendingChats: state.pendingChats
+              .where((c) => c.id != chat.id)
+              .toList(),
+        ),
+      );
+    } catch (e, stackTrace) {
+      L.e(e, stackTrace);
+      emit(
+        state.copyWith(
+          error: e.toString(),
+          pendingChats: state.pendingChats
               .map((c) => c.id == chat.id ? chat.withError(e.toString()) : c)
               .toList(),
         ),
@@ -117,12 +152,14 @@ sealed class ChatEvent with _$ChatEvent {
   const factory ChatEvent.init(PotInfoEntity pot) = ChatInit;
   const factory ChatEvent.loadMore() = ChatLoadMore;
   const factory ChatEvent.sendChat(String message) = ChatSendChat;
+  const factory ChatEvent.resendChat(int id) = ChatResendChat;
 }
 
 @freezed
 sealed class ChatState with _$ChatState {
   const factory ChatState({
     @Default([]) List<Sendable> chats,
+    @Default([]) List<PendingChatEntity> pendingChats,
     @Default(false) bool endReached,
     @Default(false) bool isLoading,
     String? error,
