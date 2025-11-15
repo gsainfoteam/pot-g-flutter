@@ -52,13 +52,12 @@ class PotGSocket {
 
   /// 이미 연결되어 있으면 기존 연결을 끊고 새로 연결
   Future<void> connect() async {
-    _shouldConnected = true;
-    _reconnectTimer?.cancel();
-    _reconnectTimer = null;
-
     if (isConnected) {
       await disconnect();
     }
+    _shouldConnected = true;
+    _reconnectTimer?.cancel();
+    _reconnectTimer = null;
 
     _connectionStateController.add(SocketConnectionState.connecting);
 
