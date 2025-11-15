@@ -4,6 +4,7 @@ import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
+import 'package:mutex/mutex.dart';
 import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
 import 'package:pot_g/app/modules/core/domain/repositories/api_channel_repository.dart';
 import 'package:pot_g/app/modules/socket/data/models/base/base_server_message_model.dart';
@@ -35,6 +36,7 @@ class PotGSocket {
   bool _shouldConnected = false;
   int _retryCount = 0;
   Timer? _reconnectTimer;
+  final _connectingMutex = ReadWriteMutex();
 
   bool get isConnected => _channel != null && _channel!.closeCode == null;
 
@@ -52,31 +54,41 @@ class PotGSocket {
 
   /// 이미 연결되어 있으면 기존 연결을 끊고 새로 연결
   Future<void> connect() async {
-    if (isConnected) {
-      await disconnect();
+    if (_connectingMutex.isWriteLocked) {
+      await _connectingMutex.acquireRead();
+      _connectingMutex.release();
+      if (isConnected) return;
     }
-    _shouldConnected = true;
-    _reconnectTimer?.cancel();
-    _reconnectTimer = null;
-
-    _connectionStateController.add(SocketConnectionState.connecting);
-
     try {
-      final channel = WebSocketChannel.connect(_apiChannelRepository.wsUrl);
-      _channel = channel;
-      await channel.ready;
-
-      _retryCount = 0;
-      _connectionStateController.add(SocketConnectionState.connected);
-
-      // 새로운 channel의 stream을 기존 controller에 연결
-      _setupChannelSubscription();
-    } catch (e) {
-      _connectionStateController.add(SocketConnectionState.disconnected);
-      if (_shouldConnected) {
-        _reconnect();
+      await _connectingMutex.acquireWrite();
+      if (isConnected) {
+        await disconnect();
       }
-      rethrow;
+      _shouldConnected = true;
+      _reconnectTimer?.cancel();
+      _reconnectTimer = null;
+
+      _connectionStateController.add(SocketConnectionState.connecting);
+
+      try {
+        final channel = WebSocketChannel.connect(_apiChannelRepository.wsUrl);
+        _channel = channel;
+        await channel.ready;
+
+        _retryCount = 0;
+        _connectionStateController.add(SocketConnectionState.connected);
+
+        // 새로운 channel의 stream을 기존 controller에 연결
+        _setupChannelSubscription();
+      } catch (e) {
+        _connectionStateController.add(SocketConnectionState.disconnected);
+        if (_shouldConnected) {
+          _reconnect();
+        }
+        rethrow;
+      }
+    } finally {
+      _connectingMutex.release();
     }
   }
 
