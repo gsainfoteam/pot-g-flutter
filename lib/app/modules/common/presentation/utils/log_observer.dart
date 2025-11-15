@@ -21,8 +21,8 @@ class LogObserver extends AutoRouterObserver {
     if (route.settings is AutoRoutePage) {
       log('Routing: ${route.settings.name}', name: 'router');
       final page = route.settings as AutoRoutePage;
-      if (page.child is LogPage) {
-        final logPage = page.child as LogPage;
+      if (page.child is PageLogger) {
+        final logPage = page.child as PageLogger;
         L.setCurrentPage(logPage.pageName, properties: logPage.pageProperties);
       }
     }
@@ -36,14 +36,18 @@ class LogObserver extends AutoRouterObserver {
       if (previousRoute?.settings is AutoRoutePage) {
         final previousPage = previousRoute?.settings as AutoRoutePage;
         final child = _getTopChild();
-        if (previousPage.child is LogPage) {
-          final logPage = previousPage.child as LogPage;
+        if (previousPage.child is PageLogger) {
+          final logPage = previousPage.child as PageLogger;
           L.setCurrentPage(
             logPage.pageName,
             properties: logPage.pageProperties,
           );
-        } else if (child is LogPage) {
-          L.setCurrentPage(child.pageName, properties: child.pageProperties);
+        } else if (child is PageLogger) {
+          final logPage = child as PageLogger;
+          L.setCurrentPage(
+            logPage.pageName,
+            properties: logPage.pageProperties,
+          );
         }
       }
     }
@@ -55,8 +59,9 @@ class LogObserver extends AutoRouterObserver {
     log('Changing tab to: ${route.routeInfo.name}', name: 'router');
     final pageName = route.routeInfo.meta['pageName'];
     final page = _getTopChild();
-    if (page is LogPage) {
-      L.setCurrentPage(page.pageName, properties: page.pageProperties);
+    if (page is PageLogger) {
+      final logPage = page as PageLogger;
+      L.setCurrentPage(logPage.pageName, properties: logPage.pageProperties);
     } else if (pageName is String) {
       L.setCurrentPage(pageName);
     }
@@ -68,8 +73,9 @@ class LogObserver extends AutoRouterObserver {
     log('Initializing tab to: ${route.routeInfo.name}', name: 'router');
     final pageName = route.routeInfo.meta['pageName'];
     final page = _getTopChild();
-    if (page is LogPage) {
-      L.setCurrentPage(page.pageName, properties: page.pageProperties);
+    if (page is PageLogger) {
+      final logPage = page as PageLogger;
+      L.setCurrentPage(logPage.pageName, properties: logPage.pageProperties);
     } else if (pageName is String) {
       L.setCurrentPage(pageName);
     }
