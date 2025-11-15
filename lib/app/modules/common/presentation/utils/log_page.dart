@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 
-mixin LogPage on StatelessWidget {
+abstract interface class PageLogger {
   String get pageName;
   Map<String, Object> get pageProperties => {};
 }
 
-mixin LogPageState on StatefulWidget {
-  String get pageName;
+mixin LogPage on StatelessWidget implements PageLogger {
+  @override
+  Map<String, Object> get pageProperties => {};
+}
+
+mixin LogPageState on StatefulWidget implements PageLogger {
+  @override
   Map<String, Object> get pageProperties => {};
 }
