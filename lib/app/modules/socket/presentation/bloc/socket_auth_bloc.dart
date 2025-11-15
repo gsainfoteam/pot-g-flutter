@@ -75,6 +75,8 @@ sealed class SocketAuthEvent with _$SocketAuthEvent {
 
 @freezed
 sealed class SocketAuthState with _$SocketAuthState {
+  const SocketAuthState._();
+
   const factory SocketAuthState.initial() = _Initial;
   const factory SocketAuthState.connecting() = SocketConnecting;
   const factory SocketAuthState.connected() = SocketConnected;
@@ -83,4 +85,9 @@ sealed class SocketAuthState with _$SocketAuthState {
   const factory SocketAuthState.failed() = SocketFailed;
   const factory SocketAuthState.authorized() = _Authorized;
   const factory SocketAuthState.error(String message) = SocketError;
+
+  bool get isConnected => switch (this) {
+    SocketConnected() => true,
+    _ => false,
+  };
 }
