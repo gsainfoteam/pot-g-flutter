@@ -1,4 +1,5 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_pressable.dart';
@@ -149,5 +150,17 @@ class Bubble extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty('isFirst', isFirst));
+    properties.add(DiagnosticsProperty('isMe', isMe));
+    properties.add(DiagnosticsProperty('profileImage', profileImage));
+    properties.add(DiagnosticsProperty('name', name));
+    properties.add(DiagnosticsProperty('sentAt', sentAt));
+    properties.add(DiagnosticsProperty('error', error));
+    properties.add(DiagnosticsProperty('isPending', isPending));
   }
 }

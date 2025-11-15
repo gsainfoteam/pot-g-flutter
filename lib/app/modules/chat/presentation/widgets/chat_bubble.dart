@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_user_entity.dart';
@@ -48,5 +49,16 @@ class ChatBubble extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty('message', message));
+    properties.add(DiagnosticsProperty('user', user));
+    properties.add(DiagnosticsProperty('isFirst', isFirst));
+    properties.add(DiagnosticsProperty('pot', pot));
+    properties.add(DiagnosticsProperty('sentAt', sentAt));
+    properties.add(DiagnosticsProperty('isPending', isPending));
   }
 }
