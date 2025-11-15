@@ -40,6 +40,8 @@ class WebsocketSocketAuthorizationRepository
       AuthorizationModel(authorization: token),
       requestId: requestId,
     );
-    await _socket.getNextMessage<AuthorizationResponseModel>();
+    await _socket.getNextMessage<AuthorizationResponseModel>(
+      requestId: requestId,
+    );
   }
 }

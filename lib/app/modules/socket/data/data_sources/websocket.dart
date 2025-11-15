@@ -159,11 +159,15 @@ class PotGSocket {
         .cast<BaseServerMessageModel<T>>();
   }
 
-  Future<BaseServerMessageModel<T>> getNextMessage<
-    T extends BaseServerMessageEvent
-  >([Duration? timeout = const Duration(seconds: 30)]) async {
+  Future<BaseServerMessageModel<T>>
+  getNextMessage<T extends BaseServerMessageEvent>({
+    String? requestId,
+    Duration? timeout = const Duration(seconds: 30),
+  }) async {
     var future = rawMessages.firstWhere(
-      (message) => message is BaseServerMessageModel<T>,
+      (message) =>
+          message is BaseServerMessageModel<T> &&
+          (requestId == null || message.requestId == requestId),
     );
     if (timeout != null) {
       future = future.timeout(
