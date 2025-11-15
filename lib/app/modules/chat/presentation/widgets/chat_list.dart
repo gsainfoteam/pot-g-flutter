@@ -174,7 +174,7 @@ class _ChatListState extends State<ChatList> {
           user: null,
           message: chat.message,
           pot: widget.pot,
-          isPending: true,
+          isPending: chat.error == null,
           error: chat.error,
           onResend: () => context.read<ChatBloc>().add(ChatResendChat(chat.id)),
         );
