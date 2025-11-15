@@ -7,11 +7,7 @@ abstract class PotTheme {
   static final theme = ThemeData(
     fontFamily: Pretendard.fontFamily,
     scaffoldBackgroundColor: Palette.white,
-    textSelectionTheme: TextSelectionThemeData(
-      cursorColor: Palette.primary,
-      selectionColor: Palette.primary.withValues(alpha: 0.4),
-      selectionHandleColor: Palette.primary,
-    ),
+    colorSchemeSeed: Palette.primary,
     cupertinoOverrideTheme: const NoDefaultCupertinoThemeData(
       primaryColor: Palette.primary,
     ),
