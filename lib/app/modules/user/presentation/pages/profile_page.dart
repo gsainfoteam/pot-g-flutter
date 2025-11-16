@@ -7,10 +7,12 @@ import 'package:pot_g/app/modules/common/presentation/utils/log_page.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_pressable.dart';
 import 'package:pot_g/app/modules/user/domain/entities/self_user_entity.dart';
 import 'package:pot_g/app/router.gr.dart';
+import 'package:pot_g/app/values/config.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
 import 'package:pot_g/gen/assets.gen.dart';
 import 'package:pot_g/gen/strings.g.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 @RoutePage()
 class ProfilePage extends StatelessWidget with LogPage {
@@ -129,6 +131,28 @@ class _Inner extends StatelessWidget {
                   onTap: () {
                     L.c('accountSetting');
                     context.router.push(const AccountManagementRoute());
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+        SizedBox(height: 24),
+        _Section(
+          title: context.t.profile.report.title,
+          child: Container(
+            decoration: BoxDecoration(
+              color: Palette.lightGrey,
+              borderRadius: BorderRadius.all(Radius.circular(16)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                _MenuButton(
+                  title: context.t.profile.report.cs,
+                  onTap: () {
+                    L.c('feedback');
+                    launchUrlString(Config.csUrl);
                   },
                 ),
               ],
