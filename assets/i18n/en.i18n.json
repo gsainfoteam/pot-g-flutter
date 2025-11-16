@@ -82,6 +82,10 @@
       "logout_dialog": {
         "description": "Are you sure you want to logout?"
       }
+    },
+    "report": {
+      "title": "Report",
+      "cs": "Feedback · Report Bug"
     }
   },
   "list": {
