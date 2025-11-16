@@ -21,6 +21,7 @@ import 'package:pot_g/app/modules/socket/data/models/pot_events/user_in_v1_event
 import 'package:pot_g/app/modules/socket/data/models/pot_events/user_kick_v1_event.dart';
 import 'package:pot_g/app/modules/socket/data/models/pot_events/user_leave_v1_event.dart';
 import 'package:pot_g/app/modules/socket/data/models/requests/send_chat_model.dart';
+import 'package:uuid/uuid.dart';
 
 bool _isChatEvent(PotEventModel e) {
   return e is PotEventModel<ChatV1Event> ||
@@ -159,8 +160,13 @@ class WebsocketChatRepository implements ChatRepository {
 
   @override
   Future<void> sendChat(String message, PotInfoEntity pot) async {
-    final blocker = _socket.getNextMessage<SendChatResponseModel>();
-    await _socket.sendRequest(SendChatModel(message: message, potPk: pot.id));
-    await blocker;
+    final requestId = Uuid().v4();
+    await Future.wait([
+      _socket.getNextMessage<SendChatResponseModel>(requestId: requestId),
+      _socket.sendRequest(
+        SendChatModel(message: message, potPk: pot.id),
+        requestId: requestId,
+      ),
+    ]);
   }
 }

@@ -198,7 +198,12 @@
     },
     "error": {
       "header": "Error Occurred",
-      "update": "This message is not supported in this version of app. Please update the app."
+      "update": "This message is not supported in this version of app. Please update the app.",
+      "failed_to_send": {
+        "title": "Failed to Send",
+        "description": "Failed to send the message. Please try again.",
+        "resend": "Resend"
+      }
     },
     "system_messages": {
       "created": {

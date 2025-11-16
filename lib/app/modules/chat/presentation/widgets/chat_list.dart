@@ -66,22 +66,10 @@ class _ChatListState extends State<ChatList> {
         }
       },
       builder: (context, state) {
-        bool isLast(int index) {
-          final chat = state.chats[index];
-          final nextChat = index == state.chats.length - 1
-              ? null
-              : state.chats[index + 1];
-          if (chat is! ChatEntity || nextChat is! ChatEntity) {
-            return true;
-          }
-          return nextChat.user.id != chat.user.id;
-        }
-
+        final chats = [...state.pendingChats, ...state.chats];
         bool dateChanged(int index) {
-          final chat = state.chats[index];
-          final nextChat = index == state.chats.length - 1
-              ? null
-              : state.chats[index + 1];
+          final chat = chats[index];
+          final nextChat = index == chats.length - 1 ? null : chats[index + 1];
           if (nextChat == null) return true;
           return !nextChat.createdAt.isSameDay(chat.createdAt);
         }
@@ -94,59 +82,70 @@ class _ChatListState extends State<ChatList> {
               const EdgeInsets.all(12) -
               EdgeInsets.only(right: 6) +
               EdgeInsets.only(top: widget.bannerShown ? 72 : 0),
-          separatorBuilder: (context, index) =>
-              SizedBox(height: isLast(index) ? 12 : 6),
-          itemBuilder: (context, index) => index == state.chats.length
-              ? const Center(child: CircularProgressIndicator.adaptive())
-              : Column(
-                  children: [
-                    if (dateChanged(index))
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        child: Center(
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 4,
-                              horizontal: 16,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Palette.lightGrey,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Text(
-                              DateFormat.yMd().add_E().format(
-                                state.chats[index].createdAt,
-                              ),
-                              textAlign: TextAlign.center,
-                              style: TextStyles.caption.copyWith(
-                                color: Palette.grey,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    _buildItem(context, index, state),
-                  ],
+          separatorBuilder: (context, index) => SizedBox(
+            height: _isFirst(chats[index], chats.elementAtOrNull(index + 1))
+                ? 12
+                : 6,
+          ),
+          itemBuilder: (context, index) {
+            if (index == chats.length) {
+              return const Center(child: CircularProgressIndicator.adaptive());
+            }
+
+            return Column(
+              children: [
+                if (dateChanged(index))
+                  _buildDateIndicator(chats[index].createdAt),
+                _buildItem(
+                  context,
+                  chats[index],
+                  _isFirst(chats[index], chats.elementAtOrNull(index + 1)),
                 ),
-          itemCount: state.chats.length + (state.isLoading ? 1 : 0),
+              ],
+            );
+          },
+          itemCount: chats.length + (state.isLoading ? 1 : 0),
         );
       },
     );
   }
 
-  Widget _buildItem(BuildContext context, int index, ChatState state) {
-    bool isFirst(int index) {
-      final chat = state.chats[index];
-      final nextChat = index == state.chats.length - 1
-          ? null
-          : state.chats[index + 1];
-      if (chat is! ChatEntity || nextChat is! ChatEntity) {
-        return true;
-      }
-      return nextChat.user.id != chat.user.id;
-    }
+  Padding _buildDateIndicator(DateTime date) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 16),
+      child: Center(
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
+          decoration: BoxDecoration(
+            color: Palette.lightGrey,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Text(
+            DateFormat.yMd().add_E().format(date),
+            textAlign: TextAlign.center,
+            style: TextStyles.caption.copyWith(color: Palette.grey),
+          ),
+        ),
+      ),
+    );
+  }
 
-    final chat = state.chats[index];
+  bool _isFirst(Sendable chat, Sendable? previousChat) {
+    final previousChatUserId = previousChat is ChatEntity
+        ? previousChat.user.id
+        : previousChat is PendingChatEntity
+        ? AuthBloc.userOf(context)?.id
+        : null;
+    final chatUserId = chat is ChatEntity
+        ? chat.user.id
+        : chat is PendingChatEntity
+        ? AuthBloc.userOf(context)?.id
+        : null;
+    if (previousChatUserId == null || chatUserId == null) return true;
+    return previousChatUserId != chatUserId;
+  }
+
+  Widget _buildItem(BuildContext context, Sendable chat, bool isFirst) {
     if (chat is! ChatEntity) {
       if (chat is SystemMessageEntity) {
         return SystemMessage(message: chat);
@@ -168,13 +167,25 @@ class _ChatListState extends State<ChatList> {
           child: Text('${chat.message}\n${context.t.chat_room.error.update}'),
         );
       }
+      if (chat is PendingChatEntity) {
+        return ChatBubble(
+          sentAt: chat.createdAt,
+          isFirst: isFirst,
+          user: null,
+          message: chat.message,
+          pot: widget.pot,
+          isPending: chat.error == null,
+          error: chat.error,
+          onResend: () => context.read<ChatBloc>().add(ChatResendChat(chat.id)),
+        );
+      }
       throw StateError('Unknown chat type');
     }
     final isMe = chat.user.id == AuthBloc.userOf(context)?.id;
     return ChatBubble(
       sentAt: chat.createdAt,
       message: chat.message,
-      isFirst: isFirst(index),
+      isFirst: isFirst,
       user: isMe ? null : chat.user,
       pot: widget.pot,
     );

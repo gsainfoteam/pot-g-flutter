@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc_concurrency/bloc_concurrency.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
@@ -19,15 +20,16 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   final _completer = Completer<void>();
   final _mutex = Mutex();
 
-  ChatBloc(this._chatRepository) : super(const ChatInitial()) {
+  ChatBloc(this._chatRepository) : super(const ChatState(isLoading: true)) {
     on<ChatInit>(_onChatInit, transformer: restartable());
     on<ChatLoadMore>(_onChatLoadMore, transformer: droppable());
     on<ChatSendChat>(_onChatSendChat);
+    on<ChatResendChat>(_onChatResendChat);
   }
 
   Future<void> _onChatInit(ChatInit event, Emitter<ChatState> emit) async {
     await _mutex.acquire();
-    emit(const ChatState.loading());
+    emit(state.copyWith(isLoading: true));
     _pot = event.pot;
     if (!_completer.isCompleted) {
       _completer.complete();
@@ -36,23 +38,25 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       final stream = emit.forEach(
         _chatRepository.getChatsStream(_pot),
         onData: (chat) {
-          return ChatState.loaded([
-            chat,
-            ...state.chats,
-          ], endReached: state.endReached);
+          return state.copyWith(
+            isLoading: false,
+            chats: [chat, ...state.chats],
+            endReached: state.endReached,
+          );
         },
       );
       final chats = await _chatRepository.getChats(_pot, null);
       emit(
-        ChatState.loaded([
-          ...state.chats,
-          ...chats.reversed,
-        ], endReached: chats.isEmpty),
+        state.copyWith(
+          isLoading: false,
+          chats: [...state.chats, ...chats.reversed],
+          endReached: chats.isEmpty,
+        ),
       );
       return stream;
     } catch (e, stackTrace) {
       L.e(e, stackTrace);
-      emit(ChatState.error(state.chats, e.toString()));
+      emit(state.copyWith(isLoading: false, error: e.toString()));
     } finally {
       _mutex.release();
     }
@@ -63,12 +67,58 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     Emitter<ChatState> emit,
   ) async {
     await _completer.future;
+    final chat = PendingChatEntity.create(event.message);
     try {
+      emit(state.copyWith(pendingChats: [chat, ...state.pendingChats]));
       await _chatRepository.sendChat(event.message, _pot);
-      // TODO: optimistic UI
+      emit(
+        state.copyWith(
+          pendingChats: state.pendingChats
+              .where((c) => c.id != chat.id)
+              .toList(),
+        ),
+      );
     } catch (e, stackTrace) {
       L.e(e, stackTrace);
-      emit(ChatState.error(state.chats, e.toString()));
+      emit(
+        state.copyWith(
+          isLoading: false,
+          error: e.toString(),
+          pendingChats: state.pendingChats
+              .map((c) => c.id == chat.id ? chat.withError(e.toString()) : c)
+              .toList(),
+        ),
+      );
+    }
+  }
+
+  Future<void> _onChatResendChat(
+    ChatResendChat event,
+    Emitter<ChatState> emit,
+  ) async {
+    await _completer.future;
+    final chat = state.pendingChats.firstWhereOrNull((c) => c.id == event.id);
+    if (chat == null) return;
+    try {
+      await _chatRepository.sendChat(chat.message, _pot);
+
+      emit(
+        state.copyWith(
+          pendingChats: state.pendingChats
+              .where((c) => c.id != chat.id)
+              .toList(),
+        ),
+      );
+    } catch (e, stackTrace) {
+      L.e(e, stackTrace);
+      emit(
+        state.copyWith(
+          error: e.toString(),
+          pendingChats: state.pendingChats
+              .map((c) => c.id == chat.id ? chat.withError(e.toString()) : c)
+              .toList(),
+        ),
+      );
     }
   }
 
@@ -81,14 +131,15 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     try {
       if (state.endReached) return;
       if (state.chats.isEmpty) return;
-      emit(ChatState.loading(state.chats));
+      emit(state.copyWith(isLoading: true));
       final lastChat = state.chats.last;
       final chats = await _chatRepository.getChats(_pot, lastChat);
       emit(
-        ChatState.loaded([
-          ...state.chats,
-          ...chats.reversed,
-        ], endReached: chats.isEmpty),
+        state.copyWith(
+          isLoading: false,
+          chats: [...state.chats, ...chats.reversed],
+          endReached: chats.isEmpty,
+        ),
       );
     } finally {
       _mutex.release();
@@ -101,33 +152,16 @@ sealed class ChatEvent with _$ChatEvent {
   const factory ChatEvent.init(PotInfoEntity pot) = ChatInit;
   const factory ChatEvent.loadMore() = ChatLoadMore;
   const factory ChatEvent.sendChat(String message) = ChatSendChat;
+  const factory ChatEvent.resendChat(int id) = ChatResendChat;
 }
 
 @freezed
 sealed class ChatState with _$ChatState {
-  const ChatState._();
-  const factory ChatState.initial([@Default([]) List<Sendable> chats]) =
-      ChatInitial;
-  const factory ChatState.loading([@Default([]) List<Sendable> chats]) =
-      ChatLoading;
-  const factory ChatState.loaded(
-    List<Sendable> chats, {
+  const factory ChatState({
+    @Default([]) List<Sendable> chats,
+    @Default([]) List<PendingChatEntity> pendingChats,
     @Default(false) bool endReached,
-  }) = ChatLoaded;
-  const factory ChatState.error(List<Sendable> chats, String message) =
-      ChatError;
-
-  bool get isLoading => switch (this) {
-    ChatLoading() => true,
-    ChatLoaded() => false,
-    _ => false,
-  };
-  String? get error => switch (this) {
-    ChatError(:final message) => message,
-    _ => null,
-  };
-  bool get endReached => switch (this) {
-    ChatLoaded(:final endReached) => endReached,
-    _ => false,
-  };
+    @Default(false) bool isLoading,
+    String? error,
+  }) = _ChatState;
 }
