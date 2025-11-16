@@ -161,8 +161,8 @@ class PotGSocket implements SocketInterface {
     _reconnectTimer = Timer(duration, () async {
       if (_shouldConnected) {
         await _tryConnect();
-        completer.complete();
       }
+      completer.complete();
     });
     await completer.future;
   }
