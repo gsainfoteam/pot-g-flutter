@@ -145,8 +145,13 @@ class PotGSocket implements SocketInterface {
     _shouldConnected = false;
     _serverSubscription?.cancel();
     _serverSubscription = null;
-    _channel?.sink.close();
+    _reconnectTimer?.cancel();
+    _reconnectTimer = null;
+    _channel?.sink.close().catchError((e, stackTrace) {
+      L.e(e, stackTrace);
+    });
     _channel = null;
+    _state.add(SocketConnectionState.disconnected);
   }
 
   Future<bool> _reconnect() async {
