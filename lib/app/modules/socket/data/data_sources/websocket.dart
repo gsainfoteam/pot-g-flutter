@@ -150,7 +150,7 @@ class PotGSocket implements SocketInterface {
   }
 
   Future<void> _reconnect() async {
-    if (_retryCount++ > _maxRetries) {
+    if (++_retryCount > _maxRetries) {
       _state.add(SocketConnectionState.failed);
       throw Exception('Max retries reached');
     }
