@@ -161,6 +161,7 @@ class WebsocketChatRepository implements ChatRepository {
   @override
   Future<void> sendChat(String message, PotInfoEntity pot) async {
     final requestId = Uuid().v4();
+    print('sendChat: $requestId, $message');
     await Future.wait([
       _socket.getNextMessage<SendChatResponseModel>(requestId: requestId),
       _socket.sendRequest(
