@@ -174,6 +174,13 @@ class PotGSocket implements SocketInterface {
     return false;
   }
 
+  @disposeMethod
+  Future<void> dispose() async {
+    await disconnect();
+    await _messages.close();
+    await _state.close();
+  }
+
   // ================ request ================
 
   @override
