@@ -36,12 +36,12 @@ class WebsocketSocketAuthorizationRepository
   Future<void> authorize(String requestId) async {
     final token = await _tokenRepository.token.first;
     if (token == null) throw Exception('Token is null');
-    await _socket.sendRequest(
-      AuthorizationModel(authorization: token),
-      requestId: requestId,
-    );
-    await _socket.getNextMessage<AuthorizationResponseModel>(
-      requestId: requestId,
-    );
+    await Future.wait([
+      _socket.getNextMessage<AuthorizationResponseModel>(requestId: requestId),
+      _socket.sendRequest(
+        AuthorizationModel(authorization: token),
+        requestId: requestId,
+      ),
+    ]);
   }
 }
