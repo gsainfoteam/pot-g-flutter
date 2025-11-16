@@ -123,11 +123,7 @@ class PotGSocket implements SocketInterface {
         },
         onDone: () {
           _state.add(SocketConnectionState.disconnected);
-          if (_shouldConnected) {
-            _reconnect().catchError((e, stackTrace) {
-              L.e(e, stackTrace);
-            });
-          }
+          if (_shouldConnected) _reconnect();
         },
       );
       _state.add(SocketConnectionState.connected);
@@ -153,10 +149,11 @@ class PotGSocket implements SocketInterface {
     _channel = null;
   }
 
-  Future<void> _reconnect() async {
+  Future<bool> _reconnect() async {
     if (++_retryCount > _maxRetries) {
       _state.add(SocketConnectionState.failed);
-      throw Exception('Max retries reached');
+      L.e('Max retries reached', StackTrace.current);
+      return true;
     }
     _state.add(SocketConnectionState.reconnecting);
     final duration = getBackOffDuration(_retryCount);
@@ -169,6 +166,7 @@ class PotGSocket implements SocketInterface {
       completer.complete();
     });
     await completer.future;
+    return false;
   }
 
   // ================ request ================
