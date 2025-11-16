@@ -4,6 +4,6 @@ extension BuildContextX on BuildContext {
   void showToast(String message) {
     ScaffoldMessenger.of(this)
       ..clearSnackBars()
-      ..showSnackBar(SnackBar(content: Text(message)));
+      ..showSnackBar(SnackBar(content: Text(message), showCloseIcon: true));
   }
 }
