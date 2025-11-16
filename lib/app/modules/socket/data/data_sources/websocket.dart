@@ -123,7 +123,11 @@ class PotGSocket implements SocketInterface {
         },
         onDone: () {
           _state.add(SocketConnectionState.disconnected);
-          if (_shouldConnected) _reconnect();
+          if (_shouldConnected) {
+            _reconnect().catchError((e, stackTrace) {
+              L.e(e, stackTrace);
+            });
+          }
         },
       );
       _state.add(SocketConnectionState.connected);
