@@ -138,6 +138,9 @@ class PotGSocket implements SocketInterface {
   Future<void> _ensureConnected() async {
     if (isConnected) return;
     await connect();
+    if (!isConnected || _channel == null) {
+      throw Exception('Socket not connected');
+    }
   }
 
   @override
@@ -164,14 +167,19 @@ class PotGSocket implements SocketInterface {
     final duration = getBackOffDuration(_retryCount);
     final completer = Completer<void>();
     _reconnectTimer?.cancel();
-    _reconnectTimer = Timer(duration, () async {
-      if (_shouldConnected) {
-        await _tryConnect();
-      }
-      completer.complete();
-    });
-    await completer.future;
-    return false;
+    _reconnectTimer = Timer(duration, () => completer.complete());
+    try {
+      await completer.future.timeout(
+        duration,
+        onTimeout: () =>
+            throw TimeoutException('Timeout waiting for reconnect'),
+      );
+      await _tryConnect();
+      return true;
+    } catch (e, stackTrace) {
+      L.e(e, stackTrace);
+      return false;
+    }
   }
 
   @disposeMethod
