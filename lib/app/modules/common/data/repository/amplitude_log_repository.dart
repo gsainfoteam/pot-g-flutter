@@ -23,8 +23,14 @@ class AmplitudeLogRepository implements LogRepository {
 
   @PostConstruct(preResolve: true)
   Future<void> init() async {
-    final deviceId = await _deviceInfoRepository.getDeviceId();
-    _instance.setDeviceId(deviceId);
+    try {
+      final deviceId = await _deviceInfoRepository.getDeviceId();
+      if (deviceId.isNotEmpty) {
+        _instance.setDeviceId(deviceId);
+      }
+    } catch (e) {
+      log('Failed to initialize device ID: $e', name: 'amplitude');
+    }
   }
 
   @override
