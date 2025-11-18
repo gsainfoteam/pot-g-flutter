@@ -79,6 +79,9 @@ Thanks goes to these wonderful people
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/enc2586"><img src="https://avatars.githubusercontent.com/u/85762538?v=4?s=100" width="100px;" alt="Hongje Choi"/><br /><sub><b>Hongje Choi</b></sub></a><br /><a href="#translation-enc2586" title="Translation">🌍</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/akrnwl"><img src="https://avatars.githubusercontent.com/u/117907042?v=4?s=100" width="100px;" alt="akrnwl"/><br /><sub><b>akrnwl</b></sub></a><br /><a href="https://github.com/gsainfoteam/pot-g-flutter/commits?author=akrnwl" title="Code">💻</a></td>
     </tr>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/rhseung"><img src="https://avatars.githubusercontent.com/u/56152093?v=4?s=100" width="100px;" alt="Hyunseung Ryu"/><br /><sub><b>Hyunseung Ryu</b></sub></a><br /><a href="https://github.com/gsainfoteam/pot-g-flutter/commits?author=rhseung" title="Code">💻</a></td>
+    </tr>
   </tbody>
   <tfoot>
     <tr>
