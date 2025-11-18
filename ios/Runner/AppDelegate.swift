@@ -12,6 +12,7 @@ import UIKit
   }
 
   override func applicationDidBecomeActive(_ application: UIApplication) {
-    application.applicationIconBadgeNumber = 0;
+    super.applicationDidBecomeActive(application)
+    application.applicationIconBadgeNumber = 0
   }
 }
