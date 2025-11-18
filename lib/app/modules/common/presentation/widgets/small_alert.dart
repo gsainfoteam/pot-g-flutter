@@ -37,10 +37,13 @@ class SmallAlert extends StatelessWidget {
             colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
           ),
           const SizedBox(width: 6),
-          Text(
-            text,
-            style: TextStyles.caption.copyWith(color: color),
-            textAlign: TextAlign.center,
+          Flexible(
+            child: Text(
+              text,
+              style: TextStyles.caption.copyWith(color: color),
+              textAlign: TextAlign.center,
+              softWrap: true,
+            ),
           ),
         ],
       ),
