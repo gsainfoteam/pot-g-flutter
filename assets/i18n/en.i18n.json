@@ -166,6 +166,7 @@
       }
     },
     "errors": {
+      "invalid_form": "There is missing information.",
       "invalid_capacity": "Invalid capacity.",
       "departure_available_before_now": "You cannot set the departure time before now.",
       "invalid_departure_available_time": "You cannot set the departure time outside the available time range.",

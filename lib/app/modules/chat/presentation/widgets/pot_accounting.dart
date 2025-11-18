@@ -11,9 +11,9 @@ import 'package:pot_g/app/modules/chat/presentation/extensions/pot_user_extensio
 import 'package:pot_g/app/modules/chat/presentation/widgets/pot_user.dart';
 import 'package:pot_g/app/modules/common/presentation/extensions/toast.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_button.dart';
+import 'package:pot_g/app/modules/common/presentation/widgets/small_alert.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
-import 'package:pot_g/gen/assets.gen.dart';
 import 'package:pot_g/gen/strings.g.dart';
 
 class PotAccounting extends StatefulWidget {
@@ -150,9 +150,9 @@ class _PotAccountingState extends State<PotAccounting> {
                     widget.pot.accountingInfo.accountingResults,
                   );
                   if (!hasChanges) {
-                    return _WarnBanner(
+                    return SmallAlert(
                       text: context.t.chat_room.drawer.accounting.check_to_edit,
-                      color: Palette.primary,
+                      type: SmallAlertType.info,
                     );
                   }
                   return Row(
@@ -182,48 +182,13 @@ class _PotAccountingState extends State<PotAccounting> {
               AnimatedOpacity(
                 opacity: _onlyPayer ? 1.0 : 0.0,
                 duration: const Duration(milliseconds: 100),
-                child: _WarnBanner(
+                child: SmallAlert(
                   text: context.t.chat_room.drawer.accounting.edit_payer_only,
-                  color: Palette.warning,
+                  type: SmallAlertType.error,
                 ),
               ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _WarnBanner extends StatelessWidget {
-  const _WarnBanner({required this.text, required this.color});
-
-  final String text;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: color),
-      ),
-      child: Row(
-        children: [
-          Assets.icons.warningTriangle.svg(
-            width: 16,
-            height: 16,
-            colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
-          ),
-          const SizedBox(width: 6),
-          Expanded(
-            child: Text(
-              text,
-              style: TextStyles.caption.copyWith(color: color),
-              textAlign: TextAlign.center,
-            ),
-          ),
-        ],
       ),
     );
   }
