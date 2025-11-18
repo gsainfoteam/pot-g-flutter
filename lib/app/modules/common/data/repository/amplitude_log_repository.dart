@@ -9,13 +9,29 @@ import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:pot_g/app/modules/common/domain/repositories/log_repository.dart';
 import 'package:pot_g/app/values/config.dart';
+import 'package:pot_g/app/modules/device/domain/repositories/device_info_repository.dart';
 
 @Singleton(as: LogRepository)
 class AmplitudeLogRepository implements LogRepository {
+  final DeviceInfoRepository _deviceInfoRepository;
   late final _instance = Amplitude(
     Configuration(apiKey: Config.amplitudeApiKey),
   );
   late final _firebaseAnalytics = FirebaseAnalytics.instance;
+
+  AmplitudeLogRepository(this._deviceInfoRepository);
+
+  @PostConstruct(preResolve: true)
+  Future<void> init() async {
+    try {
+      final deviceId = await _deviceInfoRepository.getDeviceId();
+      if (deviceId.isNotEmpty) {
+        _instance.setDeviceId(deviceId);
+      }
+    } catch (e) {
+      log('Failed to initialize device ID: $e', name: 'amplitude');
+    }
+  }
 
   @override
   void logEvent(String eventName, Map<String, Object?> properties) {
