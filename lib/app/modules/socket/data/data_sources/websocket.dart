@@ -211,6 +211,6 @@ class PotGSocket implements SocketInterface {
     await _ensureConnected();
     final encodedData = jsonEncode(data);
     if (kDebugMode) log('< $encodedData', name: 'socket');
-    _channel!.sink.add(data);
+    _channel!.sink.add(encodedData);
   }
 }
