@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -6,6 +8,7 @@ import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/date_select.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/path_select.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_button.dart';
+import 'package:pot_g/app/modules/common/presentation/widgets/small_alert.dart';
 import 'package:pot_g/app/modules/core/domain/entities/route_entity.dart';
 import 'package:pot_g/app/modules/core/presentation/bloc/route_list_bloc.dart';
 import 'package:pot_g/app/modules/create/presentation/bloc/create_cubit.dart';
@@ -15,8 +18,35 @@ import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
 import 'package:pot_g/gen/strings.g.dart';
 
-class CreateForm extends StatelessWidget {
+class CreateForm extends StatefulWidget {
   const CreateForm({super.key});
+
+  @override
+  State<CreateForm> createState() => _CreateFormState();
+}
+
+class _CreateFormState extends State<CreateForm> {
+  bool _showInvalidAlert = false;
+  Timer? _alertTimer;
+
+  void _showInvalidFormAlert() {
+    setState(() {
+      _showInvalidAlert = true;
+    });
+    _alertTimer?.cancel();
+    _alertTimer = Timer(const Duration(milliseconds: 3000), () {
+      if (!mounted) return;
+      setState(() {
+        _showInvalidAlert = false;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _alertTimer?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,14 +58,22 @@ class CreateForm extends StatelessWidget {
               padding: EdgeInsets.symmetric(vertical: 20, horizontal: 16),
               child: Column(
                 children: [
-                  const _Info(),
+                  _Info(showValidation: _showInvalidAlert),
                   const SizedBox(height: 32),
-                  const _Capacity(),
+                  _Capacity(showValidation: _showInvalidAlert),
                   const SizedBox(height: 32),
-                  const _TimeInterval(),
+                  _TimeInterval(showValidation: _showInvalidAlert),
                 ],
               ),
             ),
+          ),
+        ),
+        AnimatedOpacity(
+          opacity: _showInvalidAlert ? 1.0 : 0.0,
+          duration: const Duration(milliseconds: 100),
+          child: SmallAlert(
+            text: context.t.create.errors.invalid_form,
+            type: SmallAlertType.error,
           ),
         ),
         SafeArea(
@@ -67,7 +105,7 @@ class CreateForm extends StatelessWidget {
                           ),
                         );
                       }
-                    : null,
+                    : () => _showInvalidFormAlert(),
               ),
               variant: PotButtonVariant.emphasized,
               child: Text(context.t.create.action),
@@ -80,14 +118,28 @@ class CreateForm extends StatelessWidget {
 }
 
 class _Info extends StatelessWidget {
-  const _Info();
+  final bool showValidation;
+
+  const _Info({required this.showValidation});
 
   @override
   Widget build(BuildContext context) {
+    final filled = context.select(
+      (CreateCubit cubit) =>
+          cubit.state.route != null && cubit.state.date != null,
+    );
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(context.t.create.info.title, style: TextStyles.title4),
+        Text(
+          context.t.create.info.title,
+          style: TextStyles.title4.copyWith(
+            color: showValidation && !filled
+                ? Palette.warning
+                : Palette.textGrey,
+          ),
+        ),
         const SizedBox(height: 12),
         Text(
           context.t.create.info.fields.route.label,
@@ -116,6 +168,7 @@ class _PathInput extends StatelessWidget {
       (CreateCubit cubit) => cubit.state.pathOpened,
     );
     final selected = context.select((CreateCubit cubit) => cubit.state.route);
+
     return PathSelect(
       showAll: false,
       selectedRoute: selected,
@@ -144,6 +197,7 @@ class _DateInput extends StatelessWidget {
       (CreateCubit cubit) => cubit.state.dateOpened,
     );
     final selected = context.select((CreateCubit cubit) => cubit.state.date);
+
     return DateSelect(
       selectedDate: selected,
       minDate: DateTime.now().startOfDay(),
@@ -167,7 +221,9 @@ class _DateInput extends StatelessWidget {
 }
 
 class _Capacity extends StatelessWidget {
-  const _Capacity();
+  final bool showValidation;
+
+  const _Capacity({required this.showValidation});
 
   @override
   Widget build(BuildContext context) {
@@ -178,10 +234,18 @@ class _Capacity extends StatelessWidget {
     final selected = context.select(
       (CreateCubit cubit) => cubit.state.maxCapacity,
     );
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(context.t.create.capacity.title, style: TextStyles.title4),
+        Text(
+          context.t.create.capacity.title,
+          style: TextStyles.title4.copyWith(
+            color: showValidation && selected == null
+                ? Palette.warning
+                : Palette.textGrey,
+          ),
+        ),
         const SizedBox(height: 4),
         Text(context.t.create.capacity.description, style: TextStyles.caption),
         const SizedBox(height: 12),
@@ -218,7 +282,9 @@ class _Capacity extends StatelessWidget {
 }
 
 class _TimeInterval extends StatelessWidget {
-  const _TimeInterval();
+  final bool showValidation;
+
+  const _TimeInterval({required this.showValidation});
 
   @override
   Widget build(BuildContext context) {
@@ -228,10 +294,22 @@ class _TimeInterval extends StatelessWidget {
           cubit.state.date != null &&
           cubit.state.maxCapacity != null,
     );
+    final filled = context.select(
+      (CreateCubit cubit) =>
+          cubit.state.startTime != null && cubit.state.endTime != null,
+    );
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(context.t.create.time_interval.title, style: TextStyles.title4),
+        Text(
+          context.t.create.time_interval.title,
+          style: TextStyles.title4.copyWith(
+            color: showValidation && !filled
+                ? Palette.warning
+                : Palette.textGrey,
+          ),
+        ),
         const SizedBox(height: 4),
         Text(
           context.t.create.time_interval.description,

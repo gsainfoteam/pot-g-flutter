@@ -163,6 +163,7 @@
       }
     },
     "errors": {
+      "invalid_form": "입력하지 않은 정보가 있습니다",
       "invalid_capacity": "최대 인원 수는 2명 이상이어야 합니다",
       "departure_available_before_now": "출발 시간을 현재 시간 이전으로 설정할 수 없습니다",
       "invalid_departure_available_time": "출발 시간을 가능한 시간 범위 밖으로 설정할 수 없습니다",
