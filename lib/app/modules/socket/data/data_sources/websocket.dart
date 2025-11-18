@@ -107,13 +107,20 @@ class PotGSocket implements SocketInterface {
       await _channel!.ready;
       _retryCount = 0;
       _serverSubscription = _channel!.stream.listen(
-        (event) {
+        (event) async {
           try {
             if (kDebugMode) log('> $event', name: 'socket');
             final Map<String, dynamic> jsonData = jsonDecode(event);
             final data = convertServerMessage(jsonData);
             _messages.add(data);
-            // TODO: handle ACK
+            if (!data.type.endsWith('_res')) {
+              await _sendRequest({
+                'type': '${data.type}_res',
+                'request_id': data.requestId,
+              }).catchError((e, stackTrace) {
+                L.e(e, stackTrace);
+              });
+            }
           } catch (e, stackTrace) {
             L.e(e, stackTrace);
           }
@@ -197,8 +204,13 @@ class PotGSocket implements SocketInterface {
     String? requestId,
   }) async {
     await _ensureConnected();
-    final data = jsonEncode(convertClientMessage(request, requestId));
-    if (kDebugMode) log('< $data', name: 'socket');
+    await _sendRequest(convertClientMessage(request, requestId));
+  }
+
+  Future<void> _sendRequest(Map<String, dynamic> data) async {
+    await _ensureConnected();
+    final encodedData = jsonEncode(data);
+    if (kDebugMode) log('< $encodedData', name: 'socket');
     _channel!.sink.add(data);
   }
 }
