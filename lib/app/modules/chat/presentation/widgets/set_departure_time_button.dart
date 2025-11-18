@@ -77,6 +77,13 @@ class SetDepartureTimeButton extends StatefulWidget {
     if (result2 != OkCancelResult.ok) return;
     l.c('confirmDepartureTime', from: 'departureTimeConfirm');
     if (!context.mounted) return;
+
+    if (date.isBefore(DateTime.now())) {
+      context.showToast("Cannot set departure time in the past.");
+      // TODO: i18n
+      return;
+    }
+
     context.read<PotActionBloc>().add(
       PotActionEvent.setDepartureTime(pot, date),
     );
