@@ -143,6 +143,7 @@ class PotGSocket implements SocketInterface {
 
   /// After call this function, [_channel] is not null and connected.
   Future<void> _ensureConnected() async {
+    if (!_shouldConnected) return;
     if (isConnected) return;
     await connect();
     if (!isConnected || _channel == null) {
