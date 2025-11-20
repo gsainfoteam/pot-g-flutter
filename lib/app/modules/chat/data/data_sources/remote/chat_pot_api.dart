@@ -8,6 +8,7 @@ import 'package:pot_g/app/modules/chat/data/models/leave_pot_response_model.dart
 import 'package:pot_g/app/modules/chat/data/models/my_pots_model.dart';
 import 'package:pot_g/app/modules/chat/data/models/pot_events_model.dart';
 import 'package:pot_g/app/modules/chat/data/models/pot_info_model.dart';
+import 'package:pot_g/app/modules/chat/data/models/report_request_model.dart';
 import 'package:pot_g/app/modules/core/data/dio/pot_dio.dart';
 import 'package:retrofit/retrofit.dart';
 
@@ -44,5 +45,11 @@ abstract class ChatPotApi {
   Future<ConfirmDepartureTimeResponseModel> confirmDepartureTime(
     @Path('id') String id,
     @Body() ConfirmDepartureTimeRequestModel request,
+  );
+
+  @POST('{id}/report')
+  Future<void> report(
+    @Path('id') String id,
+    @Body() ReportRequestModel request,
   );
 }

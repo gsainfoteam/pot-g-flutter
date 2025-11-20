@@ -337,6 +337,14 @@
         },
         "report": {
           "action": "Report",
+          "error": {
+            "already_reported": "You have already submitted a report",
+            "invalid_target": "Unable to identify the report target",
+            "invalid_reason": "Please select a valid report reason",
+            "pot_not_found": "The pot could not be found",
+            "network_error": "A network error occurred",
+            "unknown": "An unknown error occurred"
+          },
           "page": {
             "title": "Report",
             "fields": {
