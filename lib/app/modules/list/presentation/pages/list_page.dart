@@ -57,7 +57,10 @@ class _Layout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PotAppBar(actions: [HiddenMenuButton()], leading: PotLogo()),
+      appBar: PotAppBar(
+        actions: [HiddenMenuButton()],
+        leading: PotLogo(text: context.t.name, showLogo: true),
+      ),
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) => Stack(
