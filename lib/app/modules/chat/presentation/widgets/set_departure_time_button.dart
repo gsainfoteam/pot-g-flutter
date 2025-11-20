@@ -49,7 +49,7 @@ class SetDepartureTimeButton extends StatefulWidget {
       return;
     }
     l.v('setDepartureTime');
-    DateTime date = DateTime.now();
+    DateTime date = DateTime.now().add(const Duration(minutes: 1));
     final result = await showGeneralOkCancelAdaptiveDialog(
       context: context,
       title: context.t.chat_room.set_departure_time.clock.title,
@@ -57,12 +57,19 @@ class SetDepartureTimeButton extends StatefulWidget {
         height: 180,
         child: CupertinoDatePicker(
           initialDateTime: date,
+          minimumDate:
+              (pot.startsAt.year == DateTime.now().year &&
+                  pot.startsAt.month == DateTime.now().month &&
+                  pot.startsAt.day == DateTime.now().day)
+              ? DateTime.now()
+              : null,
           onDateTimeChanged: (value) => date = value,
           mode: CupertinoDatePickerMode.time,
         ),
       ),
       okLabel: context.t.common.confirm,
     );
+
     if (result != OkCancelResult.ok) return;
     if (!context.mounted) return;
     l.v('departureTimeConfirm', from: 'setDepartureTime');
