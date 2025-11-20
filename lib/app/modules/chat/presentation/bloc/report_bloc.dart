@@ -10,10 +10,13 @@ part 'report_bloc.freezed.dart';
 
 @injectable
 class ReportBloc extends Bloc<ReportEvent, ReportState> {
+  static const int maxReasonLength = 200;
+
   ReportBloc(this._repository, @factoryParam this._pot)
     : super(const ReportState()) {
     on<_TargetChanged>(_onTargetChanged);
     on<_ReasonChanged>(_onReasonChanged);
+    on<_ReasonDetailChanged>(_onReasonDetailChanged);
     on<_TargetSelectorToggled>(
       (event, emit) => emit(state.copyWith(targetSelectorOpen: event.isOpen)),
     );
@@ -40,20 +43,31 @@ class ReportBloc extends Bloc<ReportEvent, ReportState> {
     emit(
       state.copyWith(
         reasonKey: event.reasonKey,
+        reasonDetail: null,
         submissionSuccess: false,
         error: null,
       ),
     );
   }
 
+  void _onReasonDetailChanged(
+    _ReasonDetailChanged event,
+    Emitter<ReportState> emit,
+  ) {
+    emit(state.copyWith(reasonDetail: event.detail));
+  }
+
   Future<void> _onSubmitted(_Submitted event, Emitter<ReportState> emit) async {
     if (!state.canSubmit) return;
     emit(state.copyWith(isSubmitting: true, error: null));
     try {
+      final reason = state.reasonKey == 'other'
+          ? state.reasonDetail!
+          : state.reasonKey!;
       await _repository.submit(
         pot: _pot,
         target: state.target!,
-        reasonKey: state.reasonKey!,
+        reasonKey: reason,
       );
       emit(state.copyWith(isSubmitting: false, submissionSuccess: true));
     } on ReportException catch (e) {
@@ -63,10 +77,12 @@ class ReportBloc extends Bloc<ReportEvent, ReportState> {
 }
 
 @freezed
-sealed class ReportEvent with _$ReportEvent {
+class ReportEvent with _$ReportEvent {
   const factory ReportEvent.targetChanged(PotUserEntity? target) =
       _TargetChanged;
   const factory ReportEvent.reasonChanged(String? reasonKey) = _ReasonChanged;
+  const factory ReportEvent.reasonDetailChanged(String detail) =
+      _ReasonDetailChanged;
   const factory ReportEvent.targetSelectorToggled(bool isOpen) =
       _TargetSelectorToggled;
   const factory ReportEvent.reasonSelectorToggled(bool isOpen) =
@@ -75,12 +91,13 @@ sealed class ReportEvent with _$ReportEvent {
 }
 
 @freezed
-sealed class ReportState with _$ReportState {
+abstract class ReportState with _$ReportState {
   const ReportState._();
 
   const factory ReportState({
     PotUserEntity? target,
     String? reasonKey,
+    String? reasonDetail,
     @Default(true) bool targetSelectorOpen,
     @Default(false) bool reasonSelectorOpen,
     @Default(false) bool isSubmitting,
@@ -88,5 +105,13 @@ sealed class ReportState with _$ReportState {
     ReportException? error,
   }) = _ReportState;
 
-  bool get canSubmit => target != null && reasonKey != null && !isSubmitting;
+  bool get canSubmit {
+    if (target == null || reasonKey == null || isSubmitting) return false;
+    if (reasonKey == 'other') {
+      return reasonDetail != null &&
+          reasonDetail!.trim().isNotEmpty &&
+          reasonDetail!.trim().length <= ReportBloc.maxReasonLength;
+    }
+    return true;
+  }
 }

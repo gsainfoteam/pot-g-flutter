@@ -9,6 +9,7 @@ import 'package:pot_g/app/modules/chat/presentation/bloc/report_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/extensions/pot_user_extension.dart';
 import 'package:pot_g/app/modules/chat/presentation/extensions/report_exception_extension.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/pot_profile_image.dart';
+import 'package:pot_g/app/modules/chat/presentation/widgets/pot_text_area.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_app_bar.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_button.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/select.dart';
@@ -103,6 +104,21 @@ class _ReportView extends StatelessWidget {
                                     ReportEvent.reasonSelectorToggled(value),
                                   ),
                             ),
+                            if (state.reasonKey == 'other') ...[
+                              const SizedBox(height: 12),
+                              PotTextArea(
+                                hintText: context
+                                    .report
+                                    .fields
+                                    .reason
+                                    .placeholder_other,
+                                maxLength: ReportBloc.maxReasonLength,
+                                onChanged: (value) =>
+                                    context.read<ReportBloc>().add(
+                                      ReportEvent.reasonDetailChanged(value),
+                                    ),
+                              ),
+                            ],
                           ],
                         ),
                       ),
