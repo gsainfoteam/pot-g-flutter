@@ -81,6 +81,12 @@
       "withdraw": "Withdraw",
       "logout_dialog": {
         "description": "Are you sure you want to logout?"
+      },
+      "withdraw_description":"Are you sure you want to leave us, ${user}?\nPlease review before withdrawing",
+      "withdraw_consent": {
+        "account_deletion":"All registered bank account information will be deleted upon withdrawal",
+        "pot_info_deletion":"You will be removed from all participating pots",
+        "restore_anavailable":"All user account information will be permanently unrecoverable"
       }
     },
     "report": {
