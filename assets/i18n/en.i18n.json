@@ -335,7 +335,31 @@
             "unknown": "Unknown error occurred."
           }
         },
-        "report": "Report"
+        "report": {
+          "action": "Report",
+          "page": {
+            "title": "Report",
+            "fields": {
+              "target": {
+                "label": "Select a passenger to report",
+                "label_filled": "Report target"
+              },
+              "reason": {
+                "label": "Report Reason",
+                "placeholder": "Select a report reason",
+                "placeholder_other": "Enter a report reason",
+                "items": {
+                  "uncooperative_chat": "Uncooperative, ill-mannered chat",
+                  "no_show": "No-show on departure day",
+                  "bad_behavior_during_ride": "Ill-mannered behavior during ride-sharing",
+                  "settlement_no_response": "Failure to respond to settlement request",
+                  "other": "Other"
+                },
+                "button": "Report"
+              }
+            }
+          }
+        }
       }
     },
     "set_departure_time": {
