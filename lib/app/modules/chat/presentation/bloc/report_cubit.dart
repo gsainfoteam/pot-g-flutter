@@ -13,11 +13,9 @@ part 'report_cubit.freezed.dart';
 class ReportCubit extends Cubit<ReportState> {
   static const int maxReasonLength = 200;
 
-  ReportCubit(this._repository, @factoryParam this._pot)
-    : super(const ReportState());
+  ReportCubit(this._repository) : super(const ReportState());
 
   final ReportRepository _repository;
-  final PotInfoEntity _pot;
 
   void targetChanged(PotUserEntity? target) {
     emit(state.copyWith(target: target, submissionSuccess: false, error: null));
@@ -46,7 +44,7 @@ class ReportCubit extends Cubit<ReportState> {
     emit(state.copyWith(reasonSelectorOpen: isOpen));
   }
 
-  Future<void> submit() async {
+  Future<void> submit(PotInfoEntity pot) async {
     if (!state.canSubmit) return;
     emit(state.copyWith(isSubmitting: true, error: null));
     try {
@@ -54,7 +52,7 @@ class ReportCubit extends Cubit<ReportState> {
           ? state.reasonDetail!.trim()
           : state.reason!.key;
       await _repository.submit(
-        pot: _pot,
+        pot: pot,
         target: state.target!,
         reasonKey: reasonPayload,
       );

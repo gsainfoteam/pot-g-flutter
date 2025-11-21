@@ -29,7 +29,7 @@ class ReportPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => sl<ReportCubit>(param1: pot),
+      create: (_) => sl<ReportCubit>(),
       child: _ReportView(pot: pot),
     );
   }
@@ -133,7 +133,7 @@ class _ReportView extends StatelessWidget {
                     SafeArea(
                       child: PotButton(
                         onPressed: state.canSubmit
-                            ? () => context.read<ReportCubit>().submit()
+                            ? () => context.read<ReportCubit>().submit(pot)
                             : null,
                         variant: PotButtonVariant.emphasized,
                         child: state.isSubmitting
