@@ -1,3 +1,4 @@
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
@@ -13,7 +14,7 @@ part 'report_bloc.freezed.dart';
 @injectable
 class ReportBloc extends Bloc<ReportSubmitEvent, ReportSubmitState> {
   ReportBloc(this._repository) : super(const ReportSubmitState()) {
-    on<_Submitted>(_onSubmitted);
+    on<_Submitted>(_onSubmitted, transformer: droppable());
   }
 
   final ReportRepository _repository;
@@ -22,7 +23,6 @@ class ReportBloc extends Bloc<ReportSubmitEvent, ReportSubmitState> {
     _Submitted event,
     Emitter<ReportSubmitState> emit,
   ) async {
-    if (state.isSubmitting) return;
     emit(state.copyWith(isSubmitting: true, error: null, success: false));
 
     try {
