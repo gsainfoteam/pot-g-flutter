@@ -25,6 +25,7 @@ class ChatRoomDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final canReport = pot.usersInfo.users.length > 1;
     return Drawer(
       child: SafeArea(
         child: Padding(
@@ -56,20 +57,22 @@ class ChatRoomDrawer extends StatelessWidget {
                       ),
                     ),
                   ),
-                  if (pot.usersInfo.users.length > 1) ...[
-                    SizedBox(width: 16),
-                    PotPressable(
-                      onTap: () => _report(context),
-                      child: Text(
-                        context.t.chat_room.drawer.actions.report.action,
-                        style: TextStyles.caption.copyWith(
-                          color: Palette.grey,
-                          decoration: TextDecoration.underline,
-                          decorationColor: Palette.grey,
-                        ),
+                  const SizedBox(width: 16),
+                  PotPressable(
+                    onTap: canReport ? () => _report(context) : null,
+                    child: Text(
+                      context.t.chat_room.drawer.actions.report.action,
+                      style: TextStyles.caption.copyWith(
+                        color: canReport
+                            ? Palette.grey
+                            : Palette.grey.withAlpha(150),
+                        decoration: canReport
+                            ? TextDecoration.underline
+                            : TextDecoration.none,
+                        decorationColor: Palette.grey,
                       ),
                     ),
-                  ],
+                  ),
                 ],
               ),
             ],
