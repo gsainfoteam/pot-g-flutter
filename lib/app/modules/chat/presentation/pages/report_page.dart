@@ -5,7 +5,7 @@ import 'package:pot_g/app/di/locator.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_user_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/enums/report_reason.dart';
-import 'package:pot_g/app/modules/chat/presentation/bloc/report_bloc.dart';
+import 'package:pot_g/app/modules/chat/presentation/bloc/report_cubit.dart';
 import 'package:pot_g/app/modules/chat/presentation/extensions/pot_user_extension.dart';
 import 'package:pot_g/app/modules/chat/presentation/extensions/report_exception_extension.dart';
 import 'package:pot_g/app/modules/chat/presentation/extensions/report_reason_extension.dart';
@@ -29,7 +29,7 @@ class ReportPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => sl<ReportBloc>(param1: pot),
+      create: (_) => sl<ReportCubit>(param1: pot),
       child: _ReportView(pot: pot),
     );
   }
@@ -42,7 +42,7 @@ class _ReportView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<ReportBloc, ReportState>(
+    return BlocListener<ReportCubit, ReportState>(
       listenWhen: (previous, current) =>
           previous.submissionSuccess != current.submissionSuccess,
       listener: (context, state) {
@@ -50,7 +50,7 @@ class _ReportView extends StatelessWidget {
           context.router.pop();
         }
       },
-      child: BlocBuilder<ReportBloc, ReportState>(
+      child: BlocBuilder<ReportCubit, ReportState>(
         builder: (context, state) {
           final targetTitle = state.target == null
               ? context.report.fields.target.label
@@ -79,12 +79,11 @@ class _ReportView extends StatelessWidget {
                               selectedTarget: state.target,
                               isOpen: state.targetSelectorOpen,
                               onTargetSelected: (user) => context
-                                  .read<ReportBloc>()
-                                  .add(ReportEvent.targetChanged(user)),
-                              onOpenChanged: (value) =>
-                                  context.read<ReportBloc>().add(
-                                    ReportEvent.targetSelectorToggled(value),
-                                  ),
+                                  .read<ReportCubit>()
+                                  .targetChanged(user),
+                              onOpenChanged: (value) => context
+                                  .read<ReportCubit>()
+                                  .targetSelectorToggled(value),
                             ),
                             const SizedBox(height: 28),
                             Text(
@@ -98,12 +97,11 @@ class _ReportView extends StatelessWidget {
                               selectedReason: state.reason,
                               isOpen: state.reasonSelectorOpen,
                               onReasonSelected: (reason) => context
-                                  .read<ReportBloc>()
-                                  .add(ReportEvent.reasonChanged(reason)),
-                              onOpenChanged: (value) =>
-                                  context.read<ReportBloc>().add(
-                                    ReportEvent.reasonSelectorToggled(value),
-                                  ),
+                                  .read<ReportCubit>()
+                                  .reasonChanged(reason),
+                              onOpenChanged: (value) => context
+                                  .read<ReportCubit>()
+                                  .reasonSelectorToggled(value),
                             ),
                             if (state.reason?.requiresDetail ?? false) ...[
                               const SizedBox(height: 12),
@@ -113,11 +111,10 @@ class _ReportView extends StatelessWidget {
                                     .fields
                                     .reason
                                     .placeholder_other,
-                                maxLength: ReportBloc.maxReasonLength,
-                                onChanged: (value) =>
-                                    context.read<ReportBloc>().add(
-                                      ReportEvent.reasonDetailChanged(value),
-                                    ),
+                                maxLength: ReportCubit.maxReasonLength,
+                                onChanged: (value) => context
+                                    .read<ReportCubit>()
+                                    .reasonDetailChanged(value),
                               ),
                             ],
                           ],
@@ -136,9 +133,7 @@ class _ReportView extends StatelessWidget {
                     SafeArea(
                       child: PotButton(
                         onPressed: state.canSubmit
-                            ? () => context.read<ReportBloc>().add(
-                                const ReportEvent.submitted(),
-                              )
+                            ? () => context.read<ReportCubit>().submit()
                             : null,
                         variant: PotButtonVariant.emphasized,
                         child: state.isSubmitting
