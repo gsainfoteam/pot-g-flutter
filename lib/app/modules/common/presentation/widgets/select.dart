@@ -12,7 +12,6 @@ class Select<T> extends StatefulWidget {
     required this.onSelected,
     required this.isOpen,
     required this.onOpenChanged,
-    required this.itemTitle,
     required this.placeholder,
     required this.openItemBuilder,
     required this.closedItemBuilder,
@@ -21,10 +20,9 @@ class Select<T> extends StatefulWidget {
 
   final List<T> items;
   final T? selectedItem;
-  final void Function(T?) onSelected;
+  final void Function(T) onSelected;
   final bool isOpen;
   final void Function(bool) onOpenChanged;
-  final String Function(T) itemTitle;
   final String placeholder;
   final Widget Function(BuildContext, T?, bool) openItemBuilder;
   final Widget Function(BuildContext, T) closedItemBuilder;

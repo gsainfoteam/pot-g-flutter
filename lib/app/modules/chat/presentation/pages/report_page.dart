@@ -187,7 +187,6 @@ class _TargetSelect extends StatelessWidget {
       onSelected: onTargetSelected,
       isOpen: isOpen,
       onOpenChanged: onOpenChanged,
-      itemTitle: (user) => user.name,
       placeholder: context.report.fields.target.label,
       openItemBuilder: (context, user, selected) {
         if (user == null) return const SizedBox.shrink();
@@ -244,10 +243,9 @@ class _ReasonSelect extends StatelessWidget {
     return Select<_ReasonOption>(
       items: options,
       selectedItem: selected,
-      onSelected: (option) => onReasonSelected(option?.key),
+      onSelected: (option) => onReasonSelected(option.key),
       isOpen: isOpen,
       onOpenChanged: onOpenChanged,
-      itemTitle: (reason) => reason.label,
       placeholder: context.report.fields.reason.placeholder,
       openItemBuilder: (context, reason, selected) {
         if (reason == null) return const SizedBox.shrink();

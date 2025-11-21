@@ -33,7 +33,6 @@ class PathSelect extends StatelessWidget {
       onSelected: onSelected,
       isOpen: isOpen,
       onOpenChanged: onOpenChanged,
-      itemTitle: (route) => route.name,
       placeholder: context.t.list.filters.route.all,
       openItemBuilder: (context, route, selected) {
         if (route == null) {
