@@ -1,3 +1,5 @@
+import 'package:collection/collection.dart';
+
 enum ReportReason {
   uncooperativeChat('uncooperative_chat'),
   noShow('no_show'),
@@ -11,7 +13,7 @@ enum ReportReason {
 
   bool get requiresDetail => this == ReportReason.other;
 
-  static ReportReason fromKey(String key) {
-    return ReportReason.values.firstWhere((reason) => reason.key == key);
+  static ReportReason? fromKey(String key) {
+    return ReportReason.values.firstWhereOrNull((reason) => reason.key == key);
   }
 }
