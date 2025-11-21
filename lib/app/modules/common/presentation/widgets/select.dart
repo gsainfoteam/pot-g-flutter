@@ -23,7 +23,7 @@ class Select<T> extends StatefulWidget {
   final void Function(T) onSelected;
   final bool isOpen;
   final void Function(bool) onOpenChanged;
-  final String placeholder;
+  final Widget placeholder;
   final Widget Function(BuildContext, T?, bool) openItemBuilder;
   final Widget Function(BuildContext, T) closedItemBuilder;
   final VoidCallback? onCleared;
@@ -109,16 +109,14 @@ class _SelectState<T> extends State<Select<T>> {
                 )
               : Container(
                   height: 48,
-                  padding: EdgeInsets.symmetric(horizontal: 12),
+                  padding: EdgeInsets.symmetric(horizontal: 16),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Expanded(
-                        child: Text(
-                          widget.placeholder,
-                          style: TextStyles.description.copyWith(
-                            color: Palette.grey,
-                          ),
+                        child: DefaultTextStyle.merge(
+                          style: TextStyles.body.copyWith(color: Palette.grey),
+                          child: widget.placeholder,
                         ),
                       ),
                       Assets.icons.navArrowDown.svg(
