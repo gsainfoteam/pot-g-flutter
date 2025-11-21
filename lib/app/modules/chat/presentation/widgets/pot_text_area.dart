@@ -105,24 +105,9 @@ class _PotTextAreaState extends State<PotTextArea> {
             fillColor: const Color(0xfff5f5f5),
             hintText: widget.hintText,
             hintStyle: TextStyles.description.copyWith(color: Palette.grey),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: widget.filled
-                  ? BorderSide.none
-                  : const BorderSide(color: Palette.borderGrey),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: widget.filled
-                  ? BorderSide.none
-                  : const BorderSide(color: Palette.borderGrey),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: widget.filled
-                  ? BorderSide.none
-                  : const BorderSide(color: Palette.primary),
-            ),
+            border: _border(),
+            enabledBorder: _border(),
+            focusedBorder: _border(color: Palette.primary),
           ),
           controller: _controller,
         ),
@@ -153,6 +138,13 @@ class _PotTextAreaState extends State<PotTextArea> {
             ),
           ),
       ],
+    );
+  }
+
+  OutlineInputBorder _border({Color color = Palette.borderGrey}) {
+    return OutlineInputBorder(
+      borderRadius: BorderRadius.all(Radius.circular(12)),
+      borderSide: widget.filled ? BorderSide.none : BorderSide(color: color),
     );
   }
 }
