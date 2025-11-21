@@ -17,6 +17,8 @@ class PotTextArea extends StatefulWidget {
     this.maxLength,
     this.minLines = 5,
     this.maxLines = 10,
+    this.restorationId,
+    this.initialValue,
   });
 
   final String? hintText;
@@ -30,49 +32,129 @@ class PotTextArea extends StatefulWidget {
   final int? maxLength;
   final int minLines;
   final int maxLines;
+  final String? restorationId;
+  final String? initialValue;
 
   @override
   State<PotTextArea> createState() => _PotTextAreaState();
 }
 
-class _PotTextAreaState extends State<PotTextArea> {
-  late TextEditingController _controller;
-  bool _isInternalController = false;
+class _PotTextAreaState extends State<PotTextArea> with RestorationMixin {
+  RestorableTextEditingController? _restorableController;
+  TextEditingController? _plainController;
+  bool _restorableRegistered = false;
+
+  TextEditingController get _effectiveController =>
+      widget.controller ?? _restorableController?.value ?? _plainController!;
+
+  bool get _shouldUseRestoration => widget.restorationId != null;
 
   @override
   void initState() {
     super.initState();
-    if (widget.controller != null) {
-      _controller = widget.controller!;
-    } else {
-      _controller = TextEditingController();
-      _isInternalController = true;
+    if (widget.controller == null) {
+      _shouldUseRestoration
+          ? _createRestorableController(_initialTextValue)
+          : _createPlainController(_initialTextValue);
     }
   }
 
   @override
   void didUpdateWidget(covariant PotTextArea oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.controller != oldWidget.controller) {
-      if (widget.controller != null) {
-        if (_isInternalController) {
-          _controller.dispose();
-          _isInternalController = false;
-        }
-        _controller = widget.controller!;
+    if (widget.controller == null && oldWidget.controller != null) {
+      final value = oldWidget.controller!.value;
+      _shouldUseRestoration
+          ? _createRestorableController(value)
+          : _createPlainController(value);
+    } else if (widget.controller != null && oldWidget.controller == null) {
+      _disposeInternalControllers();
+    }
+
+    if (_shouldUseRestoration != (oldWidget.restorationId != null) &&
+        widget.controller == null) {
+      final currentValue = _effectiveController.value;
+      if (_shouldUseRestoration) {
+        _createRestorableController(currentValue);
       } else {
-        _controller = TextEditingController(text: _controller.text);
-        _isInternalController = true;
+        _createPlainController(currentValue);
+      }
+    }
+
+    if (widget.controller == null &&
+        oldWidget.controller == null &&
+        widget.initialValue != oldWidget.initialValue) {
+      final desiredText = widget.initialValue ?? '';
+      if (_effectiveController.text != desiredText) {
+        _effectiveController.value = TextEditingValue(
+          text: desiredText,
+          selection: TextSelection.collapsed(offset: desiredText.length),
+        );
       }
     }
   }
 
   @override
   void dispose() {
-    if (_isInternalController) {
-      _controller.dispose();
-    }
+    _disposeInternalControllers();
     super.dispose();
+  }
+
+  void _createRestorableController([TextEditingValue? value]) {
+    _disposeInternalControllers();
+    _restorableController = value == null
+        ? RestorableTextEditingController()
+        : RestorableTextEditingController.fromValue(value);
+    if (!restorePending) {
+      _registerRestorableController();
+    }
+  }
+
+  void _createPlainController([TextEditingValue? value]) {
+    _disposeInternalControllers();
+    _plainController = value == null
+        ? TextEditingController()
+        : TextEditingController.fromValue(value);
+  }
+
+  void _disposeInternalControllers() {
+    if (_restorableController != null) {
+      _unregisterRestorableController();
+      _restorableController!.dispose();
+      _restorableController = null;
+    }
+    _plainController?.dispose();
+    _plainController = null;
+  }
+
+  @override
+  void restoreState(RestorationBucket? oldBucket, bool initialRestore) {
+    _registerRestorableController();
+  }
+
+  @override
+  String? get restorationId => widget.restorationId;
+
+  TextEditingValue get _initialTextValue =>
+      TextEditingValue(text: widget.initialValue ?? '');
+
+  void _registerRestorableController() {
+    if (_restorableController == null ||
+        widget.restorationId == null ||
+        _restorableRegistered) {
+      return;
+    }
+    registerForRestoration(
+      _restorableController!,
+      '${widget.restorationId}_controller',
+    );
+    _restorableRegistered = true;
+  }
+
+  void _unregisterRestorableController() {
+    if (!_restorableRegistered || _restorableController == null) return;
+    unregisterFromRestoration(_restorableController!);
+    _restorableRegistered = false;
   }
 
   @override
@@ -109,14 +191,14 @@ class _PotTextAreaState extends State<PotTextArea> {
             enabledBorder: _border(),
             focusedBorder: _border(color: Palette.primary),
           ),
-          controller: _controller,
+          controller: _effectiveController,
         ),
         if (widget.maxLength != null)
           Positioned(
             right: 12,
             bottom: 12,
             child: ValueListenableBuilder(
-              valueListenable: _controller,
+              valueListenable: _effectiveController,
               builder: (context, value, child) {
                 final length = value.text.characters.length;
                 final isOverflow = length > widget.maxLength!;

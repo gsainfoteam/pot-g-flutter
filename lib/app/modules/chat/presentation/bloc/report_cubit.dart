@@ -22,14 +22,7 @@ class ReportCubit extends Cubit<ReportState> {
   }
 
   void reasonChanged(ReportReason? reason) {
-    emit(
-      state.copyWith(
-        reason: reason,
-        reasonDetail: null,
-        submissionSuccess: false,
-        error: null,
-      ),
-    );
+    emit(state.copyWith(reason: reason, submissionSuccess: false, error: null));
   }
 
   void reasonDetailChanged(String detail) {

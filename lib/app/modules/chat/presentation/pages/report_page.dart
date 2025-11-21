@@ -111,6 +111,7 @@ class _ReportView extends StatelessWidget {
                                     .reason
                                     .placeholder_other,
                                 maxLength: ReportCubit.maxReasonLength,
+                                initialValue: state.reasonDetail,
                                 onChanged: (value) => context
                                     .read<ReportCubit>()
                                     .reasonDetailChanged(value),
