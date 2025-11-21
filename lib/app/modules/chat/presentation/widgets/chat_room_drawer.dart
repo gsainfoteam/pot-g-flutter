@@ -56,18 +56,20 @@ class ChatRoomDrawer extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(width: 16),
-                  PotPressable(
-                    onTap: () => _report(context),
-                    child: Text(
-                      context.t.chat_room.drawer.actions.report.action,
-                      style: TextStyles.caption.copyWith(
-                        color: Palette.grey,
-                        decoration: TextDecoration.underline,
-                        decorationColor: Palette.grey,
+                  if (pot.usersInfo.users.length > 1) ...[
+                    SizedBox(width: 16),
+                    PotPressable(
+                      onTap: () => _report(context),
+                      child: Text(
+                        context.t.chat_room.drawer.actions.report.action,
+                        style: TextStyles.caption.copyWith(
+                          color: Palette.grey,
+                          decoration: TextDecoration.underline,
+                          decorationColor: Palette.grey,
+                        ),
                       ),
                     ),
-                  ),
+                  ],
                 ],
               ),
             ],
