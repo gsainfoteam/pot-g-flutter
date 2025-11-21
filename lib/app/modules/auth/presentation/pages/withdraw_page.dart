@@ -155,7 +155,7 @@ class _ConsentList extends StatelessWidget {
                     .profile
                     .account_management
                     .withdraw_consent
-                    .restore_anavailable,
+                    .restore_unavailable,
                 style: TextStyles.body,
               ),
             ),
