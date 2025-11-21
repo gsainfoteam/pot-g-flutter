@@ -55,7 +55,7 @@ class AccountManagementPage extends StatelessWidget with LogPage {
               title: context.t.profile.account_management.withdraw,
               onTap: () {
                 L.c('withdraw');
-                context.router.push(const AccountWithdrawRoute());
+                context.router.push(const WithdrawRoute());
               },
             ),
           ],
