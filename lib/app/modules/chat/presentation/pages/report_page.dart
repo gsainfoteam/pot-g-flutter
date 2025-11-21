@@ -144,7 +144,8 @@ class _ReportView extends StatelessWidget {
                                   target: formState.target!,
                                   reason: formState.reason!,
                                   reasonDetail:
-                                      formState.reason == ReportReason.other
+                                      (formState.reason?.requiresDetail ??
+                                          false)
                                       ? formState.reasonDetail
                                       : null,
                                 ),
