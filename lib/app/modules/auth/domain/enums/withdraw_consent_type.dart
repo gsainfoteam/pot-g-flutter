@@ -1,1 +1,5 @@
-enum WithdrawType { accountDeletion, potInfoDeletion, restoreUnavailable }
+enum WithdrawConsentType {
+  accountDeletion,
+  potInfoDeletion,
+  restoreUnavailable,
+}
