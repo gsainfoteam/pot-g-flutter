@@ -61,7 +61,7 @@ class _PotTextAreaState extends State<PotTextArea> {
         }
         _controller = widget.controller!;
       } else {
-        _controller = TextEditingController();
+        _controller = TextEditingController(text: _controller.text);
         _isInternalController = true;
       }
     }
