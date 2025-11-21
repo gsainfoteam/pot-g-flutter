@@ -13,6 +13,7 @@ import 'package:pot_g/app/modules/chat/presentation/widgets/pot_users.dart';
 import 'package:pot_g/app/modules/common/presentation/extensions/toast.dart';
 import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_pressable.dart';
+import 'package:pot_g/app/router.gr.dart';
 import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
 import 'package:pot_g/gen/strings.g.dart';
@@ -24,6 +25,7 @@ class ChatRoomDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final canReport = pot.usersInfo.users.length > 1;
     return Drawer(
       child: SafeArea(
         child: Padding(
@@ -55,6 +57,22 @@ class ChatRoomDrawer extends StatelessWidget {
                       ),
                     ),
                   ),
+                  const SizedBox(width: 16),
+                  PotPressable(
+                    onTap: canReport ? () => _report(context) : null,
+                    child: Text(
+                      context.t.chat_room.drawer.actions.report.action,
+                      style: TextStyles.caption.copyWith(
+                        color: canReport
+                            ? Palette.grey
+                            : Palette.grey.withAlpha(150),
+                        decoration: canReport
+                            ? TextDecoration.underline
+                            : TextDecoration.none,
+                        decorationColor: Palette.grey,
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ],
@@ -74,6 +92,7 @@ class ChatRoomDrawer extends StatelessWidget {
       );
       return;
     }
+
     final result = await showOkCancelAlertDialog(
       context: context,
       title: context.t.chat_room.drawer.actions.leave.confirm.title,
@@ -81,19 +100,28 @@ class ChatRoomDrawer extends StatelessWidget {
     );
     if (result != OkCancelResult.ok) return;
     if (!context.mounted) return;
+
     final bloc = context.read<PotActionBloc>();
     final blocker = bloc.stream.firstWhere((s) => !s.isLoading);
     bloc.add(PotActionEvent.leavePot(pot));
+
     final state = await blocker;
     if (!context.mounted) return;
+
     final error = state.leavePotError;
     if (error != null) {
       context.showToast(error.getErrorMessage(context));
       return;
     }
+
     context.router
       ..pop()
       ..pop();
     context.read<PotDetailBloc>().add(PotDetailEvent.loadMyPots());
+  }
+
+  Future<void> _report(BuildContext context) async {
+    L.c('report', properties: {'potId': pot.id, 'potName': pot.name});
+    context.router.push(ReportRoute(pot: pot));
   }
 }

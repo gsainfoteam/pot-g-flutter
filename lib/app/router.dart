@@ -79,6 +79,7 @@ class AppRouter extends RootStackRouter {
     ),
     AutoRoute(path: '/chat/:id', page: ChatRoomRoute.page),
     AutoRoute(path: '/chat/:id/accounting', page: AccountingRoute.page),
+    AutoRoute(path: '/chat/:id/report', page: ReportRoute.page),
     CustomRoute(
       path: '/invited/:id',
       page: InvitedRoute.page,
