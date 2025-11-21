@@ -50,7 +50,7 @@ class ReportCubit extends Cubit<ReportState> {
     try {
       final reasonPayload = state.reason == ReportReason.other
           ? state.reasonDetail!.trim()
-          : state.reason!.key;
+          : state.reason!.name;
       await _repository.submit(
         pot: pot,
         target: state.target!,

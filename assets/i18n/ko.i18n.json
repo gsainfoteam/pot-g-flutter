@@ -353,11 +353,11 @@
                 "label": "신고 사유",
                 "placeholder": "신고 사유를 선택하세요",
                 "placeholder_other": "신고 사유를 입력하세요",
-                "items": {
-                  "uncooperative_chat": "비협조적, 비매너 채팅",
-                  "no_show": "출발 당일 노쇼",
-                  "bad_behavior_during_ride": "동승 중 비매너 행동",
-                  "settlement_no_response": "정산 요청 불응",
+                "items(context=ReportReason)": {
+                  "uncooperativeChat": "비협조적, 비매너 채팅",
+                  "noShow": "출발 당일 노쇼",
+                  "badBehaviorDuringRide": "동승 중 비매너 행동",
+                  "settlementNoResponse": "정산 요청 불응",
                   "other": "기타"
                 },
                 "button": "신고하기"

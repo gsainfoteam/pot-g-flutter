@@ -8,7 +8,6 @@ import 'package:pot_g/app/modules/chat/domain/enums/report_reason.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/report_cubit.dart';
 import 'package:pot_g/app/modules/chat/presentation/extensions/pot_user_extension.dart';
 import 'package:pot_g/app/modules/chat/presentation/extensions/report_exception_extension.dart';
-import 'package:pot_g/app/modules/chat/presentation/extensions/report_reason_extension.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/pot_profile_image.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/pot_text_area.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_app_bar.dart';
@@ -219,12 +218,14 @@ class _ReasonSelect extends StatelessWidget {
       itemBuilder: (context, reason, selected) {
         if (reason == null) return const SizedBox.shrink();
         return _ReasonSelector(
-          title: reason.label(context),
+          title: context.report.fields.reason.items(context: reason),
           selected: selected,
         );
       },
-      selectedItemBuilder: (context, reason) =>
-          _ReasonSelector(title: reason.label(context), selected: false),
+      selectedItemBuilder: (context, reason) => _ReasonSelector(
+        title: context.report.fields.reason.items(context: reason),
+        selected: false,
+      ),
     );
   }
 }

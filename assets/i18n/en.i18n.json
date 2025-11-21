@@ -356,11 +356,11 @@
                 "label": "Report Reason",
                 "placeholder": "Select a report reason",
                 "placeholder_other": "Enter a report reason",
-                "items": {
-                  "uncooperative_chat": "Uncooperative, ill-mannered chat",
-                  "no_show": "No-show on departure day",
-                  "bad_behavior_during_ride": "Ill-mannered behavior during ride-sharing",
-                  "settlement_no_response": "Failure to respond to settlement request",
+                "items(context=ReportReason)": {
+                  "uncooperativeChat": "Uncooperative, ill-mannered chat",
+                  "noShow": "No-show on departure day",
+                  "badBehaviorDuringRide": "Ill-mannered behavior during ride-sharing",
+                  "settlementNoResponse": "Failure to respond to settlement request",
                   "other": "Other"
                 },
                 "button": "Report"
