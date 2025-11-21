@@ -6,6 +6,7 @@ import 'package:pot_g/app/modules/chat/domain/entities/pot_user_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/enums/report_reason.dart';
 import 'package:pot_g/app/modules/chat/domain/exceptions/report_exception.dart';
 import 'package:pot_g/app/modules/chat/domain/repositories/report_repository.dart';
+import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
 
 part 'report_bloc.freezed.dart';
 
@@ -37,6 +38,11 @@ class ReportBloc extends Bloc<ReportSubmitEvent, ReportSubmitState> {
       emit(state.copyWith(isSubmitting: false, success: true));
     } on ReportException catch (e) {
       emit(state.copyWith(isSubmitting: false, error: e));
+    } catch (e, stackTrace) {
+      L.e(e, stackTrace);
+      emit(
+        state.copyWith(isSubmitting: false, error: ReportException.unknown(e)),
+      );
     }
   }
 }
