@@ -10,7 +10,7 @@ import 'package:pot_g/app/modules/auth/domain/repositories/token_repository.dart
 import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
 import 'package:pot_g/app/modules/device/domain/repositories/device_info_repository.dart';
 import 'package:pot_g/app/modules/user/domain/entities/self_user_entity.dart';
-import 'package:pot_g/app/modules/user/domain/entities/withdraw_consent_entity.dart';
+import 'package:pot_g/app/modules/auth/domain/entities/withdraw_consent_entity.dart';
 import 'package:rxdart/streams.dart';
 import 'package:rxdart/subjects.dart';
 

@@ -1,4 +1,4 @@
-import 'package:pot_g/app/modules/user/domain/enums/withdraw_type.dart';
+import 'package:pot_g/app/modules/auth/domain/enums/withdraw_consent_type.dart';
 
 final class WithdrawConsentEntity {
   final WithdrawType type;
