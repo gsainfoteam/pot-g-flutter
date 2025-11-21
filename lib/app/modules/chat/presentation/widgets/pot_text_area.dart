@@ -95,7 +95,12 @@ class _PotTextAreaState extends State<PotTextArea> {
           onChanged: widget.onChanged,
           decoration: InputDecoration(
             counter: const SizedBox.shrink(),
-            contentPadding: const EdgeInsets.fromLTRB(12, 12, 12, 30),
+            contentPadding: EdgeInsets.fromLTRB(
+              12,
+              12,
+              12,
+              widget.maxLength != null ? 30 : 12,
+            ),
             filled: widget.filled,
             fillColor: const Color(0xfff5f5f5),
             hintText: widget.hintText,
