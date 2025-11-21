@@ -1,17 +1,8 @@
 sealed class WithdrawException implements Exception {
   const WithdrawException();
-
-  const factory WithdrawException.notAllConsentsGiven() =
-      NotAllConsentsGivenException;
   const factory WithdrawException.networkError(String error) =
       NetworkErrorException;
   const factory WithdrawException.unknown(Object error) = UnknownException;
-}
-
-class NotAllConsentsGivenException extends WithdrawException {
-  const NotAllConsentsGivenException();
-  @override
-  String toString() => 'WithdrawException.NotAllConsentsGivenException';
 }
 
 class NetworkErrorException extends WithdrawException {
