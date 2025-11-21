@@ -13,8 +13,8 @@ class Select<T> extends StatefulWidget {
     required this.isOpen,
     required this.onOpenChanged,
     required this.placeholder,
-    required this.openItemBuilder,
-    required this.closedItemBuilder,
+    required this.itemBuilder,
+    required this.selectedItemBuilder,
     this.onCleared,
   });
 
@@ -24,8 +24,8 @@ class Select<T> extends StatefulWidget {
   final bool isOpen;
   final void Function(bool) onOpenChanged;
   final Widget placeholder;
-  final Widget Function(BuildContext, T?, bool) openItemBuilder;
-  final Widget Function(BuildContext, T) closedItemBuilder;
+  final Widget Function(BuildContext, T?, bool) itemBuilder;
+  final Widget Function(BuildContext, T) selectedItemBuilder;
   final VoidCallback? onCleared;
 
   @override
@@ -57,7 +57,7 @@ class _SelectState<T> extends State<Select<T>> {
                           widget.onOpenChanged(false);
                           widget.onCleared?.call();
                         },
-                        child: widget.openItemBuilder(
+                        child: widget.itemBuilder(
                           context,
                           null,
                           widget.selectedItem == null,
@@ -71,7 +71,7 @@ class _SelectState<T> extends State<Select<T>> {
                           widget.onOpenChanged(false);
                           widget.onSelected(item);
                         },
-                        child: widget.openItemBuilder(context, item, selected),
+                        child: widget.itemBuilder(context, item, selected),
                       );
                     }),
                   ]
@@ -91,7 +91,7 @@ class _SelectState<T> extends State<Select<T>> {
               ? Row(
                   children: [
                     Expanded(
-                      child: widget.closedItemBuilder(
+                      child: widget.selectedItemBuilder(
                         context,
                         widget.selectedItem as T,
                       ),

@@ -188,11 +188,11 @@ class _TargetSelect extends StatelessWidget {
       isOpen: isOpen,
       onOpenChanged: onOpenChanged,
       placeholder: Text(context.report.fields.target.label),
-      openItemBuilder: (context, user, selected) {
+      itemBuilder: (context, user, selected) {
         if (user == null) return const SizedBox.shrink();
         return _TargetSelector(user: user, pot: pot, selected: selected);
       },
-      closedItemBuilder: (context, user) =>
+      selectedItemBuilder: (context, user) =>
           _TargetSelector(user: user, pot: pot, selected: false),
     );
   }
@@ -247,11 +247,11 @@ class _ReasonSelect extends StatelessWidget {
       isOpen: isOpen,
       onOpenChanged: onOpenChanged,
       placeholder: Text(context.report.fields.reason.placeholder),
-      openItemBuilder: (context, reason, selected) {
+      itemBuilder: (context, reason, selected) {
         if (reason == null) return const SizedBox.shrink();
         return _ReasonSelector(title: reason.label, selected: selected);
       },
-      closedItemBuilder: (context, reason) =>
+      selectedItemBuilder: (context, reason) =>
           _ReasonSelector(title: reason.label, selected: false),
     );
   }
