@@ -3,12 +3,14 @@ import 'package:injectable/injectable.dart';
 import 'package:pot_g/app/modules/auth/data/data_sources/remote/user_auth_api.dart';
 import 'package:pot_g/app/modules/auth/data/models/login_request_model.dart';
 import 'package:pot_g/app/modules/auth/data/models/logout_request_model.dart';
+import 'package:pot_g/app/modules/auth/domain/exceptions/withdraw_exception.dart';
 import 'package:pot_g/app/modules/auth/domain/repositories/auth_repository.dart';
 import 'package:pot_g/app/modules/auth/domain/repositories/oauth_repository.dart';
 import 'package:pot_g/app/modules/auth/domain/repositories/token_repository.dart';
 import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
 import 'package:pot_g/app/modules/device/domain/repositories/device_info_repository.dart';
 import 'package:pot_g/app/modules/user/domain/entities/self_user_entity.dart';
+import 'package:pot_g/app/modules/user/domain/entities/withdraw_consent_entity.dart';
 import 'package:rxdart/streams.dart';
 import 'package:rxdart/subjects.dart';
 
@@ -100,5 +102,20 @@ class OauthRestAuthRepository implements AuthRepository {
   Future<void> update() async {
     final user = await _getUser();
     _userSubject.add(user);
+  }
+
+  @override
+  Future<void> withdraw(List<WithdrawConsentEntity> consents) async {
+    if (consents.any((consent) => !consent.isAgreed)) {
+      throw const WithdrawException.notAllConsentsGiven();
+    }
+    try {
+      await _userAuthApi.withdraw();
+      await _tokenRepository.deleteToken();
+    } on DioException catch (e) {
+      throw WithdrawException.networkError(e.message ?? e.error.toString());
+    } catch (e) {
+      throw WithdrawException.unknown(e);
+    }
   }
 }
