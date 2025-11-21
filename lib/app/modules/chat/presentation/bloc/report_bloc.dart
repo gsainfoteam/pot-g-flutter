@@ -23,8 +23,9 @@ class ReportBloc extends Bloc<ReportSubmitEvent, ReportSubmitState> {
     emit(state.copyWith(isSubmitting: true, error: null, success: false));
 
     try {
+      final detail = (event.reasonDetail ?? '').trim();
       final reasonPayload = event.reason.requiresDetail
-          ? event.reasonDetail!.trim()
+          ? detail
           : event.reason.name;
 
       await _repository.submit(
