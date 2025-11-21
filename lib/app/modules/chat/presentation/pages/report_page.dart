@@ -6,6 +6,7 @@ import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_user_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/enums/report_reason.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/report_cubit.dart';
+import 'package:pot_g/app/modules/chat/presentation/bloc/report_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/extensions/pot_user_extension.dart';
 import 'package:pot_g/app/modules/chat/presentation/extensions/report_exception_extension.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/pot_profile_image.dart';
@@ -27,8 +28,11 @@ class ReportPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => sl<ReportCubit>(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => sl<ReportCubit>()),
+        BlocProvider(create: (_) => sl<ReportBloc>()),
+      ],
       child: _ReportView(pot: pot),
     );
   }
@@ -41,17 +45,17 @@ class _ReportView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<ReportCubit, ReportState>(
-      listenWhen: (previous, current) =>
-          previous.submissionSuccess != current.submissionSuccess,
+    return BlocListener<ReportBloc, ReportSubmitState>(
+      listenWhen: (previous, current) => previous.success != current.success,
       listener: (context, state) {
-        if (state.submissionSuccess) {
+        if (state.success) {
           context.router.pop();
         }
       },
       child: BlocBuilder<ReportCubit, ReportState>(
-        builder: (context, state) {
-          final targetTitle = state.target == null
+        builder: (context, formState) {
+          final submitState = context.watch<ReportBloc>().state;
+          final targetTitle = formState.target == null
               ? context.report.fields.target.label
               : context.report.fields.target.label_filled;
           return Scaffold(
@@ -75,8 +79,8 @@ class _ReportView extends StatelessWidget {
                             const SizedBox(height: 12),
                             _TargetSelect(
                               pot: pot,
-                              selectedTarget: state.target,
-                              isOpen: state.targetSelectorOpen,
+                              selectedTarget: formState.target,
+                              isOpen: formState.targetSelectorOpen,
                               onTargetSelected: (user) => context
                                   .read<ReportCubit>()
                                   .targetChanged(user),
@@ -93,8 +97,8 @@ class _ReportView extends StatelessWidget {
                             ),
                             const SizedBox(height: 12),
                             _ReasonSelect(
-                              selectedReason: state.reason,
-                              isOpen: state.reasonSelectorOpen,
+                              selectedReason: formState.reason,
+                              isOpen: formState.reasonSelectorOpen,
                               onReasonSelected: (reason) => context
                                   .read<ReportCubit>()
                                   .reasonChanged(reason),
@@ -102,7 +106,7 @@ class _ReportView extends StatelessWidget {
                                   .read<ReportCubit>()
                                   .reasonSelectorToggled(value),
                             ),
-                            if (state.reason?.requiresDetail ?? false) ...[
+                            if (formState.reason?.requiresDetail ?? false) ...[
                               const SizedBox(height: 12),
                               PotTextArea(
                                 hintText: context
@@ -111,7 +115,7 @@ class _ReportView extends StatelessWidget {
                                     .reason
                                     .placeholder_other,
                                 maxLength: ReportCubit.maxReasonLength,
-                                initialValue: state.reasonDetail,
+                                initialValue: formState.reasonDetail,
                                 onChanged: (value) => context
                                     .read<ReportCubit>()
                                     .reasonDetailChanged(value),
@@ -122,21 +126,32 @@ class _ReportView extends StatelessWidget {
                       ),
                     ),
                     AnimatedOpacity(
-                      opacity: state.error != null ? 1.0 : 0.0,
+                      opacity: submitState.error != null ? 1.0 : 0.0,
                       duration: const Duration(milliseconds: 100),
                       child: SmallAlert(
-                        text: state.error?.getErrorMessage(context) ?? '',
+                        text: submitState.error?.getErrorMessage(context) ?? '',
                         type: SmallAlertType.error,
                       ),
                     ),
                     const SizedBox(height: 12),
                     SafeArea(
                       child: PotButton(
-                        onPressed: state.canSubmit
-                            ? () => context.read<ReportCubit>().submit(pot)
+                        onPressed:
+                            formState.canSubmit && !submitState.isSubmitting
+                            ? () => context.read<ReportBloc>().add(
+                                ReportSubmitEvent.submitted(
+                                  pot: pot,
+                                  target: formState.target!,
+                                  reason: formState.reason!,
+                                  reasonDetail:
+                                      formState.reason == ReportReason.other
+                                      ? formState.reasonDetail
+                                      : null,
+                                ),
+                              )
                             : null,
                         variant: PotButtonVariant.emphasized,
-                        child: state.isSubmitting
+                        child: submitState.isSubmitting
                             ? SizedBox(
                                 height: 20,
                                 width: 20,

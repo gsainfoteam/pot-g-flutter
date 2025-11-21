@@ -1,11 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
-import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_user_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/enums/report_reason.dart';
-import 'package:pot_g/app/modules/chat/domain/exceptions/report_exception.dart';
-import 'package:pot_g/app/modules/chat/domain/repositories/report_repository.dart';
 
 part 'report_cubit.freezed.dart';
 
@@ -13,16 +10,14 @@ part 'report_cubit.freezed.dart';
 class ReportCubit extends Cubit<ReportState> {
   static const int maxReasonLength = 200;
 
-  ReportCubit(this._repository) : super(const ReportState());
-
-  final ReportRepository _repository;
+  ReportCubit() : super(const ReportState());
 
   void targetChanged(PotUserEntity? target) {
-    emit(state.copyWith(target: target, submissionSuccess: false, error: null));
+    emit(state.copyWith(target: target));
   }
 
   void reasonChanged(ReportReason? reason) {
-    emit(state.copyWith(reason: reason, submissionSuccess: false, error: null));
+    emit(state.copyWith(reason: reason));
   }
 
   void reasonDetailChanged(String detail) {
@@ -36,24 +31,6 @@ class ReportCubit extends Cubit<ReportState> {
   void reasonSelectorToggled(bool isOpen) {
     emit(state.copyWith(reasonSelectorOpen: isOpen));
   }
-
-  Future<void> submit(PotInfoEntity pot) async {
-    if (!state.canSubmit) return;
-    emit(state.copyWith(isSubmitting: true, error: null));
-    try {
-      final reasonPayload = state.reason == ReportReason.other
-          ? state.reasonDetail!.trim()
-          : state.reason!.name;
-      await _repository.submit(
-        pot: pot,
-        target: state.target!,
-        reasonKey: reasonPayload,
-      );
-      emit(state.copyWith(isSubmitting: false, submissionSuccess: true));
-    } on ReportException catch (e) {
-      emit(state.copyWith(isSubmitting: false, error: e));
-    }
-  }
 }
 
 @freezed
@@ -66,13 +43,10 @@ abstract class ReportState with _$ReportState {
     String? reasonDetail,
     @Default(true) bool targetSelectorOpen,
     @Default(false) bool reasonSelectorOpen,
-    @Default(false) bool isSubmitting,
-    @Default(false) bool submissionSuccess,
-    ReportException? error,
   }) = _ReportState;
 
   bool get canSubmit {
-    if (target == null || reason == null || isSubmitting) return false;
+    if (target == null || reason == null) return false;
     if (reason == ReportReason.other) {
       return reasonDetail != null &&
           reasonDetail!.trim().isNotEmpty &&
