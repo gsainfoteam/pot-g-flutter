@@ -54,6 +54,7 @@ locator.config.dart
 
 # Environment variables
 .env
+!.env.example
 
 # Fastlane
 */fastlane/report.xml
