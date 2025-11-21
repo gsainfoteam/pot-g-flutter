@@ -1,13 +1,14 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pot_g/app/di/locator.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_user_entity.dart';
+import 'package:pot_g/app/modules/chat/domain/enums/report_reason.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/report_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/extensions/pot_user_extension.dart';
 import 'package:pot_g/app/modules/chat/presentation/extensions/report_exception_extension.dart';
+import 'package:pot_g/app/modules/chat/presentation/extensions/report_reason_extension.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/pot_profile_image.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/pot_text_area.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_app_bar.dart';
@@ -94,7 +95,7 @@ class _ReportView extends StatelessWidget {
                             ),
                             const SizedBox(height: 12),
                             _ReasonSelect(
-                              selectedReason: state.reasonKey,
+                              selectedReason: state.reason,
                               isOpen: state.reasonSelectorOpen,
                               onReasonSelected: (reason) => context
                                   .read<ReportBloc>()
@@ -104,7 +105,7 @@ class _ReportView extends StatelessWidget {
                                     ReportEvent.reasonSelectorToggled(value),
                                   ),
                             ),
-                            if (state.reasonKey == 'other') ...[
+                            if (state.reason?.requiresDetail ?? false) ...[
                               const SizedBox(height: 12),
                               PotTextArea(
                                 hintText: context
@@ -206,53 +207,29 @@ class _ReasonSelect extends StatelessWidget {
     required this.onOpenChanged,
   });
 
-  final String? selectedReason;
+  final ReportReason? selectedReason;
   final bool isOpen;
-  final void Function(String?) onReasonSelected;
+  final void Function(ReportReason?) onReasonSelected;
   final void Function(bool) onOpenChanged;
-
-  List<_ReasonOption> _options(BuildContext context) => [
-    _ReasonOption(
-      key: 'uncooperative_chat',
-      label: context.report.fields.reason.items.uncooperative_chat,
-    ),
-    _ReasonOption(
-      key: 'no_show',
-      label: context.report.fields.reason.items.no_show,
-    ),
-    _ReasonOption(
-      key: 'bad_behavior_during_ride',
-      label: context.report.fields.reason.items.bad_behavior_during_ride,
-    ),
-    _ReasonOption(
-      key: 'settlement_no_response',
-      label: context.report.fields.reason.items.settlement_no_response,
-    ),
-    _ReasonOption(
-      key: 'other',
-      label: context.report.fields.reason.items.other,
-    ),
-  ];
 
   @override
   Widget build(BuildContext context) {
-    final options = _options(context);
-    final selected = options.firstWhereOrNull(
-      (option) => option.key == selectedReason,
-    );
-    return Select<_ReasonOption>(
-      items: options,
-      selectedItem: selected,
-      onSelected: (option) => onReasonSelected(option.key),
+    return Select<ReportReason>(
+      items: ReportReason.values,
+      selectedItem: selectedReason,
+      onSelected: onReasonSelected,
       isOpen: isOpen,
       onOpenChanged: onOpenChanged,
       placeholder: Text(context.report.fields.reason.placeholder),
       itemBuilder: (context, reason, selected) {
         if (reason == null) return const SizedBox.shrink();
-        return _ReasonSelector(title: reason.label, selected: selected);
+        return _ReasonSelector(
+          title: reason.label(context),
+          selected: selected,
+        );
       },
       selectedItemBuilder: (context, reason) =>
-          _ReasonSelector(title: reason.label, selected: false),
+          _ReasonSelector(title: reason.label(context), selected: false),
     );
   }
 }
@@ -323,13 +300,6 @@ class _ReasonSelector extends StatelessWidget {
       ),
     );
   }
-}
-
-class _ReasonOption {
-  const _ReasonOption({required this.key, required this.label});
-
-  final String key;
-  final String label;
 }
 
 extension on BuildContext {
