@@ -47,7 +47,14 @@ abstract class TextStyles {
 
   static final caption2 = TextStyle(
     fontSize: 12,
-    height: 1.2,
+    height: 1,
     fontWeight: FontWeight.w400,
+  );
+
+  static final caption3 = TextStyle(
+    fontSize: 10,
+    height: 1,
+    fontWeight: FontWeight.w300,
+    letterSpacing: -1.5 * 0.01 * 10,
   );
 }
