@@ -14,15 +14,12 @@ part 'report_bloc.freezed.dart';
 @injectable
 class ReportBloc extends Bloc<ReportSubmitEvent, ReportSubmitState> {
   ReportBloc(this._repository) : super(const ReportSubmitState()) {
-    on<_Submitted>(_onSubmitted, transformer: droppable());
+    on<_Submit>(_onSubmit, transformer: droppable());
   }
 
   final ReportRepository _repository;
 
-  Future<void> _onSubmitted(
-    _Submitted event,
-    Emitter<ReportSubmitState> emit,
-  ) async {
+  Future<void> _onSubmit(_Submit event, Emitter<ReportSubmitState> emit) async {
     emit(state.copyWith(isSubmitting: true, error: null, success: false));
 
     try {
@@ -49,12 +46,12 @@ class ReportBloc extends Bloc<ReportSubmitEvent, ReportSubmitState> {
 
 @freezed
 abstract class ReportSubmitEvent with _$ReportSubmitEvent {
-  const factory ReportSubmitEvent.submitted({
+  const factory ReportSubmitEvent.submit({
     required PotInfoEntity pot,
     required PotUserEntity target,
     required ReportReason reason,
     String? reasonDetail,
-  }) = _Submitted;
+  }) = _Submit;
 }
 
 @freezed
@@ -63,5 +60,5 @@ abstract class ReportSubmitState with _$ReportSubmitState {
     @Default(false) bool isSubmitting,
     @Default(false) bool success,
     ReportException? error,
-  }) = _ReportSubmitState;
+  }) = _SubmitState;
 }

@@ -139,7 +139,7 @@ class _ReportView extends StatelessWidget {
                         onPressed:
                             formState.canSubmit && !submitState.isSubmitting
                             ? () => context.read<ReportBloc>().add(
-                                ReportSubmitEvent.submitted(
+                                ReportSubmitEvent.submit(
                                   pot: pot,
                                   target: formState.target!,
                                   reason: formState.reason!,
