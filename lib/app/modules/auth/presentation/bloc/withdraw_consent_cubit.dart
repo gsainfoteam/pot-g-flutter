@@ -1,23 +1,27 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
+import 'package:pot_g/app/modules/auth/domain/enums/withdraw_consent_type.dart';
 
 part 'withdraw_consent_cubit.freezed.dart';
 
 @injectable
 class WithdrawConsentCubit extends Cubit<WithdrawConsentState> {
-  WithdrawConsentCubit() : super(const WithdrawConsentState());
+  WithdrawConsentCubit()
+    : super(
+        const WithdrawConsentState(
+          consents: {
+            WithdrawConsentType.accountDeletion: false,
+            WithdrawConsentType.potInfoDeletion: false,
+            WithdrawConsentType.restoreUnavailable: false,
+          },
+        ),
+      );
 
-  void toggleAccountDeletionConsent(bool value) {
-    emit(state.copyWith(accountDeletionConsent: value));
-  }
-
-  void togglePotInfoDeletionConsent(bool value) {
-    emit(state.copyWith(potInfoDeletionConsent: value));
-  }
-
-  void toggleRestoreUnavailableConsent(bool value) {
-    emit(state.copyWith(restoreUnavailableConsent: value));
+  void toggleConsent(WithdrawConsentType type, bool value) {
+    final newConsents = Map<WithdrawConsentType, bool>.from(state.consents);
+    newConsents[type] = value;
+    emit(state.copyWith(consents: newConsents));
   }
 }
 
@@ -26,17 +30,10 @@ sealed class WithdrawConsentState with _$WithdrawConsentState {
   const WithdrawConsentState._();
 
   const factory WithdrawConsentState({
-    @Default(false) bool accountDeletionConsent,
-    @Default(false) bool potInfoDeletionConsent,
-    @Default(false) bool restoreUnavailableConsent,
+    @Default({}) Map<WithdrawConsentType, bool> consents, // TODO: default
   }) = _WithdrawConsentState;
 
-  int get checkedCount => [
-    accountDeletionConsent,
-    potInfoDeletionConsent,
-    restoreUnavailableConsent,
-  ].where((consent) => consent).length;
-
+  int get checkedCount => consents.values.where((consent) => consent).length;
   bool get anyChecked => checkedCount > 0;
   bool get allChecked => checkedCount == 3;
 }
