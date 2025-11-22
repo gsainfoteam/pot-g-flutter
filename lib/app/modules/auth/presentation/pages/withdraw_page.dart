@@ -29,21 +29,18 @@ class WithdrawPage extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => sl<WithdrawConsentCubit>()),
-        BlocProvider(
-          create: (context) => sl<WithdrawBloc>(),
-          child: BlocListener<WithdrawBloc, WithdrawState>(
-            listener: (context, state) {
-              state.mapOrNull(
-                error: (e) =>
-                    context.showToast(context.t.profile.withdraw.error),
-                success: (e) =>
-                    context.router.push(const MainBottomNavigationRoute()),
-              );
-            },
-          ),
-        ),
+        BlocProvider(create: (context) => sl<WithdrawBloc>()),
       ],
-      child: _Layout(user: user),
+      child: BlocListener<WithdrawBloc, WithdrawState>(
+        listener: (context, state) {
+          state.mapOrNull(
+            error: (e) => context.showToast(context.t.profile.withdraw.error),
+            success: (e) =>
+                context.router.push(const MainBottomNavigationRoute()),
+          );
+        },
+        child: _Layout(user: user),
+      ),
     );
   }
 }
