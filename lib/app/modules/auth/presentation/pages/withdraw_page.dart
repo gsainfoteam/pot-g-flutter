@@ -13,6 +13,7 @@ import 'package:pot_g/app/modules/common/presentation/extensions/toast.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_app_bar.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_button.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_checkbox.dart';
+import 'package:pot_g/app/modules/user/domain/entities/self_user_entity.dart';
 import 'package:pot_g/app/router.gr.dart';
 import 'package:pot_g/app/values/text_styles.dart';
 import 'package:pot_g/gen/strings.g.dart';
@@ -25,81 +26,88 @@ class WithdrawPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final user = context.read<AuthBloc>().state.user;
     if (user == null) return const SizedBox.shrink();
+    return BlocProvider(
+      create: (context) => sl<WithdrawBloc>(),
+      child: BlocListener<WithdrawBloc, WithdrawState>(
+        listener: (context, state) {
+          state.mapOrNull(
+            error: (e) => context.showToast(context.t.profile.withdraw.error),
+            success: (e) =>
+                context.router.push(const MainBottomNavigationRoute()),
+          );
+        },
+        child: _Layout(user: user),
+      ),
+    );
+  }
+}
+
+class _Layout extends StatelessWidget {
+  const _Layout({required this.user});
+
+  final SelfUserEntity user;
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: PotAppBar(
         title: Text(context.t.profile.account_management.withdraw),
       ),
-      body: MultiBlocProvider(
-        providers: [
-          BlocProvider<WithdrawBloc>(create: (context) => sl<WithdrawBloc>()),
-        ],
-        child: BlocListener<WithdrawBloc, WithdrawState>(
-          listener: (context, state) {
-            state.mapOrNull(
-              error: (e) => context.showToast(context.t.profile.withdraw.error),
-              success: (e) =>
-                  context.router.push(const MainBottomNavigationRoute()),
-            );
-          },
-          child: BlocBuilder<WithdrawConsentCubit, WithdrawConsentState>(
-            builder: (context, state) {
-              return Padding(
-                padding: EdgeInsets.symmetric(vertical: 20, horizontal: 16),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: BlocBuilder<WithdrawConsentCubit, WithdrawConsentState>(
+        builder: (context, state) {
+          return Padding(
+            padding: EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _FofoAnimation(),
-                        SizedBox(height: 20),
-                        Text(
-                          context.t.profile.withdraw.description(
-                            user: user.name,
-                          ),
-                          style: TextStyles.title2,
-                        ),
-                        SizedBox(height: 20),
-                        _ConsentList(),
-                      ],
+                    _FofoAnimation(),
+                    SizedBox(height: 20),
+                    Text(
+                      context.t.profile.withdraw.description(user: user.name),
+                      style: TextStyles.title2,
                     ),
-                    SafeArea(
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: PotButton(
-                              onPressed: () => context.router.pop(),
-                              size: PotButtonSize.large,
-                              variant: PotButtonVariant.outlined,
-                              child: Text(context.t.common.cancel),
-                            ),
-                          ),
-                          SizedBox(width: 10),
-                          Expanded(
-                            child: PotButton(
-                              onPressed: state.allChecked
-                                  ? () {
-                                      context.read<WithdrawBloc>().add(
-                                        WithdrawEvent.withdraw(),
-                                      );
-                                    }
-                                  : null,
-                              size: PotButtonSize.large,
-                              variant: PotButtonVariant.emphasized,
-                              child: Text(
-                                context.t.profile.account_management.withdraw,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    SizedBox(height: 20),
+                    _ConsentList(),
                   ],
                 ),
-              );
-            },
-          ),
-        ),
+                SafeArea(
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: PotButton(
+                          onPressed: () => context.router.pop(),
+                          size: PotButtonSize.large,
+                          variant: PotButtonVariant.outlined,
+                          child: Text(context.t.common.cancel),
+                        ),
+                      ),
+                      SizedBox(width: 10),
+                      Expanded(
+                        child: PotButton(
+                          onPressed: state.allChecked
+                              ? () {
+                                  context.read<WithdrawBloc>().add(
+                                    WithdrawEvent.withdraw(),
+                                  );
+                                }
+                              : null,
+                          size: PotButtonSize.large,
+                          variant: PotButtonVariant.emphasized,
+                          child: Text(
+                            context.t.profile.account_management.withdraw,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }
