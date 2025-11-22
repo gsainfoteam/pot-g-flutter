@@ -26,18 +26,24 @@ class WithdrawPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final user = context.read<AuthBloc>().state.user;
     if (user == null) return const SizedBox.shrink();
-    return BlocProvider(
-      create: (context) => sl<WithdrawBloc>(),
-      child: BlocListener<WithdrawBloc, WithdrawState>(
-        listener: (context, state) {
-          state.mapOrNull(
-            error: (e) => context.showToast(context.t.profile.withdraw.error),
-            success: (e) =>
-                context.router.push(const MainBottomNavigationRoute()),
-          );
-        },
-        child: _Layout(user: user),
-      ),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => sl<WithdrawConsentCubit>()),
+        BlocProvider(
+          create: (context) => sl<WithdrawBloc>(),
+          child: BlocListener<WithdrawBloc, WithdrawState>(
+            listener: (context, state) {
+              state.mapOrNull(
+                error: (e) =>
+                    context.showToast(context.t.profile.withdraw.error),
+                success: (e) =>
+                    context.router.push(const MainBottomNavigationRoute()),
+              );
+            },
+          ),
+        ),
+      ],
+      child: _Layout(user: user),
     );
   }
 }
@@ -159,7 +165,7 @@ class _ConsentList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cubit = context.watch<WithdrawConsentCubit>();
+    final cubit = context.read<WithdrawConsentCubit>();
     return Column(
       children: WithdrawConsentType.values.map((type) {
         return Padding(
