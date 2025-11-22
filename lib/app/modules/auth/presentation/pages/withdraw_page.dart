@@ -139,11 +139,12 @@ class _FofoAnimationState extends State<_FofoAnimation>
   @override
   Widget build(BuildContext context) {
     return Lottie.asset(
-      'assets/lottie/withdraw_fofo.json',
+      'assets/lottie/withdraw_fofo.lottie',
       fit: BoxFit.contain,
       width: 100,
       height: 100,
       controller: _controller,
+      decoder: _customDecoder,
       onLoaded: (composition) {
         _controller
           ..duration = composition.duration
@@ -184,7 +185,7 @@ class _ConsentList extends StatelessWidget {
   }
 }
 
-Future<LottieComposition?> customDecoder(List<int> bytes) {
+Future<LottieComposition?> _customDecoder(List<int> bytes) {
   return LottieComposition.decodeZip(
     bytes,
     filePicker: (files) {
