@@ -27,5 +27,5 @@ sealed class WithdrawConsentState with _$WithdrawConsentState {
 
   int get checkedCount => consents.length;
   bool get anyChecked => checkedCount != 0;
-  bool get allChecked => checkedCount == 3;
+  bool get allChecked => checkedCount == WithdrawConsentType.values.length;
 }
