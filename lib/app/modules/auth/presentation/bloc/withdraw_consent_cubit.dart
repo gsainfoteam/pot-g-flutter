@@ -10,8 +10,10 @@ class WithdrawConsentCubit extends Cubit<WithdrawConsentState> {
   WithdrawConsentCubit() : super(const WithdrawConsentState());
 
   void toggleConsent(WithdrawConsentType type, bool value) {
-    value ? state.consents.add(type) : state.consents.remove(type);
-    emit(state);
+    final newConsents = value
+        ? state.consents.union({type})
+        : state.consents.difference({type});
+    emit(state.copyWith(consents: newConsents));
   }
 }
 
