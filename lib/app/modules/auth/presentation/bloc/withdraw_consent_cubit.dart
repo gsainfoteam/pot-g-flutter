@@ -7,21 +7,11 @@ part 'withdraw_consent_cubit.freezed.dart';
 
 @injectable
 class WithdrawConsentCubit extends Cubit<WithdrawConsentState> {
-  WithdrawConsentCubit()
-    : super(
-        const WithdrawConsentState(
-          consents: {
-            WithdrawConsentType.accountDeletion: false,
-            WithdrawConsentType.potInfoDeletion: false,
-            WithdrawConsentType.restoreUnavailable: false,
-          },
-        ),
-      );
+  WithdrawConsentCubit() : super(const WithdrawConsentState());
 
   void toggleConsent(WithdrawConsentType type, bool value) {
-    final newConsents = Map<WithdrawConsentType, bool>.from(state.consents);
-    newConsents[type] = value;
-    emit(state.copyWith(consents: newConsents));
+    value ? state.consents.add(type) : state.consents.remove(type);
+    emit(state);
   }
 }
 
@@ -30,10 +20,10 @@ sealed class WithdrawConsentState with _$WithdrawConsentState {
   const WithdrawConsentState._();
 
   const factory WithdrawConsentState({
-    @Default({}) Map<WithdrawConsentType, bool> consents, // TODO: default
+    @Default({}) Set<WithdrawConsentType> consents,
   }) = _WithdrawConsentState;
 
-  int get checkedCount => consents.values.where((consent) => consent).length;
-  bool get anyChecked => checkedCount > 0;
+  int get checkedCount => consents.length;
+  bool get anyChecked => checkedCount != 0;
   bool get allChecked => checkedCount == 3;
 }
