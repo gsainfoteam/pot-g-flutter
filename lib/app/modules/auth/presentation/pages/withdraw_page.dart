@@ -165,7 +165,7 @@ class _ConsentList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cubit = context.read<WithdrawConsentCubit>();
+    final cubit = context.watch<WithdrawConsentCubit>();
     return Column(
       children: WithdrawConsentType.values.map((type) {
         return Padding(
