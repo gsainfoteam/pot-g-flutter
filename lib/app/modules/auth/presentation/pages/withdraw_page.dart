@@ -1,11 +1,14 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lottie/lottie.dart';
 import 'package:pot_g/app/di/locator.dart';
 import 'package:pot_g/app/modules/auth/domain/enums/withdraw_consent_type.dart';
 import 'package:pot_g/app/modules/auth/presentation/bloc/auth_bloc.dart';
 import 'package:pot_g/app/modules/auth/presentation/bloc/withdraw_bloc.dart';
 import 'package:pot_g/app/modules/auth/presentation/bloc/withdraw_consent_cubit.dart';
+import 'package:pot_g/app/modules/auth/presentation/extensions/withdraw_consent_type_extension.dart';
 import 'package:pot_g/app/modules/common/presentation/extensions/toast.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_app_bar.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_button.dart';
@@ -28,9 +31,6 @@ class WithdrawPage extends StatelessWidget {
       ),
       body: MultiBlocProvider(
         providers: [
-          BlocProvider<WithdrawConsentCubit>(
-            create: (context) => sl<WithdrawConsentCubit>(),
-          ),
           BlocProvider<WithdrawBloc>(create: (context) => sl<WithdrawBloc>()),
         ],
         child: BlocListener<WithdrawBloc, WithdrawState>(
@@ -51,7 +51,7 @@ class WithdrawPage extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(color: Colors.black, width: 100, height: 100),
+                        _FofoAnimation(),
                         SizedBox(height: 20),
                         Text(
                           context.t.profile.withdraw.description(
@@ -105,6 +105,46 @@ class WithdrawPage extends StatelessWidget {
   }
 }
 
+class _FofoAnimation extends StatefulWidget {
+  const _FofoAnimation();
+
+  @override
+  State<_FofoAnimation> createState() => _FofoAnimationState();
+}
+
+class _FofoAnimationState extends State<_FofoAnimation>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Lottie.asset(
+      'assets/lottie/withdraw_fofo.json',
+      fit: BoxFit.contain,
+      width: 100,
+      height: 100,
+      controller: _controller,
+      onLoaded: (composition) {
+        _controller
+          ..duration = composition.duration
+          ..forward();
+      },
+    );
+  }
+}
+
 class _ConsentList extends StatelessWidget {
   const _ConsentList();
 
@@ -118,15 +158,13 @@ class _ConsentList extends StatelessWidget {
           child: Row(
             children: [
               PotCheckbox(
-                value: cubit.state.consents[type] ?? false,
-                onChanged: (value) => {
-                  cubit.toggleConsent(type, value ?? false),
-                },
+                value: cubit.state.consents.contains(type),
+                onChanged: (value) => cubit.toggleConsent(type, value ?? false),
               ),
               SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  type.getDescription(context.t), //cubit으로 getDescription 옮기기?
+                  type.getDescription(context),
                   style: TextStyles.body,
                 ),
               ),
@@ -136,4 +174,15 @@ class _ConsentList extends StatelessWidget {
       }).toList(),
     );
   }
+}
+
+Future<LottieComposition?> customDecoder(List<int> bytes) {
+  return LottieComposition.decodeZip(
+    bytes,
+    filePicker: (files) {
+      return files.firstWhereOrNull(
+        (f) => f.name.startsWith('animations/') && f.name.endsWith('.json'),
+      );
+    },
+  );
 }
