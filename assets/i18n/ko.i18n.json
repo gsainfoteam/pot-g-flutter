@@ -81,13 +81,16 @@
       "withdraw": "회원탈퇴",
       "logout_dialog": {
         "description": "로그아웃 하시겠습니까?"
-      },
-      "withdraw_description": "${user}님과 이별인가요?\n탈퇴하기 전에 확인해주세요",
-      "withdraw_consent": {
+      }
+    },
+    "withdraw":{
+      "description": "${user}님과 이별인가요?\n탈퇴하기 전에 확인해주세요",
+      "consents": {
         "account_deletion": "탈퇴 시 등록된 계좌 정보가 사라져요",
         "pot_info_deletion": "참여 중인 모든 팟에서 퇴장 돼요",
         "restore_unavailable": "모든 계정 정보는 복구할 수 없어요"
-      }
+      },
+      "error":"오류로 인해 탈퇴에 실패했습니다"
     },
     "report": {
       "title": "제보",
