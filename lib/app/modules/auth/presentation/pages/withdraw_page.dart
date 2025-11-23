@@ -1,8 +1,6 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lottie/lottie.dart';
 import 'package:pot_g/app/di/locator.dart';
 import 'package:pot_g/app/modules/auth/domain/enums/withdraw_consent_type.dart';
 import 'package:pot_g/app/modules/auth/presentation/bloc/auth_bloc.dart';
