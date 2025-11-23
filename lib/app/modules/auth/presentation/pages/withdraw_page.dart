@@ -142,17 +142,22 @@ class _FofoAnimationState extends State<_FofoAnimation>
 
   @override
   Widget build(BuildContext context) {
-    return Assets.lottie.withdrawFofo.lottie(
-      fit: BoxFit.contain,
-      width: 100,
-      height: 100,
-      controller: _controller,
-      decoder: _customDecoder,
-      onLoaded: (composition) {
-        _controller
-          ..duration = composition.duration
-          ..forward();
+    return BlocListener<WithdrawConsentCubit, WithdrawConsentState>(
+      listener: (context, state) {
+        if (state.anyChecked) {
+          _controller.forward();
+        } else {
+          _controller.reverse();
+        }
       },
+      child: Assets.lottie.withdrawFofo.lottie(
+        fit: BoxFit.contain,
+        width: 100,
+        height: 100,
+        controller: _controller,
+        decoder: _customDecoder,
+        onLoaded: (composition) => _controller.duration = composition.duration,
+      ),
     );
   }
 }
