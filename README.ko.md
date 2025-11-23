@@ -81,6 +81,7 @@ lib/
     </tr>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/rhseung"><img src="https://avatars.githubusercontent.com/u/56152093?v=4?s=100" width="100px;" alt="Hyunseung Ryu"/><br /><sub><b>Hyunseung Ryu</b></sub></a><br /><a href="https://github.com/gsainfoteam/pot-g-flutter/commits?author=rhseung" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/tkjftkjf"><img src="https://avatars.githubusercontent.com/u/72309529?v=4?s=100" width="100px;" alt="tkjftkjf"/><br /><sub><b>tkjftkjf</b></sub></a><br /><a href="https://github.com/gsainfoteam/pot-g-flutter/commits?author=tkjftkjf" title="Code">💻</a></td>
     </tr>
   </tbody>
   <tfoot>
