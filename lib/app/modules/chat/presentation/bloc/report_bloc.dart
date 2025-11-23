@@ -34,12 +34,16 @@ class ReportBloc extends Bloc<ReportSubmitEvent, ReportSubmitState> {
         reasonKey: reasonPayload,
       );
       emit(state.copyWith(isSubmitting: false, success: true));
-    } on ReportException catch (e) {
-      emit(state.copyWith(isSubmitting: false, error: e));
+    } on ReportException catch (e, stackTrace) {
+      final errorId = L.e(e, stackTrace);
+      emit(state.copyWith(isSubmitting: false, error: e.withErrorId(errorId)));
     } catch (e, stackTrace) {
-      L.e(e, stackTrace);
+      final errorId = L.e(e, stackTrace);
       emit(
-        state.copyWith(isSubmitting: false, error: ReportException.unknown(e)),
+        state.copyWith(
+          isSubmitting: false,
+          error: ReportException.unknown(e, errorId),
+        ),
       );
     }
   }
