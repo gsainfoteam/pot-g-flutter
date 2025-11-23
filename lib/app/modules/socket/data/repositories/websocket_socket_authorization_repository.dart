@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:injectable/injectable.dart';
+import 'package:pot_g/app/modules/auth/data/services/token_refresh_service.dart';
 import 'package:pot_g/app/modules/auth/domain/repositories/token_repository.dart';
 import 'package:pot_g/app/modules/socket/data/data_sources/websocket.dart';
 import 'package:pot_g/app/modules/socket/data/models/events/authorization_response_model.dart';
@@ -13,8 +14,13 @@ class WebsocketSocketAuthorizationRepository
     implements SocketAuthorizationRepository {
   final PotGSocket _socket;
   final TokenRepository _tokenRepository;
+  final TokenRefreshService _tokenRefreshService;
 
-  WebsocketSocketAuthorizationRepository(this._socket, this._tokenRepository);
+  WebsocketSocketAuthorizationRepository(
+    this._socket,
+    this._tokenRepository,
+    this._tokenRefreshService,
+  );
 
   @PostConstruct(preResolve: true)
   Future<void> init() async {
@@ -33,15 +39,31 @@ class WebsocketSocketAuthorizationRepository
     await _socket.disconnect();
   }
 
-  Future<void> authorize(String requestId) async {
+  Future<void> authorize(String requestId, [int retry = 0]) async {
+    final expiration = _tokenRepository.tokenExpiration;
+    if (expiration != null && expiration.isBefore(DateTime.now())) {
+      await _tokenRefreshService.refresh();
+    }
+
     final token = await _tokenRepository.token.first;
     if (token == null) throw Exception('Token is null');
-    await Future.wait([
-      _socket.getNextMessage<AuthorizationResponseModel>(requestId: requestId),
-      _socket.sendRequest(
-        AuthorizationModel(authorization: token),
-        requestId: requestId,
-      ),
-    ]);
+    try {
+      await Future.wait([
+        _socket
+            .getNextMessage<AuthorizationResponseModel>(requestId: requestId)
+            .timeout(const Duration(seconds: 10)),
+        _socket.sendRequest(
+          AuthorizationModel(authorization: token),
+          requestId: requestId,
+        ),
+      ]);
+    } on TimeoutException {
+      if (retry < 1) {
+        if (await _tokenRefreshService.refresh()) {
+          return authorize(requestId, retry + 1);
+        }
+      }
+      rethrow;
+    }
   }
 }
