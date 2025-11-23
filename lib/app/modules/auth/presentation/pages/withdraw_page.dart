@@ -24,7 +24,7 @@ class WithdrawPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = context.read<AuthBloc>().state.user;
+    final user = AuthBloc.userOf(context);
     if (user == null) return const SizedBox.shrink();
     return MultiBlocProvider(
       providers: [
