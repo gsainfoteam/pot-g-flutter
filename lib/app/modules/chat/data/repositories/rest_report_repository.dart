@@ -6,7 +6,6 @@ import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_user_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/exceptions/report_exception.dart';
 import 'package:pot_g/app/modules/chat/domain/repositories/report_repository.dart';
-import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
 
 @Injectable(as: ReportRepository)
 class RestReportRepository implements ReportRepository {
@@ -25,16 +24,14 @@ class RestReportRepository implements ReportRepository {
         pot.id,
         ReportRequestModel(userPk: target.id, reason: reasonKey),
       );
-    } on DioException catch (e, stackTrace) {
+    } on DioException catch (e) {
       final message = e.response?.data is Map<String, dynamic>
           ? (e.response?.data['message'] as String?) ??
                 (e.message ?? 'Network error')
           : e.message ?? 'Network error';
-      final errorId = L.e(e, stackTrace);
-      throw ReportException.networkError(message, errorId);
-    } catch (e, stackTrace) {
-      final errorId = L.e(e, stackTrace);
-      throw ReportException.unknown(e, errorId);
+      throw ReportException.networkError(message);
+    } catch (e) {
+      throw ReportException.unknown(e);
     }
   }
 }
