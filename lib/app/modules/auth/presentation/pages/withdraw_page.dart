@@ -107,7 +107,7 @@ class _Layout extends StatelessWidget {
                           SizedBox(width: 10),
                           Expanded(
                             child: PotButton(
-                              onPressed: (isLoading && state.allChecked)
+                              onPressed: (!isLoading && state.allChecked)
                                   ? () {
                                       context.read<WithdrawBloc>().add(
                                         WithdrawEvent.withdraw(),
