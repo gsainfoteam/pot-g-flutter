@@ -10,6 +10,7 @@ import 'package:pot_g/app/modules/auth/presentation/bloc/withdraw_bloc.dart';
 import 'package:pot_g/app/modules/auth/presentation/bloc/withdraw_consent_cubit.dart';
 import 'package:pot_g/app/modules/auth/presentation/extensions/withdraw_consent_type_extension.dart';
 import 'package:pot_g/app/modules/common/presentation/extensions/toast.dart';
+import 'package:pot_g/app/modules/common/presentation/functions/lottie_asset.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_app_bar.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_button.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_checkbox.dart';
@@ -155,7 +156,7 @@ class _FofoAnimationState extends State<_FofoAnimation>
         width: 100,
         height: 100,
         controller: _controller,
-        decoder: _customDecoder,
+        decoder: dotLottieDecoder,
         onLoaded: (composition) =>
             _controller.duration = composition.duration ~/ 2,
       ),
@@ -192,15 +193,4 @@ class _ConsentList extends StatelessWidget {
       }).toList(),
     );
   }
-}
-
-Future<LottieComposition?> _customDecoder(List<int> bytes) {
-  return LottieComposition.decodeZip(
-    bytes,
-    filePicker: (files) {
-      return files.firstWhereOrNull(
-        (f) => f.name.startsWith('animations/') && f.name.endsWith('.json'),
-      );
-    },
-  );
 }
