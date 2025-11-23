@@ -93,6 +93,16 @@ class ChatRoomDrawer extends StatelessWidget {
       return;
     }
 
+    if (pot.isArchived) {
+      showOkAlertDialog(
+        context: context,
+        title: context.t.chat_room.drawer.actions.leave.archived.title,
+        message:
+            context.t.chat_room.drawer.actions.leave.error.pot_already_closed,
+      );
+      return;
+    }
+
     final result = await showOkCancelAlertDialog(
       context: context,
       title: context.t.chat_room.drawer.actions.leave.confirm.title,
