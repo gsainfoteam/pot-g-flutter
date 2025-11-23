@@ -58,59 +58,71 @@ class _Layout extends StatelessWidget {
       appBar: PotAppBar(
         title: Text(context.t.profile.account_management.withdraw),
       ),
-      body: BlocBuilder<WithdrawConsentCubit, WithdrawConsentState>(
+      body: BlocBuilder<WithdrawBloc, WithdrawState>(
         builder: (context, state) {
-          return Padding(
-            padding: EdgeInsets.symmetric(vertical: 20, horizontal: 16),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+          final isLoading = state.maybeMap(
+            loading: (value) => true,
+            orElse: () => false,
+          );
+          return BlocBuilder<WithdrawConsentCubit, WithdrawConsentState>(
+            builder: (context, state) {
+              return Padding(
+                padding: EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    _FofoAnimation(),
-                    SizedBox(height: 20),
-                    Text(
-                      context.t.profile.withdraw.description(user: user.name),
-                      style: TextStyles.title2,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _FofoAnimation(),
+                        SizedBox(height: 20),
+                        Text(
+                          context.t.profile.withdraw.description(
+                            user: user.name,
+                          ),
+                          style: TextStyles.title2,
+                        ),
+                        SizedBox(height: 20),
+                        _ConsentList(),
+                      ],
                     ),
-                    SizedBox(height: 20),
-                    _ConsentList(),
+                    SafeArea(
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: PotButton(
+                              onPressed: isLoading
+                                  ? null
+                                  : () => context.router.pop(),
+                              size: PotButtonSize.large,
+                              variant: PotButtonVariant.outlined,
+                              child: Text(context.t.common.cancel),
+                            ),
+                          ),
+                          SizedBox(width: 10),
+                          Expanded(
+                            child: PotButton(
+                              onPressed: (isLoading && state.allChecked)
+                                  ? () {
+                                      context.read<WithdrawBloc>().add(
+                                        WithdrawEvent.withdraw(),
+                                      );
+                                    }
+                                  : null,
+                              size: PotButtonSize.large,
+                              variant: PotButtonVariant.emphasized,
+                              child: Text(
+                                context.t.profile.account_management.withdraw,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
-                SafeArea(
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: PotButton(
-                          onPressed: () => context.router.pop(),
-                          size: PotButtonSize.large,
-                          variant: PotButtonVariant.outlined,
-                          child: Text(context.t.common.cancel),
-                        ),
-                      ),
-                      SizedBox(width: 10),
-                      Expanded(
-                        child: PotButton(
-                          onPressed: state.allChecked
-                              ? () {
-                                  context.read<WithdrawBloc>().add(
-                                    WithdrawEvent.withdraw(),
-                                  );
-                                }
-                              : null,
-                          size: PotButtonSize.large,
-                          variant: PotButtonVariant.emphasized,
-                          child: Text(
-                            context.t.profile.account_management.withdraw,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+              );
+            },
           );
         },
       ),
