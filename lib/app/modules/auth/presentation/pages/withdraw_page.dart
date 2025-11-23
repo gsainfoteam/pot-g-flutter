@@ -156,7 +156,8 @@ class _FofoAnimationState extends State<_FofoAnimation>
         height: 100,
         controller: _controller,
         decoder: _customDecoder,
-        onLoaded: (composition) => _controller.duration = composition.duration,
+        onLoaded: (composition) =>
+            _controller.duration = composition.duration ~/ 2,
       ),
     );
   }
