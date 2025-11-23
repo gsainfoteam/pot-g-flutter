@@ -16,6 +16,7 @@ import 'package:pot_g/app/modules/common/presentation/widgets/pot_checkbox.dart'
 import 'package:pot_g/app/modules/user/domain/entities/self_user_entity.dart';
 import 'package:pot_g/app/router.gr.dart';
 import 'package:pot_g/app/values/text_styles.dart';
+import 'package:pot_g/gen/assets.gen.dart';
 import 'package:pot_g/gen/strings.g.dart';
 
 @RoutePage()
@@ -141,8 +142,7 @@ class _FofoAnimationState extends State<_FofoAnimation>
 
   @override
   Widget build(BuildContext context) {
-    return Lottie.asset(
-      'assets/lottie/withdraw_fofo.lottie',
+    return Assets.lottie.withdrawFofo.lottie(
       fit: BoxFit.contain,
       width: 100,
       height: 100,
