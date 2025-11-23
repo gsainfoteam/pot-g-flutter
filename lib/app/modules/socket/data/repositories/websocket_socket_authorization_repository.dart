@@ -49,14 +49,14 @@ class WebsocketSocketAuthorizationRepository
     if (token == null) throw Exception('Token is null');
     try {
       await Future.wait([
-        _socket
-            .getNextMessage<AuthorizationResponseModel>(requestId: requestId)
-            .timeout(const Duration(seconds: 10)),
+        _socket.getNextMessage<AuthorizationResponseModel>(
+          requestId: requestId,
+        ),
         _socket.sendRequest(
           AuthorizationModel(authorization: token),
           requestId: requestId,
         ),
-      ]);
+      ]).timeout(const Duration(seconds: 10));
     } on TimeoutException {
       if (retry < 1) {
         if (await _tokenRefreshService.refresh()) {
