@@ -10,6 +10,7 @@ import 'package:pot_g/app/modules/chat/presentation/extensions/pot_user_extensio
 import 'package:pot_g/app/modules/chat/presentation/widgets/tooltip_overlay.dart';
 import 'package:pot_g/app/modules/common/domain/enums/tooltip_type.dart';
 import 'package:pot_g/app/modules/common/presentation/bloc/tooltip_cubit.dart';
+import 'package:pot_g/app/modules/common/presentation/extensions/date_time.dart';
 import 'package:pot_g/app/modules/common/presentation/extensions/toast.dart';
 import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/general_dialog.dart';
@@ -57,10 +58,7 @@ class SetDepartureTimeButton extends StatefulWidget {
         height: 180,
         child: CupertinoDatePicker(
           initialDateTime: date,
-          minimumDate:
-              (pot.startsAt.year == DateTime.now().year &&
-                  pot.startsAt.month == DateTime.now().month &&
-                  pot.startsAt.day == DateTime.now().day)
+          minimumDate: pot.startsAt.isSameDay(DateTime.now())
               ? DateTime.now()
               : null,
           onDateTimeChanged: (value) => date = value,
