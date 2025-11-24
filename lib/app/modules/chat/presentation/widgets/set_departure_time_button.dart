@@ -10,6 +10,7 @@ import 'package:pot_g/app/modules/chat/presentation/extensions/pot_user_extensio
 import 'package:pot_g/app/modules/chat/presentation/widgets/tooltip_overlay.dart';
 import 'package:pot_g/app/modules/common/domain/enums/tooltip_type.dart';
 import 'package:pot_g/app/modules/common/presentation/bloc/tooltip_cubit.dart';
+import 'package:pot_g/app/modules/common/presentation/extensions/date_time.dart';
 import 'package:pot_g/app/modules/common/presentation/extensions/toast.dart';
 import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/general_dialog.dart';
@@ -49,7 +50,7 @@ class SetDepartureTimeButton extends StatefulWidget {
       return;
     }
     l.v('setDepartureTime');
-    DateTime date = DateTime.now();
+    DateTime date = DateTime.now().add(const Duration(minutes: 1));
     final result = await showGeneralOkCancelAdaptiveDialog(
       context: context,
       title: context.t.chat_room.set_departure_time.clock.title,
@@ -57,12 +58,16 @@ class SetDepartureTimeButton extends StatefulWidget {
         height: 180,
         child: CupertinoDatePicker(
           initialDateTime: date,
+          minimumDate: pot.startsAt.isSameDay(DateTime.now())
+              ? DateTime.now()
+              : null,
           onDateTimeChanged: (value) => date = value,
           mode: CupertinoDatePickerMode.time,
         ),
       ),
       okLabel: context.t.common.confirm,
     );
+
     if (result != OkCancelResult.ok) return;
     if (!context.mounted) return;
     l.v('departureTimeConfirm', from: 'setDepartureTime');
@@ -77,6 +82,7 @@ class SetDepartureTimeButton extends StatefulWidget {
     if (result2 != OkCancelResult.ok) return;
     l.c('confirmDepartureTime', from: 'departureTimeConfirm');
     if (!context.mounted) return;
+
     context.read<PotActionBloc>().add(
       PotActionEvent.setDepartureTime(pot, date),
     );
