@@ -37,12 +37,7 @@ class WithdrawPage extends StatelessWidget {
             error: (e) => context.showToast(context.t.profile.withdraw.error),
             success: (e) async {
               context.read<AuthBloc>().add(AuthEvent.logout());
-              await context.read<AuthBloc>().stream.firstWhere(
-                (state) => state == const AuthState.unauthenticated(),
-              );
-              if (context.mounted) {
-                context.router.replaceAll(const [MainBottomNavigationRoute()]);
-              }
+              context.router.replaceAll(const [SplashRoute()]);
             },
           );
         },
