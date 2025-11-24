@@ -330,6 +330,9 @@
             "title": "퇴장하시겠습니까?",
             "description": "출발 시간 확정 이전에는\n자유로운 퇴장이 가능합니다\n퇴장하시겠습니까?"
           },
+           "archived": {
+            "title": "이미 해산된 팟입니다"
+          },
           "departure_confirmed": "출발 시간을 확정한 이후에는 퇴장이 불가능합니다",
           "error": {
             "after_departure_confirmed": "출발 시간을 확정한 이후에는 퇴장이 불가능합니다",

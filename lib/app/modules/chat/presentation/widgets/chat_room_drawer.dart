@@ -84,6 +84,16 @@ class ChatRoomDrawer extends StatelessWidget {
 
   Future<void> _leave(BuildContext context) async {
     L.c('leave', properties: {'potId': pot.id, 'potName': pot.name});
+    if (pot.isArchived) {
+      showOkAlertDialog(
+        context: context,
+        title: context.t.chat_room.drawer.actions.leave.archived.title,
+        message:
+            context.t.chat_room.drawer.actions.leave.error.pot_already_closed,
+      );
+      return;
+    }
+
     if (pot.departureTime != null) {
       showOkAlertDialog(
         context: context,
