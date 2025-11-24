@@ -37,7 +37,7 @@ class WithdrawPage extends StatelessWidget {
             error: (e) => context.showToast(context.t.profile.withdraw.error),
             success: (e) async {
               context.read<AuthBloc>().add(AuthEvent.logout());
-              context.router.replaceAll(const [SplashRoute()]);
+              context.router.replaceAll(const [MainBottomNavigationRoute()]);
             },
           );
         },
