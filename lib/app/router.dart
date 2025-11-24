@@ -104,6 +104,7 @@ class AppRouter extends RootStackRouter {
       path: '/settings/account-management',
       page: AccountManagementRoute.page,
     ),
+    AutoRoute(path: '/settings/account-withdraw', page: WithdrawRoute.page),
 
     // user
     AutoRoute(path: '/user/consent', page: ConsentRoute.page),

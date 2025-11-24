@@ -6,4 +6,5 @@ abstract interface class AuthRepository {
   Future<void> signOut();
   Stream<SelfUserEntity?> get user;
   Future<void> update();
+  Future<void> withdraw();
 }

@@ -30,4 +30,7 @@ abstract class UserAuthApi {
 
   @POST('logout')
   Future<void> logout(@Body() LogoutRequestModel request);
+
+  @POST('withdraw')
+  Future<void> withdraw();
 }

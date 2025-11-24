@@ -11,7 +11,6 @@ import 'package:pot_g/app/router.gr.dart';
 import 'package:pot_g/app/values/text_styles.dart';
 import 'package:pot_g/gen/assets.gen.dart';
 import 'package:pot_g/gen/strings.g.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 @RoutePage()
 class AccountManagementPage extends StatelessWidget with LogPage {
@@ -56,7 +55,7 @@ class AccountManagementPage extends StatelessWidget with LogPage {
               title: context.t.profile.account_management.withdraw,
               onTap: () {
                 L.c('withdraw');
-                launchUrl(Uri.parse('https://idp.gistory.me'));
+                context.router.push(const WithdrawRoute());
               },
             ),
           ],

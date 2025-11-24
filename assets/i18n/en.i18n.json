@@ -83,6 +83,15 @@
         "description": "Are you sure you want to logout?"
       }
     },
+    "withdraw": {
+      "description": "Are you sure you want to leave us, ${user}?\nPlease review before withdrawing",
+      "consents": {
+        "account_deletion": "All registered bank account information will be deleted upon withdrawal",
+        "pot_info_deletion": "You will be removed from all participating pots",
+        "restore_unavailable": "All user account information will be permanently unrecoverable"
+      },
+      "error": "Failed to withdraw due to an error"
+    },
     "report": {
       "title": "Report",
       "cs": "Feedback · Report Bug"

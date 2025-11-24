@@ -3,6 +3,7 @@ import 'package:injectable/injectable.dart';
 import 'package:pot_g/app/modules/auth/data/data_sources/remote/user_auth_api.dart';
 import 'package:pot_g/app/modules/auth/data/models/login_request_model.dart';
 import 'package:pot_g/app/modules/auth/data/models/logout_request_model.dart';
+import 'package:pot_g/app/modules/auth/domain/exceptions/withdraw_exception.dart';
 import 'package:pot_g/app/modules/auth/domain/repositories/auth_repository.dart';
 import 'package:pot_g/app/modules/auth/domain/repositories/oauth_repository.dart';
 import 'package:pot_g/app/modules/auth/domain/repositories/token_repository.dart';
@@ -100,5 +101,17 @@ class OauthRestAuthRepository implements AuthRepository {
   Future<void> update() async {
     final user = await _getUser();
     _userSubject.add(user);
+  }
+
+  @override
+  Future<void> withdraw() async {
+    try {
+      await _userAuthApi.withdraw();
+      await _tokenRepository.deleteToken();
+    } on DioException catch (e) {
+      throw WithdrawException.networkError(e.message ?? e.error.toString());
+    } catch (e) {
+      throw WithdrawException.unknown(e);
+    }
   }
 }
