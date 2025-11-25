@@ -206,7 +206,7 @@ class _SelectBankDialogState extends State<_SelectBankDialog> {
                   selectedBank = null;
                 }),
               )
-            : BankList(
+            : _BankList(
                 search: _search,
                 onSearchValueChanged: (value) {
                   setState(() => _search = value);
@@ -246,8 +246,8 @@ class _Bank extends StatelessWidget {
   }
 }
 
-class BankList extends StatefulWidget {
-  const BankList({
+class _BankList extends StatefulWidget {
+  const _BankList({
     super.key,
     required this.search,
     required this.onSearchValueChanged,
@@ -259,10 +259,10 @@ class BankList extends StatefulWidget {
   final void Function(BankEntity bank) onBankSelected;
 
   @override
-  State<BankList> createState() => _BankListState();
+  State<_BankList> createState() => _BankListState();
 }
 
-class _BankListState extends State<BankList> {
+class _BankListState extends State<_BankList> {
   final _controller = ScrollController();
   double pixels = 0;
 
