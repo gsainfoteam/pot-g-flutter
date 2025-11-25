@@ -268,6 +268,22 @@ class _BankListState extends State<BankList> {
   double pixels = 0;
 
   @override
+  initState() {
+    super.initState();
+    _controller.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    setState(() => pixels = _controller.position.pixels);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
