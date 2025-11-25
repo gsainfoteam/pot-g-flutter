@@ -188,27 +188,7 @@ class _SelectBankDialog extends StatefulWidget {
 
 class _SelectBankDialogState extends State<_SelectBankDialog> {
   BankEntity? selectedBank;
-  final _controller = ScrollController();
-  double _pixels = 0;
   String _search = '';
-
-  @override
-  initState() {
-    super.initState();
-    _controller.addListener(_onScroll);
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  void _onScroll() {
-    setState(() {
-      _pixels = _controller.position.pixels;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -227,12 +207,68 @@ class _SelectBankDialogState extends State<_SelectBankDialog> {
                   selectedBank = null;
                 }),
               )
-            : _buildBankList(),
+            : BankList(
+                search: _search,
+                onSearchValueChanged: (value) {
+                  setState(() => _search = value);
+                },
+                onBankSelected: (bank) {
+                  setState(() => selectedBank = bank);
+                },
+              ),
       ),
     );
   }
+}
 
-  Widget _buildBankList() {
+class _Bank extends StatelessWidget {
+  const _Bank({required this.bank});
+
+  final BankEntity bank;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          padding: EdgeInsets.all(8),
+          height: 64,
+          width: 64,
+          decoration: BoxDecoration(
+            border: Border.all(color: Palette.borderGrey),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Image.network(bank.logoUrl),
+        ),
+        const SizedBox(height: 4),
+        Text(bank.name, style: TextStyles.description),
+      ],
+    );
+  }
+}
+
+class BankList extends StatefulWidget {
+  const BankList({
+    super.key,
+    required this.search,
+    required this.onSearchValueChanged,
+    required this.onBankSelected,
+  });
+
+  final String search;
+  final void Function(String value)? onSearchValueChanged;
+  final void Function(BankEntity bank) onBankSelected;
+
+  @override
+  State<BankList> createState() => _BankListState();
+}
+
+class _BankListState extends State<BankList> {
+  final _controller = ScrollController();
+  double pixels = 0;
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -242,7 +278,8 @@ class _SelectBankDialogState extends State<_SelectBankDialog> {
         ),
         const SizedBox(height: 20),
         PotTextField(
-          onChanged: (value) => setState(() => _search = value),
+          onChanged: widget
+              .onSearchValueChanged, //(value) => setState(() => _search = value),
           filled: true,
           suffixIcon: Assets.icons.search.svg(
             colorFilter: ColorFilter.mode(Palette.textGrey, BlendMode.srcIn),
@@ -252,7 +289,7 @@ class _SelectBankDialogState extends State<_SelectBankDialog> {
         ),
         const SizedBox(height: 20),
         SizedBox(
-          height: lerpDouble(300, 500, clampDouble(_pixels / 100, 0, 1)),
+          height: lerpDouble(300, 500, clampDouble(pixels / 100, 0, 1)),
           child: BlocBuilder<BankListBloc, BankListState>(
             builder: (context, state) => SingleChildScrollView(
               controller: _controller,
@@ -262,9 +299,9 @@ class _SelectBankDialogState extends State<_SelectBankDialog> {
                       .where((b) => !b.isSecurities)
                       .where(
                         (b) =>
-                            _search.isEmpty ||
+                            widget.search.isEmpty ||
                             b.name.toLowerCase().contains(
-                              _search.toLowerCase(),
+                              widget.search.toLowerCase(),
                             ),
                       )
                       .toList()
@@ -280,9 +317,9 @@ class _SelectBankDialogState extends State<_SelectBankDialog> {
                       .where((b) => b.isSecurities)
                       .where(
                         (b) =>
-                            _search.isEmpty ||
+                            widget.search.isEmpty ||
                             b.name.toLowerCase().contains(
-                              _search.toLowerCase(),
+                              widget.search.toLowerCase(),
                             ),
                       )
                       .toList()
@@ -311,7 +348,9 @@ class _SelectBankDialogState extends State<_SelectBankDialog> {
                   : PotPressable(
                       onTap: () {
                         L.c('selectBank', from: 'selectBank');
-                        setState(() => selectedBank = b);
+                        widget.onBankSelected(
+                          b,
+                        ); //setState(() => selectedBank = b);
                       },
                       child: _Bank(bank: b),
                     ),
@@ -319,32 +358,6 @@ class _SelectBankDialogState extends State<_SelectBankDialog> {
           )
           .intersperse(const SizedBox(width: 8))
           .toList(),
-    );
-  }
-}
-
-class _Bank extends StatelessWidget {
-  const _Bank({required this.bank});
-
-  final BankEntity bank;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          padding: EdgeInsets.all(8),
-          height: 64,
-          width: 64,
-          decoration: BoxDecoration(
-            border: Border.all(color: Palette.borderGrey),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Image.network(bank.logoUrl),
-        ),
-        const SizedBox(height: 4),
-        Text(bank.name, style: TextStyles.description),
-      ],
     );
   }
 }
