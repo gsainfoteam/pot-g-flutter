@@ -248,7 +248,6 @@ class _Bank extends StatelessWidget {
 
 class _BankList extends StatefulWidget {
   const _BankList({
-    super.key,
     required this.search,
     required this.onSearchValueChanged,
     required this.onBankSelected,
