@@ -194,7 +194,6 @@ class _SelectBankDialogState extends State<_SelectBankDialog> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) {
-        _search = '';
         return sl<BankListBloc>()..add(BankListEvent.load());
       },
       child: AnimatedSwitcher(
@@ -256,7 +255,7 @@ class BankList extends StatefulWidget {
   });
 
   final String search;
-  final void Function(String value)? onSearchValueChanged;
+  final void Function(String value) onSearchValueChanged;
   final void Function(BankEntity bank) onBankSelected;
 
   @override
