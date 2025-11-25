@@ -213,13 +213,19 @@ class _SelectBankDialogState extends State<_SelectBankDialog> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => sl<BankListBloc>()..add(BankListEvent.load()),
+      create: (_) {
+        _search = '';
+        return sl<BankListBloc>()..add(BankListEvent.load());
+      },
       child: AnimatedSwitcher(
         duration: const Duration(milliseconds: 300),
         child: selectedBank != null
             ? _BankNumber(
                 selectedBank: selectedBank!,
-                onSelectBank: () => setState(() => selectedBank = null),
+                onSelectBank: () => setState(() {
+                  _search = '';
+                  selectedBank = null;
+                }),
               )
             : _buildBankList(),
       ),
