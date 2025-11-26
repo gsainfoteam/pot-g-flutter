@@ -34,7 +34,7 @@ abstract class ChatPotApi {
   @POST('{id}/kick')
   Future<KickUserResponseModel> kickUser(
     @Path('id') String id,
-    @Field("user_pk") String userPk,
+    @Field("user_id") String userPk,
   );
 
   @POST('{id}/out')
