@@ -18,6 +18,7 @@ platform :android do
     version_codes = google_play_track_version_codes(track: "internal")
     build_number = version_codes.max + 1
     pubspec = YAML.load_file("../../pubspec.yaml")
+    build_version = pubspec['version']
     version_string = "#{pubspec["version"]} (#{build_number})"
     UI.message("Building #{pubspec["name"]} #{version_string}")
 
@@ -69,6 +70,7 @@ platform :android do
       payload: {
         "Build Date" => Time.now.to_s,
         "Build Number" => build_number,
+        "Build Version" => build_version,
         "Internal App" => internal_app_url == "Failed" ? "Failed" : "<#{internal_app_url}>",
       }
     ) if ENV['CI']
