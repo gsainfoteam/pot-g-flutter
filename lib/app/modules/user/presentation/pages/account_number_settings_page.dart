@@ -281,9 +281,7 @@ class _BankListState extends State<_BankList> {
         ),
         const SizedBox(height: 20),
         PotTextField(
-          onChanged: (value) => setState(
-            () => _search = value,
-          ), //(value) => setState(() => _search = value),
+          onChanged: (value) => setState(() => _search = value),
           filled: true,
           suffixIcon: Assets.icons.search.svg(
             colorFilter: ColorFilter.mode(Palette.textGrey, BlendMode.srcIn),
@@ -352,9 +350,7 @@ class _BankListState extends State<_BankList> {
                   : PotPressable(
                       onTap: () {
                         L.c('selectBank', from: 'selectBank');
-                        widget.onSelectBank(
-                          b,
-                        ); //setState(() => selectedBank = b);
+                        widget.onSelectBank(b);
                       },
                       child: _Bank(bank: b),
                     ),
