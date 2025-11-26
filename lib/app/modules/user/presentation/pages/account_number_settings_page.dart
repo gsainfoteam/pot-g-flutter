@@ -188,7 +188,6 @@ class _SelectBankDialog extends StatefulWidget {
 
 class _SelectBankDialogState extends State<_SelectBankDialog> {
   BankEntity? selectedBank;
-  String _search = '';
 
   @override
   Widget build(BuildContext context) {
@@ -202,16 +201,11 @@ class _SelectBankDialogState extends State<_SelectBankDialog> {
             ? _BankNumber(
                 selectedBank: selectedBank!,
                 onSelectBank: () => setState(() {
-                  _search = '';
                   selectedBank = null;
                 }),
               )
             : _BankList(
-                search: _search,
-                onSearchValueChanged: (value) {
-                  setState(() => _search = value);
-                },
-                onBankSelected: (bank) {
+                onSelectBank: (bank) {
                   setState(() => selectedBank = bank);
                 },
               ),
@@ -247,15 +241,9 @@ class _Bank extends StatelessWidget {
 }
 
 class _BankList extends StatefulWidget {
-  const _BankList({
-    required this.search,
-    required this.onSearchValueChanged,
-    required this.onBankSelected,
-  });
+  const _BankList({required this.onSelectBank});
 
-  final String search;
-  final void Function(String value) onSearchValueChanged;
-  final void Function(BankEntity bank) onBankSelected;
+  final void Function(BankEntity bank) onSelectBank;
 
   @override
   State<_BankList> createState() => _BankListState();
@@ -263,7 +251,8 @@ class _BankList extends StatefulWidget {
 
 class _BankListState extends State<_BankList> {
   final _controller = ScrollController();
-  double pixels = 0;
+  String _search = '';
+  double _pixels = 0;
 
   @override
   initState() {
@@ -278,7 +267,7 @@ class _BankListState extends State<_BankList> {
   }
 
   void _onScroll() {
-    setState(() => pixels = _controller.position.pixels);
+    setState(() => _pixels = _controller.position.pixels);
   }
 
   @override
@@ -292,8 +281,9 @@ class _BankListState extends State<_BankList> {
         ),
         const SizedBox(height: 20),
         PotTextField(
-          onChanged: widget
-              .onSearchValueChanged, //(value) => setState(() => _search = value),
+          onChanged: (value) => setState(
+            () => _search = value,
+          ), //(value) => setState(() => _search = value),
           filled: true,
           suffixIcon: Assets.icons.search.svg(
             colorFilter: ColorFilter.mode(Palette.textGrey, BlendMode.srcIn),
@@ -303,7 +293,7 @@ class _BankListState extends State<_BankList> {
         ),
         const SizedBox(height: 20),
         SizedBox(
-          height: lerpDouble(300, 500, clampDouble(pixels / 100, 0, 1)),
+          height: lerpDouble(300, 500, clampDouble(_pixels / 100, 0, 1)),
           child: BlocBuilder<BankListBloc, BankListState>(
             builder: (context, state) => SingleChildScrollView(
               controller: _controller,
@@ -313,9 +303,9 @@ class _BankListState extends State<_BankList> {
                       .where((b) => !b.isSecurities)
                       .where(
                         (b) =>
-                            widget.search.isEmpty ||
+                            _search.isEmpty ||
                             b.name.toLowerCase().contains(
-                              widget.search.toLowerCase(),
+                              _search.toLowerCase(),
                             ),
                       )
                       .toList()
@@ -331,9 +321,9 @@ class _BankListState extends State<_BankList> {
                       .where((b) => b.isSecurities)
                       .where(
                         (b) =>
-                            widget.search.isEmpty ||
+                            _search.isEmpty ||
                             b.name.toLowerCase().contains(
-                              widget.search.toLowerCase(),
+                              _search.toLowerCase(),
                             ),
                       )
                       .toList()
@@ -362,7 +352,7 @@ class _BankListState extends State<_BankList> {
                   : PotPressable(
                       onTap: () {
                         L.c('selectBank', from: 'selectBank');
-                        widget.onBankSelected(
+                        widget.onSelectBank(
                           b,
                         ); //setState(() => selectedBank = b);
                       },
