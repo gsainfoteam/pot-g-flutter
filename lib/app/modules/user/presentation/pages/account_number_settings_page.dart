@@ -188,9 +188,71 @@ class _SelectBankDialog extends StatefulWidget {
 
 class _SelectBankDialogState extends State<_SelectBankDialog> {
   BankEntity? selectedBank;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (_) {
+        return sl<BankListBloc>()..add(BankListEvent.load());
+      },
+      child: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 300),
+        child: selectedBank != null
+            ? _BankNumber(
+                selectedBank: selectedBank!,
+                onSelectBank: () => setState(() {
+                  selectedBank = null;
+                }),
+              )
+            : _BankList(
+                onSelectBank: (bank) {
+                  setState(() => selectedBank = bank);
+                },
+              ),
+      ),
+    );
+  }
+}
+
+class _Bank extends StatelessWidget {
+  const _Bank({required this.bank});
+
+  final BankEntity bank;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          padding: EdgeInsets.all(8),
+          height: 64,
+          width: 64,
+          decoration: BoxDecoration(
+            border: Border.all(color: Palette.borderGrey),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Image.network(bank.logoUrl),
+        ),
+        const SizedBox(height: 4),
+        Text(bank.name, style: TextStyles.description),
+      ],
+    );
+  }
+}
+
+class _BankList extends StatefulWidget {
+  const _BankList({required this.onSelectBank});
+
+  final void Function(BankEntity bank) onSelectBank;
+
+  @override
+  State<_BankList> createState() => _BankListState();
+}
+
+class _BankListState extends State<_BankList> {
   final _controller = ScrollController();
-  double _pixels = 0;
   String _search = '';
+  double _pixels = 0;
 
   @override
   initState() {
@@ -205,28 +267,11 @@ class _SelectBankDialogState extends State<_SelectBankDialog> {
   }
 
   void _onScroll() {
-    setState(() {
-      _pixels = _controller.position.pixels;
-    });
+    setState(() => _pixels = _controller.position.pixels);
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => sl<BankListBloc>()..add(BankListEvent.load()),
-      child: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 300),
-        child: selectedBank != null
-            ? _BankNumber(
-                selectedBank: selectedBank!,
-                onSelectBank: () => setState(() => selectedBank = null),
-              )
-            : _buildBankList(),
-      ),
-    );
-  }
-
-  Widget _buildBankList() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -305,7 +350,7 @@ class _SelectBankDialogState extends State<_SelectBankDialog> {
                   : PotPressable(
                       onTap: () {
                         L.c('selectBank', from: 'selectBank');
-                        setState(() => selectedBank = b);
+                        widget.onSelectBank(b);
                       },
                       child: _Bank(bank: b),
                     ),
@@ -313,32 +358,6 @@ class _SelectBankDialogState extends State<_SelectBankDialog> {
           )
           .intersperse(const SizedBox(width: 8))
           .toList(),
-    );
-  }
-}
-
-class _Bank extends StatelessWidget {
-  const _Bank({required this.bank});
-
-  final BankEntity bank;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          padding: EdgeInsets.all(8),
-          height: 64,
-          width: 64,
-          decoration: BoxDecoration(
-            border: Border.all(color: Palette.borderGrey),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Image.network(bank.logoUrl),
-        ),
-        const SizedBox(height: 4),
-        Text(bank.name, style: TextStyles.description),
-      ],
     );
   }
 }
