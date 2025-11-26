@@ -23,8 +23,9 @@ platform :ios do
     app_store_connect_api_key(duration: 1200) if ENV['CI']
 
     pubspec = YAML.load_file("../../pubspec.yaml")
+    build_version = pubspec["version"]
     build_number = latest_testflight_build_number + 1
-    version_string = "#{pubspec["version"]} (#{build_number})"
+    version_string = "#{build_version} (#{build_number})"
     UI.message("Building #{pubspec["name"]} #{version_string}")
 
     exportOptionsFilePath = "#{Tempfile.new('exportOptions').path}.plist"
@@ -47,6 +48,7 @@ platform :ios do
     slack(
       payload: {
         "Build Date" => Time.now.to_s,
+        "Build Version" => build_version,
         "Build Number" => build_number,
       }
     ) if ENV['CI']
