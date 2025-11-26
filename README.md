@@ -60,6 +60,23 @@ lib/
 
 Check [Contributing](.github/CONTRIBUTING.md)
 
+### Setup
+
+Use flutter version manager(fvm) or mise
+
+fvm follows `.fvmrc`
+
+for mise user, set `dart.getFlutterSdkCommand` as follows
+
+```json
+{
+  "dart.getFlutterSdkCommand": {
+    "executable": "mise",
+    "args": ["where", "flutter"]
+  }
+}
+```
+
 ## Contributors ✨
 
 Thanks goes to these wonderful people

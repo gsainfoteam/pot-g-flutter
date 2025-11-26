@@ -60,6 +60,23 @@ lib/
 
 [기여 가이드](.github/CONTRIBUTING.md)를 확인해주세요
 
+### 설정
+
+Flutter 버전 관리 도구(fvm) 또는 mise를 사용합니다.
+
+fvm을 사용하는 경우 `.fvmrc`를 따릅니다.
+
+mise를 사용하는 경우 `dart.getFlutterSdkCommand`를 다음과 같이 설정합니다.
+
+```json
+{
+  "dart.getFlutterSdkCommand": {
+    "executable": "mise",
+    "args": ["where", "flutter"]
+  }
+}
+```
+
 ## 기여자 ✨
 
 이 프로젝트에 기여해주신 멋진 분들께 감사드립니다
