@@ -15,7 +15,98 @@ platform :android do
 
   desc "Deploy a new version to the Google Play"
   lane :internal do
+    version_codes = google_play_track_version_codes(track: "internal")default_platform(:android)
+
+platform :android do
+  desc "Test build"
+  lane :test do
+    UI.message("Building for testing")
+    aabPath = "../../build/app/outputs/bundle/debug/app-debug.aab"
+    FileUtils.remove_dir(aabPath) if File.directory?(aabPath)
+
+    sh("flutter", "build", "appbundle", "--debug")
+    unless File.exist?(aabPath)
+      UI.user_error!("Build failed")
+    end
+  end
+
+  desc "Deploy a new version to the Google Play"
+  lane :internal do
     version_codes = google_play_track_version_codes(track: "internal")
+    pubspec = YAML.load_file("../../pubspec.yaml")
+    build_version = pubspec["version"]
+    build_number = version_codes.max + 1
+    version_string = "#{build_version} (#{build_number})"
+    UI.message("Building #{pubspec["name"]} #{version_string}")
+
+    android_app_id = File.open("../../lib/firebase_options.dart").read().match(/appId: '(.*android.*)'/)[1]
+    UI.message("Android App ID: #{android_app_id}")
+    debug_info_path = "build/app/outputs/symbols"
+
+    sh(
+      "flutter", "build", "appbundle",
+      "--obfuscate",
+      "--split-debug-info=#{debug_info_path}",
+      "--release",
+      "--build-number=#{build_number}",
+    )
+
+    begin
+      sh("firebase", "crashlytics:symbols:upload", "--app=#{android_app_id}", "../../#{debug_info_path}")
+    rescue => e
+      UI.message("Ignoring error during Crashlytics symbols upload: #{e.message}")
+    end
+
+    symbols_path = File.expand_path("../../build/app/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib")
+    Dir.chdir(symbols_path) do
+      sh("zip", "-r", "native_symbol.zip", ".")
+    end
+
+    upload_to_play_store(
+      aab: "../build/app/outputs/bundle/release/app-release.aab",
+      track: "internal",
+      version_name: version_string,
+      mapping_paths: [
+        "../build/app/outputs/mapping/release/mapping.txt",
+        "#{symbols_path}/native_symbol.zip",
+      ],
+      skip_upload_metadata: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true,
+    )
+    begin
+      internal_app_url = upload_to_play_store_internal_app_sharing(
+        aab: "../build/app/outputs/bundle/release/app-release.aab",
+      )
+    rescue => e
+      UI.message("Error during internal app sharing upload: #{e.message}")
+      internal_app_url = "Failed"
+    end
+    
+    slack(
+      payload: {
+        "Build Date" => Time.now.to_s,
+        "Build Number" => build_number,
+        "Build Version" => build_version,
+        "Internal App" => internal_app_url == "Failed" ? "Failed" : "<#{internal_app_url}>",
+      }
+    ) if ENV['CI']
+  end
+
+  lane :production do
+    upload_to_play_store(
+      track: "internal",
+      track_promote_to: "production",
+      skip_upload_changelogs: true,
+    )
+    slack(
+      payload: {
+        "Promoted At" => Time.now.to_s,
+      }
+    ) if ENV['CI']
+  end
+end
+
     build_number = version_codes.max + 1
     pubspec = YAML.load_file("../../pubspec.yaml")
     build_version = pubspec['version']
