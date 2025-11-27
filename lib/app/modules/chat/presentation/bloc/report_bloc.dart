@@ -24,14 +24,12 @@ class ReportBloc extends Bloc<ReportSubmitEvent, ReportSubmitState> {
 
     try {
       final detail = (event.reasonDetail ?? '').trim();
-      final reasonPayload = event.reason.requiresDetail
-          ? detail
-          : event.reason.name;
+      final reason = event.reason.requiresDetail ? detail : event.reason.name;
 
       await _repository.submit(
         pot: event.pot,
         target: event.target,
-        reasonKey: reasonPayload,
+        reason: reason,
       );
       emit(state.copyWith(isSubmitting: false, success: true));
     } on ReportException catch (e, stackTrace) {

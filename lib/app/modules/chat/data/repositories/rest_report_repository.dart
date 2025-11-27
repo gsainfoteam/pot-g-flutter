@@ -18,12 +18,12 @@ class RestReportRepository implements ReportRepository {
   Future<void> submit({
     required PotInfoEntity pot,
     required PotUserEntity target,
-    required String reasonKey,
+    required String reason,
   }) async {
     try {
       final result = await _potApi.report(
         pot.id,
-        ReportRequestModel(reportTargetId: target.id, reason: reasonKey),
+        ReportRequestModel(reportTargetId: target.id, reason: reason),
       );
       switch (result.result) {
         case ReportResult.ok:
