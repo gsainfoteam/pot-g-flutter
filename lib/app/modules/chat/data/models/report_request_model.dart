@@ -6,7 +6,7 @@ part 'report_request_model.g.dart';
 @Freezed(toJson: true)
 sealed class ReportRequestModel with _$ReportRequestModel {
   const factory ReportRequestModel({
-    required String userPk,
+    required String reportTargetId,
     required String reason,
   }) = _ReportRequestModel;
 }

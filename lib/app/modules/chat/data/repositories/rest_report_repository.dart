@@ -6,6 +6,7 @@ import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_user_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/exceptions/report_exception.dart';
 import 'package:pot_g/app/modules/chat/domain/repositories/report_repository.dart';
+import 'package:pot_g/app/modules/chat/data/models/report_response_model.dart';
 
 @Injectable(as: ReportRepository)
 class RestReportRepository implements ReportRepository {
@@ -17,13 +18,17 @@ class RestReportRepository implements ReportRepository {
   Future<void> submit({
     required PotInfoEntity pot,
     required PotUserEntity target,
-    required String reasonKey,
+    required String reason,
   }) async {
     try {
-      await _potApi.report(
+      final result = await _potApi.report(
         pot.id,
-        ReportRequestModel(userPk: target.id, reason: reasonKey),
+        ReportRequestModel(reportTargetId: target.id, reason: reason),
       );
+      switch (result.result) {
+        case ReportResult.ok:
+          return;
+      }
     } on DioException catch (e) {
       final message = e.response?.data is Map<String, dynamic>
           ? (e.response?.data['message'] as String?) ??

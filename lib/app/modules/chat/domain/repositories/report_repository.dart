@@ -5,6 +5,6 @@ abstract interface class ReportRepository {
   Future<void> submit({
     required PotInfoEntity pot,
     required PotUserEntity target,
-    required String reasonKey,
+    required String reason,
   });
 }

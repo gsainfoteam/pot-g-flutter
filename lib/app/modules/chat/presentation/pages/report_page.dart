@@ -192,7 +192,7 @@ class _TargetSelect extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final users = pot.getPassengersExceptMe(context);
+    final users = pot.getUsersExceptMe(context);
     return Select<PotUserEntity>(
       items: users,
       selectedItem: selectedTarget,
