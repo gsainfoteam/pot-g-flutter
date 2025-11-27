@@ -25,7 +25,7 @@ platform :ios do
     latest_testflight_version = lane_context[SharedValues::LATEST_TESTFLIGHT_VERSION]
     pubspec = YAML.load_file("../../pubspec.yaml")
     build_version = pubspec["version"]
-    build_number = latest_testflight_build_number + 1
+    build_number =  lane_context[SharedValues::LATEST_TESTFLIGHT_BUILD_NUMBER] + 1
     version_string = "#{build_version} (#{build_number})"
     UI.message("Building #{pubspec["name"]} #{version_string}")
     
