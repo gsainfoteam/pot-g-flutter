@@ -20,10 +20,16 @@ class RestReportRepository implements ReportRepository {
     required String reasonKey,
   }) async {
     try {
-      await _potApi.report(
+      final result = await _potApi.report(
         pot.id,
-        ReportRequestModel(userPk: target.id, reason: reasonKey),
+        ReportRequestModel(reportTargetId: target.id, reason: reasonKey),
       );
+      switch (result.result) {
+        case 'OK':
+          return;
+        default:
+          throw ReportException.unknown(result.result);
+      }
     } on DioException catch (e) {
       final message = e.response?.data is Map<String, dynamic>
           ? (e.response?.data['message'] as String?) ??
