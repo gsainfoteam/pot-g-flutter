@@ -18,4 +18,7 @@ extension PotOverviewEntityX on PotOverviewEntity {
       .users
       .where((u) => u.isInPot && u.id != AuthBloc.userOf(context)?.id)
       .toList();
+  List<PotUserEntity> getUsersExceptMe(BuildContext context) => usersInfo.users
+      .where((u) => u.id != AuthBloc.userOf(context)?.id)
+      .toList();
 }
