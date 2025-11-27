@@ -21,12 +21,17 @@ platform :ios do
     setup_ci if ENV['CI']
     sync_code_signing(type: "appstore", readonly: true)
     app_store_connect_api_key(duration: 1200) if ENV['CI']
-
+    latest_testflight_build_number
+    latest_testflight_version = lane_context[SharedValues::LATEST_TESTFLIGHT_VERSION]
     pubspec = YAML.load_file("../../pubspec.yaml")
     build_version = pubspec["version"]
     build_number = latest_testflight_build_number + 1
     version_string = "#{build_version} (#{build_number})"
     UI.message("Building #{pubspec["name"]} #{version_string}")
+    
+    if latest_testflight_version == build_version
+      UI.user_error!("The build version is identical to the App Store version. Please increment the version.")
+    end
 
     exportOptionsFilePath = "#{Tempfile.new('exportOptions').path}.plist"
     File.write(exportOptionsFilePath, {
