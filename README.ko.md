@@ -2,7 +2,7 @@
 
 [English](README.md) | [한국어](README.ko.md)
 
-[![Flutter Version](https://img.shields.io/badge/Flutter-3.35.5-02569B?logo=flutter&logoColor=white)](https://flutter.dev)
+[![Flutter Version](https://img.shields.io/badge/Flutter-3.38.3-02569B?logo=flutter&logoColor=white)](https://flutter.dev)
 [![build and publish (android, iOS)](https://github.com/gsainfoteam/pot-g-flutter/actions/workflows/upload.yml/badge.svg)](https://github.com/gsainfoteam/pot-g-flutter/actions/workflows/upload.yml)
 [![All Contributors](https://img.shields.io/github/all-contributors/gsainfoteam/pot-g-flutter?color=orange)](#기여자-)
 [![Star on GitHub](https://img.shields.io/github/stars/gsainfoteam/pot-g-flutter?style=social)](https://github.com/gsainfoteam/pot-g-flutter/stargazers)
@@ -59,6 +59,23 @@ lib/
 ## 기여하기
 
 [기여 가이드](.github/CONTRIBUTING.md)를 확인해주세요
+
+### 설정
+
+Flutter 버전 관리 도구(fvm) 또는 mise를 사용합니다.
+
+fvm을 사용하는 경우 `.fvmrc`를 따릅니다.
+
+mise를 사용하는 경우 `dart.getFlutterSdkCommand`를 다음과 같이 설정합니다.
+
+```json
+{
+  "dart.getFlutterSdkCommand": {
+    "executable": "mise",
+    "args": ["where", "flutter"]
+  }
+}
+```
 
 ## 기여자 ✨
 

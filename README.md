@@ -2,7 +2,7 @@
 
 [English](README.md) | [한국어](README.ko.md)
 
-[![Flutter Version](https://img.shields.io/badge/Flutter-3.35.5-02569B?logo=flutter&logoColor=white)](https://flutter.dev)
+[![Flutter Version](https://img.shields.io/badge/Flutter-3.38.3-02569B?logo=flutter&logoColor=white)](https://flutter.dev)
 [![build and publish (android, iOS)](https://github.com/gsainfoteam/pot-g-flutter/actions/workflows/upload.yml/badge.svg)](https://github.com/gsainfoteam/pot-g-flutter/actions/workflows/upload.yml)
 [![All Contributors](https://img.shields.io/github/all-contributors/gsainfoteam/pot-g-flutter?color=orange)](#contributors-)
 [![Star on GitHub](https://img.shields.io/github/stars/gsainfoteam/pot-g-flutter?style=social)](https://github.com/gsainfoteam/pot-g-flutter/stargazers)
@@ -59,6 +59,23 @@ lib/
 ## Contribution
 
 Check [Contributing](.github/CONTRIBUTING.md)
+
+### Setup
+
+Use flutter version manager(fvm) or mise
+
+fvm follows `.fvmrc`
+
+for mise user, set `dart.getFlutterSdkCommand` as follows
+
+```json
+{
+  "dart.getFlutterSdkCommand": {
+    "executable": "mise",
+    "args": ["where", "flutter"]
+  }
+}
+```
 
 ## Contributors ✨
 
