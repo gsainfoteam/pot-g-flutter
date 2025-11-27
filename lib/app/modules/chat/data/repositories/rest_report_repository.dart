@@ -6,6 +6,7 @@ import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_user_entity.dart';
 import 'package:pot_g/app/modules/chat/domain/exceptions/report_exception.dart';
 import 'package:pot_g/app/modules/chat/domain/repositories/report_repository.dart';
+import 'package:pot_g/app/modules/chat/data/models/report_response_model.dart';
 
 @Injectable(as: ReportRepository)
 class RestReportRepository implements ReportRepository {
@@ -25,10 +26,8 @@ class RestReportRepository implements ReportRepository {
         ReportRequestModel(reportTargetId: target.id, reason: reasonKey),
       );
       switch (result.result) {
-        case 'OK':
+        case ReportResult.ok:
           return;
-        default:
-          throw ReportException.unknown(result.result);
       }
     } on DioException catch (e) {
       final message = e.response?.data is Map<String, dynamic>
