@@ -5,8 +5,10 @@ part 'kick_user_response_model.g.dart';
 
 @Freezed(toJson: false)
 sealed class KickUserResponseModel with _$KickUserResponseModel {
-  const factory KickUserResponseModel({required KickUserResult result}) =
-      _KickUserResponseModel;
+  const factory KickUserResponseModel({
+    @JsonKey(unknownEnumValue: KickUserResult.unknown)
+    required KickUserResult result,
+  }) = _KickUserResponseModel;
 
   factory KickUserResponseModel.fromJson(Map<String, dynamic> json) =>
       _$KickUserResponseModelFromJson(json);
@@ -23,4 +25,5 @@ enum KickUserResult {
   notYetPaymentConfirmed,
   potNotExist,
   potAlreadyClosed,
+  unknown,
 }

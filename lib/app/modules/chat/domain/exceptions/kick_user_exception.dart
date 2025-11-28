@@ -13,6 +13,8 @@ sealed class KickUserException implements Exception {
   const factory KickUserException.potNotExist() = PotNotExistException;
   const factory KickUserException.potAlreadyClosed() =
       PotAlreadyClosedException;
+  const factory KickUserException.unknownJsonValue() =
+      UnknownJsonValueException;
   const factory KickUserException.networkError(String error) =
       NetworkErrorException;
   const factory KickUserException.unknown(Object error) = UnknownException;
@@ -58,6 +60,12 @@ class PotAlreadyClosedException extends KickUserException {
   const PotAlreadyClosedException();
   @override
   String toString() => 'KickUserException.PotAlreadyClosedException';
+}
+
+class UnknownJsonValueException extends KickUserException {
+  const UnknownJsonValueException();
+  @override
+  String toString() => 'KickUserException.UnknownJsonValueException';
 }
 
 class NetworkErrorException extends KickUserException {
