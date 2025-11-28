@@ -12,7 +12,7 @@ sealed class KickUserResponseModel with _$KickUserResponseModel {
   }) = _KickUserResponseModel;
 
   factory KickUserResponseModel.fromJson(Map<String, dynamic> json) =>
-      _$KickUserResponseModelFromJson({...json, "value": json["value"]});
+      _$KickUserResponseModelFromJson({...json, "value": json["result"]});
 }
 
 @JsonEnum(fieldRename: FieldRename.pascal)
