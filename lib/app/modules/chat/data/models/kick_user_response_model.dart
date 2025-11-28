@@ -8,10 +8,11 @@ sealed class KickUserResponseModel with _$KickUserResponseModel {
   const factory KickUserResponseModel({
     @JsonKey(unknownEnumValue: KickUserResult.unknown)
     required KickUserResult result,
+    @JsonKey(name: "value", defaultValue: null) String? value,
   }) = _KickUserResponseModel;
 
   factory KickUserResponseModel.fromJson(Map<String, dynamic> json) =>
-      _$KickUserResponseModelFromJson(json);
+      _$KickUserResponseModelFromJson({...json, "value": json["value"]});
 }
 
 @JsonEnum(fieldRename: FieldRename.pascal)

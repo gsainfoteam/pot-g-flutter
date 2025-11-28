@@ -70,7 +70,7 @@ class WebsocketPotActionRepository implements PotActionRepository {
         case KickUserResult.potAlreadyClosed:
           throw KickUserException.potAlreadyClosed();
         case KickUserResult.unknown:
-          throw KickUserException.unknownJsonValue();
+          throw KickUserException.unknownJsonValue(result.value!);
       }
     } on DioException catch (e) {
       throw KickUserException.networkError(e.message ?? e.error.toString());
