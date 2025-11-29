@@ -9,10 +9,8 @@ platform :ios do
     FileUtils.remove_dir(xcarchivePath) if File.directory?(xcarchivePath)
     
     response=Net::HTTP.get(URI("https://itunes.apple.com/lookup?id=6744280856&country=KR"))
-    # response = `curl -s "https://itunes.apple.com/lookup?id=6744280856&country=KR"`
     data=JSON.parse(response)
     latest_app_store_version=data['results'][0]['version']
-    UI.message("#{latest_app_store_version}")
     pubspec = YAML.load_file("../../pubspec.yaml")
     build_version = pubspec["version"]
 
