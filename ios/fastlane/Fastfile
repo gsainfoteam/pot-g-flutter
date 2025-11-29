@@ -3,11 +3,13 @@ default_platform(:ios)
 platform :ios do
   desc "Test build"
   lane :test do
+    require 'net/http'
     require 'json'
     UI.message("Building for testing")
     FileUtils.remove_dir(xcarchivePath) if File.directory?(xcarchivePath)
-  
-    response = `curl -s "https://itunes.apple.com/lookup?id=6744280856&country=KR"`
+    
+    response=Net::HTTP.get(URI("https://itunes.apple.com/lookup?id=6744280856&country=KR"))
+    # response = `curl -s "https://itunes.apple.com/lookup?id=6744280856&country=KR"`
     data=JSON.parse(response)
     latest_app_store_version=data['results'][0]['version']
     UI.message("#{latest_app_store_version}")
