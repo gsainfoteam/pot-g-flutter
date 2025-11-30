@@ -13,7 +13,7 @@ sealed class KickUserException implements Exception {
   const factory KickUserException.potNotExist() = PotNotExistException;
   const factory KickUserException.potAlreadyClosed() =
       PotAlreadyClosedException;
-  const factory KickUserException.unknownResponse(String error) =
+  const factory KickUserException.unknownResponse(Object error) =
       UnknownResponseException;
   const factory KickUserException.networkError(String error) =
       NetworkErrorException;
