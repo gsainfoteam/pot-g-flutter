@@ -56,6 +56,7 @@ class AccountingPage extends StatelessWidget {
                 NotAParticipantException() => errors.not_a_participant,
                 PotNotExistException() => errors.pot_not_exist,
                 PotAlreadyClosedException() => errors.pot_already_closed,
+                UnknownResponseException() => errors.unknown,
                 NetworkErrorException() => errors.network_error,
                 UnknownException() => errors.unknown,
               };

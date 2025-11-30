@@ -70,6 +70,7 @@ class _PotAccountingState extends State<PotAccounting> {
                   errors.not_accounting_requester,
                 PotNotExistException() => errors.pot_not_exist,
                 PotAlreadyClosedException() => errors.pot_already_closed,
+                UnknownResponseException() => errors.unknown,
                 NetworkErrorException() => errors.network_error,
                 UnknownException() => errors.unknown,
               };
