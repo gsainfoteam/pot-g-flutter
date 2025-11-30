@@ -8,9 +8,9 @@ platform :ios do
     UI.message("Building for testing")
     FileUtils.remove_dir(xcarchivePath) if File.directory?(xcarchivePath)
     
-    response=Net::HTTP.get(URI("https://itunes.apple.com/lookup?id=6744280856&country=KR"))
-    data=JSON.parse(response)
-    latest_app_store_version=data['results'][0]['version']
+    response = Net::HTTP.get(URI("https://itunes.apple.com/lookup?id=6744280856&country=KR"))
+    data = JSON.parse(response)
+    latest_app_store_version = data['results'][0]['version']
     pubspec = YAML.load_file("../../pubspec.yaml")
     build_version = pubspec["version"]
 
@@ -35,7 +35,7 @@ platform :ios do
     app_store_connect_api_key(duration: 1200) if ENV['CI']
     pubspec = YAML.load_file("../../pubspec.yaml")
     build_version = pubspec["version"]
-    build_number =  latest_testflight_build_number + 1
+    build_number = latest_testflight_build_number + 1
     version_string = "#{build_version} (#{build_number})"
     UI.message("Building #{pubspec["name"]} #{version_string}")
 
