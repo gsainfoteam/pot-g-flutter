@@ -29,6 +29,8 @@ class RestJoinPotRepository implements JoinPotRepository {
       }
     } on DioException catch (e) {
       throw JoinPotException.networkError(e.error.toString());
+    } on ArgumentError catch (e) {
+      throw JoinPotException.unknownResponse(e.invalidValue);
     }
   }
 }
