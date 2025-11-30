@@ -10,6 +10,8 @@ sealed class DepartureTimeException implements Exception {
       PotAlreadyClosedException;
   const factory DepartureTimeException.notInAvailableTimeRange() =
       NotInAvailableTimeRangeException;
+  const factory DepartureTimeException.unknownResponse(String invalidArgument) =
+      UnknownResponseException;
   const factory DepartureTimeException.networkError(String error) =
       NetworkErrorException;
   const factory DepartureTimeException.unknown(Object error) = UnknownException;
@@ -50,6 +52,14 @@ class NotInAvailableTimeRangeException extends DepartureTimeException {
   @override
   String toString() =>
       'DepartureTimeException.NotInAvailableTimeRangeException';
+}
+
+class UnknownResponseException extends DepartureTimeException {
+  final String invalidArgument;
+  const UnknownResponseException(this.invalidArgument);
+  @override
+  String toString() =>
+      'DepartureTimeException.UnknownResponseException(invalidArgument: $invalidArgument)';
 }
 
 class NetworkErrorException extends DepartureTimeException {
