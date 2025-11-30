@@ -46,6 +46,8 @@ class RestCreatePotRepository implements CreatePotRepository {
       }
     } on DioException catch (e) {
       throw CreatePotException.networkError(e.error.toString());
+    } on ArgumentError catch (e) {
+      throw CreatePotException.unknownResponse(e.invalidValue.toString());
     }
   }
 }

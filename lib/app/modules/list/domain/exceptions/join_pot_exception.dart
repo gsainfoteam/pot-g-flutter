@@ -8,6 +8,8 @@ sealed class JoinPotException implements Exception {
   const factory JoinPotException.potNotExist() = PotNotExistException;
   const factory JoinPotException.potAlreadyClosed() = PotAlreadyClosedException;
   const factory JoinPotException.potFull() = PotFullException;
+  const factory JoinPotException.unknownResponse(String invalidArgument) =
+      UnknownResponseException;
   const factory JoinPotException.networkError(String error) =
       NetworkErrorException;
   const factory JoinPotException.unknown(Object error) = UnknownException;
@@ -35,6 +37,14 @@ class PotFullException extends JoinPotException {
   const PotFullException();
   @override
   String toString() => 'JoinPotException.PotFullException';
+}
+
+class UnknownResponseException extends JoinPotException {
+  final String invalidArgument;
+  const UnknownResponseException(this.invalidArgument);
+  @override
+  String toString() =>
+      'JoinPotException.UnknownResponseException(invalidArgument: $invalidArgument)';
 }
 
 class NetworkErrorException extends JoinPotException {

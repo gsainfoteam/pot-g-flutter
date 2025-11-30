@@ -14,6 +14,8 @@ extension CreateErrorX on CreatePotException {
         return errors.invalid_departure_available_time;
       case TooFarDepartureAvailableTimeException():
         return errors.too_far_departure_available_time;
+      case UnknownResponseException():
+        return errors.unknown;
       case NetworkErrorException():
         return errors.network_error;
       case UnknownException():

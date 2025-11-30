@@ -21,6 +21,8 @@ extension LeavePotExceptionX on leave.LeavePotException {
         return errors.pot_not_exist;
       case leave.PotAlreadyClosedException():
         return errors.pot_already_closed;
+      case leave.UnknownResponseException():
+        return errors.unknown;
       case leave.NetworkErrorException():
         return errors.network_error;
       case leave.UnknownException():
@@ -47,6 +49,8 @@ extension KickUserExceptionX on kick.KickUserException {
         return errors.pot_not_exist;
       case kick.PotAlreadyClosedException():
         return errors.pot_already_closed;
+      case kick.UnknownResponseException():
+        return errors.unknown;
       case kick.NetworkErrorException():
         return errors.network_error;
       case kick.UnknownException():
@@ -71,6 +75,8 @@ extension DepartureTimeExceptionX on departure.DepartureTimeException {
         return errors.pot_already_closed;
       case departure.NotInAvailableTimeRangeException():
         return errors.not_in_available_time_range;
+      case departure.UnknownResponseException():
+        return errors.unknown;
       case departure.NetworkErrorException():
         return errors.network_error;
       case departure.UnknownException():

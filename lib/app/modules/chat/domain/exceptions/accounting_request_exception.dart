@@ -16,7 +16,8 @@ sealed class AccountingRequestException implements Exception {
   const factory AccountingRequestException.potNotExist() = PotNotExistException;
   const factory AccountingRequestException.potAlreadyClosed() =
       PotAlreadyClosedException;
-
+  const factory AccountingRequestException.unknownResponse(String invalidArgument) =
+      UnknownResponseException;
   const factory AccountingRequestException.networkError(String error) =
       NetworkErrorException;
   const factory AccountingRequestException.unknown(Object error) =
@@ -71,6 +72,14 @@ class PotAlreadyClosedException extends AccountingRequestException {
   const PotAlreadyClosedException();
   @override
   String toString() => 'AccountingRequestException.PotAlreadyClosedException';
+}
+
+class UnknownResponseException extends AccountingRequestException {
+  final String invalidArgument;
+  const UnknownResponseException(this.invalidArgument);
+  @override
+  String toString() =>
+      'AccountingRequestException.UnknownResponseException(invalidArgument: $invalidArgument)';
 }
 
 class NetworkErrorException extends AccountingRequestException {

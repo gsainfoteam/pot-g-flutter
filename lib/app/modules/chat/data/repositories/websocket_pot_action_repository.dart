@@ -45,6 +45,8 @@ class WebsocketPotActionRepository implements PotActionRepository {
       throw DepartureTimeException.networkError(
         e.message ?? e.error.toString(),
       );
+    } on ArgumentError catch (e) {
+      throw DepartureTimeException.unknownResponse(e.invalidValue.toString());
     }
   }
 
@@ -72,6 +74,8 @@ class WebsocketPotActionRepository implements PotActionRepository {
       }
     } on DioException catch (e) {
       throw KickUserException.networkError(e.message ?? e.error.toString());
+    } on ArgumentError catch (e) {
+      throw KickUserException.unknownResponse(e.invalidValue.toString());
     }
   }
 
@@ -95,6 +99,8 @@ class WebsocketPotActionRepository implements PotActionRepository {
       }
     } on DioException catch (e) {
       throw LeavePotException.networkError(e.message ?? e.error.toString());
+    } on ArgumentError catch (e) {
+      throw LeavePotException.unknownResponse(e.invalidValue.toString());
     }
   }
 }

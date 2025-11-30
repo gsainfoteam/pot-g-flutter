@@ -8,7 +8,9 @@ sealed class AccountingConfirmException implements Exception {
   const factory AccountingConfirmException.potNotExist() = PotNotExistException;
   const factory AccountingConfirmException.potAlreadyClosed() =
       PotAlreadyClosedException;
-
+  const factory AccountingConfirmException.unknownResponse(
+    String invalidArgument,
+  ) = UnknownResponseException;
   const factory AccountingConfirmException.networkError(String error) =
       NetworkErrorException;
   const factory AccountingConfirmException.unknown(Object error) =
@@ -38,6 +40,14 @@ class PotAlreadyClosedException extends AccountingConfirmException {
   const PotAlreadyClosedException();
   @override
   String toString() => 'AccountingConfirmException.PotAlreadyClosedException';
+}
+
+class UnknownResponseException extends AccountingConfirmException {
+  final String invalidArgument;
+  const UnknownResponseException(this.invalidArgument);
+  @override
+  String toString() =>
+      'AccountingConfirmException.UnknownResponseException(invalidArgument: $invalidArgument)';
 }
 
 class NetworkErrorException extends AccountingConfirmException {

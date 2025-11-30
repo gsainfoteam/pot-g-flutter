@@ -10,6 +10,8 @@ sealed class LeavePotException implements Exception {
   const factory LeavePotException.potNotExist() = PotNotExistException;
   const factory LeavePotException.potAlreadyClosed() =
       PotAlreadyClosedException;
+  const factory LeavePotException.unknownResponse(String invalidArgument) =
+      UnknownResponseException;
   const factory LeavePotException.networkError(String error) =
       NetworkErrorException;
   const factory LeavePotException.unknown(Object error) = UnknownException;
@@ -43,6 +45,13 @@ class PotAlreadyClosedException extends LeavePotException {
   const PotAlreadyClosedException();
   @override
   String toString() => 'LeavePotException.PotAlreadyClosedException';
+}
+
+class UnknownResponseException extends LeavePotException {
+  final String invalidArgument;
+  const UnknownResponseException(this.invalidArgument);
+  @override
+  String toString() => 'LeavePotException.UnknownResponseException(invalidArgument: $invalidArgument)';
 }
 
 class NetworkErrorException extends LeavePotException {

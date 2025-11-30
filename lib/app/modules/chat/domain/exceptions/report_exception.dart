@@ -5,10 +5,29 @@ sealed class ReportException implements Exception {
 
   const factory ReportException.networkError(String error, [String? errorId]) =
       ReportNetworkException;
+  const factory ReportException.unknownResponse(
+    String invalidArgument, [
+    String? errorId,
+  ]) = ReportUnknownResponseException;
   const factory ReportException.unknown(Object error, [String? errorId]) =
       ReportUnknownException;
 
   ReportException withErrorId(String errorId);
+}
+
+class ReportUnknownResponseException extends ReportException {
+  final String invalidArgument;
+  @override
+  final String? errorId;
+  const ReportUnknownResponseException(this.invalidArgument, [this.errorId]);
+
+  @override
+  ReportException withErrorId(String errorId) =>
+      ReportException.unknownResponse(invalidArgument, errorId);
+
+  @override
+  String toString() =>
+      'ReportException.ReportUnknownResponseException(invalidArgument: $invalidArgument, errorId: $errorId)';
 }
 
 class ReportNetworkException extends ReportException {
