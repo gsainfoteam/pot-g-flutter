@@ -14,6 +14,8 @@ extension JoinPotExceptionX on JoinPotException {
         return errors.pot_already_closed;
       case PotFullException():
         return errors.pot_full;
+      case UnknownResponseException():
+        return errors.unknown;
       case NetworkErrorException():
         return errors.network_error;
       case UnknownException():

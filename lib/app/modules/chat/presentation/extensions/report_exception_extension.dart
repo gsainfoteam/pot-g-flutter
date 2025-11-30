@@ -7,6 +7,7 @@ extension ReportExceptionX on ReportException {
     final errors = context.t.chat_room.drawer.actions.report.error;
     final message = switch (this) {
       ReportNetworkException() => errors.network_error,
+      ReportUnknownResponseException() => errors.unknown,
       ReportUnknownException() => errors.unknown,
     };
     return '$message ($errorId)';
