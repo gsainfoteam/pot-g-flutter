@@ -73,7 +73,7 @@ class WebsocketPotActionRepository implements PotActionRepository {
     } on DioException catch (e) {
       throw KickUserException.networkError(e.message ?? e.error.toString());
     } on ArgumentError catch (e) {
-      throw KickUserException.unknownResponse(e.message ?? e.toString());
+      throw KickUserException.unknownResponse(e.invalidValue);
     }
   }
 

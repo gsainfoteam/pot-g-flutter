@@ -13,7 +13,7 @@ sealed class KickUserException implements Exception {
   const factory KickUserException.potNotExist() = PotNotExistException;
   const factory KickUserException.potAlreadyClosed() =
       PotAlreadyClosedException;
-  const factory KickUserException.unknownResponse(Object error) =
+  const factory KickUserException.unknownResponse(String invalidArgument) =
       UnknownResponseException;
   const factory KickUserException.networkError(String error) =
       NetworkErrorException;
@@ -63,12 +63,11 @@ class PotAlreadyClosedException extends KickUserException {
 }
 
 class UnknownResponseException extends KickUserException {
-  final Object error;
-  const UnknownResponseException(this.error);
+  final String invalidArgument;
+  const UnknownResponseException(this.invalidArgument);
   @override
-  String toString() => kDebugMode
-      ? 'KickUserException.UnknownResponseException(error: $error)'
-      : 'KickUserException.UnknownResponseException';
+  String toString() =>
+      'KickUserException.UnknownResponseException(invalid argument: $invalidArgument)';
 }
 
 class NetworkErrorException extends KickUserException {
