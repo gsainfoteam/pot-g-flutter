@@ -5,14 +5,11 @@ part 'kick_user_response_model.g.dart';
 
 @Freezed(toJson: false)
 sealed class KickUserResponseModel with _$KickUserResponseModel {
-  const factory KickUserResponseModel({
-    @JsonKey(unknownEnumValue: KickUserResult.unknown)
-    required KickUserResult result,
-    @JsonKey(name: "value", defaultValue: null) String? value,
-  }) = _KickUserResponseModel;
+  const factory KickUserResponseModel({required KickUserResult result}) =
+      _KickUserResponseModel;
 
   factory KickUserResponseModel.fromJson(Map<String, dynamic> json) =>
-      _$KickUserResponseModelFromJson({...json, "value": json["result"]});
+      _$KickUserResponseModelFromJson(json);
 }
 
 @JsonEnum(fieldRename: FieldRename.pascal)
@@ -26,5 +23,4 @@ enum KickUserResult {
   notYetPaymentConfirmed,
   potNotExist,
   potAlreadyClosed,
-  unknown,
 }

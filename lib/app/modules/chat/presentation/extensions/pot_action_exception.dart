@@ -47,8 +47,6 @@ extension KickUserExceptionX on kick.KickUserException {
         return errors.pot_not_exist;
       case kick.PotAlreadyClosedException():
         return errors.pot_already_closed;
-      case kick.UnknownJsonValueException():
-        return errors.unknown;
       case kick.NetworkErrorException():
         return errors.network_error;
       case kick.UnknownException():
