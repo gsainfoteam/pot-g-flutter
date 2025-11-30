@@ -60,7 +60,9 @@ class WebsocketPotAccountingRepository implements PotAccountingRepository {
         e.message ?? e.error.toString(),
       );
     } on ArgumentError catch (e) {
-      throw AccountingRequestException.unknownResponse(e.invalidValue);
+      throw AccountingRequestException.unknownResponse(
+        e.invalidValue.toString(),
+      );
     }
   }
 
@@ -93,7 +95,9 @@ class WebsocketPotAccountingRepository implements PotAccountingRepository {
         e.message ?? e.error.toString(),
       );
     } on ArgumentError catch (e) {
-      throw AccountingConfirmException.unknownResponse(e.invalidValue);
+      throw AccountingConfirmException.unknownResponse(
+        e.invalidValue.toString(),
+      );
     }
   }
 

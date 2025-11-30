@@ -36,7 +36,7 @@ class RestReportRepository implements ReportRepository {
           : e.message ?? 'Network error';
       throw ReportException.networkError(message);
     } on ArgumentError catch (e) {
-      throw ReportException.unknownResponse(e.invalidValue);
+      throw ReportException.unknownResponse(e.invalidValue.toString());
     } catch (e) {
       throw ReportException.unknown(e);
     }
