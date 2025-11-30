@@ -3,8 +3,20 @@ default_platform(:ios)
 platform :ios do
   desc "Test build"
   lane :test do
+    require 'net/http'
+    require 'json'
     UI.message("Building for testing")
     FileUtils.remove_dir(xcarchivePath) if File.directory?(xcarchivePath)
+    
+    response = Net::HTTP.get(URI("https://itunes.apple.com/lookup?id=6744280856&country=KR"))
+    data = JSON.parse(response)
+    latest_app_store_version = data['results'][0]['version']
+    pubspec = YAML.load_file("../../pubspec.yaml")
+    build_version = pubspec["version"]
+
+    if latest_app_store_version == build_version
+      UI.user_error!("The build version is identical to the App Store version. Please increment the version.")
+    end
 
     sh(
       "flutter", "build", "ipa",
@@ -21,7 +33,6 @@ platform :ios do
     setup_ci if ENV['CI']
     sync_code_signing(type: "appstore", readonly: true)
     app_store_connect_api_key(duration: 1200) if ENV['CI']
-
     pubspec = YAML.load_file("../../pubspec.yaml")
     build_version = pubspec["version"]
     build_number = latest_testflight_build_number + 1
