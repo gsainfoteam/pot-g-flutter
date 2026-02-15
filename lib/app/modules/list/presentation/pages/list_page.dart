@@ -1,5 +1,4 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -10,9 +9,6 @@ import 'package:pot_g/app/modules/common/presentation/utils/log_page.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_app_bar.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_button.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_logo.dart';
-import 'package:pot_g/app/modules/core/data/models/pot_model.dart';
-import 'package:pot_g/app/modules/core/data/models/route_model.dart';
-import 'package:pot_g/app/modules/core/data/models/stop_model.dart';
 import 'package:pot_g/app/modules/core/domain/entities/pot_summary_entity.dart';
 import 'package:pot_g/app/modules/core/presentation/widgets/hidden_menu_button.dart';
 import 'package:pot_g/app/modules/list/presentation/bloc/list_cubit.dart';
@@ -41,83 +37,6 @@ final _listBannerEntries = [
     ),
   ),
 ];
-
-/// 디버그 모드에서만 사용하는 목업 팟 리스트.
-List<PotSummaryEntity> get _mockPotsForDebug {
-  final now = DateTime.now();
-  const uSquare = StopModel(id: '1', name: '유스퀘어', lat: 0, lng: 0);
-  const gist = StopModel(id: '2', name: '지스트', lat: 0, lng: 0);
-  const station = StopModel(id: '3', name: '송정역', lat: 0, lng: 0);
-  const giToU = RouteModel(id: '1', from: gist, to: uSquare);
-  const uToGi = RouteModel(id: '2', from: uSquare, to: gist);
-  const songToGi = RouteModel(id: '3', from: station, to: gist);
-
-  return [
-    PotModel(
-      id: 'm1',
-      name: '목업 팟 1',
-      route: giToU,
-      startsAt: now.copyWith(hour: 8, minute: 0),
-      endsAt: now.copyWith(hour: 9, minute: 30),
-      current: 2,
-      total: 4,
-    ),
-    PotModel(
-      id: 'm2',
-      name: '목업 팟 2',
-      route: giToU,
-      startsAt: now.copyWith(hour: 10, minute: 0),
-      endsAt: now.copyWith(hour: 11, minute: 0),
-      current: 4,
-      total: 4,
-    ),
-    PotModel(
-      id: 'm3',
-      name: '목업 팟 3',
-      route: uToGi,
-      startsAt: now.copyWith(hour: 13, minute: 10),
-      endsAt: now.copyWith(hour: 14, minute: 0),
-      current: 1,
-      total: 4,
-    ),
-    PotModel(
-      id: 'm4',
-      name: '목업 팟 4',
-      route: uToGi,
-      startsAt: now.copyWith(hour: 18, minute: 0),
-      endsAt: now.copyWith(hour: 19, minute: 30),
-      current: 3,
-      total: 4,
-    ),
-    PotModel(
-      id: 'm5',
-      name: '목업 팟 5',
-      route: songToGi,
-      startsAt: now.add(const Duration(days: 1)).copyWith(hour: 8, minute: 0),
-      endsAt: now.add(const Duration(days: 1)).copyWith(hour: 9, minute: 0),
-      current: 2,
-      total: 4,
-    ),
-    PotModel(
-      id: 'm6',
-      name: '목업 팟 6',
-      route: songToGi,
-      startsAt: now.add(const Duration(days: 1)).copyWith(hour: 12, minute: 0),
-      endsAt: now.add(const Duration(days: 1)).copyWith(hour: 13, minute: 30),
-      current: 4,
-      total: 4,
-    ),
-    PotModel(
-      id: 'm7',
-      name: '목업 팟 7',
-      route: giToU,
-      startsAt: now.add(const Duration(days: 2)).copyWith(hour: 9, minute: 0),
-      endsAt: now.add(const Duration(days: 2)).copyWith(hour: 10, minute: 0),
-      current: 3,
-      total: 4,
-    ),
-  ];
-}
 
 @RoutePage()
 class ListPage extends StatelessWidget with LogPage {
@@ -162,30 +81,28 @@ class _Layout extends StatelessWidget {
                 child: Container(
                   color: Palette.lightGrey,
                   child: BlocBuilder<PotListBloc, PotListState>(
-                    builder: (context, state) {
-                      final pots = kDebugMode ? _mockPotsForDebug : state.pots;
-                      if (pots.isEmpty) {
-                        if (state.isLoading && !kDebugMode) {
-                          return const Center(
-                            child: CircularProgressIndicator.adaptive(),
-                          );
-                        }
-                        return _Refresh(
-                          child: CustomScrollView(
-                            physics: const AlwaysScrollableScrollPhysics(),
-                            slivers: [
-                              SliverToBoxAdapter(
-                                child: BannerCarousel(
-                                  banners: _listBannerEntries,
-                                ),
-                              ),
-                              const SliverFillRemaining(child: _EmptyScreen()),
-                            ],
-                          ),
-                        );
-                      }
-                      return _ListView(pots: pots);
-                    },
+                    builder: (context, state) => state.pots.isEmpty
+                        ? state.isLoading
+                              ? const Center(
+                                  child: CircularProgressIndicator.adaptive(),
+                                )
+                              : _Refresh(
+                                  child: CustomScrollView(
+                                    physics:
+                                        const AlwaysScrollableScrollPhysics(),
+                                    slivers: [
+                                      SliverToBoxAdapter(
+                                        child: BannerCarousel(
+                                          banners: _listBannerEntries,
+                                        ),
+                                      ),
+                                      const SliverFillRemaining(
+                                        child: _EmptyScreen(),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                        : _ListView(pots: state.pots),
                   ),
                 ),
               ),
@@ -258,11 +175,10 @@ class _ListViewState extends State<_ListView> {
                   final isSameDay = previousPot == null
                       ? false
                       : pot.startsAt.isSameDay(previousPot.startsAt);
-                  final version = kDebugMode ? 2 : 1;
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      if (!isSameDay && version >= 2) ...[
+                      if (!isSameDay) ...[
                         Row(
                           children: [
                             Text(
