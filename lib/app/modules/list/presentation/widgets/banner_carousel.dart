@@ -7,10 +7,10 @@ class BannerCarousel extends StatefulWidget {
   const BannerCarousel({
     super.key,
     required this.banners,
-    this.height = 56,
+    this.height = 70,
     this.horizontalPadding = 16,
-    this.verticalPadding = 8,
-    this.autoScrollDuration = const Duration(seconds: 3),
+    this.verticalPadding = 16,
+    this.autoScrollDuration = const Duration(seconds: 5),
     this.borderRadius = 12,
   });
 
