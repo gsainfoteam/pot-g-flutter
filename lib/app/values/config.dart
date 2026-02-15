@@ -13,7 +13,7 @@ abstract class Config {
   static const String idpRedirectScheme = _Config.idpRedirectScheme;
   @EnviedField(defaultValue: 'pot-g-idp-login-redirect://callback')
   static const String idpRedirectUri = _Config.idpRedirectUri;
-  @EnviedField(defaultValue: 'https://api.idp.gistory.me/')
+  @EnviedField(defaultValue: 'https://api.account.gistory.me/')
   static const String idpApiBaseUrl = _Config.idpApiBaseUrl;
   @EnviedField(defaultValue: 'market://details?id=me.gistory.pot_g')
   static const String playStoreUrl = _Config.playStoreUrl;

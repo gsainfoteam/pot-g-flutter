@@ -27,18 +27,19 @@ class WebAuth2OauthRepository implements OAuthRepository {
 
     final scopes = ['profile', 'email', 'offline_access'];
     final prompt = recentLogout ? 'login' : 'consent';
-    final authorizeUri = Uri.parse('https://idp.gistory.me/authorize').replace(
-      queryParameters: {
-        'client_id': clientId,
-        'redirect_uri': Config.idpRedirectUri,
-        'scope': scopes.join(' '),
-        'response_type': 'code',
-        'state': state,
-        'code_challenge': codeChallenge,
-        'code_challenge_method': 'S256',
-        'prompt': prompt,
-      },
-    );
+    final authorizeUri = Uri.parse('https://account.gistory.me/authorize')
+        .replace(
+          queryParameters: {
+            'client_id': clientId,
+            'redirect_uri': Config.idpRedirectUri,
+            'scope': scopes.join(' '),
+            'response_type': 'code',
+            'state': state,
+            'code_challenge': codeChallenge,
+            'code_challenge_method': 'S256',
+            'prompt': prompt,
+          },
+        );
 
     try {
       final result = await FlutterWebAuth2.authenticate(
