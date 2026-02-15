@@ -15,6 +15,7 @@ import 'package:pot_g/app/modules/core/presentation/widgets/hidden_menu_button.d
 import 'package:pot_g/app/modules/list/presentation/bloc/list_cubit.dart';
 import 'package:pot_g/app/modules/list/presentation/bloc/pot_list_bloc.dart';
 import 'package:pot_g/app/modules/list/presentation/pages/list_filter.dart';
+import 'package:pot_g/app/modules/list/presentation/widgets/banner_carousel.dart';
 import 'package:pot_g/app/modules/list/presentation/widgets/panel_draggable.dart';
 import 'package:pot_g/app/modules/list/presentation/widgets/pot_list_item.dart';
 import 'package:pot_g/app/router.gr.dart';
@@ -22,6 +23,11 @@ import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
 import 'package:pot_g/gen/assets.gen.dart';
 import 'package:pot_g/gen/strings.g.dart';
+
+final _listBannerAssets = [
+  Assets.images.bannerZiggle,
+  Assets.images.bannerInfoteam,
+];
 
 @RoutePage()
 class ListPage extends StatelessWidget with LogPage {
@@ -65,24 +71,33 @@ class _Layout extends StatelessWidget {
               Positioned.fill(
                 child: Container(
                   color: Palette.lightGrey,
-                  child: BlocBuilder<PotListBloc, PotListState>(
-                    builder: (context, state) => state.pots.isEmpty
-                        ? state.isLoading
-                              ? const Center(
-                                  child: CircularProgressIndicator.adaptive(),
-                                )
-                              : _Refresh(
-                                  child: CustomScrollView(
-                                    physics:
-                                        const AlwaysScrollableScrollPhysics(),
-                                    slivers: [
-                                      SliverFillRemaining(
-                                        child: _EmptyScreen(),
-                                      ),
-                                    ],
-                                  ),
-                                )
-                        : _ListView(pots: state.pots),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      BannerCarousel(banners: _listBannerAssets),
+                      Expanded(
+                        child: BlocBuilder<PotListBloc, PotListState>(
+                          builder: (context, state) => state.pots.isEmpty
+                              ? state.isLoading
+                                    ? const Center(
+                                        child:
+                                            CircularProgressIndicator.adaptive(),
+                                      )
+                                    : _Refresh(
+                                        child: CustomScrollView(
+                                          physics:
+                                              const AlwaysScrollableScrollPhysics(),
+                                          slivers: [
+                                            SliverFillRemaining(
+                                              child: _EmptyScreen(),
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                              : _ListView(pots: state.pots),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
