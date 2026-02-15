@@ -26,10 +26,20 @@ import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
 import 'package:pot_g/gen/assets.gen.dart';
 import 'package:pot_g/gen/strings.g.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
-final _listBannerAssets = [
-  Assets.images.bannerZiggle,
-  Assets.images.bannerInfoteam,
+final _listBannerEntries = [
+  BannerEntry(
+    asset: Assets.images.bannerZiggle,
+    onTap: () =>
+        launchUrlString('https://ziggle.gistory.me/app?redirect=/home'),
+  ),
+  BannerEntry(
+    asset: Assets.images.bannerInfoteam,
+    onTap: () => launchUrlString(
+      'https://infoteam-rulrudino.notion.site/2fb365ea27df8061ae1cdd7067d31580?pvs=105',
+    ),
+  ),
 ];
 
 /// 디버그 모드에서만 사용하는 목업 팟 리스트.
@@ -166,7 +176,7 @@ class _Layout extends StatelessWidget {
                             slivers: [
                               SliverToBoxAdapter(
                                 child: BannerCarousel(
-                                  banners: _listBannerAssets,
+                                  banners: _listBannerEntries,
                                 ),
                               ),
                               const SliverFillRemaining(child: _EmptyScreen()),
@@ -234,7 +244,9 @@ class _ListViewState extends State<_ListView> {
         controller: _scrollController,
         physics: const AlwaysScrollableScrollPhysics(),
         slivers: [
-          SliverToBoxAdapter(child: BannerCarousel(banners: _listBannerAssets)),
+          SliverToBoxAdapter(
+            child: BannerCarousel(banners: _listBannerEntries),
+          ),
           SliverPadding(
             padding: EdgeInsets.fromLTRB(16, 0, 16, bottomPadding),
             sliver: SliverList.builder(

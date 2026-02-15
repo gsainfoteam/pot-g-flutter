@@ -3,6 +3,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:pot_g/gen/assets.gen.dart';
 
+class BannerEntry {
+  const BannerEntry({required this.asset, this.onTap});
+
+  final SvgGenImage asset;
+  final VoidCallback? onTap;
+}
+
 class BannerCarousel extends StatefulWidget {
   const BannerCarousel({
     super.key,
@@ -14,7 +21,7 @@ class BannerCarousel extends StatefulWidget {
     this.borderRadius = 12,
   });
 
-  final List<SvgGenImage> banners;
+  final List<BannerEntry> banners;
   final double height;
   final double horizontalPadding;
   final double verticalPadding;
@@ -63,7 +70,7 @@ class _BannerCarouselState extends State<BannerCarousel> {
 
     final content = banners.length == 1
         ? _BannerItem(
-            asset: banners.first,
+            entry: banners.first,
             height: widget.height,
             borderRadius: widget.borderRadius,
           )
@@ -73,7 +80,7 @@ class _BannerCarouselState extends State<BannerCarousel> {
               controller: _pageController,
               itemCount: banners.length,
               itemBuilder: (context, index) => _BannerItem(
-                asset: banners[index],
+                entry: banners[index],
                 height: widget.height,
                 borderRadius: widget.borderRadius,
               ),
@@ -92,24 +99,33 @@ class _BannerCarouselState extends State<BannerCarousel> {
 
 class _BannerItem extends StatelessWidget {
   const _BannerItem({
-    required this.asset,
+    required this.entry,
     required this.height,
     required this.borderRadius,
   });
 
-  final SvgGenImage asset;
+  final BannerEntry entry;
   final double height;
   final double borderRadius;
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
+    final content = ClipRRect(
       borderRadius: BorderRadius.circular(borderRadius),
       child: SizedBox(
         height: height,
         width: double.infinity,
-        child: asset.svg(fit: BoxFit.cover),
+        child: entry.asset.svg(fit: BoxFit.cover),
       ),
+    );
+
+    final onTap = entry.onTap;
+    if (onTap == null) return content;
+
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: content,
     );
   }
 }
