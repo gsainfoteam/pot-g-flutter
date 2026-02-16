@@ -1,5 +1,4 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -15,6 +14,7 @@ import 'package:pot_g/app/modules/core/presentation/widgets/hidden_menu_button.d
 import 'package:pot_g/app/modules/list/presentation/bloc/list_cubit.dart';
 import 'package:pot_g/app/modules/list/presentation/bloc/pot_list_bloc.dart';
 import 'package:pot_g/app/modules/list/presentation/pages/list_filter.dart';
+import 'package:pot_g/app/modules/list/presentation/widgets/banner_carousel.dart';
 import 'package:pot_g/app/modules/list/presentation/widgets/panel_draggable.dart';
 import 'package:pot_g/app/modules/list/presentation/widgets/pot_list_item.dart';
 import 'package:pot_g/app/router.gr.dart';
@@ -22,6 +22,21 @@ import 'package:pot_g/app/values/palette.dart';
 import 'package:pot_g/app/values/text_styles.dart';
 import 'package:pot_g/gen/assets.gen.dart';
 import 'package:pot_g/gen/strings.g.dart';
+import 'package:url_launcher/url_launcher_string.dart';
+
+final _listBannerEntries = [
+  BannerEntry(
+    asset: Assets.images.bannerZiggle,
+    onTap: () =>
+        launchUrlString('https://ziggle.gistory.me/app?redirect=/home'),
+  ),
+  BannerEntry(
+    asset: Assets.images.bannerInfoteam,
+    onTap: () => launchUrlString(
+      'https://infoteam-rulrudino.notion.site/2fb365ea27df8061ae1cdd7067d31580?pvs=105',
+    ),
+  ),
+];
 
 @RoutePage()
 class ListPage extends StatelessWidget with LogPage {
@@ -76,7 +91,12 @@ class _Layout extends StatelessWidget {
                                     physics:
                                         const AlwaysScrollableScrollPhysics(),
                                     slivers: [
-                                      SliverFillRemaining(
+                                      SliverToBoxAdapter(
+                                        child: BannerCarousel(
+                                          banners: _listBannerEntries,
+                                        ),
+                                      ),
+                                      const SliverFillRemaining(
                                         child: _EmptyScreen(),
                                       ),
                                     ],
@@ -135,74 +155,83 @@ class _ListViewState extends State<_ListView> {
 
   @override
   Widget build(BuildContext context) {
+    final bottomPadding = MediaQuery.of(context).size.height * 0.4;
     return _Refresh(
-      child: ListView.builder(
+      child: CustomScrollView(
         controller: _scrollController,
         physics: const AlwaysScrollableScrollPhysics(),
-        padding: EdgeInsets.fromLTRB(
-          16,
-          20,
-          16,
-          MediaQuery.of(context).size.height * 0.4,
-        ),
-        itemCount: widget.pots.length + 1, // +1 for loading indicator
-        itemBuilder: (context, index) {
-          if (index < widget.pots.length) {
-            final pot = widget.pots[index];
-            final previousPot = index > 0 ? widget.pots[index - 1] : null;
-            final isSameDay = previousPot == null
-                ? false
-                : pot.startsAt.isSameDay(previousPot.startsAt);
-            final version = kDebugMode ? 2 : 1;
-            return Column(
-              children: [
-                if (!isSameDay && version >= 2) ...[
-                  Row(
+        slivers: [
+          SliverToBoxAdapter(
+            child: BannerCarousel(banners: _listBannerEntries),
+          ),
+          SliverPadding(
+            padding: EdgeInsets.fromLTRB(16, 0, 16, bottomPadding),
+            sliver: SliverList.builder(
+              itemCount: widget.pots.length + 1,
+              itemBuilder: (context, index) {
+                if (index < widget.pots.length) {
+                  final pot = widget.pots[index];
+                  final previousPot = index > 0 ? widget.pots[index - 1] : null;
+                  final isSameDay = previousPot == null
+                      ? false
+                      : pot.startsAt.isSameDay(previousPot.startsAt);
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Text(
-                        DateFormat.yMd().add_E().format(pot.startsAt),
-                        style: TextStyles.caption.copyWith(
-                          color: Palette.textGrey,
+                      if (!isSameDay) ...[
+                        Row(
+                          children: [
+                            Text(
+                              DateFormat.yMd().add_E().format(pot.startsAt),
+                              style: TextStyles.caption.copyWith(
+                                color: Palette.textGrey,
+                              ),
+                            ),
+                            const SizedBox(width: 4),
+                            Expanded(
+                              child: Container(
+                                height: 1,
+                                color: Palette.textGrey,
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                      const SizedBox(width: 4),
-                      Expanded(
-                        child: Container(height: 1, color: Palette.textGrey),
-                      ),
+                        const SizedBox(height: 16),
+                      ],
+                      PotListItem(pot: pot),
+                      const SizedBox(height: 15),
                     ],
-                  ),
-                  const SizedBox(height: 16),
-                ],
-                PotListItem(pot: pot),
-                const SizedBox(height: 15),
-              ],
-            );
-          } else {
-            return BlocBuilder<PotListBloc, PotListState>(
-              builder: (context, state) {
-                if (state.isLoading) {
-                  return const Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: Center(child: CircularProgressIndicator.adaptive()),
                   );
                 }
-                if (state.endReached) {
-                  return Padding(
-                    padding: const EdgeInsets.only(top: 8, bottom: 32),
-                    child: Text(
-                      context.t.list.reached_all,
-                      style: TextStyles.description.copyWith(
-                        color: Palette.grey,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  );
-                }
-                return const SizedBox.shrink();
+                return BlocBuilder<PotListBloc, PotListState>(
+                  builder: (context, state) {
+                    if (state.isLoading) {
+                      return const Padding(
+                        padding: EdgeInsets.all(16.0),
+                        child: Center(
+                          child: CircularProgressIndicator.adaptive(),
+                        ),
+                      );
+                    }
+                    if (state.endReached) {
+                      return Padding(
+                        padding: const EdgeInsets.only(top: 8, bottom: 32),
+                        child: Text(
+                          context.t.list.reached_all,
+                          style: TextStyles.description.copyWith(
+                            color: Palette.grey,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      );
+                    }
+                    return const SizedBox.shrink();
+                  },
+                );
               },
-            );
-          }
-        },
+            ),
+          ),
+        ],
       ),
     );
   }
