@@ -40,22 +40,28 @@ class _BannerCarouselState extends State<BannerCarousel> {
   void initState() {
     super.initState();
     _pageController = PageController();
-    _startTimerIfNeeded();
+    if (widget.banners.length > 1) {
+      _timer = Timer.periodic(widget.autoScrollDuration, (_) => _nextPage());
+    }
   }
 
   @override
   void didUpdateWidget(covariant BannerCarousel oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.banners.length != widget.banners.length) {
-      _timer?.cancel();
-      _timer = null;
-      _startTimerIfNeeded();
-    }
-  }
+    final oldLength = oldWidget.banners.length;
+    final newLength = widget.banners.length;
 
-  void _startTimerIfNeeded() {
-    if (widget.banners.length > 1) {
-      _timer = Timer.periodic(widget.autoScrollDuration, (_) => _nextPage());
+    if (oldLength != newLength) {
+      if (_pageController.hasClients && widget.banners.isNotEmpty) {
+        _pageController.jumpToPage(0);
+      }
+
+      if (newLength <= 1) {
+        _timer?.cancel();
+        _timer = null;
+      } else if (oldLength <= 1) {
+        _timer = Timer.periodic(widget.autoScrollDuration, (_) => _nextPage());
+      }
     }
   }
 
