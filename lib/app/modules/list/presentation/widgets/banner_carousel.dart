@@ -40,6 +40,20 @@ class _BannerCarouselState extends State<BannerCarousel> {
   void initState() {
     super.initState();
     _pageController = PageController();
+    _startTimerIfNeeded();
+  }
+
+  @override
+  void didUpdateWidget(covariant BannerCarousel oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.banners.length != widget.banners.length) {
+      _timer?.cancel();
+      _timer = null;
+      _startTimerIfNeeded();
+    }
+  }
+
+  void _startTimerIfNeeded() {
     if (widget.banners.length > 1) {
       _timer = Timer.periodic(widget.autoScrollDuration, (_) => _nextPage());
     }
@@ -68,31 +82,26 @@ class _BannerCarouselState extends State<BannerCarousel> {
     final banners = widget.banners;
     if (banners.isEmpty) return const SizedBox.shrink();
 
-    final content = banners.length == 1
-        ? _BannerItem(
-            entry: banners.first,
-            height: widget.height,
-            borderRadius: widget.borderRadius,
-          )
-        : SizedBox(
-            height: widget.height,
-            child: PageView.builder(
-              controller: _pageController,
-              itemCount: banners.length,
-              itemBuilder: (context, index) => _BannerItem(
-                entry: banners[index],
-                height: widget.height,
-                borderRadius: widget.borderRadius,
-              ),
-            ),
-          );
-
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: widget.horizontalPadding,
         vertical: widget.verticalPadding,
       ),
-      child: content,
+      child: SizedBox(
+        height: widget.height,
+        child: PageView.builder(
+          controller: _pageController,
+          physics: banners.length == 1
+              ? const NeverScrollableScrollPhysics()
+              : null,
+          itemCount: banners.length,
+          itemBuilder: (context, index) => _BannerItem(
+            entry: banners[index],
+            height: widget.height,
+            borderRadius: widget.borderRadius,
+          ),
+        ),
+      ),
     );
   }
 }
