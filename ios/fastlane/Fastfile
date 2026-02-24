@@ -91,6 +91,7 @@ platform :ios do
         add_id_info_uses_idfa: false,
       },
       reject_if_possible: true,
+      age_assurance: 'none'
     )
     slack(
       payload: {
