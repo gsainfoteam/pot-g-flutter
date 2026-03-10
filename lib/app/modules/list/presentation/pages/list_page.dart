@@ -30,12 +30,6 @@ final _listBannerEntries = [
     onTap: () =>
         launchUrlString('https://ziggle.gistory.me/app?redirect=/home'),
   ),
-  BannerEntry(
-    asset: Assets.images.bannerInfoteam,
-    onTap: () => launchUrlString(
-      'https://www.notion.so/infoteam-rulrudino/2026-309365ea27df80488137d0680fd51686?source=copy_link',
-    ),
-  ),
 ];
 
 @RoutePage()
