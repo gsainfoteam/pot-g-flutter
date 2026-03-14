@@ -55,8 +55,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       );
       return stream;
     } catch (e, stackTrace) {
-      L.e(e, stackTrace);
-      emit(state.copyWith(isLoading: false, error: e.toString()));
+      final errorId = L.e(e, stackTrace);
+      emit(state.copyWith(isLoading: false, error: errorId));
     } finally {
       _mutex.release();
     }
@@ -79,13 +79,13 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         ),
       );
     } catch (e, stackTrace) {
-      L.e(e, stackTrace);
+      final errorId = L.e(e, stackTrace);
       emit(
         state.copyWith(
           isLoading: false,
-          error: e.toString(),
+          error: errorId,
           pendingChats: state.pendingChats
-              .map((c) => c.id == chat.id ? chat.withError(e.toString()) : c)
+              .map((c) => c.id == chat.id ? chat.withError(errorId) : c)
               .toList(),
         ),
       );
@@ -110,12 +110,12 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         ),
       );
     } catch (e, stackTrace) {
-      L.e(e, stackTrace);
+      final errorId = L.e(e, stackTrace);
       emit(
         state.copyWith(
-          error: e.toString(),
+          error: errorId,
           pendingChats: state.pendingChats
-              .map((c) => c.id == chat.id ? chat.withError(e.toString()) : c)
+              .map((c) => c.id == chat.id ? chat.withError(errorId) : c)
               .toList(),
         ),
       );

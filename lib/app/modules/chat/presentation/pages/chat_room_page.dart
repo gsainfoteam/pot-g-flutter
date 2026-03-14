@@ -80,7 +80,9 @@ class ChatRoomPage extends StatelessWidget with LogPage {
           BlocListener<ChatBloc, ChatState>(
             listenWhen: (prev, curr) =>
                 prev.error != curr.error && curr.error != null,
-            listener: (context, state) => context.showToast(state.error!),
+            listener: (context, state) => context.showToast(
+              '${context.t.common.unknown_error} (${state.error!})',
+            ),
           ),
           BlocListener<PotActionBloc, PotActionState>(
             listener: (context, state) {
