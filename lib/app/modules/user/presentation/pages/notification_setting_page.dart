@@ -157,7 +157,11 @@ class _NotificationSettingPageState extends State<_NotificationSettingPage>
                   ],
                 );
               },
-              error: (e) => Center(child: Text('Error: ${e.message}')),
+              error: (e) => Center(
+                child: Text(
+                  '${context.t.common.unknown_error} (${e.errorId})',
+                ),
+              ),
             );
           },
         ),
