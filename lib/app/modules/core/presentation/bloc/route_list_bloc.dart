@@ -21,8 +21,7 @@ class RouteListBloc extends Bloc<RouteListEvent, RouteListState> {
       final routes = await _repository.getRouteList();
       emit(RouteListState.loaded(routes));
     } catch (e, stackTrace) {
-      L.e(e, stackTrace);
-      emit(RouteListState.error(e.toString()));
+      emit(RouteListState.error(L.e(e, stackTrace)));
     }
   }
 }
@@ -39,7 +38,7 @@ sealed class RouteListState with _$RouteListState {
   const factory RouteListState.initial() = _Initial;
   const factory RouteListState.loading() = _Loading;
   const factory RouteListState.loaded(List<RouteEntity> routes) = _Loaded;
-  const factory RouteListState.error(String message) = _Error;
+  const factory RouteListState.error(String errorId) = _Error;
 
   List<RouteEntity> get routes => switch (this) {
     _Loaded(:final routes) => routes,
