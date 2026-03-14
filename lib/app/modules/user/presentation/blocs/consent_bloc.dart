@@ -21,8 +21,7 @@ class ConsentBloc extends Bloc<ConsentEvent, ConsentState> {
       await _repository.updateConsent(event.terms);
       emit(const ConsentState.loaded());
     } catch (e, stackTrace) {
-      L.e(e, stackTrace);
-      emit(ConsentState.error(e.toString()));
+      emit(ConsentState.error(L.e(e, stackTrace)));
     }
   }
 }
@@ -37,5 +36,5 @@ sealed class ConsentState with _$ConsentState {
   const factory ConsentState.initial() = _Initial;
   const factory ConsentState.loading() = _Loading;
   const factory ConsentState.loaded() = _Loaded;
-  const factory ConsentState.error(String message) = _Error;
+  const factory ConsentState.error(String errorId) = _Error;
 }
