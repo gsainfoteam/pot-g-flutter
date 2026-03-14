@@ -32,8 +32,7 @@ class PushSettingBloc extends Bloc<PushSettingEvent, PushSettingState> {
         ),
       );
     } catch (e, stackTrace) {
-      L.e(e, stackTrace);
-      emit(PushSettingState.error(e.toString()));
+      emit(PushSettingState.error(L.e(e, stackTrace)));
     }
   }
 
@@ -61,8 +60,7 @@ class PushSettingBloc extends Bloc<PushSettingEvent, PushSettingState> {
         );
       }
     } catch (e, stackTrace) {
-      L.e(e, stackTrace);
-      emit(PushSettingState.error(e.toString()));
+      emit(PushSettingState.error(L.e(e, stackTrace)));
     }
   }
 
@@ -110,5 +108,5 @@ sealed class PushSettingState with _$PushSettingState {
     PushSettingEntity pushSetting, {
     @Default(true) bool isOsNotificationEnabled,
   }) = _Loaded;
-  const factory PushSettingState.error(String message) = _Error;
+  const factory PushSettingState.error(String errorId) = _Error;
 }

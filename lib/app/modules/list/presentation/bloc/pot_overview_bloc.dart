@@ -21,8 +21,7 @@ class PotOverviewBloc extends Bloc<PotOverviewEvent, PotOverviewState> {
       final overview = await _repository.getPotOverview(event.potId);
       emit(PotOverviewState.loaded(overview));
     } catch (e, stackTrace) {
-      L.e(e, stackTrace);
-      emit(PotOverviewState.error(e.toString()));
+      emit(PotOverviewState.error(L.e(e, stackTrace)));
     }
   }
 }
@@ -37,14 +36,14 @@ sealed class PotOverviewState with _$PotOverviewState {
   const PotOverviewState._();
   const factory PotOverviewState.loading() = _Loading;
   const factory PotOverviewState.loaded(PotOverviewEntity overview) = _Loaded;
-  const factory PotOverviewState.error(String message) = _Error;
+  const factory PotOverviewState.error(String errorId) = _Error;
 
   PotOverviewEntity? get overview => switch (this) {
     _Loaded(:final overview) => overview,
     _ => null,
   };
-  String? get error => switch (this) {
-    _Error(:final message) => message,
+  String? get errorId => switch (this) {
+    _Error(:final errorId) => errorId,
     _ => null,
   };
 }

@@ -21,8 +21,7 @@ class BankListBloc extends Bloc<BankListEvent, BankListState> {
       final banks = await _accountingRepository.getBankList();
       emit(BankListState.loaded(banks));
     } catch (e, stackTrace) {
-      L.e(e, stackTrace);
-      emit(BankListState.error(e.toString()));
+      emit(BankListState.error(L.e(e, stackTrace)));
     }
   }
 }
@@ -39,7 +38,7 @@ sealed class BankListState with _$BankListState {
   const factory BankListState.initial() = _Initial;
   const factory BankListState.loading() = _Loading;
   const factory BankListState.loaded(List<BankEntity> banks) = _Loaded;
-  const factory BankListState.error(String message) = _Error;
+  const factory BankListState.error(String errorId) = _Error;
 
   List<BankEntity> get banks => switch (this) {
     _Loaded(:final banks) => banks,

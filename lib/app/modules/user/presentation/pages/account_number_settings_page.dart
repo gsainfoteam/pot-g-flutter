@@ -400,8 +400,10 @@ class _BankNumberState extends State<_BankNumber> {
             context.read<AuthBloc>().add(AuthEvent.update());
             context.router.pop();
           }
-          if (state.errorMessage != null) {
-            context.showToast(state.errorMessage!);
+          if (state.errorId != null) {
+            context.showToast(
+              '${context.t.common.unknown_error} (${state.errorId!})',
+            );
           }
         },
         child: Column(

@@ -74,11 +74,11 @@ class UpdateListener extends StatelessWidget {
               if (result == OkCancelResult.ok) await _launchStore();
             }
             break;
-          case AppVersionStateError(:final message):
+          case AppVersionStateError(:final errorId):
             await showOkAlertDialog(
               context: navigatorContext,
-              title: 'App version error',
-              message: message,
+              title: context.t.update.error.title,
+              message: '${context.t.common.unknown_error} ($errorId)',
             );
             break;
           default:

@@ -26,8 +26,7 @@ class AppVersionBloc extends Bloc<AppVersionEvent, AppVersionState> {
       final versionInfo = await _appVersionRepository.getVersionInfo();
       emit(AppVersionState.data(versionInfo));
     } catch (e, stackTrace) {
-      L.e(e, stackTrace);
-      emit(AppVersionState.error(e.toString()));
+      emit(AppVersionState.error(L.e(e, stackTrace)));
     }
   }
 }
@@ -41,7 +40,7 @@ sealed class AppVersionEvent with _$AppVersionEvent {
 sealed class AppVersionState with _$AppVersionState {
   const factory AppVersionState.initial() = _Initial;
   const factory AppVersionState.loading() = _Loading;
-  const factory AppVersionState.error(String message) = AppVersionStateError;
+  const factory AppVersionState.error(String errorId) = AppVersionStateError;
   const factory AppVersionState.data(VersionInfoEntity versionInfo) =
       AppVersionStateData;
 }

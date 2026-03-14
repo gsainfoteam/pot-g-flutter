@@ -61,8 +61,7 @@ class SocketAuthBloc extends Bloc<SocketAuthEvent, SocketAuthState> {
     try {
       await _socket.connect();
     } catch (e, stackTrace) {
-      L.e(e, stackTrace);
-      emit(SocketAuthState.error(e.toString()));
+      emit(SocketAuthState.error(L.e(e, stackTrace)));
     }
   }
 }
@@ -85,7 +84,7 @@ sealed class SocketAuthState with _$SocketAuthState {
   const factory SocketAuthState.disconnected() = SocketDisconnected;
   const factory SocketAuthState.failed() = SocketFailed;
   const factory SocketAuthState.authorized() = _Authorized;
-  const factory SocketAuthState.error(String message) = SocketError;
+  const factory SocketAuthState.error(String errorId) = SocketError;
 
   bool get isConnected => switch (this) {
     SocketConnected() => true,

@@ -219,6 +219,10 @@
         "resend": "Resend"
       }
     },
+    "load_error": {
+      "network_error": "Network error occurred.",
+      "unknown": "Unknown error occurred."
+    },
     "system_messages": {
       "created": {
         "description": "$user created the pot."
@@ -480,6 +484,9 @@
       "title": "Update Required",
       "message": "Please update to the latest version to continue.\n\nCurrent version: $currentVersion\nLatest version: $latestVersion",
       "button": "Update"
+    },
+    "error": {
+      "title": "App version error"
     }
   },
   "consent": {

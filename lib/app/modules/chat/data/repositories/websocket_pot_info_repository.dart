@@ -1,6 +1,8 @@
+import 'package:dio/dio.dart' show DioException;
 import 'package:injectable/injectable.dart';
 import 'package:pot_g/app/modules/chat/data/data_sources/remote/chat_pot_api.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
+import 'package:pot_g/app/modules/chat/domain/exceptions/pot_info_exception.dart';
 import 'package:pot_g/app/modules/chat/domain/repositories/pot_info_repository.dart';
 import 'package:pot_g/app/modules/core/domain/entities/pot_id_entity.dart';
 import 'package:pot_g/app/modules/socket/data/data_sources/websocket.dart';
@@ -22,7 +24,17 @@ class WebsocketPotInfoRepository implements PotInfoRepository {
 
   @override
   Stream<PotInfoEntity> getPotInfoStream(PotIdEntity pot) async* {
-    yield await _api.getPotInfo(pot.id);
+    try {
+      yield await _api.getPotInfo(pot.id);
+    } on DioException catch (e, stackTrace) {
+      Error.throwWithStackTrace(
+        PotInfoException.networkError(e.message ?? e.error.toString()),
+        stackTrace,
+      );
+    } catch (e, stackTrace) {
+      Error.throwWithStackTrace(PotInfoException.unknown(e), stackTrace);
+    }
+
     yield* _socket
         .createStreamFor<PotEventModel>()
         .map((e) => e.body)
@@ -37,6 +49,22 @@ class WebsocketPotInfoRepository implements PotInfoRepository {
               p is PotEventModel<ArchiveV1Event>,
         )
         .where((e) => e.potPk == pot.id)
-        .asyncMap((e) => _api.getPotInfo(pot.id));
+        .asyncMap((e) async {
+          try {
+            return await _api.getPotInfo(pot.id);
+          } on DioException catch (e, stackTrace) {
+            Error.throwWithStackTrace(
+              PotInfoException.networkError(
+                e.message ?? e.error.toString(),
+              ),
+              stackTrace,
+            );
+          } catch (e, stackTrace) {
+            Error.throwWithStackTrace(
+              PotInfoException.unknown(e),
+              stackTrace,
+            );
+          }
+        });
   }
 }

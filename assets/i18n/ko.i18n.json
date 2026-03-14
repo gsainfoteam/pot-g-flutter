@@ -216,6 +216,10 @@
         "resend": "재전송"
       }
     },
+    "load_error": {
+      "network_error": "네트워크 오류가 발생했습니다",
+      "unknown": "알 수 없는 오류가 발생했습니다"
+    },
     "system_messages": {
       "created": {
         "description": "$user 님이 팟을 생성하셨습니다"
@@ -330,7 +334,7 @@
             "title": "퇴장하시겠습니까?",
             "description": "출발 시간 확정 이전에는\n자유로운 퇴장이 가능합니다\n퇴장하시겠습니까?"
           },
-           "archived": {
+          "archived": {
             "title": "이미 해산된 팟입니다"
           },
           "departure_confirmed": "출발 시간을 확정한 이후에는 퇴장이 불가능합니다",
@@ -477,6 +481,9 @@
       "title": "업데이트 필요",
       "message": "팟쥐를 계속 사용하기 위해서 최신 버전으로 업데이트해주세요.\n현재 버전: $currentVersion\n최신 버전: $latestVersion",
       "button": "업데이트"
+    },
+    "error": {
+      "title": "앱 버전 오류"
     }
   },
   "consent": {

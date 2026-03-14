@@ -24,8 +24,7 @@ class SetBankAccountBloc
       await _repository.setAccounting(event.bank, event.accountNumber);
       emit(const SetBankAccountState.success());
     } catch (e, stackTrace) {
-      L.e(e, stackTrace);
-      emit(SetBankAccountState.error(e.toString()));
+      emit(SetBankAccountState.error(L.e(e, stackTrace)));
     }
   }
 }
@@ -42,14 +41,14 @@ sealed class SetBankAccountState with _$SetBankAccountState {
   const factory SetBankAccountState.initial() = _Initial;
   const factory SetBankAccountState.loading() = _Loading;
   const factory SetBankAccountState.success() = _Success;
-  const factory SetBankAccountState.error(String message) = _Error;
+  const factory SetBankAccountState.error(String errorId) = _Error;
 
   bool get isSuccess => switch (this) {
     _Success() => true,
     _ => false,
   };
-  String? get errorMessage => switch (this) {
-    _Error(:final message) => message,
+  String? get errorId => switch (this) {
+    _Error(:final errorId) => errorId,
     _ => null,
   };
 }

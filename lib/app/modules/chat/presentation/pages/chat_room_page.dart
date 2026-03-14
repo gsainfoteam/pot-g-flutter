@@ -13,6 +13,7 @@ import 'package:pot_g/app/modules/chat/presentation/bloc/pot_detail_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/pot_info_bloc.dart';
 import 'package:pot_g/app/modules/chat/presentation/bloc/taxi_app_cubit.dart';
 import 'package:pot_g/app/modules/chat/presentation/extensions/pot_action_exception.dart';
+import 'package:pot_g/app/modules/chat/presentation/extensions/pot_info_exception_extension.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/accounting_button.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/chat_input.dart';
 import 'package:pot_g/app/modules/chat/presentation/widgets/chat_list.dart';
@@ -79,7 +80,9 @@ class ChatRoomPage extends StatelessWidget with LogPage {
           BlocListener<ChatBloc, ChatState>(
             listenWhen: (prev, curr) =>
                 prev.error != curr.error && curr.error != null,
-            listener: (context, state) => context.showToast(state.error!),
+            listener: (context, state) => context.showToast(
+              '${context.t.common.unknown_error} (${state.error!})',
+            ),
           ),
           BlocListener<PotActionBloc, PotActionState>(
             listener: (context, state) {
@@ -131,8 +134,10 @@ class ChatRoomPage extends StatelessWidget with LogPage {
         child: BlocBuilder<PotInfoBloc, PotInfoState>(
           builder: (context, state) {
             if (state.error != null) {
+              final error = state.error!;
               return ErrorCover(
-                message: state.error!,
+                message:
+                    '${error.err.getErrorMessage(context)} (${error.errorId})',
                 onRefresh: () {
                   context.read<PotInfoBloc>().add(
                     PotInfoEvent.init(_PotId(id: id)),
