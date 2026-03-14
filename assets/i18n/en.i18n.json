@@ -484,6 +484,9 @@
       "title": "Update Required",
       "message": "Please update to the latest version to continue.\n\nCurrent version: $currentVersion\nLatest version: $latestVersion",
       "button": "Update"
+    },
+    "error": {
+      "title": "App version error"
     }
   },
   "consent": {

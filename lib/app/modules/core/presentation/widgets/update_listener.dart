@@ -77,7 +77,7 @@ class UpdateListener extends StatelessWidget {
           case AppVersionStateError(:final errorId):
             await showOkAlertDialog(
               context: navigatorContext,
-              title: 'App version error',
+              title: context.t.update.error.title,
               message: '${context.t.common.unknown_error} ($errorId)',
             );
             break;

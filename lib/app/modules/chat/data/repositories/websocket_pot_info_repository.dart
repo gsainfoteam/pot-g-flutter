@@ -26,10 +26,13 @@ class WebsocketPotInfoRepository implements PotInfoRepository {
   Stream<PotInfoEntity> getPotInfoStream(PotIdEntity pot) async* {
     try {
       yield await _api.getPotInfo(pot.id);
-    } on DioException catch (e) {
-      throw PotInfoException.networkError(e.message ?? e.error.toString());
-    } catch (e) {
-      throw PotInfoException.unknown(e);
+    } on DioException catch (e, stackTrace) {
+      Error.throwWithStackTrace(
+        PotInfoException.networkError(e.message ?? e.error.toString()),
+        stackTrace,
+      );
+    } catch (e, stackTrace) {
+      Error.throwWithStackTrace(PotInfoException.unknown(e), stackTrace);
     }
 
     yield* _socket
@@ -49,12 +52,18 @@ class WebsocketPotInfoRepository implements PotInfoRepository {
         .asyncMap((e) async {
           try {
             return await _api.getPotInfo(pot.id);
-          } on DioException catch (e) {
-            throw PotInfoException.networkError(
-              e.message ?? e.error.toString(),
+          } on DioException catch (e, stackTrace) {
+            Error.throwWithStackTrace(
+              PotInfoException.networkError(
+                e.message ?? e.error.toString(),
+              ),
+              stackTrace,
             );
-          } catch (e) {
-            throw PotInfoException.unknown(e);
+          } catch (e, stackTrace) {
+            Error.throwWithStackTrace(
+              PotInfoException.unknown(e),
+              stackTrace,
+            );
           }
         });
   }
