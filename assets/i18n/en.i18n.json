@@ -219,6 +219,10 @@
         "resend": "Resend"
       }
     },
+    "load_error": {
+      "network_error": "Network error occurred.",
+      "unknown": "Unknown error occurred."
+    },
     "system_messages": {
       "created": {
         "description": "$user created the pot."
