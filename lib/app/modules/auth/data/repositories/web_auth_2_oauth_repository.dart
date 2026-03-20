@@ -25,7 +25,7 @@ class WebAuth2OauthRepository implements OAuthRepository {
         .encode(sha256.convert(utf8.encode(codeVerifier)).bytes)
         .replaceAll('=', '');
 
-    final scopes = ['profile', 'email', 'offline_access'];
+    final scopes = ['name', 'email', 'offline_access'];
     final prompt = recentLogout ? 'login' : 'consent';
     final authorizeUri = Uri.parse('https://account.gistory.me/authorize')
         .replace(
