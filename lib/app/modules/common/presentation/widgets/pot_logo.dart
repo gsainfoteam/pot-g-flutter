@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:pot_g/gen/assets.gen.dart';
-import 'package:pot_g/gen/strings.g.dart';
 
 class PotLogo extends StatelessWidget {
-  const PotLogo({super.key});
+  final bool showLogo;
+  final String text;
+
+  const PotLogo({super.key, this.showLogo = false, required this.text});
 
   @override
   Widget build(BuildContext context) {
@@ -14,10 +16,11 @@ class PotLogo extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            AspectRatio(aspectRatio: 1, child: Assets.logo.color.image()),
-            const SizedBox(width: 4),
+            if (showLogo)
+              AspectRatio(aspectRatio: 1, child: Assets.logo.color.image()),
+            if (showLogo) const SizedBox(width: 4),
             Text(
-              context.t.name,
+              text,
               style: TextStyle(
                 fontWeight: FontWeight.w900,
                 fontSize: 28,
