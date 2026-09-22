@@ -45,7 +45,8 @@ class PotListBloc extends Bloc<PotListEvent, PotListState> {
       );
       emit(
         state.copyWith(
-          pots: [...state.pots, ...pots].sorted(
+          pots: [...state.pots, ...pots].sortedByCompare(
+            (a) => a,
             (a, b) =>
                 (a.total == a.current ? 1 : 0) - (b.total == b.current ? 1 : 0),
           ),
