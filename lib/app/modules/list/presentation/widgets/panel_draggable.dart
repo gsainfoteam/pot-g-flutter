@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_bottom_sheet.dart';
 
 class PanelDraggable extends StatefulWidget {

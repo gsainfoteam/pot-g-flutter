@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:pot_g/gen/assets.gen.dart';
 import 'package:pot_g/gen/strings.g.dart';
 

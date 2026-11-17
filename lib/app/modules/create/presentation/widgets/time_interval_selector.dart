@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:intl/intl.dart';
 import 'package:pot_g/app/modules/common/presentation/widgets/pot_button.dart';
 import 'package:pot_g/app/modules/create/presentation/widgets/time_interval_form.dart';
