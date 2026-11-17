@@ -316,6 +316,6 @@ class _ReasonSelector extends StatelessWidget {
 }
 
 extension on BuildContext {
-  TranslationsChatRoomDrawerActionsReportPageEn get report =>
+  Translations$chat_room$drawer$actions$report$page$en get report =>
       this.t.chat_room.drawer.actions.report.page;
 }

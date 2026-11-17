@@ -317,6 +317,6 @@ class _SettlementTargets extends StatelessWidget {
 }
 
 extension on BuildContext {
-  TranslationsChatRoomAccountingDutchEn get dutch =>
+  Translations$chat_room$accounting$dutch$en get dutch =>
       this.t.chat_room.accounting.dutch;
 }

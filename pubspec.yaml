@@ -14,8 +14,8 @@ dependencies:
   flutter_bloc: ^9.1.0
   get_it: ^9.0.5
   injectable: ^3.0.0
-  slang: ^4.6.0
-  slang_flutter: ^4.6.0
+  slang: ^4.14.0
+  slang_flutter: ^4.14.0
   flutter_svg: ^2.0.17
   flutter_secure_storage: ^10.3.4
   dio: ^5.8.0+1
