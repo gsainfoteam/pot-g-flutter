@@ -75,7 +75,7 @@ class FcmMessagingRepository implements MessagingRepository, LinkRepository {
     );
     final localNotificationPlugin = FlutterLocalNotificationsPlugin();
     await localNotificationPlugin.initialize(
-      const InitializationSettings(
+      settings: const InitializationSettings(
         android: AndroidInitializationSettings('@mipmap/ic_launcher'),
         iOS: DarwinInitializationSettings(),
       ),
@@ -119,17 +119,17 @@ class FcmMessagingRepository implements MessagingRepository, LinkRepository {
     final image = imageUrl != null && imageUrl.isNotEmpty
         ? BigPictureStyleInformation(
             ByteArrayAndroidBitmap(
-              await NetworkAssetBundle(
-                Uri.parse(imageUrl),
-              ).load(imageUrl).then((value) => value.buffer.asUint8List()),
+              await NetworkAssetBundle(Uri.parse(imageUrl))
+                  .load(imageUrl)
+                  .then((value) => value.buffer.asUint8List()),
             ),
           )
         : null;
     FlutterLocalNotificationsPlugin().show(
-      notification.hashCode,
-      notification.title,
-      notification.body,
-      NotificationDetails(
+      id: notification.hashCode,
+      title: notification.title,
+      body: notification.body,
+      notificationDetails: NotificationDetails(
         android: AndroidNotificationDetails(
           _androidNotificationChannel.id,
           _androidNotificationChannel.name,

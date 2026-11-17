@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:dynamic_fonts/dynamic_fonts.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 final _fontWeightMap = {
   FontWeight.w100: 'Thin',

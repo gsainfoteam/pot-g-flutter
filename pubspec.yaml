@@ -1,10 +1,10 @@
 name: pot_g
 description: "A new Flutter project."
 publish_to: "none"
-version: 1.1.1
+version: 1.1.2
 
 environment:
-  sdk: ^3.10.0
+  sdk: ^3.14.0
 
 dependencies:
   flutter:
@@ -13,52 +13,54 @@ dependencies:
   rxdart: ^0.28.0
   flutter_bloc: ^9.1.0
   get_it: ^9.0.5
-  injectable: ^2.5.2
-  slang: ^4.6.0
-  slang_flutter: ^4.6.0
+  injectable: ^3.0.0
+  slang: ^4.14.0
+  slang_flutter: ^4.14.0
   flutter_svg: ^2.0.17
-  flutter_secure_storage: ^9.2.4
+  flutter_secure_storage: ^10.3.4
   dio: ^5.8.0+1
   retrofit: ^4.7.3
   json_annotation: ^4.9.0
   freezed_annotation: ^3.0.0
-  permission_handler: ^12.0.1
+  permission_handler: ^13.0.2
   url_launcher: ^6.3.1
-  auto_route: ^10.2.0
+  auto_route: ^11.2.0
   amplitude_flutter: ^4.3.0
   flutter_localizations:
     sdk: flutter
-  dynamic_fonts: ^2.2.1
+  dynamic_fonts: ^3.1.0
   intl: ^0.20.2
   envied: ^1.1.1
   flutter_native_splash: ^2.4.5
-  firebase_core: ^4.2.1
+  firebase_core: ^5.2.0
   sheet: ^1.0.0
   nonce: ^1.2.0
   crypto: ^3.0.6
-  flutter_web_auth_2: ^4.1.0
-  adaptive_dialog: ^2.4.1
+  flutter_web_auth_2: ^5.1.0
+  adaptive_dialog: ^3.1.0
   collection: ^1.19.1
-  device_info_plus: ^12.2.0
+  device_info_plus: ^13.3.0
   hive_ce: ^2.15.1
   hive_ce_flutter: ^2.3.3
   mutex: ^3.1.0
   uuid: ^4.5.1
   web_socket_channel: ^3.0.3
   bloc_concurrency: ^0.3.0
-  firebase_messaging: ^16.0.4
-  flutter_local_notifications: ^19.4.2
+  firebase_messaging: ^17.1.0
+  flutter_local_notifications: ^23.0.2
   app_links: ^7.0.0
   intersperse: ^2.0.0
-  share_plus: ^12.0.0
-  firebase_crashlytics: ^5.0.4
-  firebase_analytics: ^12.0.4
-  package_info_plus: ^9.0.0
+  share_plus: ^13.3.1
+  firebase_crashlytics: ^6.1.0
+  firebase_analytics: ^13.1.0
+  package_info_plus: ^10.2.2
   pub_semver: ^2.2.0
   flutter_exit_app: ^2.0.0
   logging: ^1.3.0
   characters: ^1.3.0
   lottie: ^3.3.2
+  material_ui: ^1.11.1
+  cupertino_ui: ^1.1.7
 
 dev_dependencies:
   flutter_test:
@@ -68,12 +70,16 @@ dev_dependencies:
   flutter_gen_runner: ^5.10.0
   retrofit_generator: ^10.0.6
   json_serializable: ^6.9.4
-  freezed: ^3.0.4
-  auto_route_generator: ^10.2.5
+  freezed: ^4.0.3
+  auto_route_generator: ^10.4.0
   flutter_launcher_icons: ^0.14.3
   hive_ce_generator: ^1.10.0
-  injectable_generator: ^2.9.0
+  injectable_generator: ^3.1.3
   envied_generator: ^1.1.1
+
+dependency_overrides:
+  analyzer: ^14.0.0
+  macos_ui: ^2.2.2
 
 flutter:
   uses-material-design: true

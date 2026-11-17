@@ -1,6 +1,6 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pot_g/app/modules/auth/presentation/bloc/auth_bloc.dart';
 import 'package:pot_g/app/modules/common/presentation/utils/log.dart';
@@ -33,7 +33,7 @@ class AppRouter extends RootStackRouter {
             user.agreedTerms.allRequired) {
           return resolver.next(true);
         }
-        await resolver.redirectUntil(ConsentRoute(onDone: () {}));
+        resolver.redirectUntil(ConsentRoute(onDone: () {}));
         return;
       }
       if (resolver.route.name == MainBottomNavigationRoute.name ||
@@ -41,7 +41,7 @@ class AppRouter extends RootStackRouter {
           resolver.route.name == LoginRoute.name) {
         return resolver.next(true);
       }
-      await resolver.redirectUntil(
+      resolver.redirectUntil(
         LoginRoute(
           onDone: () => resolver.resolveNext(true, reevaluateNext: false),
           onConsent: () => resolver.next(true),
@@ -74,7 +74,10 @@ class AppRouter extends RootStackRouter {
       page: CreateRoute.page,
       customRouteBuilder: <T>(context, child, page) =>
           Theme.of(context).platform == TargetPlatform.iOS
-          ? CupertinoSheetRoute<T>(settings: page, builder: (_) => child)
+          ? CupertinoSheetRoute<T>(
+              settings: page,
+              scrollableBuilder: (_, _) => child,
+            )
           : MaterialPageRoute<T>(settings: page, builder: (_) => child),
     ),
     AutoRoute(path: '/chat/:id', page: ChatRoomRoute.page),

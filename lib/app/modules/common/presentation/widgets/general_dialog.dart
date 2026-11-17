@@ -3,8 +3,8 @@ import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:adaptive_dialog/src/extensions/string.dart';
 // ignore: depend_on_referenced_packages
 import 'package:animations/animations.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
+import 'package:material_ui/material_ui.dart';
 // ignore: depend_on_referenced_packages
 import 'package:meta/meta.dart';
 
