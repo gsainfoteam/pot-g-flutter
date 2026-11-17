@@ -108,8 +108,10 @@ jobs:
             lib/**/*.gr.dart
             lib/**/*.config.dart
             lib/gen
-          key: codegen-${{ runner.os }}-3.50.0-${{ hashFiles('pubspec.yaml', 'pubspec.lock', 'build.yaml', 'slang.yaml', 'assets/**', 'lib/**/*.dart') }}
-          restore-keys: codegen-${{ runner.os }}-3.50.0-
+          # .env is an input of envied (config.g.dart) that build_runner does not track,
+          # so it must be part of the key and of the restore prefix.
+          key: codegen-${{ runner.os }}-3.50.0-${{ hashFiles('.env') }}-${{ hashFiles('pubspec.yaml', 'pubspec.lock', 'build.yaml', 'slang.yaml', 'assets/**', 'lib/**/*.dart') }}
+          restore-keys: codegen-${{ runner.os }}-3.50.0-${{ hashFiles('.env') }}-
       - name: Generate files
         if: env.run == 'true'
         run: |
