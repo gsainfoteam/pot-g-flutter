@@ -7,9 +7,7 @@ import 'package:pot_g/app/router.dart';
 
 @module
 abstract class Module {
-  FlutterSecureStorage get flutterSecureStorage => const FlutterSecureStorage(
-    aOptions: AndroidOptions(encryptedSharedPreferences: true),
-  );
+  FlutterSecureStorage get flutterSecureStorage => const FlutterSecureStorage();
 
   DeviceInfoPlugin get deviceInfoPlugin => DeviceInfoPlugin();
 
