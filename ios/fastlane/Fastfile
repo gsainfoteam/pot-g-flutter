@@ -32,6 +32,20 @@ platform :ios do
   lane :internal do
     setup_ci if ENV['CI']
     sync_code_signing(type: "appstore", readonly: true)
+    app_identifier = CredentialsManager::AppfileConfig.try_fetch_value(:app_identifier)
+    profile_name = ENV["sigh_#{app_identifier}_appstore_profile-name"]
+    team_id = ENV["sigh_#{app_identifier}_appstore_team-id"]
+    update_code_signing_settings(
+      use_automatic_signing: false,
+      path: "./Runner.xcodeproj",
+      team_id: team_id,
+      targets: ["Runner"],
+      build_configurations: ["Release"],
+      code_sign_identity: "iPhone Distribution",
+      sdk: "iphoneos*",
+      bundle_identifier: app_identifier,
+      profile_name: profile_name,
+    )
     app_store_connect_api_key(duration: 1200) if ENV['CI']
     pubspec = YAML.load_file("../../pubspec.yaml")
     build_version = pubspec["version"]
