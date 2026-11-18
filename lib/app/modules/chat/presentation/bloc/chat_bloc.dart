@@ -49,7 +49,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       emit(
         state.copyWith(
           isLoading: false,
-          chats: [...state.chats, ...chats.reversed],
+          chats: [...chats.reversed],
           endReached: chats.isEmpty,
         ),
       );
