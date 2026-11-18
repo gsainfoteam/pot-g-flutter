@@ -17,8 +17,6 @@ types:
     typeId: 1
     nextIndex: 3
     fields:
-      dev:
-        index: 0
       qa:
         index: 1
       prod:
