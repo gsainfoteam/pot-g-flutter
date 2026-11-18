@@ -2,12 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:material_ui/material_ui.dart';
 
 enum ApiChannel {
-  dev(
-    'https://api.dev.pot-g.gistory.me/',
-    'wss://api.dev.pot-g.gistory.me/ws',
-    'https://dev.pot-g.gistory.me/',
-    Colors.orange,
-  ),
   qa(
     'https://api.qa.pot-g.gistory.me/',
     'wss://api.qa.pot-g.gistory.me/ws',
@@ -27,5 +21,5 @@ enum ApiChannel {
   final Color color;
   Uri get wsUrl => Uri.parse(_wsUrl);
   const ApiChannel(this.url, this._wsUrl, this.appLinkUrl, this.color);
-  factory ApiChannel.byMode() => kDebugMode ? dev : prod;
+  factory ApiChannel.byMode() => kDebugMode ? qa : prod;
 }
