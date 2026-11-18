@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:pot_g/app/values/palette.dart';
 
 class PotBottomSheet extends StatelessWidget {

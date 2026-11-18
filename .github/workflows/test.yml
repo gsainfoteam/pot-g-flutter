@@ -66,37 +66,23 @@ jobs:
       - uses: subosito/flutter-action@v2
         if: env.run == 'true'
         with:
-          flutter-version: "3.38.3"
+          flutter-version: "3.50.0"
           channel: "stable"
           cache: true
-      - uses: actions/cache@v4
-        if: env.run == 'true'
-        with:
-          path: |
-            .dart_tool
-            !.dart_tool/**/*.snapshot
-          key: ${{ runner.os }}-dart-tool-3.38.3-${{ hashFiles('pubspec.lock') }}
       - name: install flutterfire
         if: env.run == 'true'
         run: flutter pub global activate flutterfire_cli
-      - uses: actions/cache@v4
-        if: env.run == 'true' && matrix.os == 'iOS'
-        with:
-          path: |
-            ~/.cocoapods
-            ~/Library/Caches/CocoaPods
-          key: cocoapods-${{ hashFiles('ios/Podfile.lock') }}
       - uses: actions/setup-java@v4
         if: env.run == 'true' && matrix.os == 'Android'
         with:
-          java-version: "17"
+          java-version: "21"
           distribution: "temurin"
           cache: "gradle"
 
       - uses: ruby/setup-ruby@v1
         if: env.run == 'true'
         with:
-          ruby-version: "3.2"
+          ruby-version: "4.0"
           bundler-cache: true
           working-directory: ${{ env.directory }}
 
@@ -111,6 +97,21 @@ jobs:
             echo "AMPLITUDE_API_KEY=${{ secrets.AMPLITUDE_API_KEY }}" >> .env
           fi
 
+      - uses: actions/cache@v4
+        if: env.run == 'true'
+        with:
+          path: |
+            .dart_tool/build
+            lib/**/*.g.dart
+            !lib/app/values/config.g.dart
+            lib/**/*.freezed.dart
+            lib/**/*.gr.dart
+            lib/**/*.config.dart
+            lib/gen
+          # .env is an input of envied (config.g.dart) that build_runner does not track,
+          # so it must be part of the key and of the restore prefix.
+          key: codegen-${{ runner.os }}-3.50.0-${{ hashFiles('.env') }}-${{ hashFiles('pubspec.yaml', 'pubspec.lock', 'build.yaml', 'slang.yaml', 'assets/**', 'lib/**/*.dart') }}
+          restore-keys: codegen-${{ runner.os }}-3.50.0-${{ hashFiles('.env') }}-
       - name: Generate files
         if: env.run == 'true'
         run: |

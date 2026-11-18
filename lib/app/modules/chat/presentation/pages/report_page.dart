@@ -1,5 +1,5 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pot_g/app/di/locator.dart';
 import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
@@ -316,6 +316,6 @@ class _ReasonSelector extends StatelessWidget {
 }
 
 extension on BuildContext {
-  TranslationsChatRoomDrawerActionsReportPageEn get report =>
+  Translations$chat_room$drawer$actions$report$page$en get report =>
       this.t.chat_room.drawer.actions.report.page;
 }
