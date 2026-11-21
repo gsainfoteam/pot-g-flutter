@@ -35,6 +35,14 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       _completer.complete();
     }
     try {
+      final chats = await _chatRepository.getChats(_pot, null);
+      emit(
+        state.copyWith(
+          isLoading: false,
+          chats: [...chats.reversed],
+          endReached: chats.isEmpty,
+        ),
+      );
       final stream = emit.forEach(
         _chatRepository.getChatsStream(_pot),
         onData: (chat) {
@@ -44,14 +52,6 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
             endReached: state.endReached,
           );
         },
-      );
-      final chats = await _chatRepository.getChats(_pot, null);
-      emit(
-        state.copyWith(
-          isLoading: false,
-          chats: [...state.chats, ...chats.reversed],
-          endReached: chats.isEmpty,
-        ),
       );
       return stream;
     } catch (e, stackTrace) {
