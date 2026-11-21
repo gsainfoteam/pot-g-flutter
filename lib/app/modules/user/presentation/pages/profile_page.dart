@@ -152,7 +152,8 @@ class _Inner extends StatelessWidget {
                   title: context.t.profile.report.cs,
                   onTap: () {
                     L.c('feedback');
-                    launchUrlString(Config.csUrl);
+                    String? email = AuthBloc.userOf(context)?.email;
+                    launchUrlString("${Config.csUrl}${email != null ? "&email=$email" : ""}");
                   },
                 ),
               ],
