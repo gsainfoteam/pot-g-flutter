@@ -153,7 +153,7 @@ class _Inner extends StatelessWidget {
                   onTap: () {
                     L.c('feedback');
                     String? email = AuthBloc.userOf(context)?.email;
-                    launchUrlString("${Config.csUrl}${email != null ? "&email=$email" : ""}");
+                    launchUrlString("${Config.csUrl}${email != null ? "&email=${Uri.encodeQueryComponent(email)}" : ""}");
                   },
                 ),
               ],
