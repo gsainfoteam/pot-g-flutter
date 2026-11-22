@@ -36,7 +36,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     }
     try {
       final stream = emit.forEach(
-        _chatRepository.getChatsStream(_pot),
+        _chatRepository.getChatsStream(_pot).where((chat) => !state.chats.any((element) => element.id == chat.id)),
         onData: (chat) {
           return state.copyWith(
             isLoading: false,
@@ -49,7 +49,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       emit(
         state.copyWith(
           isLoading: false,
-          chats: [...state.chats, ...chats.reversed],
+          chats: [...chats.where((chat) => !state.chats.any((element) => element.id == chat.id)).toList().reversed, ...state.chats],
           endReached: chats.isEmpty,
         ),
       );
