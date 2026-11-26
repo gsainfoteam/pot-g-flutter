@@ -23,6 +23,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   ChatBloc(this._chatRepository) : super(const ChatState(isLoading: true)) {
     on<ChatInit>(_onChatInit, transformer: restartable());
     on<ChatLoadMore>(_onChatLoadMore, transformer: droppable());
+    on<ChatLoadRecent>(_onChatLoadRecent, transformer: droppable());
     on<ChatSendChat>(_onChatSendChat);
     on<ChatResendChat>(_onChatResendChat);
   }
@@ -145,12 +146,34 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       _mutex.release();
     }
   }
+
+  Future<void> _onChatLoadRecent(
+    ChatLoadRecent event,
+    Emitter<ChatState> emit
+  ) async {
+    await _completer.future;
+    await _mutex.acquire();
+    try {
+      emit(state.copyWith(isLoading: true));
+      final chats = await _chatRepository.getChatsAfter(_pot, state.chats.lastOrNull);
+      emit(
+        state.copyWith(
+          isLoading: false,
+          chats: chats.reversed.toList(),
+          endReached: chats.isEmpty,
+        ),
+      );
+    } finally {
+      _mutex.release();
+    }
+  }
 }
 
 @freezed
 sealed class ChatEvent with _$ChatEvent {
   const factory ChatEvent.init(PotInfoEntity pot) = ChatInit;
   const factory ChatEvent.loadMore() = ChatLoadMore;
+  const factory ChatEvent.loadRecent() = ChatLoadRecent;
   const factory ChatEvent.sendChat(String message) = ChatSendChat;
   const factory ChatEvent.resendChat(int id) = ChatResendChat;
 }

@@ -3,6 +3,7 @@ import 'package:pot_g/app/modules/chat/domain/entities/pot_info_entity.dart';
 
 abstract interface class ChatRepository {
   Future<List<Sendable>> getChats(PotInfoEntity pot, Sendable? last);
+  Future<List<Sendable>> getChatsAfter(PotInfoEntity pot, Sendable? last);
   Future<void> sendChat(String message, PotInfoEntity pot);
   Stream<Sendable> getChatsStream(PotInfoEntity pot);
 }
