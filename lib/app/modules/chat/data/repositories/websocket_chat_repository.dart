@@ -133,6 +133,21 @@ class WebsocketChatRepository implements ChatRepository {
   }
 
   @override
+  Future<List<Sendable>> getChatsAfter(PotInfoEntity pot, Sendable? last) async {
+    List<Sendable> trim(List<Sendable> chats) => chats.splitBefore((chat) => chat.id == last?.id).lastOrNull ?? [];
+
+    Future<List<Sendable>> load(Sendable? current) async {
+      final chats = await getChats(pot, current);
+      if (chats.isEmpty || chats.any((chat) => chat.id == last?.id)) {
+        return trim(chats);
+      }
+      final older = await load(chats.first);
+      return [...older, ...chats];
+    }
+    return load(null);
+  }
+
+  @override
   Stream<Sendable> getChatsStream(PotInfoEntity pot) async* {
     PotInfoEntity localPot = await _api.getPotInfo(pot.id);
     yield* _socket
