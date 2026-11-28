@@ -160,7 +160,6 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         state.copyWith(
           isLoading: false,
           chats: chats.reversed.toList(),
-          endReached: chats.isEmpty,
         ),
       );
     } finally {

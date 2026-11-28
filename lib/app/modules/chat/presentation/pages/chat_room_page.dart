@@ -186,10 +186,7 @@ class _LayoutState extends State<_Layout> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      final chatState = context.read<ChatBloc>().state;
-      if (!chatState.isLoading) {
-        context.read<ChatBloc>().add(ChatEvent.loadRecent());
-      }
+      context.read<ChatBloc>().add(ChatEvent.loadRecent());
     }
   }
 
